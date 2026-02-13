@@ -114,11 +114,11 @@ async function loadCharacters() {
   try {
     const resp = await fetch(new URL('./data/characters.json', import.meta.url));
     state.characters = await resp.json();
-    log('OK', 'DATA', `Loaded ${state.characters.length} characters`);
+    log('OK', 'ДАННЫЕ', `Загружено ${state.characters.length} персонажей`);
     populateFilters();
     renderCharacters();
   } catch (e) {
-    log('ERR', 'DATA', `Failed to load characters: ${e.message}`);
+    log('ERR', 'ДАННЫЕ', `Ошибка загрузки персонажей: ${e.message}`);
   }
 }
 
@@ -224,7 +224,7 @@ function selectChar(role, id) {
   if (role === 'A') { state.selectedA = char; } else { state.selectedB = char; }
   updateCharDisplay();
   renderCharacters(getCurrentFilters());
-  log('INFO', 'CHAR', `${role}: ${char.name_ru} (${char.compatibility})`);
+  log('INFO', 'ПЕРСОНАЖИ', `${role}: ${char.name_ru} (${char.compatibility})`);
 }
 
 function updateCharDisplay() {
@@ -308,7 +308,7 @@ function initModeSwitcher() {
       document.getElementById('mode-idea').classList.toggle('hidden', mode !== 'idea');
       document.getElementById('mode-script').classList.toggle('hidden', mode !== 'script');
       document.getElementById('mode-video').classList.toggle('hidden', mode !== 'video');
-      log('INFO', 'MODE', `Input mode: ${mode}`);
+      log('INFO', 'РЕЖИМ', `Ввод: ${mode === 'idea' ? 'идея' : mode === 'script' ? 'диалог' : 'видео'}`);
     });
   });
 }
@@ -321,7 +321,7 @@ function initToggles() {
       const opt = track.dataset.opt;
       if (opt && opt in state.options) {
         state.options[opt] = track.classList.contains('active');
-        log('INFO', 'OPT', `${opt} = ${state.options[opt]}`);
+        log('INFO', 'ОПЦИИ', `${opt} = ${state.options[opt]}`);
       }
     });
   });
@@ -344,7 +344,7 @@ function initVideoUpload() {
 }
 
 function handleVideoFile(file) {
-  if (!file.type.startsWith('video/')) { log('WARN', 'VIDEO', 'Not a video file'); return; }
+  if (!file.type.startsWith('video/')) { log('WARN', 'ВИДЕО', 'Не видеофайл'); return; }
   const url = URL.createObjectURL(file);
   const video = document.createElement('video');
   video.preload = 'metadata';
@@ -357,7 +357,7 @@ function handleVideoFile(file) {
       <div>⏱ ${state.videoMeta.duration}s · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
     `;
     URL.revokeObjectURL(url);
-    log('OK', 'VIDEO', `Loaded: ${file.name} (${state.videoMeta.duration}s)`);
+    log('OK', 'ВИДЕО', `Загружено: ${file.name} (${state.videoMeta.duration}с)`);
   };
   video.src = url;
 }
@@ -449,14 +449,14 @@ function initVideoUrlFetch() {
             canvas.height = img.naturalHeight;
             canvas.getContext('2d').drawImage(img, 0, 0);
             state.videoMeta.cover_base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
-            log('OK', 'VIDEO', 'Cover image captured for Gemini');
+            log('OK', 'ВИДЕО', 'Обложка захвачена для Gemini');
           };
-          img.onerror = () => log('WARN', 'VIDEO', 'Cover image CORS blocked — Gemini won\'t see it');
+          img.onerror = () => log('WARN', 'ВИДЕО', 'Обложка заблокирована CORS — Gemini не увидит');
           img.src = data.cover;
         } catch { /* cover download failed, not critical */ }
       }
 
-      log('OK', 'VIDEO', `${data.platform}: ${data.title || 'video'} (${data.duration || '?'}s)`);
+      log('OK', 'ВИДЕО', `${data.platform}: ${data.title || 'видео'} (${data.duration || '?'}с)`);
 
     } catch (e) {
       showVideoStatus(`❌ Сетевая ошибка: ${e.message}`, 'text-red-400');
@@ -604,7 +604,7 @@ function initHumor() {
     document.getElementById('humor-cat-ru').textContent = cat.ru;
     document.getElementById('humor-cat-en').textContent = cat.en;
     document.getElementById('gen-cat').textContent = cat.ru;
-    log('OK', 'HUMOR', `Category: ${cat.ru} / ${cat.en}`);
+    log('OK', 'КАТЕГОРИЯ', `${cat.ru} / ${cat.en}`);
   });
 }
 
@@ -749,6 +749,10 @@ function initGenerate() {
         return;
       }
     }
+    if (state.inputMode === 'video' && !state.videoMeta) {
+      showGenStatus('⚠️ Сначала загрузи видео или вставь ссылку', 'text-orange-400');
+      return;
+    }
 
     const btn = document.getElementById('btn-generate');
 
@@ -831,10 +835,8 @@ function initGenerate() {
           </div>
         `;
       }
-    } else if (!isApiMode) {
-      showGenStatus('❌ Переключитесь на режим API в настройках для генерации.', 'text-red-400');
-      log('WARN', 'ГЕНЕРАЦИЯ', 'Режим демо отключён — нужен режим API');
     } else {
+      // Demo mode or API without _apiContext — show local result
       displayResult(localResult);
     }
 
@@ -915,13 +917,21 @@ function initTimingCoach() {
 
     const trimResult = autoTrim(lines);
     if (trimResult.trimmed) {
-      trimResult.auto_fixes.forEach(f => log('OK', 'TRIM', f));
-      log('OK', 'TRIM', `New estimate: ${trimResult.estimate.total}s (was ${state.lastResult.duration_estimate.total}s)`);
+      trimResult.auto_fixes.forEach(f => log('OK', 'ТАЙМИНГ', f));
+
+      // Update actual dialogue text in all prompt structures
+      const newA = trimResult.lines.find(l => l.speaker === 'A')?.text;
+      const newB = trimResult.lines.find(l => l.speaker === 'B')?.text;
+      if (newA !== undefined && newB !== undefined) {
+        applyDialogueUpdate(newA, newB);
+      }
+
       state.lastResult.duration_estimate = trimResult.estimate;
       state.lastResult.auto_fixes.push(...trimResult.auto_fixes);
       updateTimingCoach(state.lastResult);
+      log('OK', 'ТАЙМИНГ', `Новая оценка: ${trimResult.estimate.total}с`);
     } else {
-      log('INFO', 'TRIM', 'Нечего сокращать автоматически');
+      log('INFO', 'ТАЙМИНГ', 'Нечего сокращать автоматически');
     }
   });
 
@@ -1036,6 +1046,65 @@ function updateCacheStats() {
   if (el) el.textContent = `Лок: ${stats.locations} | Рекв: ${stats.props} | Одежда: ${stats.wardrobes}`;
 }
 
+// ─── SHARED: Apply dialogue changes to all prompts ──
+function applyDialogueUpdate(newA, newB) {
+  if (!state.lastResult) return;
+
+  // Update blueprint
+  const bp = state.lastResult.blueprint_json;
+  if (bp?.dialogue_segments) {
+    const segA = bp.dialogue_segments.find(s => s.speaker === 'A');
+    const segB = bp.dialogue_segments.find(s => s.speaker === 'B');
+    if (segA) segA.text_ru = newA;
+    if (segB) segB.text_ru = newB;
+  }
+  if (bp?.scenes) {
+    const sceneA = bp.scenes.find(s => s.segment === 'act_A');
+    const sceneB = bp.scenes.find(s => s.segment === 'act_B');
+    if (sceneA) sceneA.dialogue_ru = newA;
+    if (sceneB) sceneB.dialogue_ru = newB;
+  }
+
+  // Update video prompt
+  const vp = state.lastResult.video_prompt_en_json;
+  if (vp?.dialogue) {
+    vp.dialogue.line_A_ru = newA;
+    vp.dialogue.line_B_ru = newB;
+    const lastWord = newB.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
+    vp.dialogue.killer_word = lastWord;
+  }
+
+  // Rebuild ru_package — replace dialogue lines in the text
+  if (state.lastResult.ru_package) {
+    let pkg = state.lastResult.ru_package;
+    // Replace A line: «old text» → «new text»
+    pkg = pkg.replace(/(🅰️[^\n]*\n\s*«)[^»]*(»)/, `$1${newA}$2`);
+    // Replace B line: «old text» → «new text»
+    pkg = pkg.replace(/(🅱️[^\n]*\n\s*«)[^»]*(»)/, `$1${newB}$2`);
+    state.lastResult.ru_package = pkg;
+    const ruPre = document.querySelector('#tab-ru pre');
+    if (ruPre) ruPre.textContent = pkg;
+  }
+
+  // Re-estimate timing
+  const lines = [
+    { speaker: 'A', text: newA, pace: state.selectedA?.speech_pace || 'normal' },
+    { speaker: 'B', text: newB, pace: state.selectedB?.speech_pace || 'normal' },
+  ];
+  state.lastResult.duration_estimate = estimateDialogue(lines);
+
+  // Re-render tabs
+  document.querySelector('#tab-video pre').textContent = JSON.stringify(state.lastResult.video_prompt_en_json, null, 2);
+  document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(state.lastResult.blueprint_json, null, 2);
+
+  // Sync dialogue editor fields
+  const edA = document.getElementById('editor-line-a');
+  const edB = document.getElementById('editor-line-b');
+  if (edA) edA.value = newA;
+  if (edB) edB.value = newB;
+  updateEditorEstimates();
+}
+
 // ─── DIALOGUE EDITOR ────────────────────
 function updateEditorEstimates() {
   const inputA = document.getElementById('editor-line-a');
@@ -1103,53 +1172,26 @@ function initDialogueEditor() {
     }
   });
 
-  // Apply changes button
+  // Apply changes button — uses shared applyDialogueUpdate
   document.getElementById('editor-apply')?.addEventListener('click', () => {
     if (!state.lastResult) return;
     const inputA = document.getElementById('editor-line-a');
     const inputB = document.getElementById('editor-line-b');
     if (!inputA || !inputB) return;
 
-    const newA = inputA.value.trim();
-    const newB = inputB.value.trim();
-
-    // Update blueprint
-    const bp = state.lastResult.blueprint_json;
-    if (bp?.dialogue_segments) {
-      const segA = bp.dialogue_segments.find(s => s.speaker === 'A');
-      const segB = bp.dialogue_segments.find(s => s.speaker === 'B');
-      if (segA) segA.text_ru = newA;
-      if (segB) segB.text_ru = newB;
-    }
-    if (bp?.scenes) {
-      const sceneA = bp.scenes.find(s => s.segment === 'act_A');
-      const sceneB = bp.scenes.find(s => s.segment === 'act_B');
-      if (sceneA) sceneA.dialogue_ru = newA;
-      if (sceneB) sceneB.dialogue_ru = newB;
-    }
-
-    // Update video prompt
-    const vp = state.lastResult.video_prompt_en_json;
-    if (vp?.dialogue) {
-      vp.dialogue.line_A_ru = newA;
-      vp.dialogue.line_B_ru = newB;
-      const lastWord = newB.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
-      vp.dialogue.killer_word = lastWord;
-    }
-
-    // Re-estimate
-    const lines = [
-      { speaker: 'A', text: newA, pace: state.selectedA?.speech_pace || 'normal' },
-      { speaker: 'B', text: newB, pace: state.selectedB?.speech_pace || 'normal' },
-    ];
-    state.lastResult.duration_estimate = estimateDialogue(lines);
-
-    // Re-render affected tabs
-    document.querySelector('#tab-video pre').textContent = JSON.stringify(state.lastResult.video_prompt_en_json, null, 2);
-    document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(state.lastResult.blueprint_json, null, 2);
+    applyDialogueUpdate(inputA.value.trim(), inputB.value.trim());
     updateTimingCoach(state.lastResult);
 
-    log('OK', 'РЕДАКТОР', `Диалог обновлён. Новая оценка: ${state.lastResult.duration_estimate.total}с`);
+    // Visual feedback
+    const applyBtn = document.getElementById('editor-apply');
+    if (applyBtn) {
+      const orig = applyBtn.textContent;
+      applyBtn.textContent = '✓ Применено!';
+      applyBtn.classList.add('btn-neon-green-active');
+      setTimeout(() => { applyBtn.textContent = orig; applyBtn.classList.remove('btn-neon-green-active'); }, 1500);
+    }
+
+    log('OK', 'РЕДАКТОР', `Диалог обновлён. Оценка: ${state.lastResult.duration_estimate.total}с`);
   });
 }
 
