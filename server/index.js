@@ -54,15 +54,6 @@ app.post('/api/auth/validate', async (req, res) => {
   }
 });
 
-// ─── POST /api/thread/summarize ──────────────
-app.post('/api/thread/summarize', authMiddleware, (req, res) => {
-  const { messages, lastN = 10 } = req.body;
-  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: 'messages array required' });
-  const recent = messages.slice(-lastN);
-  const summary = recent.map(m => `[${m.role}] ${m.content}`).join('\n');
-  res.json({ memory: `STYLE_MEMORY (${recent.length} msgs):\n${summary}`, count: recent.length });
-});
-
 // ─── POST /api/fun/category ──────────────────
 app.post('/api/fun/category', authMiddleware, (req, res) => {
   const categories = [

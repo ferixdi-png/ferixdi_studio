@@ -431,8 +431,21 @@ function initVideoUrlFetch() {
 
 function showVideoStatus(text, cls) {
   const el = document.getElementById('video-url-status');
+  if (!el) return;
   el.classList.remove('hidden');
-  el.className = `text-xs font-mono ${cls}`;
+  el.className = `text-xs ${cls}`;
+  el.textContent = text;
+}
+
+function showGenStatus(text, cls) {
+  let el = document.getElementById('gen-status');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'gen-status';
+    const btn = document.getElementById('btn-generate');
+    if (btn) btn.parentNode.insertBefore(el, btn);
+  }
+  el.className = `text-sm text-center py-2 ${cls}`;
   el.textContent = text;
 }
 
@@ -453,11 +466,17 @@ function initHumor() {
 function initGenerate() {
   document.getElementById('btn-generate')?.addEventListener('click', () => {
     if (!state.selectedA || !state.selectedB) {
-      log('WARN', 'GEN', 'Выберите двух персонажей!');
+      showGenStatus('⚠️ Сначала выбери двух персонажей на шаге 1', 'text-orange-400');
       return;
     }
 
-    log('INFO', 'GEN', 'Generating package...');
+    // Check that there's at least some input for idea mode
+    if (state.inputMode === 'idea' && !document.getElementById('idea-input')?.value.trim()) {
+      showGenStatus('⚠️ Опиши идею в текстовом поле выше', 'text-orange-400');
+      return;
+    }
+
+    showGenStatus('⏳ Генерирую пакет...', 'text-gray-400');
 
     const input = {
       input_mode: state.inputMode,
@@ -477,10 +496,19 @@ function initGenerate() {
       characters: state.characters,
     };
 
-    const result = generate(input);
+    let result;
+    try {
+      result = generate(input);
+    } catch (e) {
+      showGenStatus(`❌ Ошибка генерации: ${e.message}`, 'text-red-400');
+      log('ERR', 'GEN', e.message);
+      return;
+    }
+
     state.lastResult = result;
 
     if (result.error) {
+      showGenStatus(`❌ ${result.error}`, 'text-red-400');
       log('ERR', 'GEN', result.error);
       return;
     }
@@ -491,7 +519,9 @@ function initGenerate() {
     document.querySelector('#tab-video pre').textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
     document.querySelector('#tab-ru pre').textContent = result.ru_package;
     document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
-    document.querySelector('#tab-log pre').textContent = JSON.stringify(result.log, null, 2);
+    showGenStatus('', 'hidden');
+    // Scroll to results
+    document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Warnings
     if (result.warnings.length > 0) {
@@ -542,8 +572,8 @@ function initGenerate() {
       document.querySelectorAll('#gen-results .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const tab = btn.dataset.tab;
-      ['photo', 'video', 'ru', 'blueprint', 'log'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
+      ['photo', 'video', 'ru', 'blueprint'].forEach(t => {
+        document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== tab);
       });
     });
   });
@@ -663,8 +693,7 @@ function initSettings() {
       document.querySelectorAll('#section-settings .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.settingsMode = btn.dataset.setting;
-      document.getElementById('api-settings').classList.toggle('hidden', btn.dataset.setting !== 'api');
-      document.getElementById('header-mode').textContent = btn.dataset.setting === 'demo' ? 'DEMO' : 'API';
+      document.getElementById('api-settings')?.classList.toggle('hidden', btn.dataset.setting !== 'api');
       log('INFO', 'SETTINGS', `Mode: ${btn.dataset.setting}`);
     });
   });
@@ -684,14 +713,7 @@ function updateCacheStats() {
 
 // ─── HEADER SETTINGS BUTTON ─────────────────
 function initHeaderSettings() {
-  document.getElementById('btn-settings')?.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    const settingsNav = document.querySelector('.nav-item[data-section="settings"]');
-    if (settingsNav) settingsNav.classList.add('active');
-    document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
-    document.getElementById('section-settings')?.classList.remove('hidden');
-    log('INFO', 'NAV', '→ settings');
-  });
+  document.getElementById('btn-settings')?.addEventListener('click', () => navigateTo('settings'));
 }
 
 // ─── LOGOUT ──────────────────────────────────

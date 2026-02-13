@@ -43,18 +43,17 @@
   <!-- ACCESS GATE -->
   <div id="access-gate" class="fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(10,10,15,0.98)">
     <div class="glass-panel-solid p-8 w-full max-w-md text-center relative overflow-hidden">
-      <div class="absolute inset-0 opacity-5" style="background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,0.1) 2px,rgba(0,212,255,0.1) 4px)"></div>
       <div class="relative z-10">
-        <div class="text-4xl font-black font-mono tracking-widest neon-text mb-2">FERIXDI</div>
-        <div class="text-sm font-mono text-gray-500 mb-1">S T U D I O</div>
-        <div class="text-xs text-gray-600 mb-8 font-mono">v2.0 // Golden Standard 2026</div>
+        <div class="text-4xl font-black tracking-widest neon-text mb-2">FERIXDI</div>
+        <div class="text-sm text-gray-400 mb-1 tracking-[0.3em] font-light">STUDIO</div>
+        <div class="text-xs text-gray-600 mb-8">Генератор контента для соцсетей</div>
         <div class="mb-6">
-          <label class="block text-xs font-mono text-gray-500 mb-2 text-left">КЛЮЧ ДОСТУПА</label>
-          <input id="access-key-input" type="password" class="input-field text-center tracking-widest" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
+          <label class="block text-xs text-gray-400 mb-2 text-left font-medium">Промо-код</label>
+          <input id="access-key-input" type="password" class="input-field text-center tracking-widest text-lg" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
         </div>
-        <button id="access-key-btn" class="btn-primary w-full mb-4 text-base tracking-wider">АКТИВИРОВАТЬ</button>
-        <div id="access-status" class="text-sm font-mono h-6"></div>
-        <div class="mt-6 text-xs text-gray-600 font-mono">Введите промо-код для доступа</div>
+        <button id="access-key-btn" class="btn-primary w-full mb-4 text-base">Войти</button>
+        <div id="access-status" class="text-sm h-6"></div>
+        <div class="mt-6 text-xs text-gray-600">Введите промо-код для доступа</div>
       </div>
     </div>
   </div>
@@ -71,7 +70,7 @@
       <div class="flex items-center gap-4">
         <span id="header-mode" class="tag text-xs">DEMO</span>
         <button id="btn-settings" class="text-gray-500 hover:text-gray-300 transition-colors text-sm">⚙️</button>
-        <button id="btn-logout" class="text-gray-500 hover:text-red-400 transition-colors text-xs font-mono">ВЫХОД</button>
+        <button id="btn-logout" class="text-gray-500 hover:text-red-400 transition-colors text-xs">Выход</button>
       </div>
     </header>
 
@@ -297,15 +296,13 @@
 
         <!-- SECTION: Timing Coach -->
         <section id="section-timing" class="section-panel hidden space-y-4">
-          <h2 class="text-xl font-bold font-mono neon-text">⏱ Timing Coach</h2>
-          <div class="glass-panel p-4 text-xs text-yellow-400/80 font-mono border-l-2 border-yellow-500/40">
-            ⚠️ Тайминг-коуч оценивает длительность, но финальная правка текста под 8 секунд — на тебе.<br>
-            Если чувствуешь, что текст длинный — режь слова руками и оставляй ударные.<br>
-            Одно лишнее слово ломает 8 секунд.
+          <h2 class="text-lg font-semibold text-white">⏱ Тайминг-коуч</h2>
+          <div class="glass-panel p-4 text-xs text-yellow-400/80 border-l-2 border-yellow-500/30">
+            Оценивает длительность диалога. Если текст не помещается в 8 секунд — сокращай слова или используй автообрезку.
           </div>
           <!-- Timeline bar -->
           <div>
-            <div class="text-xs font-mono text-gray-500 mb-2">ШКАЛА 0..8s</div>
+            <div class="text-xs text-gray-400 font-medium mb-2">Шкала 0–8 сек</div>
             <div id="timing-bar" class="timing-bar">
               <div class="timing-segment timing-hook" style="left:0;width:10%"><span class="text-[10px]">hook</span></div>
               <div class="timing-segment timing-a" style="left:10%;width:35%"><span class="text-[10px]">A</span></div>
@@ -333,17 +330,17 @@
 
         <!-- SECTION: Settings -->
         <section id="section-settings" class="section-panel hidden space-y-4">
-          <h2 class="text-xl font-bold font-mono neon-text">⚙️ Настройки</h2>
+          <h2 class="text-lg font-semibold text-white">⚙️ Настройки</h2>
           <div class="glass-panel p-4 space-y-4">
             <div>
-              <label class="text-xs font-mono text-gray-500 mb-1 block">Режим</label>
+              <label class="text-xs text-gray-400 mb-1 block font-medium">Режим</label>
               <div class="flex gap-2">
                 <button class="mode-btn active" data-setting="demo">Demo (локально)</button>
                 <button class="mode-btn" data-setting="api">API (backend)</button>
               </div>
             </div>
             <div id="api-settings" class="hidden space-y-3">
-              <label class="text-xs font-mono text-gray-500">Backend URL:</label>
+              <label class="text-xs text-gray-400 font-medium">Backend URL:</label>
               <input id="api-url" type="url" class="input-field" placeholder="https://your-backend.onrender.com">
               <div class="flex items-center justify-between">
                 <span class="text-xs text-gray-400">Validate via backend</span>
@@ -351,18 +348,18 @@
               </div>
             </div>
             <div>
-              <label class="text-xs font-mono text-gray-500 mb-1 block">History Cache</label>
+              <label class="text-xs text-gray-400 mb-1 block font-medium">Кеш истории</label>
               <div class="flex gap-2 items-center">
-                <span id="cache-stats" class="text-xs text-gray-500 font-mono">—</span>
+                <span id="cache-stats" class="text-xs text-gray-500">—</span>
                 <button id="btn-clear-cache" class="btn-neon-pink text-xs">Очистить</button>
               </div>
             </div>
           </div>
           <div class="glass-panel p-4">
-            <div class="text-xs font-mono text-gray-500 mb-2">О ПРОЕКТЕ</div>
-            <p class="text-xs text-gray-400">FERIXDI Studio — космический хакерский командный центр для ремикса видео.</p>
-            <p class="text-xs text-gray-400 mt-1">Уникализируй видео. Пересобери под себя. Забирай бесплатный трафик.</p>
-            <p class="text-xs text-gray-600 mt-2 font-mono">Ремикс структуры и темпа. Без копирования личности/голоса.</p>
+            <div class="text-xs text-gray-400 font-medium mb-2">О проекте</div>
+            <p class="text-xs text-gray-400">FERIXDI Studio — генератор контент-пакетов для видео в соцсетях.</p>
+            <p class="text-xs text-gray-400 mt-1">Выбери персонажей → опиши идею → получи промпт для фото, видео и текст для поста.</p>
+            <p class="text-xs text-gray-500 mt-2">Ремикс структуры и темпа. Оригинальный контент без копирования.</p>
           </div>
         </section>
       </main>
