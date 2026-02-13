@@ -92,6 +92,102 @@ app.post('/api/remix/generate', authMiddleware, (req, res) => {
   });
 });
 
+// ─── POST /api/video/fetch — скачка видео по URL (TikTok / Instagram) ──
+app.post('/api/video/fetch', async (req, res) => {
+  const { url } = req.body;
+  if (!url) return res.status(400).json({ error: 'URL required' });
+
+  try {
+    const normalized = url.trim();
+
+    // ── TikTok ──
+    if (normalized.includes('tiktok.com') || normalized.includes('vm.tiktok.com')) {
+      const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(normalized)}&hd=1`;
+      const resp = await fetch(apiUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' },
+      });
+      const data = await resp.json();
+
+      if (data.code !== 0 || !data.data) {
+        return res.status(422).json({ error: 'TikTok: не удалось получить видео', detail: data.msg || 'unknown' });
+      }
+
+      const v = data.data;
+      return res.json({
+        platform: 'tiktok',
+        video_url: v.hdplay || v.play,
+        video_url_sd: v.play,
+        cover: v.cover || v.origin_cover,
+        title: v.title || '',
+        author: v.author?.nickname || v.author?.unique_id || '',
+        duration: v.duration || 0,
+        width: v.width || 0,
+        height: v.height || 0,
+        music: v.music_info?.title || '',
+      });
+    }
+
+    // ── Instagram ──
+    if (normalized.includes('instagram.com')) {
+      // Extract shortcode from URL
+      const match = normalized.match(/\/(p|reel|reels|tv)\/([A-Za-z0-9_-]+)/);
+      if (!match) return res.status(400).json({ error: 'Неверная ссылка Instagram. Нужна ссылка на пост/reel.' });
+
+      const shortcode = match[2];
+      // Use Instagram's public oEmbed API for metadata
+      const oembedUrl = `https://api.instagram.com/oembed/?url=https://www.instagram.com/p/${shortcode}/`;
+      const oembedResp = await fetch(oembedUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+      });
+
+      if (!oembedResp.ok) {
+        return res.status(422).json({ error: 'Instagram: пост не найден или приватный' });
+      }
+
+      const oembed = await oembedResp.json();
+
+      // Try saveig API for actual video URL
+      let videoUrl = null;
+      try {
+        const saveigResp = await fetch('https://v3.saveig.app/api/ajaxSearch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0' },
+          body: `q=${encodeURIComponent(normalized)}&t=media&lang=en`,
+        });
+        const saveigData = await saveigResp.json();
+        if (saveigData.status === 'ok' && saveigData.data) {
+          // Extract first download link from HTML response
+          const linkMatch = saveigData.data.match(/href="(https?:\/\/[^"]+\.mp4[^"]*)"/);
+          if (linkMatch) videoUrl = linkMatch[1];
+          if (!videoUrl) {
+            const anyLink = saveigData.data.match(/href="(https?:\/\/[^"]+)"/);
+            if (anyLink) videoUrl = anyLink[1];
+          }
+        }
+      } catch { /* saveig fallback failed, continue with oembed data */ }
+
+      return res.json({
+        platform: 'instagram',
+        video_url: videoUrl,
+        cover: oembed.thumbnail_url || null,
+        title: oembed.title || '',
+        author: oembed.author_name || '',
+        author_url: oembed.author_url || '',
+        width: oembed.thumbnail_width || 0,
+        height: oembed.thumbnail_height || 0,
+        shortcode,
+        note: videoUrl ? 'Видео готово к скачиванию' : 'Метаданные получены, но прямая ссылка на видео недоступна (приватный аккаунт или ограничения IG)',
+      });
+    }
+
+    return res.status(400).json({ error: 'Поддерживаются только TikTok и Instagram ссылки' });
+
+  } catch (e) {
+    console.error('Video fetch error:', e.message);
+    res.status(500).json({ error: 'Ошибка при обработке видео', detail: e.message });
+  }
+});
+
 // ─── Health ──────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok', mode: 'api' }));
 

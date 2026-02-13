@@ -164,7 +164,34 @@
               <label class="text-xs font-mono text-gray-500">Реплика B:</label>
               <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги..."></textarea>
             </div>
-            <div id="mode-video" class="hidden space-y-2 mt-2">
+            <div id="mode-video" class="hidden space-y-3 mt-2">
+              <!-- URL Download -->
+              <div class="glass-panel p-3 space-y-2">
+                <div class="text-xs font-mono text-gray-500">📎 СКАЧАТЬ ПО ССЫЛКЕ (TikTok / Instagram)</div>
+                <div class="flex gap-2">
+                  <input id="video-url-input" type="url" class="input-field flex-1" placeholder="https://www.tiktok.com/@user/video/... или instagram.com/reel/...">
+                  <button id="video-url-fetch" class="btn-neon text-xs whitespace-nowrap">⬇️ Скачать</button>
+                </div>
+                <div id="video-url-status" class="text-xs font-mono hidden"></div>
+                <!-- Preview -->
+                <div id="video-url-result" class="hidden space-y-2">
+                  <div class="flex gap-3 items-start">
+                    <img id="video-url-cover" class="w-20 h-20 rounded object-cover hidden" alt="cover">
+                    <div class="flex-1 space-y-1">
+                      <div id="video-url-title" class="text-xs text-gray-300"></div>
+                      <div id="video-url-author" class="text-xs text-gray-500 font-mono"></div>
+                      <div id="video-url-meta" class="text-xs text-gray-600 font-mono"></div>
+                    </div>
+                  </div>
+                  <a id="video-url-download" href="#" target="_blank" class="btn-neon-green text-xs inline-block hidden">💾 Открыть видео (сохранить)</a>
+                </div>
+              </div>
+              <!-- OR upload -->
+              <div class="flex items-center gap-3 text-xs text-gray-600 font-mono">
+                <div class="flex-1 border-t border-space-border"></div>
+                <span>или загрузить файл</span>
+                <div class="flex-1 border-t border-space-border"></div>
+              </div>
               <div class="glass-panel p-3 border-dashed border-2 border-space-border text-center cursor-pointer" id="video-dropzone">
                 <div class="text-xl mb-1">📁</div>
                 <div class="text-xs font-mono text-gray-500">Загрузить mp4/mov</div>
