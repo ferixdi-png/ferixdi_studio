@@ -32,9 +32,6 @@ function escapeHtml(str) {
 function log(level, module, msg) {
   const el = document.getElementById('log-output');
   if (!el) return;
-  // Show log panel on first message
-  const panel = document.getElementById('log-panel');
-  if (panel?.classList.contains('hidden')) panel.classList.remove('hidden');
   const ts = new Date().toLocaleTimeString('ru-RU');
   const cls = { INFO: 'log-info', WARN: 'log-warn', ERR: 'log-err', OK: 'log-ok' }[level] || 'log-info';
   el.innerHTML += `<div class="${cls}">[${ts}] ${escapeHtml(module)}: ${escapeHtml(msg)}</div>`;
@@ -892,6 +889,9 @@ function displayResult(result) {
   // Populate context & dialogue block
   populateContextBlock(result);
 
+  // Populate Insta package tab
+  populateInstaTab(result);
+
   document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // Warnings
@@ -946,6 +946,72 @@ function populateContextBlock(result) {
     <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Тайминг:</span> <span class="text-gray-200">${est.total || '8.0'}с · ${est.risk || '—'}</span></div>
     <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Хук:</span> <span class="text-gray-200">${ctx.hookAction?.action_ru?.slice(0, 35) || '—'}</span></div>
     <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Заголовок:</span> <span class="text-gray-200">${engage.viral_title?.slice(0, 45) || '—'}${engage.viral_title?.length > 45 ? '...' : ''}</span></div>
+  `;
+}
+
+function populateInstaTab(result) {
+  const el = document.getElementById('tab-insta');
+  if (!el) return;
+
+  const engage = result.log?.engagement || {};
+  const ctx = result._apiContext || {};
+  const charA = ctx.charA || state.selectedA || {};
+  const charB = ctx.charB || state.selectedB || {};
+
+  const viralTitle = engage.viral_title || '—';
+  const pinComment = engage.pin_comment || '—';
+  const firstComment = engage.first_comment || '—';
+  const hashtags = engage.hashtags || [];
+  const seriesTag = engage.series_tag || '';
+
+  // Build copy-friendly hashtag string
+  const hashtagStr = hashtags.join(' ');
+
+  el.innerHTML = `
+    <!-- Viral Title -->
+    <div class="glass-panel p-4 relative">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
+      <div class="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">🔥 Вирусный заголовок</div>
+      <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(viralTitle)}</div>
+      <div class="text-[9px] text-gray-600 mt-2">Вставь как заголовок Reels — цепляет в ленте</div>
+    </div>
+
+    <!-- Hashtags -->
+    <div class="glass-panel p-4 relative">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
+      <div class="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider mb-2"># Хештеги · ${hashtags.length} шт</div>
+      <div class="copy-target text-xs text-gray-300 leading-relaxed bg-black/30 rounded-lg p-3 select-all">${escapeHtml(hashtagStr)}</div>
+      ${seriesTag ? `<div class="text-[9px] text-violet-400 mt-2">Серия: ${escapeHtml(seriesTag)}</div>` : ''}
+      <div class="text-[9px] text-gray-600 mt-1">Вставь в первый комментарий или в описание</div>
+    </div>
+
+    <!-- Pin Comment (bait for shares) -->
+    <div class="glass-panel p-4 relative">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
+      <div class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider mb-2">📌 Закреплённый комментарий</div>
+      <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(pinComment)}</div>
+      <div class="text-[9px] text-gray-600 mt-2">Закрепи — провоцирует пересылки и сохранения</div>
+    </div>
+
+    <!-- First Comment -->
+    <div class="glass-panel p-4 relative">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">💬 Первый комментарий</div>
+      <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(firstComment)}</div>
+      <div class="text-[9px] text-gray-600 mt-2">Напиши сразу после публикации — запускает обсуждение</div>
+    </div>
+
+    <!-- Share bait tip -->
+    <div class="bg-gradient-to-r from-violet-500/8 to-cyan-500/8 rounded-lg p-4 border border-violet-500/15">
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">🚀 Байт на пересылку</div>
+      <div class="text-xs text-gray-300 leading-relaxed space-y-1.5">
+        <div>1. <span class="text-gray-200 font-medium">Закрепи комментарий</span> — он провоцирует «отправь подруге»</div>
+        <div>2. <span class="text-gray-200 font-medium">Заголовок</span> — должен вызывать «ЧТО?! надо показать маме»</div>
+        <div>3. <span class="text-gray-200 font-medium">Первый коммент</span> — задаёт тон обсуждения</div>
+        <div>4. <span class="text-gray-200 font-medium">Хештеги</span> — микс ниша + средние + большие для охвата</div>
+      </div>
+      <div class="text-[9px] text-gray-500 mt-3">Персонажи: ${charA.name_ru || 'A'} × ${charB.name_ru || 'B'}</div>
+    </div>
   `;
 }
 
@@ -1132,7 +1198,7 @@ function initGenerate() {
       document.querySelectorAll('#gen-results .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const tab = btn.dataset.tab;
-      ['photo', 'video', 'ru', 'blueprint'].forEach(t => {
+      ['photo', 'video', 'insta', 'ru', 'blueprint'].forEach(t => {
         document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== tab);
       });
     });
