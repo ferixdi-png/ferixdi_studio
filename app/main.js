@@ -75,6 +75,7 @@ function initPromoCode() {
       const modeEl = document.getElementById('header-mode');
       if (modeEl) modeEl.textContent = 'VIP';
       log('OK', 'ПРОМО', 'Промо-код принят');
+      updateWelcomeBanner();
 
       // Auto-authenticate with server
       autoAuth();
@@ -105,11 +106,30 @@ async function autoAuth() {
   } catch { /* server might not be up yet */ }
 }
 
+function updateWelcomeBanner() {
+  const banner = document.getElementById('welcome-banner');
+  if (!banner) return;
+  if (isPromoValid()) {
+    banner.classList.add('hidden');
+  } else {
+    banner.classList.remove('hidden');
+  }
+}
+
+function initWelcomeBanner() {
+  updateWelcomeBanner();
+  const btn = document.getElementById('welcome-go-settings');
+  if (btn) {
+    btn.addEventListener('click', () => navigateTo('settings'));
+  }
+}
+
 function initApp() {
   log('OK', 'СИСТЕМА', 'FERIXDI Studio v2.0 — добро пожаловать!');
   loadCharacters();
   updateCacheStats();
   navigateTo('characters');
+  initWelcomeBanner();
 
   // Auto-authenticate if promo is already saved
   if (isPromoValid()) {

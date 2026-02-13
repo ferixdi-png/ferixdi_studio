@@ -83,6 +83,59 @@
       <!-- Workspace -->
       <main id="workspace" class="flex-1 overflow-y-auto p-6 relative">
 
+        <!-- ═══ WELCOME BANNER (shown when no promo) ═══ -->
+        <div id="welcome-banner" class="mb-6 relative overflow-hidden rounded-2xl border border-cyan-500/20" style="background: linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(124,92,252,0.06) 50%, rgba(232,121,168,0.04) 100%)">
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,229,255,0.08),transparent_60%)]"></div>
+          <div class="relative p-6 space-y-4">
+            <!-- Main message -->
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/20 text-2xl">🚀</div>
+              <div class="flex-1">
+                <h3 class="text-base font-bold text-white leading-tight">Добро пожаловать в FERIXDI Studio</h3>
+                <p class="text-sm text-gray-300 mt-1.5 leading-relaxed">AI-генератор вирусных Reels за 2 минуты. Выбери персонажей, опиши идею — получи готовые промпты для фото и видео + тексты для Instagram.</p>
+              </div>
+            </div>
+
+            <!-- Two columns: free vs promo -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Free -->
+              <div class="bg-black/30 rounded-xl p-4 border border-gray-700/30">
+                <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5 mb-2">
+                  <span class="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-[10px]">✓</span>
+                  Бесплатно прямо сейчас
+                </div>
+                <div class="text-[11px] text-gray-400 space-y-1">
+                  <div>• Смотри всех <span class="text-gray-200">82 персонажа</span> и их характеристики</div>
+                  <div>• Выбирай пары и проверяй совместимость</div>
+                  <div>• Изучай все режимы и настройки</div>
+                  <div>• Загружай видео-референсы</div>
+                </div>
+              </div>
+              <!-- Promo -->
+              <div class="bg-black/30 rounded-xl p-4 border border-cyan-500/15">
+                <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 mb-2">
+                  <span class="flex items-center justify-center w-5 h-5 rounded-full bg-cyan-500/20 text-[10px]">⚡</span>
+                  С промо-кодом
+                </div>
+                <div class="text-[11px] text-gray-400 space-y-1">
+                  <div>• <span class="text-gray-200">AI-генерация</span> через Gemini 2.0 Flash</div>
+                  <div>• Уникальные диалоги, фото и видео промпты</div>
+                  <div>• Хештеги, заголовки, комменты для Инсты</div>
+                  <div>• Безлимитные генерации</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex items-center gap-3 pt-1">
+              <button id="welcome-go-settings" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
+                🔑 Ввести промо-код
+              </button>
+              <span class="text-[11px] text-gray-500">Вставь промо-код в разделе «Настройки» → и генерируй!</span>
+            </div>
+          </div>
+        </div>
+
         <!-- SECTION: Characters (Step 1) -->
         <section id="section-characters" class="section-panel space-y-5">
           <!-- Step indicator -->
