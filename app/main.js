@@ -109,11 +109,23 @@ async function autoAuth() {
 function updateWelcomeBanner() {
   const banner = document.getElementById('welcome-banner');
   if (!banner) return;
+  banner.classList.remove('hidden');
+
+  const title = banner.querySelector('h3');
+  const desc = banner.querySelector('p');
+  const columns = banner.querySelector('.grid');
+  const ctaBtn = document.getElementById('welcome-go-settings');
+  const ctaHint = document.getElementById('welcome-cta-hint');
+
   if (isPromoValid()) {
-    banner.classList.add('hidden');
-  } else {
-    banner.classList.remove('hidden');
+    if (title) title.textContent = '\u{1F680} FERIXDI Studio — VIP \u{2728}';
+    if (desc) desc.textContent = 'AI-\u0433\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0432\u0438\u0440\u0443\u0441\u043D\u044B\u0445 Reels \u0430\u043A\u0442\u0438\u0432\u0435\u043D. \u0412\u044B\u0431\u0435\u0440\u0438 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0435\u0439, \u043E\u043F\u0438\u0448\u0438 \u0438\u0434\u0435\u044E \u0438 \u043D\u0430\u0436\u043C\u0438 \u00AB\u0421\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u00BB. \u0411\u0435\u0437\u043B\u0438\u043C\u0438\u0442\u043D\u044B\u0435 \u0433\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u0438 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B.';
+    if (columns) columns.classList.add('hidden');
+    if (ctaBtn) { ctaBtn.textContent = '\u{1F3AC} \u041D\u0430\u0447\u0430\u0442\u044C \u0433\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044E'; ctaBtn.onclick = () => navigateTo('generate'); }
+    if (ctaHint) ctaHint.textContent = '\u0412\u0441\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438 \u0440\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B \u2014 \u0433\u0435\u043D\u0435\u0440\u0438\u0440\u0443\u0439 \u0431\u0435\u0437 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439!';
   }
+  const charCountEl = document.getElementById('welcome-char-count');
+  if (charCountEl) charCountEl.textContent = state.characters.length;
 }
 
 function initWelcomeBanner() {
@@ -1118,6 +1130,40 @@ async function callGeminiAPI(apiContext) {
   return data.gemini;
 }
 
+// ─── GENERATION HISTORY (localStorage) ──────
+const GEN_HISTORY_KEY = 'ferixdi_gen_history';
+const GEN_HISTORY_MAX = 10;
+
+function saveGenerationHistory(result) {
+  try {
+    const history = JSON.parse(localStorage.getItem(GEN_HISTORY_KEY) || '[]');
+    const entry = {
+      ts: Date.now(),
+      charA: state.selectedA?.name_ru || '?',
+      charB: state.selectedB?.name_ru || '?',
+      category: result.log?.category?.ru || '',
+      dialogueA: result.blueprint_json?.dialogue_segments?.find(s => s.speaker === 'A')?.text_ru || '',
+      dialogueB: result.blueprint_json?.dialogue_segments?.find(s => s.speaker === 'B')?.text_ru || '',
+      killerWord: result.blueprint_json?.killer_word || '',
+    };
+    history.push(entry);
+    if (history.length > GEN_HISTORY_MAX) history.splice(0, history.length - GEN_HISTORY_MAX);
+    localStorage.setItem(GEN_HISTORY_KEY, JSON.stringify(history));
+  } catch { /* ignore */ }
+}
+
+function getThreadMemory() {
+  try {
+    const history = JSON.parse(localStorage.getItem(GEN_HISTORY_KEY) || '[]');
+    if (history.length === 0) return null;
+    return history.slice(-3).map(h => ({
+      category: h.category,
+      dialogueA: h.dialogueA,
+      dialogueB: h.dialogueB,
+    }));
+  } catch { return null; }
+}
+
 function initGenerate() {
   document.getElementById('btn-generate')?.addEventListener('click', async () => {
     if (!state.selectedA || !state.selectedB) {
@@ -1149,7 +1195,8 @@ function initGenerate() {
     }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Генерирую...';
+    btn.textContent = '⏳ Строю промпт...';
+    showGenStatus('⚙️ Строю Production Contract...', 'text-cyan-400');
 
     // Reset previous results and preflight status
     document.getElementById('gen-results')?.classList.add('hidden');
@@ -1167,7 +1214,7 @@ function initGenerate() {
       } : null,
       scene_hint_ru: document.getElementById('scene-hint')?.value || null,
       category: state.category || getRandomCategory(Date.now().toString()),
-      thread_memory: null,
+      thread_memory: getThreadMemory(),
       video_meta: state.videoMeta,
       product_info: state.productInfo,
       options: state.options,
@@ -1197,13 +1244,16 @@ function initGenerate() {
     }
 
     // Step 1.5: Show pre-flight parameter breakdown
+    btn.textContent = '⏳ Подготовка...';
+    showGenStatus('📊 Параметры готовы, отправляю в AI...', 'text-cyan-400');
     renderPreflight(localResult);
 
     // Step 2: If API mode — send context to Gemini for creative refinement
     const isApiMode = state.settingsMode === 'api' && localStorage.getItem('ferixdi_api_url');
 
     if (isApiMode && localResult._apiContext) {
-      showGenStatus('', '');
+      btn.textContent = '⏳ AI генерирует...';
+      showGenStatus('🧠 FERIXDI AI генерирует контент... (15-30с)', 'text-violet-400');
       log('INFO', 'AI', 'Генерирую уникальный контент...');
 
       try {
@@ -1212,6 +1262,7 @@ function initGenerate() {
           const merged = mergeGeminiResult(localResult, geminiData);
           log('OK', 'AI', 'Творческий контент сгенерирован');
           updatePreflightStatus('✅ Готово · FERIXDI AI сгенерировал уникальный контент', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
+          saveGenerationHistory(merged);
           displayResult(merged);
         } else {
           // No JWT token — try to auto-auth and show local result for now

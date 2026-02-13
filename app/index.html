@@ -83,7 +83,7 @@
       <!-- Workspace -->
       <main id="workspace" class="flex-1 overflow-y-auto p-6 relative">
 
-        <!-- ═══ WELCOME BANNER (shown when no promo) ═══ -->
+        <!-- ═══ WELCOME BANNER (shown for all users, different content for VIP) ═══ -->
         <div id="welcome-banner" class="mb-6 relative overflow-hidden rounded-2xl border border-cyan-500/20" style="background: linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(124,92,252,0.06) 50%, rgba(232,121,168,0.04) 100%)">
           <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,229,255,0.08),transparent_60%)]"></div>
           <div class="relative p-6 space-y-4">
@@ -105,7 +105,7 @@
                   Бесплатно прямо сейчас
                 </div>
                 <div class="text-[11px] text-gray-400 space-y-1">
-                  <div>• Смотри всех <span class="text-gray-200">82 персонажа</span> и их характеристики</div>
+                  <div>• Смотри всех <span class="text-gray-200" id="welcome-char-count">115</span> <span class="text-gray-200">персонажей</span> и их характеристики</div>
                   <div>• Выбирай пары и проверяй совместимость</div>
                   <div>• Изучай все режимы и настройки</div>
                   <div>• Загружай видео-референсы</div>
@@ -131,7 +131,7 @@
               <button id="welcome-go-settings" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
                 🔑 Ввести промо-код
               </button>
-              <span class="text-[11px] text-gray-500">Вставь промо-код в разделе «Настройки» → и генерируй!</span>
+              <span id="welcome-cta-hint" class="text-[11px] text-gray-500">Вставь промо-код в разделе «Настройки» → и генерируй!</span>
             </div>
           </div>
         </div>

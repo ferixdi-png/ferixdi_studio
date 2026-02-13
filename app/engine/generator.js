@@ -1615,7 +1615,7 @@ ${engage.hashtags.join(' ')}
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
       input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
       propAnchor, lightingMood, hookAction: hookObj, releaseAction: releaseObj,
-      aesthetic, script_ru, cinematography,
+      aesthetic, script_ru, cinematography, thread_memory,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
       dialogueA, dialogueB, killerWord,
       // Remake instruction — when video reference is provided, Gemini must replicate it

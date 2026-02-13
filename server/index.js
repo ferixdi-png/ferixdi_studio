@@ -16,6 +16,47 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'ferixdi-dev-secret-change-me';
 
+// ─── Multi API Key Rotation ─────────────────
+function getGeminiKeys() {
+  const keys = [];
+  if (process.env.GEMINI_API_KEY) keys.push(process.env.GEMINI_API_KEY);
+  for (let i = 1; i <= 5; i++) {
+    const k = process.env[`GEMINI_API_KEY_${i}`];
+    if (k) keys.push(k);
+  }
+  return keys.length > 0 ? keys : [];
+}
+let _keyIndex = 0;
+function nextGeminiKey() {
+  const keys = getGeminiKeys();
+  if (keys.length === 0) return null;
+  const key = keys[_keyIndex % keys.length];
+  _keyIndex++;
+  return key;
+}
+
+// ─── Rate Limiting (in-memory) ──────────────
+const _rateLimits = new Map();
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 10;
+function checkRateLimit(userId) {
+  const now = Date.now();
+  let entry = _rateLimits.get(userId);
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    entry = { windowStart: now, count: 0 };
+    _rateLimits.set(userId, entry);
+  }
+  entry.count++;
+  return entry.count <= RATE_LIMIT_MAX;
+}
+// Cleanup stale entries every 5 min
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of _rateLimits) {
+    if (now - v.windowStart > RATE_LIMIT_WINDOW_MS * 2) _rateLimits.delete(k);
+  }
+}, 300_000);
+
 app.use(cors());
 app.use(express.json({ limit: '75mb' }));
 
@@ -79,7 +120,14 @@ function buildGeminiPrompt(ctx) {
   const { charA, charB, category, topic_ru, scene_hint, input_mode, video_meta,
     product_info, location, wardrobeA, wardrobeB, propAnchor, lightingMood,
     hookAction, releaseAction, aesthetic, script_ru, cinematography,
-    remake_mode, remake_instruction } = ctx;
+    remake_mode, remake_instruction, thread_memory } = ctx;
+
+  // ── THREAD MEMORY BLOCK (anti-repeat) ──
+  let threadBlock = '';
+  if (Array.isArray(thread_memory) && thread_memory.length > 0) {
+    const items = thread_memory.map((h, i) => `  ${i + 1}. Категория: "${h.category}" | A: "${h.dialogueA}" | B: "${h.dialogueB}"`).join('\n');
+    threadBlock = `\n══════════ ПРЕДЫДУЩИЕ ГЕНЕРАЦИИ (НЕ ПОВТОРЯЙ!) ══════════\nПользователь уже генерировал следующие диалоги. ПРИДУМАЙ НОВЫЙ, НЕПОХОЖИЙ диалог с другой темой, другими словами, другим углом юмора:\n${items}\n`;
+  }
 
   // ── MODE-SPECIFIC TASK BLOCK ──
   let taskBlock = '';
@@ -179,7 +227,7 @@ ${product_info?.description_en ? `Описание товара: ${product_info.
 Ты — генератор контент-пакетов для вирусных 8-секундных AI-видео.
 Формат: два пожилых русских персонажа спорят перед камерой (selfie POV, вертикальное 9:16).
 Результат: уникальный, смешной, цепляющий контент который люди пересматривают.
-${taskBlock}
+${threadBlock}${taskBlock}
 ${productBlock}
 
 ════════════════════════════════════════════════════════════════
@@ -271,10 +319,10 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    AF: ${cinematography.face_stability?.front_camera_face_lock || 'Phone face-tracking AF keeps face sharpest, 50-100ms lag'}.
 
 6. ГЛАЗА И ВЗГЛЯД (по таймингу):
-   Hook 0-0.8с: ${cinematography.gaze?.hook_gaze || 'A → direct camera eye contact'}.
-   Act A 0.8-3.6с: ${cinematography.gaze?.act_A_gaze || 'A 70% camera 30% B; B side-eye tracking A'}.
-   Act B 3.6-7.1с: ${cinematography.gaze?.act_B_gaze || 'B 80% camera; A eyes widen, dart between B and camera'}.
-   Release 7.1-8.0с: ${cinematography.gaze?.release_gaze || 'Both look at each other, occasional camera glance'}.
+   Hook 0-0.6с: ${cinematography.gaze?.hook_gaze || 'A → direct camera eye contact'}.
+   Act A 0.6-3.8с: ${cinematography.gaze?.act_A_gaze || 'A 70% camera 30% B; B side-eye tracking A'}.
+   Act B 3.8-7.3с: ${cinematography.gaze?.act_B_gaze || 'B 80% camera; A eyes widen, dart between B and camera'}.
+   Release 7.3-8.0с: ${cinematography.gaze?.release_gaze || 'Both look at each other, occasional camera glance'}.
    Зрачки: ${cinematography.gaze?.pupil_detail || '3-5mm, catch-light from source, wet sclera, iris texture'}.
    Микросаккады: ${cinematography.gaze?.micro_saccades || 'Tiny 0.5-1° jumps every 0.5-1.5s — eyes NEVER still'}.
    Фронталка: ${cinematography.gaze?.smartphone_eye_contact || 'Camera 2-5cm above screen; mix 60% lens contact + 40% screen look'}.
@@ -441,9 +489,15 @@ ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опи�
 
 // ─── POST /api/generate — Gemini multimodal generation ──────────
 app.post('/api/generate', authMiddleware, async (req, res) => {
-  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+  const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) {
     return res.status(503).json({ error: 'AI-движок не настроен. Обратитесь к администратору.' });
+  }
+
+  // Rate limiting
+  const userId = req.user?.hash || req.ip;
+  if (!checkRateLimit(userId)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
   const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime } = req.body;
@@ -490,33 +544,57 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       });
     }
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
-    const body = {
-      contents: [{ parts }],
-      generationConfig: {
-        temperature: 0.88,
-        maxOutputTokens: 4096,
-        responseMimeType: 'application/json',
-      },
-    };
+    const MAX_RETRIES = 2;
+    let lastError = null;
+    let data = null;
+    let text = null;
 
-    const resp = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      const apiKey = attempt === 0 ? GEMINI_KEY : nextGeminiKey() || GEMINI_KEY;
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      const body = {
+        contents: [{ parts }],
+        generationConfig: {
+          temperature: 0.88,
+          maxOutputTokens: 4096,
+          responseMimeType: 'application/json',
+        },
+      };
 
-    const data = await resp.json();
+      try {
+        const resp = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
 
-    if (!resp.ok) {
-      const errMsg = data.error?.message || JSON.stringify(data.error) || 'Gemini API error';
-      console.error('Gemini generate error:', errMsg);
-      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
+        data = await resp.json();
+
+        if (!resp.ok) {
+          lastError = data.error?.message || JSON.stringify(data.error) || 'Gemini API error';
+          console.error(`Gemini generate error (attempt ${attempt + 1}):`, lastError);
+          if (resp.status === 429 || resp.status >= 500) {
+            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+            continue;
+          }
+          return res.status(resp.status).json({ error: `Ошибка AI: ${lastError}` });
+        }
+
+        text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) break;
+
+        lastError = 'AI не вернул контент';
+        console.warn(`Gemini empty response (attempt ${attempt + 1})`);
+        if (attempt < MAX_RETRIES) await new Promise(r => setTimeout(r, 800));
+      } catch (fetchErr) {
+        lastError = fetchErr.message;
+        console.error(`Gemini fetch error (attempt ${attempt + 1}):`, fetchErr.message);
+        if (attempt < MAX_RETRIES) await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+      }
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) {
-      return res.status(422).json({ error: 'AI не вернул контент. Попробуйте ещё раз.' });
+      return res.status(422).json({ error: `AI не вернул контент после ${MAX_RETRIES + 1} попыток. ${lastError || 'Попробуйте ещё раз.'}` });
     }
 
     let geminiResult;
