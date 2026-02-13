@@ -11,10 +11,10 @@ import { historyCache } from './history_cache.js';
 
 // ─── V2 TIMING GRID ─────────────────────────
 const GRID_V2 = {
-  hook:    { start: 0.0, end: 0.8 },
-  act_A:   { start: 0.8, end: 3.6 },
-  act_B:   { start: 3.6, end: 7.1 },
-  release: { start: 7.1, end: 8.0 },
+  hook:    { start: 0.0, end: 0.6 },
+  act_A:   { start: 0.6, end: 3.8 },
+  act_B:   { start: 3.8, end: 7.3 },
+  release: { start: 7.3, end: 8.0 },
 };
 
 // ─── LOCATIONS (fallback — used when no external locations loaded) ──
@@ -1010,8 +1010,8 @@ function buildTimingGridV2(hookObj, releaseObj) {
     tolerance_s: 0.2,
     grid: [
       { segment: 'hook', ...GRID_V2.hook, action_en: hookObj.action_en, audio: hookObj.audio },
-      { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers short pompous provocation (6-9 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
-      { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (6-11 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
+      { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers pompous provocation (6-10 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
+      { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (6-12 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
       { segment: 'release', ...GRID_V2.release, action_en: releaseObj.action_en, audio: releaseObj.audio, note: 'ZERO words, shared laughter only' },
     ],
   };
@@ -1470,25 +1470,25 @@ export function generate(input) {
 👔 B: ${wardrobeB}
 🪑 Реквизит: ${propAnchor}
 
-[0.00–0.80] 🎣 ХУК: ${hookObj.action_ru}
+[0.00–0.60] 🎣 ХУК: ${hookObj.action_ru}
   🔊 Звук: ${hookObj.audio}
   🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
 
-[0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
+[0.60–3.80] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dialogueA}»
-  💬 Темп: ${charA.speech_pace} | Слов: 4-7 (${charA.speech_pace === 'slow' ? 'макс 5' : charA.speech_pace === 'fast' ? 'до 7' : '5-6'}) | Окно: 2.8с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  💬 Темп: ${charA.speech_pace} | Слов: 6-10 (${charA.speech_pace === 'slow' ? 'макс 7' : charA.speech_pace === 'fast' ? 'до 10' : '7-9'}) | Окно: 3.2с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
-[3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
+[3.80–7.30] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
   «${dialogueB}»
-  💬 Темп: ${charB.speech_pace} | Слов: 4-8 (${charB.speech_pace === 'slow' ? 'макс 6' : charB.speech_pace === 'fast' ? 'до 8' : '5-7'}) | Окно: 3.5с | паузы = сила
+  💬 Темп: ${charB.speech_pace} | Слов: 6-12 (${charB.speech_pace === 'slow' ? 'макс 8' : charB.speech_pace === 'fast' ? 'до 12' : '8-10'}) | Окно: 3.5с | паузы = сила
   🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
-  💥 KILLER WORD «${killerWord}» → ближе к 7.0s
+  💥 KILLER WORD «${killerWord}» → ближе к 7.1s
   👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
 
-[7.10–8.00] 😂 RELEASE: ${releaseObj.action_ru}
+[7.30–8.00] 😂 RELEASE: ${releaseObj.action_ru}
   🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
   🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
   🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
@@ -1533,13 +1533,13 @@ ${engage.hashtags.join(' ')}
     lighting: lightingMood,
     scenes: [
       { id: 1, segment: 'hook', action: hookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${hookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
-      { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 4-7 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
-      { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 4-8 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
+      { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-10 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
+      { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-12 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
       { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers?.laugh_style || 'natural laugh'}, shared laugh` },
     ],
     dialogue_segments: [
-      { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '4-7' },
-      { speaker: 'B', text_ru: dialogueB, start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, word_range: '4-8' },
+      { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '6-10' },
+      { speaker: 'B', text_ru: dialogueB, start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, word_range: '6-12' },
     ],
     timing_grid: {
       total: 8.0,
@@ -1547,7 +1547,7 @@ ${engage.hashtags.join(' ')}
       A: [GRID_V2.act_A.start, GRID_V2.act_A.end],
       B: [GRID_V2.act_B.start, GRID_V2.act_B.end],
       release: [GRID_V2.release.start, GRID_V2.release.end],
-      killer_word_at: 6.85,
+      killer_word_at: 7.1,
       gap_between_speakers: '0.15-0.25s',
     },
     identity_anchors: {
@@ -1713,25 +1713,25 @@ export function mergeGeminiResult(localResult, geminiData) {
 👔 B: ${ctx.wardrobeB}
 🪑 Реквизит: ${ctx.propAnchor}
 
-[0.00–0.80] 🎣 ХУК: ${ctx.hookAction.action_ru}
+[0.00–0.60] 🎣 ХУК: ${ctx.hookAction.action_ru}
   🔊 Звук: ${ctx.hookAction.audio}
   🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
 
-[0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
+[0.60–3.80] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dA}»
   💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
-[3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
+[3.80–7.30] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
   «${dB}»
   💬 Темп: ${charB.speech_pace} | паузы = сила
   🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
-  💥 KILLER WORD «${kw}» → ближе к 7.0s
+  💥 KILLER WORD «${kw}» → ближе к 7.1s
   👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
 
-[7.10–8.00] 😂 RELEASE: ${ctx.releaseAction.action_ru}
+[7.30–8.00] 😂 RELEASE: ${ctx.releaseAction.action_ru}
   🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
   🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
   🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
@@ -1774,8 +1774,8 @@ ${hashtags.join(' ')}
     if (words > maxWords) return `${label}: ${words} слов (макс ${maxWords}). Сократите для точного тайминга.`;
     return null;
   };
-  const dAwords = validateWordCount(dA, 7, 'Реплика A');
-  const dBwords = validateWordCount(dB, 8, 'Реплика B');
+  const dAwords = validateWordCount(dA, 10, 'Реплика A');
+  const dBwords = validateWordCount(dB, 12, 'Реплика B');
   if (dAwords) r.warnings = [...(r.warnings || []), dAwords];
   if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
 

@@ -14,14 +14,14 @@ const DEVICE_WORDS = ['phone in hand', 'holding phone', 'camera visible', 'selfi
 
 // v2 grid boundaries
 const GRID_V2 = {
-  hook:    { start: 0.0, end: 0.8 },
-  act_A:   { start: 0.8, end: 3.6 },
-  act_B:   { start: 3.6, end: 7.1 },
-  release: { start: 7.1, end: 8.0 },
+  hook:    { start: 0.0, end: 0.6 },
+  act_A:   { start: 0.6, end: 3.8 },
+  act_B:   { start: 3.8, end: 7.3 },
+  release: { start: 7.3, end: 8.0 },
 };
 
 // v2 word count limits (tightened to fit timing windows)
-const WORD_LIMITS = { A: { min: 4, max: 7 }, B: { min: 4, max: 8 } };
+const WORD_LIMITS = { A: { min: 4, max: 10 }, B: { min: 4, max: 12 } };
 
 export function scanBannedWords(text) {
   const warnings = [];

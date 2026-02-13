@@ -1568,16 +1568,16 @@ function updateEditorEstimates() {
   const wordsA = inputA.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
   const wordsB = inputB.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
 
-  const overA = estA.duration > 2.8;
+  const overA = estA.duration > 3.2;
   const overB = estB.duration > 3.5;
-  const risk = total > 6.3 || overA || overB ? 'high' : total > 5.3 ? 'medium' : 'low';
+  const risk = total > 6.7 || overA || overB ? 'high' : total > 5.8 ? 'medium' : 'low';
 
-  document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 7 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 2.8с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 7 ? ' — много' : ''}</span>`;
-  document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 8 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 3.5с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 8 ? ' — много' : ''}</span>`;
+  document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 10 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 3.2с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 10 ? ' — много' : ''}</span>`;
+  document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 12 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 3.5с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 12 ? ' — много' : ''}</span>`;
 
   const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
   const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
-  document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 6.3с ${riskLabel}</span>`;
+  document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 6.7с ${riskLabel}</span>`;
 
   const badge = document.getElementById('editor-timing-badge');
   if (badge) {

@@ -4,7 +4,7 @@
  * Per-speaker window limits: A=2.8s, B=3.5s
  */
 
-const PACE_WPS = { slow: 2.0, normal: 2.5, fast: 3.0 };
+const PACE_WPS = { slow: 2.3, normal: 3.0, fast: 3.5 };
 const LONG_WORD_THRESHOLD = 8;
 const LONG_WORD_PENALTY = 0.15;
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
@@ -12,7 +12,7 @@ const FILLER_PENALTY = 0.12;
 const SHORT_PUNCH_BONUS = -0.1;
 const PAUSE_MARKER_DURATION = 0.3;
 // v2 speaker window limits (seconds of speech available)
-const SPEAKER_WINDOW = { A: 2.8, B: 3.5 };
+const SPEAKER_WINDOW = { A: 3.2, B: 3.5 };
 
 export function estimateLineDuration(text, pace = 'normal') {
   if (!text || !text.trim()) return { duration: 0, wordCount: 0, details: [] };
