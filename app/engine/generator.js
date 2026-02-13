@@ -1355,9 +1355,13 @@ export function generate(input) {
     ...(topicEn ? { topic_context: topicEn } : {}),
     ...(sceneHint ? { scene_reference: `Visual/structural reference from source video: "${sceneHint}". Adapt the energy and pacing but keep original characters and dialogue.` } : {}),
     dialogue: {
-      line_A_ru: dialogueA,
-      line_B_ru: dialogueB,
-      killer_word: killerWord,
+      CRITICAL_INSTRUCTION: 'Gemini MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
+      example_format_only: {
+        example_A_ru: dialogueA,
+        example_B_ru: dialogueB,
+        example_killer_word: killerWord,
+        note: 'THIS IS JUST A FORMAT EXAMPLE. You MUST write your own lines that are funnier and more fitting for the characters above.',
+      },
       language: 'CRITICAL: All dialogue MUST be spoken in Russian (русский язык). Characters speak naturally with authentic Russian intonation, regional accent variations, and age-appropriate speech patterns. NO English speech allowed.',
       speech_style_A: charA.speech_style_ru || 'Характерная эмоциональная русская речь',
       speech_style_B: charB.speech_style_ru || 'Характерная русская речь с паузами',
