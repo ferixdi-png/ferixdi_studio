@@ -1641,9 +1641,9 @@ export function mergeGeminiResult(localResult, geminiData) {
     r.photo_prompt_en_json.scene = g.photo_scene_en;
   }
 
-  // ── 2. Video prompt: replace dialogue ──
-  if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.line_A_ru = g.dialogue_A_ru;
-  if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.line_B_ru = g.dialogue_B_ru;
+  // ── 2. Video prompt: replace dialogue (Gemini generates fresh lines) ──
+  if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
+  if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
   if (g.killer_word) r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
 
   // ── 3. Video prompt: replace emotion arc ──

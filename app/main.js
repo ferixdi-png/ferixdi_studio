@@ -1491,8 +1491,8 @@ function applyDialogueUpdate(newA, newB) {
   // Update video prompt
   const vp = state.lastResult.video_prompt_en_json;
   if (vp?.dialogue) {
-    vp.dialogue.line_A_ru = newA;
-    vp.dialogue.line_B_ru = newB;
+    vp.dialogue.final_A_ru = newA;
+    vp.dialogue.final_B_ru = newB;
     const lastWord = newB.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
     vp.dialogue.killer_word = lastWord;
   }
