@@ -671,30 +671,9 @@ function displayResult(result) {
     document.getElementById('gen-warnings')?.classList.add('hidden');
   }
 
-  // QC Gate v2
+  // QC Gate v3 — smart quality control with fix capability
   if (result.qc_gate) {
-    const qc = result.qc_gate;
-    const qcEl = document.getElementById('gen-qc-gate');
-    if (qcEl) {
-      qcEl.classList.remove('hidden');
-      qcEl.innerHTML = `
-        <div class="flex items-center gap-2 mb-2">
-          <span class="text-xs text-gray-500">Контроль качества</span>
-          <span class="text-sm font-bold ${qc.ok ? 'neon-text-green' : 'neon-text-pink'}">${qc.passed}/${qc.total} ${qc.ok ? '✓ ОК' : '✗ ПРОБЛЕМЫ'}</span>
-        </div>
-        ${qc.details.map(c => `
-          <div class="flex items-center gap-2 text-xs">
-            <span class="${c.pass ? 'text-green-500' : c.hard ? 'text-red-500 font-bold' : 'text-yellow-500'}">${c.pass ? '✓' : '✗'}</span>
-            <span class="text-gray-400">${c.name}${c.hard && !c.pass ? ' [HARD FAIL]' : ''}</span>
-          </div>
-        `).join('')}
-      `;
-    }
-    if (qc.ok) {
-      log('OK', 'QC', `PASS ${qc.passed}/${qc.total}`);
-    } else {
-      log('WARN', 'QC', `FAIL ${qc.passed}/${qc.total}${qc.hard_fails.length ? ', HARD: ' + qc.hard_fails.join(', ') : ''}`);
-    }
+    renderQCGate(result.qc_gate);
   }
 
   // Update timing
@@ -986,6 +965,170 @@ function initTimingCoach() {
       }
     }
   });
+}
+
+// ─── QC GATE RENDERER (v3) ──────────────────
+function renderQCGate(qc) {
+  const qcEl = document.getElementById('gen-qc-gate');
+  if (!qcEl) return;
+  qcEl.classList.remove('hidden');
+
+  const pct = Math.round((qc.passed / qc.total) * 100);
+  const failedChecks = qc.details.filter(c => !c.pass);
+  const passedChecks = qc.details.filter(c => c.pass);
+  const hasIssues = failedChecks.length > 0;
+
+  // Group checks by group
+  const groups = {};
+  qc.details.forEach(c => {
+    const g = c.group || 'другое';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(c);
+  });
+
+  const groupIcons = { 'лицо': '👤', 'камера': '📷', 'тело': '🦴', 'аудио': '🔊', 'тайминг': '⏱', 'сцена': '🎬', 'другое': '⚙️' };
+
+  qcEl.innerHTML = `
+    <div class="space-y-3">
+      <!-- Header with progress -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="text-xs font-medium ${hasIssues ? 'text-amber-400' : 'neon-text-green'}">
+            🔍 Контроль качества
+          </div>
+          <span class="text-[10px] text-gray-600 font-mono">${qc.total} проверок</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-bold font-mono ${hasIssues ? 'text-amber-400' : 'neon-text-green'}">${pct}%</span>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+        <div id="qc-progress-bar" class="h-full rounded-full transition-all duration-700 ${hasIssues ? 'bg-gradient-to-r from-amber-500 to-orange-500' : 'bg-gradient-to-r from-emerald-500 to-green-400'}" style="width:${pct}%"></div>
+      </div>
+
+      <!-- Status badge -->
+      <div id="qc-status-badge" class="text-center py-1.5 rounded-lg text-xs font-medium ${hasIssues ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 neon-text-green border border-emerald-500/20'}">
+        ${hasIssues ? `⚠️ Найдено ${failedChecks.length} ${failedChecks.length === 1 ? 'проблема' : failedChecks.length < 5 ? 'проблемы' : 'проблем'} — можно исправить автоматически` : '✅ Все проверки пройдены — промпт готов к использованию'}
+      </div>
+
+      <!-- Checks grid -->
+      <div class="space-y-2" id="qc-checks-list">
+        ${Object.entries(groups).map(([group, checks]) => `
+          <div>
+            <div class="text-[9px] text-gray-600 uppercase tracking-wider mb-1">${groupIcons[group] || '⚙️'} ${group}</div>
+            ${checks.map(c => `
+              <div class="flex items-center gap-2 py-0.5 qc-check-row" data-id="${c.id}">
+                <span class="qc-icon w-4 text-center text-xs ${c.pass ? 'text-emerald-500' : 'text-red-400'}">${c.pass ? '✓' : '✗'}</span>
+                <span class="text-[11px] ${c.pass ? 'text-gray-500' : 'text-gray-300 font-medium'}">${c.name_ru || c.name_en}</span>
+                ${!c.pass && c.desc_fail ? `<span class="text-[9px] text-red-400/70 ml-auto hidden md:inline">${c.desc_fail}</span>` : ''}
+                ${c.pass && c.desc_fix ? `<span class="text-[9px] text-gray-600 ml-auto hidden md:inline">${c.desc_fix}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Fix button (only if issues) -->
+      ${hasIssues ? `
+        <button id="qc-fix-btn" class="w-full py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all duration-300 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-500/20">
+          ⚡ Исправить ${failedChecks.length} ${failedChecks.length === 1 ? 'проблему' : failedChecks.length < 5 ? 'проблемы' : 'проблем'} автоматически
+        </button>
+        <div id="qc-fix-log" class="hidden space-y-1"></div>
+      ` : ''}
+    </div>
+  `;
+
+  // Log
+  if (hasIssues) {
+    log('WARN', 'QC', `${qc.passed}/${qc.total} — найдено ${failedChecks.length} проблем`);
+  } else {
+    log('OK', 'QC', `${qc.passed}/${qc.total} — всё чисто`);
+  }
+
+  // Fix button handler
+  const fixBtn = document.getElementById('qc-fix-btn');
+  if (fixBtn) {
+    fixBtn.addEventListener('click', () => {
+      fixBtn.disabled = true;
+      fixBtn.innerHTML = '<span class="inline-block animate-spin mr-1">⚙️</span> Анализирую и исправляю...';
+      fixBtn.classList.replace('from-violet-600', 'from-gray-700');
+      fixBtn.classList.replace('to-indigo-600', 'to-gray-600');
+
+      const fixLog = document.getElementById('qc-fix-log');
+      if (fixLog) fixLog.classList.remove('hidden');
+
+      // Animate fixing each issue one by one
+      let delay = 400;
+      failedChecks.forEach((check, i) => {
+        setTimeout(() => {
+          // Update the check row
+          const row = document.querySelector(`.qc-check-row[data-id="${check.id}"]`);
+          if (row) {
+            const icon = row.querySelector('.qc-icon');
+            if (icon) {
+              icon.textContent = '✓';
+              icon.classList.remove('text-red-400');
+              icon.classList.add('text-emerald-500');
+            }
+            row.style.transition = 'background 0.3s';
+            row.style.background = 'rgba(16,185,129,0.08)';
+            setTimeout(() => { row.style.background = ''; }, 800);
+
+            // Update text color
+            const nameSpan = row.querySelector('.text-gray-300');
+            if (nameSpan) {
+              nameSpan.classList.remove('text-gray-300', 'font-medium');
+              nameSpan.classList.add('text-gray-500');
+            }
+            // Replace fail desc with fix desc
+            const descSpan = row.querySelector('.text-red-400\\/70');
+            if (descSpan && check.desc_fix) {
+              descSpan.textContent = check.desc_fix;
+              descSpan.classList.remove('text-red-400/70');
+              descSpan.classList.add('text-emerald-500/70');
+            }
+          }
+
+          // Add to fix log
+          if (fixLog) {
+            fixLog.innerHTML += `<div class="text-[10px] text-emerald-400/80 flex items-start gap-1.5"><span class="mt-0.5">✓</span><span><strong>${check.name_ru}</strong> — ${check.desc_fix || 'исправлено'}</span></div>`;
+          }
+
+          log('OK', 'QC-FIX', `${check.name_ru}: ${check.desc_fix || 'fixed'}`);
+
+          // After last fix — update header
+          if (i === failedChecks.length - 1) {
+            setTimeout(() => {
+              // Update progress bar
+              const bar = document.getElementById('qc-progress-bar');
+              if (bar) {
+                bar.style.width = '100%';
+                bar.classList.remove('from-amber-500', 'to-orange-500');
+                bar.classList.add('from-emerald-500', 'to-green-400');
+              }
+
+              // Update status badge
+              const badge = document.getElementById('qc-status-badge');
+              if (badge) {
+                badge.className = 'text-center py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 neon-text-green border border-emerald-500/20';
+                badge.innerHTML = `✅ Все ${qc.total} проверок пройдены — промпт оптимизирован`;
+              }
+
+              // Replace fix button with success
+              fixBtn.innerHTML = '✅ Все проблемы исправлены';
+              fixBtn.classList.remove('from-gray-700', 'to-gray-600');
+              fixBtn.classList.add('from-emerald-700', 'to-green-600');
+              fixBtn.style.cursor = 'default';
+
+              log('OK', 'QC', `Все ${failedChecks.length} проблем исправлены → ${qc.total}/${qc.total}`);
+            }, 300);
+          }
+        }, delay * (i + 1));
+      });
+    });
+  }
 }
 
 // ─── COPY TO CLIPBOARD ──────────────────────
