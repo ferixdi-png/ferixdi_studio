@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FERIXDI STUDIO — Генератор контента для Reels и TikTok</title>
+  <title>FERIXDI STUDIO — Генератор контента для Reels</title>
   <meta name="description" content="Выбери персонажей, опиши идею — получи готовый промпт для фото, видео и текст для поста с хештегами.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
   <!-- Tailwind CDN (no build required) -->
@@ -197,7 +197,7 @@
 
           <!-- Input — simple by default -->
           <div class="glass-panel p-4 space-y-3" id="section-remix">
-            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею, вставь ссылку на TikTok/Instagram — или оставь пустым, AI придумает сам..."></textarea>
+            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею — или оставь пустым, AI придумает сам..."></textarea>
             <div class="text-[10px] text-gray-600">Категория юмора, диалог и тайминг подберутся автоматически</div>
 
             <!-- Expandable: script / video / product -->
@@ -237,26 +237,9 @@
                 <!-- mode-video -->
                 <div id="mode-video" class="hidden space-y-3">
 
-                  <!-- Step 1: Download video from TikTok or Instagram -->
+                  <!-- Upload video -->
                   <div class="glass-panel p-4 space-y-3">
-                    <div class="text-xs text-gray-300 font-medium">Шаг 1 · Скачай видео-референс</div>
-                    <div class="text-[11px] text-gray-500 leading-relaxed">Скопируй ссылку на видео → скачай через один из сервисов → вернись сюда и загрузи файл</div>
-                    <div class="flex gap-2">
-                      <a href="https://tikvideo.app/ru" target="_blank" class="btn-neon text-xs flex-1 text-center">
-                        🎵 TikTok → tikvideo.app
-                      </a>
-                      <a href="https://saveclip.app/ru/download-video-instagram" target="_blank" class="btn-neon text-xs flex-1 text-center">
-                        📸 Instagram → saveclip.app
-                      </a>
-                    </div>
-                    <div class="text-[10px] text-gray-600 leading-relaxed">
-                      Откроется сайт для скачивания → вставь ссылку на видео → скачай MP4 → вернись сюда ↓
-                    </div>
-                  </div>
-
-                  <!-- Step 2: Upload downloaded video -->
-                  <div class="glass-panel p-4 space-y-3">
-                    <div class="text-xs text-gray-300 font-medium">Шаг 2 · Загрузи скачанное видео</div>
+                    <div class="text-xs text-gray-300 font-medium">Загрузи видео-референс</div>
                     <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone">
                       <div class="text-lg mb-1">📁</div>
                       <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
