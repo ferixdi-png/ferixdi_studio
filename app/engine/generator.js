@@ -617,6 +617,7 @@ export function generate(input) {
     character1_id, character2_id,
     context_ru, script_ru, scene_hint_ru,
     category, thread_memory, video_meta,
+    product_info,
     options = {}, seed = Date.now().toString(),
     characters = []
   } = input;
@@ -744,6 +745,13 @@ export function generate(input) {
     },
     style: 'photorealistic, cinematic grain, raw authentic feel, no filters',
     negative: 'no text, no watermark, no logo, no phone visible, no camera visible, no overlay, no cartoon, no anime, no plastic skin',
+    ...(product_info?.description_en ? {
+      product_placement: {
+        instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as described — same shape, colors, branding, materials. It is the focal point of their argument.',
+        product_description: product_info.description_en,
+        placement: 'Character A holds the product while arguing, product clearly visible in frame, photorealistic rendering matching original reference photo',
+      }
+    } : {}),
   };
 
   // ── VIDEO PROMPT (EN) ──
@@ -785,6 +793,13 @@ export function generate(input) {
       content_type: 'satirical/domestic',
     },
     output: { format: 'mp4 h264', resolution: '1080x1920 vertical 9:16', fps: 30, duration: '8.0s ±0.2s' },
+    ...(product_info?.description_en ? {
+      product_placement: {
+        instruction: 'CRITICAL: The product described below MUST appear in the video. Character A holds/shows it during their line. The product must be rendered with photorealistic accuracy matching the original reference photo exactly — same colors, shape, branding, materials, proportions.',
+        product_description: product_info.description_en,
+        integration: 'Product is naturally woven into the comedic argument. A uses it as a prop during provocation. Product stays visible throughout acts A and B.',
+      }
+    } : {}),
   };
 
   // ── ENGAGEMENT (smart hashtags + viral bait) ──
@@ -831,7 +846,16 @@ ${engage.hashtags.join(' ')}
 • Хештеги → в ПЕРВЫЙ коммент от автора (IG не режет охват).
 • Закреп → закрепить коммент сверху.
 • Первый коммент → постить через 1-2 мин после публикации.
-• Серия: используй ${engage.seriesTag} на каждом видео этой пары.`;
+• Серия: используй ${engage.seriesTag} на каждом видео этой пары.${product_info?.description_en ? `
+
+📦 ТОВАР В КАДРЕ:
+═══════════════════════════════════════════
+Описание товара (EN, для промпта): ${product_info.description_en.slice(0, 300)}${product_info.description_en.length > 300 ? '...' : ''}
+
+⚠️ ВАЖНО: Товар должен быть в кадре точно как на исходном фото!
+• Персонаж A держит/показывает товар во время своей реплики
+• Товар остаётся видимым на протяжении всего ролика
+• Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
 
   // ── BLUEPRINT JSON ──
   const blueprint_json = {

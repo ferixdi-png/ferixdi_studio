@@ -232,6 +232,41 @@
             </div>
           </div>
 
+          <!-- Product Photo (optional) -->
+          <div class="glass-panel p-4 space-y-3" id="section-product">
+            <div class="flex items-center justify-between">
+              <div class="text-xs text-gray-400 font-medium">Фото товара (необязательно)</div>
+              <span class="text-[10px] text-gray-600">Gemini проанализирует фото и опишет товар</span>
+            </div>
+            <p class="text-[11px] text-gray-500">Если хочешь, чтобы в видео был конкретный товар — загрузи его фото. AI опишет каждую деталь, и товар появится в промпте точно как на исходном фото.</p>
+            <div class="flex gap-3 items-start">
+              <!-- Upload zone -->
+              <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-4 text-center cursor-pointer hover:border-violet-500/50 transition-colors flex-1 min-h-[100px] flex flex-col items-center justify-center">
+                <div id="product-preview-zone">
+                  <div class="text-2xl mb-1">📦</div>
+                  <div class="text-xs text-gray-500">Перетащи фото или нажми</div>
+                  <div class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP</div>
+                </div>
+                <input type="file" id="product-file" accept="image/jpeg,image/png,image/webp" class="hidden">
+              </div>
+              <!-- Preview -->
+              <div id="product-preview" class="hidden">
+                <img id="product-preview-img" class="w-28 h-28 rounded-lg object-cover border border-gray-700" alt="товар">
+              </div>
+            </div>
+            <!-- Status -->
+            <div id="product-status" class="hidden text-xs"></div>
+            <!-- Description result -->
+            <div id="product-result" class="hidden space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-emerald-400 font-medium">✓ Описание получено от Gemini</span>
+                <button id="product-clear" class="text-[10px] text-gray-500 hover:text-red-400 transition-colors">✕ Убрать товар</button>
+              </div>
+              <div id="product-description" class="text-[11px] text-gray-300 leading-relaxed bg-black/30 rounded-lg p-3 max-h-[150px] overflow-y-auto"></div>
+              <div id="product-tokens" class="text-[10px] text-gray-600"></div>
+            </div>
+          </div>
+
           <!-- Category -->
           <div class="glass-panel p-4 space-y-2">
             <div class="text-xs text-gray-400 font-medium mb-1">Категория юмора</div>

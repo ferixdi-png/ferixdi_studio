@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'ferixdi-dev-secret-change-me';
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
 
 // ─── Serve Frontend (app/) ──────────────────
 const appDir = join(__dirname, '..', 'app');
@@ -81,6 +81,77 @@ app.post('/api/remix/generate', authMiddleware, (req, res) => {
     message: 'Production generation requires Gemini API key. Configure GEMINI_API_KEY env var.',
     demo_hint: 'Use frontend Demo mode for full local generation without API.',
   });
+});
+
+// ─── POST /api/product/describe — Gemini Vision: описание товара по фото ──
+app.post('/api/product/describe', async (req, res) => {
+  const { image_base64, mime_type } = req.body;
+  if (!image_base64) return res.status(400).json({ error: 'image_base64 required' });
+
+  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+  if (!GEMINI_KEY) {
+    return res.status(503).json({ error: 'GEMINI_API_KEY не настроен. Добавьте переменную окружения на сервере.' });
+  }
+
+  try {
+    const mimeType = mime_type || 'image/jpeg';
+
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+
+    const prompt = `You are a product photography analyst. Analyze this product photo and provide an ULTRA-DETAILED description in English for AI image/video generation.
+
+Include ALL of the following in structured format:
+1. **PRODUCT TYPE**: What is this product (category, name if recognizable)
+2. **SHAPE & FORM**: Exact shape, proportions, dimensions feel, silhouette
+3. **COLORS & MATERIALS**: Every color, gradient, texture, material (matte/glossy/metallic/transparent etc.)
+4. **BRANDING & TEXT**: Any logos, labels, text, fonts visible on the product
+5. **DETAILS & FEATURES**: Buttons, caps, handles, patterns, seams, edges, surface details
+6. **LIGHTING & SHADOWS**: How light interacts with the product surface (reflections, highlights, shadows)
+7. **PACKAGING**: If visible — box, wrapper, tag details
+
+Format your response as a single dense paragraph optimized for AI image generation prompts. Start directly with the product description, no preamble. Be extremely specific about every visual detail — the goal is that an AI model can recreate this EXACT product from the description alone.`;
+
+    const body = {
+      contents: [{
+        parts: [
+          { text: prompt },
+          { inline_data: { mime_type: mimeType, data: image_base64 } }
+        ]
+      }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 1024,
+      }
+    };
+
+    const resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      const errMsg = data.error?.message || JSON.stringify(data.error) || 'Gemini API error';
+      return res.status(resp.status).json({ error: `Gemini: ${errMsg}` });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      return res.status(422).json({ error: 'Gemini не вернул описание. Попробуйте другое фото.' });
+    }
+
+    res.json({
+      description_en: text.trim(),
+      model: 'gemini-2.0-flash',
+      tokens: data.usageMetadata?.totalTokenCount || 0,
+    });
+
+  } catch (e) {
+    console.error('Product describe error:', e.message);
+    res.status(500).json({ error: `Ошибка анализа: ${e.message}` });
+  }
 });
 
 // ─── POST /api/video/fetch — скачка видео по URL (TikTok / Instagram) ──

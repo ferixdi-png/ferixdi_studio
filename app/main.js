@@ -16,6 +16,7 @@ const state = {
   inputMode: 'idea',
   category: null,
   videoMeta: null,
+  productInfo: null, // { image_base64, mime_type, description_en }
   options: { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false },
   lastResult: null,
   settingsMode: 'demo',
@@ -449,6 +450,111 @@ function showGenStatus(text, cls) {
   el.textContent = text;
 }
 
+// ─── PRODUCT PHOTO UPLOAD ───────────────────
+function initProductUpload() {
+  const dropzone = document.getElementById('product-dropzone');
+  const fileInput = document.getElementById('product-file');
+  if (!dropzone || !fileInput) return;
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = 'rgba(139,92,246,0.5)'; });
+  dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropzone.style.borderColor = '';
+    if (e.dataTransfer.files.length) handleProductFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) handleProductFile(fileInput.files[0]); });
+
+  // Clear button
+  document.getElementById('product-clear')?.addEventListener('click', () => {
+    state.productInfo = null;
+    document.getElementById('product-result').classList.add('hidden');
+    document.getElementById('product-preview').classList.add('hidden');
+    document.getElementById('product-status').classList.add('hidden');
+    document.getElementById('product-preview-zone').innerHTML = `
+      <div class="text-2xl mb-1">📦</div>
+      <div class="text-xs text-gray-500">Перетащи фото или нажми</div>
+      <div class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP</div>
+    `;
+    fileInput.value = '';
+  });
+}
+
+async function handleProductFile(file) {
+  if (!file.type.startsWith('image/')) {
+    showProductStatus('Нужно фото (JPG, PNG, WebP)', 'text-red-400');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showProductStatus('Файл слишком большой (макс. 10 МБ)', 'text-red-400');
+    return;
+  }
+
+  // Show preview
+  const previewEl = document.getElementById('product-preview');
+  const imgEl = document.getElementById('product-preview-img');
+  const reader = new FileReader();
+
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    imgEl.src = dataUrl;
+    previewEl.classList.remove('hidden');
+
+    // Shrink dropzone text
+    document.getElementById('product-preview-zone').innerHTML = `
+      <div class="text-xs text-emerald-400">✓ ${file.name}</div>
+      <div class="text-[10px] text-gray-500 mt-1">${(file.size / 1024).toFixed(0)} КБ</div>
+    `;
+
+    // Extract base64 (remove data:image/...;base64, prefix)
+    const base64 = dataUrl.split(',')[1];
+    const mimeType = file.type;
+
+    showProductStatus('⏳ Gemini анализирует товар...', 'text-gray-400');
+
+    try {
+      const apiBase = window.location.origin;
+      const resp = await fetch(`${apiBase}/api/product/describe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_base64: base64, mime_type: mimeType }),
+      });
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        showProductStatus(`❌ ${data.error || 'Ошибка'}`, 'text-red-400');
+        return;
+      }
+
+      // Save to state
+      state.productInfo = {
+        image_base64: base64,
+        mime_type: mimeType,
+        description_en: data.description_en,
+      };
+
+      // Show description
+      document.getElementById('product-result').classList.remove('hidden');
+      document.getElementById('product-description').textContent = data.description_en;
+      document.getElementById('product-tokens').textContent = data.tokens ? `${data.tokens} токенов · ${data.model}` : '';
+      showProductStatus('', 'hidden');
+
+    } catch (e) {
+      showProductStatus(`❌ Сетевая ошибка: ${e.message}`, 'text-red-400');
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function showProductStatus(text, cls) {
+  const el = document.getElementById('product-status');
+  if (!el) return;
+  el.classList.remove('hidden');
+  el.className = `text-xs ${cls}`;
+  el.textContent = text;
+}
+
 // ─── RANDOM HUMOR ────────────────────────────
 function initHumor() {
   document.getElementById('humor-random')?.addEventListener('click', () => {
@@ -491,6 +597,7 @@ function initGenerate() {
       category: state.category,
       thread_memory: null,
       video_meta: state.videoMeta,
+      product_info: state.productInfo,
       options: state.options,
       seed: Date.now().toString(),
       characters: state.characters,
@@ -749,6 +856,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initToggles();
   initVideoUpload();
   initVideoUrlFetch();
+  initProductUpload();
   initHumor();
   initGenerate();
   initTimingCoach();
