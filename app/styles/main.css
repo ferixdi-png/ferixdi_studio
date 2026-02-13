@@ -510,3 +510,9 @@ mark {
   border-radius: 3px;
   padding: 0 3px;
 }
+
+/* ── Log Panel ────────────────────────────── */
+.log-info { color: #9ca3af; }
+.log-warn { color: #fbbf24; }
+.log-err  { color: #f87171; }
+.log-ok   { color: #34d399; }

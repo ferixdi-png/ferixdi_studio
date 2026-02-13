@@ -23,13 +23,22 @@ const state = {
 };
 
 // ─── LOG ─────────────────────────────────────
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function log(level, module, msg) {
   const el = document.getElementById('log-output');
   if (!el) return;
+  // Show log panel on first message
+  const panel = document.getElementById('log-panel');
+  if (panel?.classList.contains('hidden')) panel.classList.remove('hidden');
   const ts = new Date().toLocaleTimeString('ru-RU');
   const cls = { INFO: 'log-info', WARN: 'log-warn', ERR: 'log-err', OK: 'log-ok' }[level] || 'log-info';
-  el.innerHTML += `<div class="${cls}">[${ts}] ${module}: ${msg}</div>`;
+  el.innerHTML += `<div class="${cls}">[${ts}] ${escapeHtml(module)}: ${escapeHtml(msg)}</div>`;
   el.scrollTop = el.scrollHeight;
+  // Limit log size to prevent memory leak
+  while (el.children.length > 200) el.removeChild(el.firstChild);
 }
 
 // ─── ACCESS GATE ─────────────────────────────
@@ -271,7 +280,7 @@ function initNavigation() {
     navigateTo('generate');
   });
 
-  // "← изменить" on step 2 → go back to step 1
+  // "← Сменить персонажей" on step 2 → go back to step 1
   document.getElementById('gen-back-chars')?.addEventListener('click', () => {
     navigateTo('characters');
   });
@@ -863,7 +872,19 @@ function initCharFilters() {
   });
 }
 
-// ─── INIT ────────────────────────────────────
+// ─── LOG PANEL TOGGLE ─────────────────────
+function initLogPanel() {
+  document.getElementById('log-toggle')?.addEventListener('click', () => {
+    const output = document.getElementById('log-output');
+    const icon = document.getElementById('log-toggle-icon');
+    if (!output) return;
+    const collapsed = output.style.display === 'none';
+    output.style.display = collapsed ? '' : 'none';
+    if (icon) icon.textContent = collapsed ? '▼' : '▲';
+  });
+}
+
+// ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initAccessGate();
   initNavigation();
@@ -880,4 +901,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initCharFilters();
   initCopyButtons();
   initHeaderSettings();
+  initLogPanel();
 });

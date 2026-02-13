@@ -275,7 +275,7 @@
           <div class="glass-panel p-4 space-y-2">
             <div class="text-xs text-gray-400 font-medium mb-1">Категория юмора</div>
             <div class="flex gap-3 items-center">
-              <button id="humor-random" class="btn-neon text-xs">� Случайная</button>
+              <button id="humor-random" class="btn-neon text-xs">🎲 Случайная</button>
               <span id="gen-cat" class="text-sm neon-text-green">подберётся автоматически</span>
             </div>
             <div id="humor-result" class="hidden mt-1">
@@ -315,9 +315,9 @@
             <div class="h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"></div>
             <div class="flex gap-2 flex-wrap">
               <button class="mode-btn active" data-tab="photo">📸 Фото-промпт</button>
-              <button class="mode-btn" data-tab="video">� Видео-промпт</button>
+              <button class="mode-btn" data-tab="video">🎬 Видео-промпт</button>
               <button class="mode-btn" data-tab="ru">🇷🇺 Текст поста</button>
-              <button class="mode-btn" data-tab="blueprint">� Полный план</button>
+              <button class="mode-btn" data-tab="blueprint">📋 Полный план</button>
             </div>
             <div id="tab-photo" class="glass-panel p-4 max-h-[400px] overflow-y-auto relative"><button class="copy-btn" data-tab="photo">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
             <div id="tab-video" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="video">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
@@ -406,6 +406,17 @@
       </main>
     </div>
 
+  </div>
+
+  <!-- Log panel (bottom-right, collapsible) -->
+  <div id="log-panel" class="fixed bottom-4 right-4 z-40 w-80 max-h-48 hidden">
+    <div class="glass-panel-solid rounded-lg overflow-hidden border border-space-border shadow-xl">
+      <div class="flex items-center justify-between px-3 py-1.5 border-b border-gray-800/50 cursor-pointer" id="log-toggle">
+        <span class="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Console</span>
+        <span class="text-[10px] text-gray-600" id="log-toggle-icon">▼</span>
+      </div>
+      <div id="log-output" class="p-2 overflow-y-auto max-h-36 text-[10px] font-mono leading-relaxed space-y-0.5"></div>
+    </div>
   </div>
 
   <script type="module" src="./main.js"></script>

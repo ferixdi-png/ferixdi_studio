@@ -84,7 +84,7 @@ app.post('/api/remix/generate', authMiddleware, (req, res) => {
 });
 
 // ─── POST /api/product/describe — Gemini Vision: описание товара по фото ──
-app.post('/api/product/describe', async (req, res) => {
+app.post('/api/product/describe', authMiddleware, async (req, res) => {
   const { image_base64, mime_type } = req.body;
   if (!image_base64) return res.status(400).json({ error: 'image_base64 required' });
 
@@ -159,7 +159,7 @@ Format your response as a single dense paragraph optimized for AI image generati
 });
 
 // ─── POST /api/video/fetch — скачка видео по URL (TikTok / Instagram) ──
-app.post('/api/video/fetch', async (req, res) => {
+app.post('/api/video/fetch', authMiddleware, async (req, res) => {
   const { url } = req.body;
   if (!url) return res.status(400).json({ error: 'URL required' });
 
