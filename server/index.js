@@ -177,7 +177,6 @@ ${productBlock}
 • Стиль речи: ${charA.speech_style_ru || 'expressive'}
 • Темп: ${charA.speech_pace || 'normal'} | Мат: ${charA.swear_level || 0}/3
 • Вайб: ${charA.vibe_archetype || 'провокатор'}
-• Фирменные слова: ${(charA.signature_words_ru || []).join(', ') || '—'}
 • Микрожест: ${charA.identity_anchors?.micro_gesture || '—'}
 • Смех: ${charA.modifiers?.laugh_style || 'natural'}
 • Стиль хука: ${charA.modifiers?.hook_style || 'attention grab'}
@@ -191,7 +190,6 @@ ${productBlock}
 • Стиль речи: ${charB.speech_style_ru || 'measured'}
 • Темп: ${charB.speech_pace || 'normal'} | Мат: ${charB.swear_level || 0}/3
 • Вайб: ${charB.vibe_archetype || 'база'}
-• Фирменные слова: ${(charB.signature_words_ru || []).join(', ') || '—'}
 • Микрожест: ${charB.identity_anchors?.micro_gesture || '—'}
 • Смех: ${charB.modifiers?.laugh_style || 'quiet chuckle'}
 • Гардероб: ${wardrobeB}

@@ -317,7 +317,6 @@ function renderCharacters(filter = {}) {
 
     // Detail sections
     const anchors = c.identity_anchors || {};
-    const sigWords = (c.signature_words_ru || []).join(', ');
 
     return `
     <div class="char-card ${selCls}" data-id="${c.id}">
@@ -347,8 +346,6 @@ function renderCharacters(filter = {}) {
           ${c.vibe_archetype ? `<div class="mb-1.5"><span class="text-violet-400 font-medium">🎪 Архетип:</span> <span class="text-gray-200 font-medium">${c.vibe_archetype}</span></div>` : ''}
 
           ${c.speech_style_ru ? `<div><span class="text-violet-400 font-medium">🗣 Речь:</span> <span class="text-gray-300">${c.speech_style_ru}</span></div>` : ''}
-
-          ${sigWords ? `<div><span class="text-violet-400 font-medium">💬 Фразы:</span> <span class="text-amber-300/80">«${sigWords}»</span></div>` : ''}
 
           ${anchors.signature_element ? `<div><span class="text-violet-400 font-medium">✨ Фишка:</span> <span class="text-gray-300">${translateEnRu(anchors.signature_element)}</span></div>` : ''}
 
