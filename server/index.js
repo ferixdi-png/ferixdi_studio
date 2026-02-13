@@ -19,6 +19,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ferixdi-dev-secret-change-me';
 app.use(cors());
 app.use(express.json());
 
+// ─── Serve Frontend (app/) ──────────────────
+const appDir = join(__dirname, '..', 'app');
+app.use(express.static(appDir));
+
 // ─── Auth Middleware ──────────────────────────
 function authMiddleware(req, res, next) {
   const token = req.headers.authorization?.replace('Bearer ', '');
@@ -90,6 +94,11 @@ app.post('/api/remix/generate', authMiddleware, (req, res) => {
 
 // ─── Health ──────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok', mode: 'api' }));
+
+// ─── SPA Fallback ───────────────────────────
+app.get('*', (req, res) => {
+  res.sendFile(join(appDir, 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`FERIXDI Studio API running on port ${PORT}`);
