@@ -1035,8 +1035,13 @@ export function generate(input) {
     }
   }
 
-  // ── Lighting (varies by location type) ──
-  const lightingMood = pickRandom(LIGHTING_MOODS, rng);
+  // ── Lighting (location-coherent selection) ──
+  // Indoor locations get indoor-compatible lighting; outdoor get outdoor-compatible
+  const isOutdoor = /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda/i.test(location);
+  const indoorMoods = LIGHTING_MOODS.filter(m => !['organic chaos', 'golden confrontation', 'exposed clarity'].includes(m.mood));
+  const outdoorMoods = LIGHTING_MOODS.filter(m => ['organic chaos', 'golden confrontation', 'exposed clarity', 'calm before storm'].includes(m.mood));
+  const lightingPool = isOutdoor ? (outdoorMoods.length ? outdoorMoods : LIGHTING_MOODS) : (indoorMoods.length ? indoorMoods : LIGHTING_MOODS);
+  const lightingMood = pickRandom(lightingPool, rng);
 
   // ── Wardrobe from character anchors (full description, not just a keyword) ──
   const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar';
@@ -1335,14 +1340,14 @@ export function generate(input) {
 
 [0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dialogueA}»
-  💬 Темп: ${charA.speech_pace} | Слов: 4-7 | Окно: 2.8с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  💬 Темп: ${charA.speech_pace} | Слов: 4-7 (${charA.speech_pace === 'slow' ? 'макс 5' : charA.speech_pace === 'fast' ? 'до 7' : '5-6'}) | Окно: 2.8с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
 [3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
   «${dialogueB}»
-  💬 Темп: ${charB.speech_pace} | Слов: 4-8 | Окно: 3.5с | паузы = сила
+  💬 Темп: ${charB.speech_pace} | Слов: 4-8 (${charB.speech_pace === 'slow' ? 'макс 6' : charB.speech_pace === 'fast' ? 'до 8' : '5-7'}) | Окно: 3.5с | паузы = сила
   🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
   💥 KILLER WORD «${killerWord}» → ближе к 7.0s
   👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
@@ -1475,6 +1480,8 @@ ${engage.hashtags.join(' ')}
       input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
       propAnchor, lightingMood, hookAction: hookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography,
+      // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
+      dialogueA, dialogueB, killerWord,
       // Remake instruction — when video reference is provided, Gemini must replicate it
       remake_mode: !!(video_meta?.url || video_meta?.title || video_meta?.cover_base64),
       remake_instruction: (video_meta?.url || video_meta?.title || video_meta?.cover_base64) ? buildRemakeInstruction(video_meta, charA, charB) : null,
@@ -1571,7 +1578,7 @@ export function mergeGeminiResult(localResult, geminiData) {
 [0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dA}»
   💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
-  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индignация'}
+  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
@@ -1617,7 +1624,20 @@ ${hashtags.join(' ')}
 • Товар остаётся видимым на протяжении всего ролика
 • Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
 
-  // ── 7. Update log ──
+  // ── 7. Post-merge dialogue validation ──
+  // Warn if Gemini's dialogue is too long for timing windows
+  const validateWordCount = (text, maxWords, label) => {
+    if (!text || text === '—') return null;
+    const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(Boolean).length;
+    if (words > maxWords) return `${label}: ${words} слов (макс ${maxWords}). Сократите для точного тайминга.`;
+    return null;
+  };
+  const dAwords = validateWordCount(dA, 7, 'Реплика A');
+  const dBwords = validateWordCount(dB, 8, 'Реплика B');
+  if (dAwords) r.warnings = [...(r.warnings || []), dAwords];
+  if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
+
+  // ── 8. Update log ──
   r.log.generator_version = '2.0-gemini';
   r.log.gemini_model = 'gemini-2.0-flash';
   if (g.viral_title_ru) r.log.engagement.viral_title = g.viral_title_ru;
