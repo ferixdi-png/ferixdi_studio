@@ -128,21 +128,65 @@ function renderCharacters(filter = {}) {
   if (filter.group) chars = chars.filter(c => c.group === filter.group);
   if (filter.compat) chars = chars.filter(c => c.compatibility === filter.compat);
 
-  grid.innerHTML = chars.map(c => `
-    <div class="char-card ${state.selectedA?.id === c.id ? 'selected border-neon-blue' : ''} ${state.selectedB?.id === c.id ? 'selected border-purple-500' : ''}"
-         data-id="${c.id}">
-      <div class="flex items-center justify-between mb-1">
-        <span class="text-sm font-medium">${c.name_ru}</span>
-        <span class="tag text-[10px] ${c.compatibility === 'meme' ? 'tag-green' : c.compatibility === 'conflict' ? 'tag-pink' : c.compatibility === 'chaotic' ? 'tag-orange' : c.compatibility === 'calm' ? '' : 'tag-purple'}">${c.compatibility}</span>
+  grid.innerHTML = chars.map(c => {
+    const isA = state.selectedA?.id === c.id;
+    const isB = state.selectedB?.id === c.id;
+    const selCls = isA ? 'selected ring-2 ring-violet-500' : isB ? 'selected ring-2 ring-indigo-500' : '';
+    const tagCls = c.compatibility === 'meme' ? 'tag-green' : c.compatibility === 'conflict' ? 'tag-pink' : c.compatibility === 'chaotic' ? 'tag-orange' : c.compatibility === 'calm' ? '' : 'tag-purple';
+
+    // Detail sections
+    const anchors = c.identity_anchors || {};
+    const sigWords = (c.signature_words_ru || []).join(', ');
+    const promptEn = c.prompt_tokens?.character_en || '';
+
+    return `
+    <div class="char-card ${selCls}" data-id="${c.id}">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-sm font-semibold text-white">${c.name_ru}</span>
+        <span class="tag text-[10px] ${tagCls}">${c.compatibility}</span>
       </div>
-      <div class="text-[10px] text-gray-500 mb-1">${c.group} · ${c.speech_pace} · мат ${c.swear_level}/3</div>
-      <div class="text-[10px] text-gray-600 line-clamp-2">${c.appearance_ru}</div>
-      <div class="flex gap-1 mt-2">
-        <button class="btn-neon text-[10px] px-2 py-0.5 select-a" data-id="${c.id}">A</button>
-        <button class="btn-neon text-[10px] px-2 py-0.5 select-b" data-id="${c.id}">B</button>
+      <div class="text-[11px] text-gray-400 mb-2">${c.group} · ${c.speech_pace} · мат ${c.swear_level}/3</div>
+
+      <!-- Select buttons -->
+      <div class="flex gap-1.5 mb-2">
+        <button class="select-a text-[11px] px-3 py-1 rounded-md font-medium transition-all ${isA ? 'bg-violet-600 text-white' : 'bg-violet-600/10 text-violet-300 hover:bg-violet-600/25'}" data-id="${c.id}">A · провокатор</button>
+        <button class="select-b text-[11px] px-3 py-1 rounded-md font-medium transition-all ${isB ? 'bg-indigo-600 text-white' : 'bg-indigo-600/10 text-indigo-300 hover:bg-indigo-600/25'}" data-id="${c.id}">B · панчлайн</button>
       </div>
-    </div>
-  `).join('');
+
+      <!-- Expandable detail -->
+      <details class="group">
+        <summary class="text-[11px] text-gray-500 cursor-pointer hover:text-gray-300 transition-colors select-none">Подробнее ▸</summary>
+        <div class="mt-2 space-y-2.5 text-[11px] border-t border-gray-800/60 pt-2.5">
+
+          ${c.vibe_archetype ? `<div><span class="text-violet-400 font-medium">Архетип:</span> <span class="text-gray-300">${c.vibe_archetype}</span></div>` : ''}
+
+          ${anchors.face_silhouette ? `<div><span class="text-violet-400 font-medium">Лицо:</span> <span class="text-gray-300">${anchors.face_silhouette}</span></div>` : ''}
+
+          ${anchors.signature_element ? `<div><span class="text-violet-400 font-medium">Фишка:</span> <span class="text-gray-300">${anchors.signature_element}</span></div>` : ''}
+
+          ${anchors.micro_gesture ? `<div><span class="text-violet-400 font-medium">Жест:</span> <span class="text-gray-300">${anchors.micro_gesture}</span></div>` : ''}
+
+          ${anchors.wardrobe_anchor ? `<div><span class="text-violet-400 font-medium">Одежда:</span> <span class="text-gray-300">${anchors.wardrobe_anchor}</span></div>` : ''}
+
+          ${sigWords ? `<div><span class="text-violet-400 font-medium">Словечки:</span> <span class="text-gray-300">«${sigWords}»</span></div>` : ''}
+
+          ${c.modifiers?.hook_style ? `<div><span class="text-violet-400 font-medium">Хук:</span> <span class="text-gray-300">${c.modifiers.hook_style}</span></div>` : ''}
+          ${c.modifiers?.laugh_style ? `<div><span class="text-violet-400 font-medium">Смех:</span> <span class="text-gray-300">${c.modifiers.laugh_style}</span></div>` : ''}
+
+          ${promptEn ? `
+          <div class="mt-2">
+            <div class="text-violet-400 font-medium mb-1">Промпт для генерации (EN):</div>
+            <div class="text-[10px] text-gray-400 leading-relaxed bg-black/30 rounded-lg p-2.5 select-all">${promptEn}</div>
+          </div>` : ''}
+
+          <div class="mt-1">
+            <div class="text-violet-400 font-medium mb-1">Внешность (RU):</div>
+            <div class="text-[10px] text-gray-400 leading-relaxed">${c.appearance_ru}</div>
+          </div>
+        </div>
+      </details>
+    </div>`;
+  }).join('');
 
   // Event delegation
   grid.querySelectorAll('.select-a').forEach(btn => {
