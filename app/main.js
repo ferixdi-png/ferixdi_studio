@@ -15,8 +15,6 @@ const state = {
   selectedB: null,
   inputMode: 'idea',
   category: null,
-  threadMessages: [],
-  threadMemory: '',
   videoMeta: null,
   options: { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false },
   lastResult: null,
@@ -227,7 +225,6 @@ function initModeSwitcher() {
       document.getElementById('mode-idea').classList.toggle('hidden', mode !== 'idea');
       document.getElementById('mode-script').classList.toggle('hidden', mode !== 'script');
       document.getElementById('mode-video').classList.toggle('hidden', mode !== 'video');
-      document.getElementById('gen-mode').textContent = mode;
       log('INFO', 'MODE', `Input mode: ${mode}`);
     });
   });
@@ -295,73 +292,6 @@ function initHumor() {
   });
 }
 
-// ─── THREAD MEMORY ───────────────────────────
-function initThread() {
-  document.getElementById('thread-import')?.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json';
-    input.onchange = async () => {
-      try {
-        const text = await input.files[0].text();
-        const data = JSON.parse(text);
-        state.threadMessages = Array.isArray(data) ? data : data.messages || [];
-        renderThreadMessages();
-        log('OK', 'THREAD', `Imported ${state.threadMessages.length} messages`);
-      } catch (e) { log('ERR', 'THREAD', `Import failed: ${e.message}`); }
-    };
-    input.click();
-  });
-
-  document.getElementById('thread-paste')?.addEventListener('click', () => {
-    const text = prompt('Вставьте текст ветки (каждая строка = сообщение):');
-    if (text) {
-      state.threadMessages = text.split('\n').filter(l => l.trim()).map((l, i) => ({
-        role: i % 2 === 0 ? 'user' : 'assistant', content: l.trim(), ts: Date.now() + i
-      }));
-      renderThreadMessages();
-      log('OK', 'THREAD', `Pasted ${state.threadMessages.length} messages`);
-    }
-  });
-
-  document.getElementById('thread-export')?.addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(state.threadMessages, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thread_export.json'; a.click();
-    log('OK', 'THREAD', 'Exported');
-  });
-
-  document.getElementById('thread-clear')?.addEventListener('click', () => {
-    state.threadMessages = []; state.threadMemory = '';
-    renderThreadMessages();
-    document.getElementById('thread-memory-output').classList.add('hidden');
-    log('INFO', 'THREAD', 'Cleared');
-  });
-
-  document.getElementById('thread-compile')?.addEventListener('click', () => {
-    const n = parseInt(document.getElementById('thread-last-n')?.value || '10');
-    const msgs = state.threadMessages.slice(-n);
-    if (msgs.length === 0) { log('WARN', 'THREAD', 'No messages to compile'); return; }
-    const memory = msgs.map(m => `[${m.role}] ${m.content}`).join('\n');
-    state.threadMemory = `STYLE_MEMORY (${msgs.length} msgs):\n${memory}`;
-    document.getElementById('thread-memory-output').classList.remove('hidden');
-    document.getElementById('thread-memory-text').textContent = state.threadMemory;
-    log('OK', 'THREAD', `Compiled memory from ${msgs.length} messages`);
-  });
-}
-
-function renderThreadMessages() {
-  const el = document.getElementById('thread-messages');
-  if (state.threadMessages.length === 0) {
-    el.innerHTML = '<div class="text-xs text-gray-600 font-mono">Пусто. Импортируйте ветку или вставьте текст.</div>';
-    return;
-  }
-  el.innerHTML = state.threadMessages.map(m => `
-    <div class="flex gap-2 text-xs">
-      <span class="font-mono ${m.role === 'user' ? 'neon-text' : 'neon-text-purple'} flex-shrink-0">${m.role === 'user' ? 'USR' : 'BOT'}</span>
-      <span class="text-gray-400">${m.content}</span>
-    </div>
-  `).join('');
-}
-
 // ─── GENERATE ────────────────────────────────
 function initGenerate() {
   document.getElementById('btn-generate')?.addEventListener('click', () => {
@@ -383,7 +313,7 @@ function initGenerate() {
       } : null,
       scene_hint_ru: document.getElementById('scene-hint')?.value || null,
       category: state.category,
-      thread_memory: state.threadMemory || null,
+      thread_memory: null,
       video_meta: state.videoMeta,
       options: state.options,
       seed: Date.now().toString(),
@@ -647,7 +577,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initToggles();
   initVideoUpload();
   initHumor();
-  initThread();
   initGenerate();
   initTimingCoach();
   initSettings();

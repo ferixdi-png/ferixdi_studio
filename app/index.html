@@ -83,10 +83,7 @@
           <div class="text-xs font-mono text-gray-600 uppercase tracking-widest">Модули</div>
         </div>
         <div id="nav-items" class="space-y-1 px-2">
-          <div class="nav-item active" data-section="thread"><span>🧵</span><span>Память</span></div>
-          <div class="nav-item" data-section="characters"><span>👥</span><span>Персонажи</span></div>
-          <div class="nav-item" data-section="remix"><span>🎬</span><span>Ремикс</span></div>
-          <div class="nav-item" data-section="humor"><span>🎲</span><span>Рандом</span></div>
+          <div class="nav-item active" data-section="characters"><span>👥</span><span>Персонажи</span></div>
           <div class="nav-item" data-section="generate"><span>⚡</span><span>Генерация</span></div>
           <div class="nav-item" data-section="timing"><span>⏱</span><span>Тайминг</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
@@ -102,32 +99,8 @@
       <!-- Workspace -->
       <main id="workspace" class="flex-1 overflow-y-auto p-6 relative">
 
-        <!-- SECTION: Thread Memory -->
-        <section id="section-thread" class="section-panel space-y-4">
-          <h2 class="text-xl font-bold font-mono neon-text">🧵 Thread Memory</h2>
-          <p class="text-xs text-gray-500 font-mono">Чем чище ветка — тем стабильнее генерация</p>
-          <div class="flex gap-2 flex-wrap">
-            <button id="thread-import" class="btn-neon text-xs">Импорт JSON</button>
-            <button id="thread-paste" class="btn-neon text-xs">Вставить текст</button>
-            <button id="thread-export" class="btn-neon text-xs">Экспорт JSON</button>
-            <button id="thread-clear" class="btn-neon-pink text-xs">Очистить</button>
-          </div>
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-mono text-gray-500">Последние N:</label>
-            <input id="thread-last-n" type="number" value="10" min="1" max="100" class="input-field w-20 text-center text-xs">
-          </div>
-          <div id="thread-messages" class="glass-panel p-4 min-h-[200px] max-h-[400px] overflow-y-auto space-y-2">
-            <div class="text-xs text-gray-600 font-mono">Пусто. Импортируйте ветку или вставьте текст.</div>
-          </div>
-          <button id="thread-compile" class="btn-neon-green">Собрать память → STYLE_MEMORY</button>
-          <div id="thread-memory-output" class="glass-panel p-4 hidden">
-            <div class="text-xs font-mono text-gray-500 mb-1">STYLE_MEMORY:</div>
-            <pre id="thread-memory-text" class="text-xs text-gray-300 whitespace-pre-wrap"></pre>
-          </div>
-        </section>
-
         <!-- SECTION: Characters -->
-        <section id="section-characters" class="section-panel hidden space-y-4">
+        <section id="section-characters" class="section-panel space-y-4">
           <h2 class="text-xl font-bold font-mono neon-text">👥 Character Mixer</h2>
           <div class="flex gap-4 flex-wrap items-center">
             <input id="char-search" type="text" class="input-field max-w-xs" placeholder="Поиск персонажа...">
@@ -162,40 +135,57 @@
           <div id="char-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-2"></div>
         </section>
 
-        <!-- SECTION: Remix / Input Mode -->
-        <section id="section-remix" class="section-panel hidden space-y-4">
-          <h2 class="text-xl font-bold font-mono neon-text">🎬 Video Remix</h2>
-          <!-- Mode selector -->
-          <div class="flex gap-2">
-            <button class="mode-btn active" data-mode="idea">💡 Идея</button>
-            <button class="mode-btn" data-mode="script">📝 Мой диалог</button>
-            <button class="mode-btn" data-mode="video">🎥 Референс-видео</button>
+        <!-- SECTION: Generate (all-in-one: input + params + button + results) -->
+        <section id="section-generate" class="section-panel hidden space-y-4">
+          <h2 class="text-xl font-bold font-mono neon-text">⚡ Генерация</h2>
+          <p class="text-xs text-gray-500 font-mono">Выбери персонажей → настрой параметры → нажми кнопку → получи готовый пакет</p>
+
+          <!-- Summary of selected chars -->
+          <div class="glass-panel p-4 text-xs font-mono text-gray-500 space-y-1">
+            <div>🅰️ Персонаж A: <span id="gen-char-a" class="text-gray-300">—</span></div>
+            <div>🅱️ Персонаж B: <span id="gen-char-b" class="text-gray-300">—</span></div>
           </div>
 
-          <!-- MODE: Idea -->
-          <div id="mode-idea" class="space-y-3">
-            <label class="text-xs font-mono text-gray-500">Кратко: что хочешь? (1-2 строки)</label>
-            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Бабка и дед спорят о том, что AI заменит внуков..."></textarea>
-          </div>
-
-          <!-- MODE: Script -->
-          <div id="mode-script" class="hidden space-y-3">
-            <label class="text-xs font-mono text-gray-500">Реплика A (инициатор):</label>
-            <textarea id="script-a" class="input-field h-16 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
-            <label class="text-xs font-mono text-gray-500">Реплика B (панчлайн):</label>
-            <textarea id="script-b" class="input-field h-16 resize-none" placeholder="В наше время за эти деньги..."></textarea>
-          </div>
-
-          <!-- MODE: Video -->
-          <div id="mode-video" class="hidden space-y-3">
-            <div class="glass-panel p-4 border-dashed border-2 border-space-border text-center cursor-pointer" id="video-dropzone">
-              <div class="text-2xl mb-2">📁</div>
-              <div class="text-xs font-mono text-gray-500">Загрузить mp4/mov или перетащить сюда</div>
-              <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
+          <!-- Input mode selector -->
+          <div class="glass-panel p-4 space-y-3" id="section-remix">
+            <div class="text-xs font-mono text-gray-500 mb-2">РЕЖИМ ВВОДА</div>
+            <div class="flex gap-2">
+              <button class="mode-btn active" data-mode="idea">💡 Идея</button>
+              <button class="mode-btn" data-mode="script">📝 Мой диалог</button>
+              <button class="mode-btn" data-mode="video">🎥 Референс-видео</button>
             </div>
-            <div id="video-meta" class="hidden text-xs font-mono text-gray-500 space-y-1"></div>
-            <label class="text-xs font-mono text-gray-500">Краткое описание сцены (опционально):</label>
-            <textarea id="scene-hint" class="input-field h-16 resize-none" placeholder="Два человека спорят на кухне, один жестикулирует..."></textarea>
+
+            <div id="mode-idea" class="space-y-2 mt-2">
+              <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Бабка и дед спорят о том, что AI заменит внуков..."></textarea>
+            </div>
+            <div id="mode-script" class="hidden space-y-2 mt-2">
+              <label class="text-xs font-mono text-gray-500">Реплика A:</label>
+              <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
+              <label class="text-xs font-mono text-gray-500">Реплика B:</label>
+              <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги..."></textarea>
+            </div>
+            <div id="mode-video" class="hidden space-y-2 mt-2">
+              <div class="glass-panel p-3 border-dashed border-2 border-space-border text-center cursor-pointer" id="video-dropzone">
+                <div class="text-xl mb-1">📁</div>
+                <div class="text-xs font-mono text-gray-500">Загрузить mp4/mov</div>
+                <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
+              </div>
+              <div id="video-meta" class="hidden text-xs font-mono text-gray-500"></div>
+              <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Описание сцены (опционально)..."></textarea>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="glass-panel p-4 space-y-2">
+            <div class="text-xs font-mono text-gray-500 mb-1">КАТЕГОРИЯ ЮМОРА</div>
+            <div class="flex gap-2 items-center">
+              <button id="humor-random" class="btn-neon text-xs">🎰 Рандом</button>
+              <span id="gen-cat" class="text-sm neon-text-green font-mono">авто</span>
+            </div>
+            <div id="humor-result" class="hidden">
+              <div id="humor-cat-ru" class="text-sm font-bold neon-text-green"></div>
+              <div id="humor-cat-en" class="text-xs text-gray-500 font-mono"></div>
+            </div>
           </div>
 
           <!-- Options -->
@@ -206,29 +196,8 @@
             <div class="flex items-center justify-between"><span class="text-xs text-gray-400">Strict lip sync</span><div class="toggle-track active" data-opt="strictLipSync"><div class="toggle-thumb"></div></div></div>
             <div class="flex items-center justify-between"><span class="text-xs text-gray-400">Auto trim если > 8s</span><div class="toggle-track" data-opt="allowAutoTrim"><div class="toggle-thumb"></div></div></div>
           </div>
-        </section>
 
-        <!-- SECTION: Random Humor -->
-        <section id="section-humor" class="section-panel hidden space-y-4">
-          <h2 class="text-xl font-bold font-mono neon-text">🎲 Random Humor Category</h2>
-          <button id="humor-random" class="btn-primary text-base">🎰 Рандом-категория</button>
-          <div id="humor-result" class="glass-panel p-4 hidden">
-            <div class="text-xs font-mono text-gray-500 mb-1">КАТЕГОРИЯ:</div>
-            <div id="humor-cat-ru" class="text-lg font-bold neon-text-green"></div>
-            <div id="humor-cat-en" class="text-sm text-gray-500 font-mono"></div>
-          </div>
-          <p class="text-xs text-gray-600 font-mono">Категория сохраняется в ветку как system note и учитывается при генерации.</p>
-        </section>
-
-        <!-- SECTION: Generate -->
-        <section id="section-generate" class="section-panel hidden space-y-4">
-          <h2 class="text-xl font-bold font-mono neon-text">⚡ Generate Final Package</h2>
-          <div class="glass-panel p-4 text-xs font-mono text-gray-500 space-y-1">
-            <div>Персонаж A: <span id="gen-char-a" class="text-gray-300">—</span></div>
-            <div>Персонаж B: <span id="gen-char-b" class="text-gray-300">—</span></div>
-            <div>Режим: <span id="gen-mode" class="text-gray-300">idea</span></div>
-            <div>Категория: <span id="gen-cat" class="text-gray-300">—</span></div>
-          </div>
+          <!-- THE BUTTON -->
           <button id="btn-generate" class="btn-primary w-full text-lg py-4">🚀 СГЕНЕРИРОВАТЬ ПАКЕТ</button>
 
           <!-- Results tabs -->
