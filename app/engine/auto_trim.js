@@ -6,12 +6,13 @@
 import { estimateDialogue } from './estimator.js';
 
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
-const FILLER_REGEX = new RegExp(`\\b(${FILLER_WORDS.join('|')})\\b`, 'gi');
+// \b doesn't work with Cyrillic in JS — use word boundary via lookaround
+const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[,\\.!?])`, 'gi');
 
 function removeFillers(text) {
   const original = text;
-  let result = text.replace(FILLER_REGEX, '').replace(/\s{2,}/g, ' ').trim();
-  if (result === original) return { text, changed: false, fix: null };
+  let result = text.replace(FILLER_REGEX, '').replace(/\s{2,}/g, ' ').replace(/^\s*[,|]\s*/, '').trim();
+  if (result === original.trim()) return { text, changed: false, fix: null };
   return { text: result, changed: true, fix: `Убраны вводные слова` };
 }
 

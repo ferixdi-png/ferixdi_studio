@@ -137,6 +137,29 @@ function pickRandom(arr, rng) { return arr[Math.floor(rng() * arr.length)]; }
 // A = more expressive/provocative; B = more grounded/rational.
 // User manual assignment (role_default) takes priority.
 function resolveRoles(charA, charB) {
+  // If user explicitly assigned roles, respect that
+  if (charA.role_default === 'A' && charB.role_default === 'B') return { A: charA, B: charB };
+  if (charA.role_default === 'B' && charB.role_default === 'A') return { A: charB, B: charA };
+
+  // Auto-assign: compute expressiveness score
+  // Higher score → role A (provocateur)
+  const score = (c) => {
+    let s = 0;
+    if (c.speech_pace === 'fast') s += 3;
+    else if (c.speech_pace === 'normal') s += 1;
+    s += c.swear_level || 0;
+    if (c.compatibility === 'chaotic') s += 2;
+    else if (c.compatibility === 'conflict') s += 1;
+    else if (c.compatibility === 'calm') s -= 2;
+    if (c.role_default === 'A') s += 1;
+    if (c.role_default === 'B') s -= 1;
+    return s;
+  };
+
+  const scoreA = score(charA);
+  const scoreB = score(charB);
+  // Higher score gets role A
+  if (scoreB > scoreA) return { A: charB, B: charA };
   return { A: charA, B: charB };
 }
 
@@ -213,8 +236,8 @@ function runQCGate(blueprint, cast) {
     { id: 3, name: 'eyes_alive', pass: cast.speaker_A.eyes.includes('saccades') || cast.speaker_A.eyes.includes('glint'), hard: false },
     { id: 4, name: 'mouth_realistic', pass: cast.speaker_A.mouth.includes('teeth') || cast.speaker_A.mouth.includes('lip'), hard: true },
     { id: 5, name: 'silent_sealed', pass: cast.speaker_B.mouth.includes('SEALED') || cast.speaker_B.mouth.includes('sealed'), hard: true },
-    { id: 6, name: 'background_solid', pass: true, hard: false },
-    { id: 7, name: 'camera_artifacts', pass: true, hard: false },
+    { id: 6, name: 'background_solid', pass: blueprint.scenes.every(s => !s.action?.includes('pattern') && !s.action?.includes('abstract')), hard: false },
+    { id: 7, name: 'camera_artifacts', pass: !!blueprint.scenes.find(s => s.segment === 'hook')?.speech_hints, hard: false },
     { id: 8, name: 'audio_no_overlap', pass: blueprint.scenes.every((s, i, arr) => i === 0 || s.start >= arr[i - 1].end - 0.05), hard: false },
     { id: 9, name: 'hook_readable', pass: blueprint.scenes[0].end <= 0.85, hard: false },
     { id: 10, name: 'laugh_natural', pass: blueprint.scenes[blueprint.scenes.length - 1].dialogue_ru === '', hard: false },
@@ -263,9 +286,9 @@ export function generate(input) {
     location = LOCATIONS[(locIdx + 1) % LOCATIONS.length];
   }
 
-  // ── Wardrobe from character anchors ──
-  const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons';
-  const wardrobeB = charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under corduroy jacket';
+  // ── Wardrobe from character anchors (full description, not just a keyword) ──
+  const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar';
+  const wardrobeB = charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt';
 
   // ── Hook & Release ──
   const hookObj = pickRandom(HOOK_ACTIONS, rng);
@@ -312,9 +335,13 @@ export function generate(input) {
     }
   }
 
-  // ── Safety: scan banned words ──
-  scanBannedWords(dialogueA);
-  scanBannedWords(dialogueB);
+  // ── Safety: scan banned words (apply replacements) ──
+  const safeA = scanBannedWords(dialogueA);
+  const safeB = scanBannedWords(dialogueB);
+  dialogueA = safeA.text;
+  dialogueB = safeB.text;
+  if (safeA.fixes.length) autoFixes.push(...safeA.fixes);
+  if (safeB.fixes.length) autoFixes.push(...safeB.fixes);
 
   // ── Build all blocks ──
   const cast = buildCastContract(charA, charB);

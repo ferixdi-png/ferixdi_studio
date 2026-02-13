@@ -1,6 +1,7 @@
 /**
- * FERIXDI Studio — Duration Estimator
- * Оценка длительности RU реплик для 8s grid
+ * FERIXDI Studio — Duration Estimator v2
+ * Оценка длительности RU реплик для 8s grid v2
+ * Per-speaker window limits: A=2.8s, B=3.5s
  */
 
 const PACE_WPS = { slow: 2.0, normal: 2.5, fast: 3.0 };
@@ -10,6 +11,8 @@ const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', '�
 const FILLER_PENALTY = 0.12;
 const SHORT_PUNCH_BONUS = -0.1;
 const PAUSE_MARKER_DURATION = 0.3;
+// v2 speaker window limits (seconds of speech available)
+const SPEAKER_WINDOW = { A: 2.8, B: 3.5 };
 
 export function estimateLineDuration(text, pace = 'normal') {
   if (!text || !text.trim()) return { duration: 0, wordCount: 0, details: [] };
@@ -64,30 +67,44 @@ export function estimateDialogue(lines, options = {}) {
 
   for (const line of lines) {
     const est = estimateLineDuration(line.text, line.pace || 'normal');
+    const speaker = line.speaker || '?';
+    const window = SPEAKER_WINDOW[speaker] || 3.0;
+    const overWindow = est.duration > window;
     const entry = {
-      speaker: line.speaker || '?',
+      speaker,
       text: line.text,
       duration: est.duration,
       wordCount: est.wordCount,
       details: est.details,
+      window,
+      overWindow,
     };
     perLine.push(entry);
     total += est.duration;
   }
 
   total = Math.round(total * 100) / 100;
+
+  // v2 risk: check both total AND per-speaker windows
   let risk = 'low';
-  if (total > TARGET) risk = 'high';
+  const anyOverWindow = perLine.some(l => l.overWindow);
+  if (total > TARGET || anyOverWindow) risk = 'high';
   else if (total > TARGET - 1.0) risk = 'medium';
 
   const notes = [];
   const trimmingSuggestions = [];
 
+  // Per-speaker window warnings
+  for (const entry of perLine) {
+    if (entry.overWindow) {
+      notes.push(`${entry.speaker}: ${entry.duration}s > окно ${entry.window}s — НЕ ВЛЕЗЕТ`);
+    }
+  }
+
   if (risk === 'high') {
-    notes.push(`Превышение на ${(total - TARGET).toFixed(2)}s — нужно сокращать`);
-    // Генерируем предложения по сокращению
+    if (total > TARGET) notes.push(`Превышение на ${(total - TARGET).toFixed(2)}s — нужно сокращать`);
     for (const entry of perLine) {
-      const words = entry.text.split(/\s+/);
+      const words = (entry.text || '').split(/\s+/);
       const fillers = words.filter(w => FILLER_WORDS.includes(w.toLowerCase().replace(/[^а-яё]/g, '')));
       if (fillers.length > 0) {
         trimmingSuggestions.push(`Убрать вводные «${fillers.join(', ')}» у ${entry.speaker} (−${(fillers.length * FILLER_PENALTY).toFixed(2)}s)`);
@@ -96,12 +113,15 @@ export function estimateDialogue(lines, options = {}) {
       if (longW.length > 0) {
         trimmingSuggestions.push(`Заменить длинные слова «${longW.join(', ')}» у ${entry.speaker} на короткие`);
       }
-      if (words.length > 8) {
-        trimmingSuggestions.push(`Сократить реплику ${entry.speaker} (${words.length} слов → ~${Math.ceil(words.length * 0.7)})`);
+      if (entry.speaker === 'A' && words.length > 9) {
+        trimmingSuggestions.push(`Сократить A до 6-9 слов (сейчас ${words.length})`);
+      }
+      if (entry.speaker === 'B' && words.length > 11) {
+        trimmingSuggestions.push(`Сократить B до 6-11 слов (сейчас ${words.length})`);
       }
     }
     if (trimmingSuggestions.length === 0) {
-      trimmingSuggestions.push('Слить короткие фразы в одну');
+      trimmingSuggestions.push('Убрать паузы (|) или слить короткие фразы');
       trimmingSuggestions.push('Оставить только панчлайн');
     }
   } else if (risk === 'medium') {

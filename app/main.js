@@ -459,20 +459,21 @@ function updateTimingCoach(result) {
 
   el.innerHTML = `
     <div class="flex items-center justify-between mb-2">
-      <span class="text-xs font-mono text-gray-500">ОЦЕНКА ДЛИТЕЛЬНОСТИ</span>
+      <span class="text-xs font-mono text-gray-500">ОЦЕНКА ДЛИТЕЛЬНОСТИ v2</span>
       <span class="text-sm font-bold font-mono ${riskColor}">${est.total}s / 8.0s ${riskLabel}</span>
     </div>
     ${est.perLine.map(l => `
       <div class="flex items-center gap-2 text-xs">
         <span class="font-mono ${l.speaker === 'A' ? 'neon-text' : 'neon-text-purple'} w-4">${l.speaker}</span>
-        <div class="flex-1 bg-glass rounded h-4 overflow-hidden">
-          <div class="h-full ${l.duration > 4 ? 'bg-red-500/30' : l.speaker === 'A' ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded" style="width:${Math.min(100, (l.duration / 8) * 100)}%"></div>
+        <div class="flex-1 bg-glass rounded h-4 overflow-hidden relative">
+          <div class="h-full ${l.overWindow ? 'bg-red-500/40' : l.speaker === 'A' ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded" style="width:${Math.min(100, (l.duration / (l.window || 3)) * 100)}%"></div>
+          ${l.window ? `<div class="absolute top-0 h-full border-r border-dashed border-yellow-500/50" style="left:100%"></div>` : ''}
         </div>
-        <span class="font-mono text-gray-500 w-12 text-right">${l.duration}s</span>
+        <span class="font-mono ${l.overWindow ? 'text-red-400' : 'text-gray-500'} w-16 text-right">${l.duration}s/${l.window || '?'}s</span>
         <span class="text-gray-600 w-8">${l.wordCount}w</span>
       </div>
     `).join('')}
-    ${est.notes.map(n => `<div class="text-xs text-yellow-400/80 mt-1">📝 ${n}</div>`).join('')}
+    ${est.notes.map(n => `<div class="text-xs ${n.includes('НЕ ВЛЕЗЕТ') ? 'text-red-400' : 'text-yellow-400/80'} mt-1">📝 ${n}</div>`).join('')}
   `;
 
   // Update bar colors
