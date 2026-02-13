@@ -1,6 +1,6 @@
 /**
- * FERIXDI Studio — Validators
- * Проверка промптов и структуры по Golden Standard
+ * FERIXDI Studio — Validators v2
+ * Проверка промптов и структуры по Golden Standard 2026 v2
  */
 
 const BANNED_WORDS = ['sexy', 'horny', 'erotic', 'nude', 'naked', 'porn', 'nsfw'];
@@ -11,6 +11,17 @@ const REPLACEMENTS = {
 
 const BANNED_OVERLAY_WORDS = ['text overlay', 'subtitle', 'caption text', 'watermark', 'logo'];
 const DEVICE_WORDS = ['phone in hand', 'holding phone', 'camera visible', 'selfie stick', 'recording device'];
+
+// v2 grid boundaries
+const GRID_V2 = {
+  hook:    { start: 0.0, end: 0.8 },
+  act_A:   { start: 0.8, end: 3.6 },
+  act_B:   { start: 3.6, end: 7.1 },
+  release: { start: 7.1, end: 8.0 },
+};
+
+// v2 word count limits
+const WORD_LIMITS = { A: { min: 6, max: 9 }, B: { min: 6, max: 11 } };
 
 export function scanBannedWords(text) {
   const warnings = [];
@@ -48,8 +59,20 @@ export function validateTimingGrid(blueprint) {
     lastEnd = scene.end;
   }
 
-  if (lastEnd > 8.05) {
-    warnings.push(`Total duration ${lastEnd}s exceeds 8s grid`);
+  if (lastEnd > 8.25) {
+    warnings.push(`Total duration ${lastEnd}s exceeds 8s grid (tolerance ±0.2s)`);
+  }
+
+  // v2: Hook must end by 0.85s (0.8 + tolerance)
+  const hookScene = scenes.find(s => s.segment === 'hook' || s.id === 1);
+  if (hookScene && hookScene.end > 0.85) {
+    warnings.push(`Hook ends at ${hookScene.end}s, must be ≤0.8s`);
+  }
+
+  // v2: Release must have zero dialogue
+  const releaseScene = scenes.find(s => s.segment === 'release');
+  if (releaseScene && releaseScene.dialogue_ru && releaseScene.dialogue_ru.trim()) {
+    warnings.push('Release segment must have ZERO words (shared laugh only)');
   }
 
   // Killer word check near 6.85s
@@ -65,7 +88,7 @@ export function validateTwoSpeakers(blueprint) {
   const warnings = [];
   if (!blueprint || !blueprint.scenes) return { valid: false, warnings };
 
-  const speakers = new Set(blueprint.scenes.map(s => s.speaker).filter(Boolean));
+  const speakers = new Set(blueprint.scenes.map(s => s.speaker).filter(s => s && s !== 'both'));
   if (speakers.size < 2) {
     warnings.push(`Only ${speakers.size} speaker(s) found, need exactly 2`);
   }
@@ -74,12 +97,32 @@ export function validateTwoSpeakers(blueprint) {
   const sorted = [...blueprint.scenes].sort((a, b) => a.start - b.start);
   for (let i = 1; i < sorted.length; i++) {
     if (sorted[i].speaker && sorted[i - 1].speaker &&
+        sorted[i].speaker !== 'both' && sorted[i - 1].speaker !== 'both' &&
         sorted[i].speaker !== sorted[i - 1].speaker &&
         sorted[i].start < sorted[i - 1].end - 0.01) {
       warnings.push(`Speaker overlap: ${sorted[i - 1].speaker} and ${sorted[i].speaker} at ${sorted[i].start}s`);
     }
   }
 
+  return { valid: warnings.length === 0, warnings };
+}
+
+export function validateWordCount(blueprint) {
+  const warnings = [];
+  if (!blueprint || !blueprint.dialogue_segments) return { valid: true, warnings };
+
+  for (const seg of blueprint.dialogue_segments) {
+    if (!seg.text_ru) continue;
+    const words = seg.text_ru.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0);
+    const limit = WORD_LIMITS[seg.speaker];
+    if (!limit) continue;
+    if (words.length < limit.min) {
+      warnings.push(`${seg.speaker}: ${words.length} слов (мин. ${limit.min}) — слишком коротко`);
+    }
+    if (words.length > limit.max + 2) {
+      warnings.push(`${seg.speaker}: ${words.length} слов (макс. ${limit.max}) — не влезет в окно, нужно резать`);
+    }
+  }
   return { valid: warnings.length === 0, warnings };
 }
 
@@ -115,6 +158,22 @@ export function validateLocationRepeat(location, historyCache) {
   return { valid: warnings.length === 0, warnings };
 }
 
+export function validateIdentityAnchors(blueprint) {
+  const warnings = [];
+  if (!blueprint || !blueprint.identity_anchors) return { valid: true, warnings };
+  const anchors = blueprint.identity_anchors;
+  for (const role of ['A', 'B']) {
+    const a = anchors[role];
+    if (!a || !a.face_silhouette) {
+      warnings.push(`${role}: missing face_silhouette anchor — Veo may redraw face`);
+    }
+    if (!a || !a.signature_element) {
+      warnings.push(`${role}: missing signature_element anchor`);
+    }
+  }
+  return { valid: warnings.length === 0, warnings };
+}
+
 export function runAllValidations(output, historyCache = null) {
   const allWarnings = [];
   const allFixes = [];
@@ -142,6 +201,14 @@ export function runAllValidations(output, historyCache = null) {
 
     const ts = validateTwoSpeakers(output.blueprint_json);
     allWarnings.push(...ts.warnings);
+
+    // v2: word count check
+    const wc = validateWordCount(output.blueprint_json);
+    allWarnings.push(...wc.warnings);
+
+    // v2: identity anchors check
+    const ia = validateIdentityAnchors(output.blueprint_json);
+    allWarnings.push(...ia.warnings);
   }
 
   // Overlays

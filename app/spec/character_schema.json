@@ -33,6 +33,33 @@
     "compatibility": {
       "type": "string",
       "enum": ["meme", "conflict", "calm", "chaotic", "balanced"]
+    },
+    "identity_anchors": {
+      "type": "object",
+      "description": "Якоря стабильности для Veo — предотвращают перерисовку между генерациями",
+      "properties": {
+        "face_silhouette": { "type": "string", "description": "Отличимый силуэт лица (подбородок/скулы/нос/брови)" },
+        "signature_element": { "type": "string", "description": "Один заметный элемент (серьги/платок/кепка/очки)" },
+        "micro_gesture": { "type": "string", "description": "Повторяемый микрожест (lip bite / усмешка / бровь)" },
+        "wardrobe_anchor": { "type": "string", "description": "Якорный элемент одежды (текстура/стиль)" }
+      }
+    },
+    "vibe_archetype": {
+      "type": "string",
+      "description": "Архетип вайба: переопределяет дефолтный из golden_standard"
+    },
+    "world_aesthetic": {
+      "type": "string",
+      "description": "Эстетика мира персонажа (VIP-деревня / городской гранж / офис)"
+    },
+    "biology_override": {
+      "type": "object",
+      "description": "Переопределение биологических параметров из golden_standard",
+      "properties": {
+        "age": { "type": "string" },
+        "skin_tokens": { "type": "array", "items": { "type": "string" } },
+        "eye_tokens": { "type": "array", "items": { "type": "string" } }
+      }
     }
   }
 }

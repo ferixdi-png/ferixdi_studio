@@ -115,10 +115,10 @@ export function estimateDialogue(lines, options = {}) {
 export function getSegmentTimings(total) {
   const t = Math.min(total, 8.0);
   return {
-    hook: { start: 0, end: Math.min(0.7, t * 0.09) },
-    speakerA: { start: 0.7, end: Math.min(3.5, t * 0.44) },
-    speakerB: { start: 3.5, end: Math.min(7.0, t * 0.875) },
-    laugh: { start: 7.0, end: t },
+    hook: { start: 0, end: 0.8 },
+    speakerA: { start: 0.8, end: 3.6 },
+    speakerB: { start: 3.6, end: 7.1 },
+    release: { start: 7.1, end: t },
     killerWord: 6.85,
   };
 }

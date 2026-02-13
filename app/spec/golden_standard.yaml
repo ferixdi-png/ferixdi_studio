@@ -1,148 +1,215 @@
 golden_standard_2026:
-  version: "1.0.0"
+  version: "2.0.0"
   updated: "2026-02-13"
+  target: "Veo 3.1 • 8s • Handheld Selfie Feel • 2 characters • Q→A→Release"
+  goal: "максимальная повторяемость реализма, стабильные лица/рот, серийность контента"
 
-  cast:
-    age_range: "89-92"
-    skin:
-      microtexture: true
-      pores: true
-      age_spots: true
-      fine_wrinkles: true
-      moisture_sheen: "subtle"
-    eyes:
-      micro_saccades: true
-      wetness: true
-      crow_feet: "deep"
-      pupil_dilation: "natural"
-    mouth:
-      lip_moisture: true
-      lip_bite_trigger: "on emotional peak"
-      teeth: "natural imperfections"
-      saliva_detail: "micro-glints on speech"
+  # ═══════════════════════════════════════════════
+  # 0) HARD CONSTRAINTS — выполняется ВСЕГДА
+  # ═══════════════════════════════════════════════
+  hard_constraints:
+    format:
+      duration: 8.0
+      tolerance_s: 0.2
+      speakers: 2
+      order: "A speaks first → B answers → shared laugh (no words)"
+      camera: "handheld selfie feel, device out of frame"
+      banned_in_frame: ["text", "logo", "readable text", "watermark", "overlay"]
+    face_stability:
+      rule: "faces and proportions MUST NOT change during clip"
+      mouth_rule: "only active speaker's mouth moves; other = sealed lips, jaw still"
+    safety:
+      en_prompts: "neutral charisma/gaze/manner formulations, no explicit adult words"
+      content: "satirical/domestic, no intimate action descriptions"
+      banned_words: ["sexy", "horny", "erotic", "nude", "naked", "porn", "nsfw"]
+      replacements:
+        sexy: "magnetic"
+        horny: "restless"
+        erotic: "sensual tension"
+        nude: "bare-skinned"
+        naked: "unclothed"
 
-  psychology:
-    band: "бабка+дед = бэнд, не пара"
-    no_personal_insults: true
-    rage_target: "ситуация, не человек"
-    archetypes:
-      A: "успешный успех — энергия, вброс, провокация"
-      B: "база — приземлённость, рациональность, панчлайн"
-    mat_policy: "мат обязателен как эмоциональный акцент, НЕ как оскорбление"
-    rhyme_policy: "рифма строго запрещена"
+  # ═══════════════════════════════════════════════
+  # I) CAST CONTRACT — биология + психология
+  # ═══════════════════════════════════════════════
+  # UNIVERSAL: поля age/skin/eyes/mouth берутся из character data.
+  # Ниже — дефолтные значения (бабка/дед), переопределяемые персонажем.
+  cast_contract:
+    biology:
+      age_range: "89-92"
+      note: "character.age_override replaces this"
+      skin:
+        - "deep wrinkles"
+        - "age spots"
+        - "sagging skin"
+        - "visible pores"
+        - "subtle skin sheen (not plastic)"
+      eyes:
+        - "wet glint"
+        - "slight sclera redness"
+        - "micro-saccades"
+      mouth:
+        - "realistic teeth/gums"
+        - "lip moisture"
+        - "lip bite only as comedic anchor for role A, sparingly"
+    vibe:
+      role_A:
+        default_archetype: "провокатор — пафос, блогерская манера, давит харизмой"
+        note: "character.vibe_archetype overrides this"
+      role_B:
+        default_archetype: "база — спокойный циничный юмор, добрые глаза"
+        note: "character.vibe_archetype overrides this"
+      relationship: "БАНДА. Оскорбления НЕ друг на друга. Мат/гнев → ситуация, инфляция, мир, абсурд"
 
-  camera:
-    pov: "front selfie"
-    device: "invisible — no phone/camera in frame ever"
-    angle: "slightly below eye level"
-    distance: "close-up to medium"
-    movement: "subtle natural hand micro-shake"
+  # ═══════════════════════════════════════════════
+  # II) IDENTITY ANCHOR PACK — якоря стабильности
+  # ═══════════════════════════════════════════════
+  # UNIVERSAL: каждый персонаж определяет свои якоря в character.identity_anchors
+  identity_anchors:
+    purpose: "prevent Veo from redrawing characters between generations"
+    per_character:
+      - "face_silhouette: отличимый силуэт (подбородок/скулы/нос/брови)"
+      - "signature_element: один заметный элемент (серьги/платок/кепка/очки на шее)"
+      - "micro_gesture: повторяемый микрожест (lip bite / тихая усмешка / поднятая бровь)"
+    serial_anchors:
+      aesthetic: "VIP-деревенский уют (или character.world_aesthetic)"
+      prop_anchor: "1 предмет-якорь на серию, менять не чаще раза в неделю"
+      prop_examples: ["самовар", "ведро", "кочерга", "чайник", "табуретка"]
 
-  artifacts:
-    micro_jitter: true
-    exposure_breathing: "0.2-0.5 EV drift"
-    rolling_shutter: "subtle on fast head turns"
-    autofocus_hunt: "0.1s on scene start"
-    compression: "h264 social media grade"
-    noise: "low-light grain in shadows"
-
-  environment:
-    backlight: "natural window or strong practicals"
-    dust_motes: "visible in light beams"
-    hard_shadows: true
+  # ═══════════════════════════════════════════════
+  # III) CAMERA & REALISM PRESET (Veo 3.1)
+  # ═══════════════════════════════════════════════
+  camera_preset:
+    pov: "held at arm's length, front-facing portrait look"
+    distance: "close enough to read skin, both faces in frame"
+    device: "INVISIBLE — never in frame"
+    artifacts:
+      - "handheld micro-jitter"
+      - "subtle exposure breathing"
+      - "mild rolling shutter only on quick micro-moves"
+      - "brief autofocus hunt ≤0.15s on lens approach"
+    realism_anchors:
+      - "slight sensor noise"
+      - "mild compression artifacts"
+      - "imperfect white balance drift"
+      - "micro motion blur on sharp gesture"
+      - "realistic shadowing under nose/cheekbones"
+      - "dust motes ONLY with backlight (no backlight → no dust)"
+    lighting:
+      primary: "backlight/sun, hard shadows, dust in beams (when applicable)"
+      rule: "always describe light source physically"
     locations:
-      policy: "уникальные, без повторов"
-      banned_repeats: ["машина", "очки на лице в каждом видео"]
+      policy: "always new, domestic"
+      examples: ["сарай", "баня", "погреб", "курятник", "сад", "чердак", "кухня", "балкон", "теплица", "подъезд"]
+      banned_repeats: ["дорогие машины повторно", "одинаковые очки на каждом видео"]
+    wardrobe:
+      policy: "contrast textures between A and B, describe materials physically"
       examples:
-        - "кухня с советским холодильником"
-        - "балкон с бельём"
-        - "дачная теплица"
-        - "подъезд с лифтом"
-        - "рынок"
-        - "поликлиника"
-        - "маршрутка"
-        - "гараж"
-        - "скамейка у подъезда"
-        - "дача, грядки"
+        - ["silk blouse", "wool fufaika"]
+        - ["leopard shawl", "cotton telnyashka"]
+        - ["pearl necklace", "striped sailor shirt"]
+        - ["fake fur shapka", "adidas tracksuit"]
+      note: "character.wardrobe_style overrides defaults"
 
-  wardrobe:
-    policy: "контраст между персонажами"
-    examples:
-      - "шёлк + шерсть"
-      - "леопард + фуфайка"
-      - "жемчуг + тельняшка"
-      - "пуховик Balenciaga + валенки"
-      - "норковая шапка + спортивки"
-    no_repeat: true
-
+  # ═══════════════════════════════════════════════
+  # IV) 8-SECOND GRID v2 (тайминг, который держится)
+  # ═══════════════════════════════════════════════
+  # Правило: если фраза не помещается — режем текст, тайминг НЕ растягиваем.
   timing_grid_8s:
     hook:
       start: 0.0
-      end: 0.7
-      description: "мгновенный вброс, цепляющий кадр или фраза"
-    speaker_A:
-      start: 0.7
-      end: 3.5
-      description: "основной вброс/провокация от A"
-    speaker_B:
-      start: 3.5
-      end: 7.0
-      description: "ответ/панчлайн от B"
-    laugh_beat:
-      start: 7.0
+      end: 0.8
+      action: "sharp approach/attack on lens"
+      detail: "finger at camera or object tap on glass"
+      audio: "mechanical trigger + sharp inhale"
+    act_A:
+      start: 0.8
+      end: 3.6
+      word_count: "6-9 words"
+      action: "A delivers short pompous question/statement"
+      other: "B silent: sealed lips, jaw still, eyes/micro-reactions only"
+    act_B:
+      start: 3.6
+      end: 7.1
+      word_count: "6-11 words"
+      action: "B responds with punchline"
+      other: "A frozen in pose, mouth closed"
+      killer_word: "near end of window (final blow)"
+    release:
+      start: 7.1
       end: 8.0
-      description: "реакция, смех, финальный бит"
-    killer_word:
-      timestamp: 6.85
-      description: "самое ударное слово в районе 6.85s"
+      action: "zero words, shared raspy contagious laughter"
+      detail: "slight camera shake, tears, knee slap / falling into embrace"
 
+  # ═══════════════════════════════════════════════
+  # V) AUDIO SPEC
+  # ═══════════════════════════════════════════════
   audio:
     room_tone: true
-    saliva_clicks: true
-    cloth_rustle: "on movement"
-    overlap: "ЗАПРЕЩЕНО — стык, а не пауза"
-    breath_sounds: true
-    mouth_closed_rule: "рот второго строго закрыт пока говорит первый"
+    cloth_rustle: "allowed"
+    saliva_clicks: "allowed"
+    overlap: "STRICTLY FORBIDDEN"
+    gap_between_speakers: "0.15-0.25s stitch, not long pause"
+    laugh_volume: "louder than dialogue, no clipping"
+    mouth_closed_rule: "non-speaking character: sealed lips, jaw still"
 
-  safety:
-    banned_words:
-      - "sexy"
-      - "horny"
-      - "erotic"
-      - "nude"
-      - "naked"
-      - "porn"
-      - "nsfw"
-    replacements:
-      sexy: "magnetic"
-      horny: "restless"
-      erotic: "sensual tension"
-      nude: "bare-skinned"
-      naked: "unclothed"
-    device_invisible: true
-    no_text_overlays: true
-    no_logo: true
-    no_watermark: true
-
+  # ═══════════════════════════════════════════════
+  # VI) CONTENT RULES (нарратив)
+  # ═══════════════════════════════════════════════
   narrative:
-    mat_as_accent: true
+    mat_policy: "as punch accent, measured, in B-punchline"
     themes:
       - "бытовой абсурд"
-      - "AI и технологии"
+      - "AI/нейронки"
       - "цены и инфляция"
       - "отношения"
-      - "разрыв поколений"
+      - "поколенческий стёб"
       - "ЖКХ"
-      - "здоровье"
+      - "мир сошёл с ума"
+      - "здоровье и поликлиника"
       - "соцсети и тренды"
       - "дача и огород"
-      - "транспорт"
     rhyme: "ЗАПРЕЩЕНА"
+    speech_style: "базарная, естественная"
     personal_insults: "ЗАПРЕЩЕНЫ"
 
-  output_package:
-    - "JSON photo prompt EN"
-    - "JSON video prompt EN"
-    - "RU package: диалог с таймингами, подсказки речи, заголовок, закреп, хэштеги"
-    - "Blueprint JSON"
-    - "Log"
+  # ═══════════════════════════════════════════════
+  # VII) QC GATE — 10 checks, PASS ≥ 9/10
+  # ═══════════════════════════════════════════════
+  qc_gate:
+    pass_threshold: 9
+    total_checks: 10
+    hard_fail: [1, 4, 5]
+    checks:
+      1: "faces stable start to finish"
+      2: "skin with microtexture, no plastic"
+      3: "eyes alive (highlights + micro-saccades)"
+      4: "mouth/teeth realistic on speaking character"
+      5: "silent character truly sealed (lips/jaw)"
+      6: "background doesn't dissolve into pattern/mush"
+      7: "camera artifacts moderate and believable"
+      8: "audio clean, no overlapping lines"
+      9: "hook reads within first 0.8s"
+      10: "final laugh looks natural, no uncanny mimics"
+
+  # ═══════════════════════════════════════════════
+  # VIII) OUTPUT CONTRACT
+  # ═══════════════════════════════════════════════
+  output_contract:
+    - "JSON PHOTO PROMPT (EN): static cover"
+    - "JSON VIDEO PROMPT (EN): Veo 3.1 scenario with all presets above"
+    - "RU BLOCK: dialogue with timing windows, viral title, pin (share bait), hashtags (РФ 2026 set)"
+    - "Blueprint JSON: scenes + actions + dialogue segments + timing grid"
+    - "Log: seed, memory_hash, characters, category, warnings, auto_fixes, duration_estimate"
+
+  # ═══════════════════════════════════════════════
+  # UNIVERSAL ADAPTER NOTES
+  # ═══════════════════════════════════════════════
+  # The standard above uses бабка/дед as DEFAULTS.
+  # Every field marked with "character.X overrides" is dynamically replaced
+  # by the actual character data from characters.json.
+  # The ROLE ADAPTER layer in generator.js maps any pair to A/B:
+  #   - A = more expressive/fast/provocative character
+  #   - B = more grounded/rational/dry character
+  #   - User manual assignment takes priority
+  # Identity anchors, vibe archetypes, wardrobe, biology — all character-driven.

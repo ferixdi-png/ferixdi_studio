@@ -75,11 +75,17 @@ describe('estimateDialogue', () => {
   });
 });
 
-describe('getSegmentTimings', () => {
-  it('returns proper 8s grid', () => {
+describe('getSegmentTimings v2', () => {
+  it('returns proper v2 8s grid', () => {
     const t = getSegmentTimings(8.0);
     expect(t.hook.start).toBe(0);
+    expect(t.hook.end).toBe(0.8);
+    expect(t.speakerA.start).toBe(0.8);
+    expect(t.speakerA.end).toBe(3.6);
+    expect(t.speakerB.start).toBe(3.6);
+    expect(t.speakerB.end).toBe(7.1);
+    expect(t.release.start).toBe(7.1);
     expect(t.killerWord).toBe(6.85);
-    expect(t.laugh.end).toBeLessThanOrEqual(8.0);
+    expect(t.release.end).toBeLessThanOrEqual(8.0);
   });
 });

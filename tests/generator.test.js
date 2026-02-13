@@ -60,7 +60,7 @@ describe('generate', () => {
     expect(result).toHaveProperty('duration_estimate');
   });
 
-  it('photo prompt has required structure', () => {
+  it('photo prompt has required v2 structure', () => {
     const result = generate({
       input_mode: 'idea', character1_id: 'test_a', character2_id: 'test_b',
       seed: 'photo-test', characters: CHARS,
@@ -69,12 +69,16 @@ describe('generate', () => {
     expect(p).toHaveProperty('scene');
     expect(p).toHaveProperty('characters');
     expect(p.characters).toHaveLength(2);
+    expect(p.characters[0]).toHaveProperty('face_anchor');
+    expect(p.characters[0]).toHaveProperty('signature');
     expect(p).toHaveProperty('environment');
+    expect(p.environment).toHaveProperty('prop_anchor');
     expect(p).toHaveProperty('camera');
     expect(p).toHaveProperty('negative');
+    expect(p.negative).toContain('no plastic skin');
   });
 
-  it('video prompt has required structure', () => {
+  it('video prompt has required v2 structure', () => {
     const result = generate({
       input_mode: 'idea', character1_id: 'test_a', character2_id: 'test_b',
       seed: 'video-test', characters: CHARS,
@@ -83,27 +87,62 @@ describe('generate', () => {
     expect(v).toHaveProperty('cast');
     expect(v.cast).toHaveProperty('speaker_A');
     expect(v.cast).toHaveProperty('speaker_B');
+    expect(v.cast).toHaveProperty('relationship');
+    expect(v.cast.speaker_A).toHaveProperty('face_silhouette');
+    expect(v.cast.speaker_A).toHaveProperty('vibe');
+    expect(v).toHaveProperty('identity_anchors');
+    expect(v.identity_anchors).toHaveProperty('serial');
     expect(v).toHaveProperty('vibe');
     expect(v).toHaveProperty('camera');
+    expect(v.camera).toHaveProperty('artifacts');
+    expect(v.camera).toHaveProperty('realism_anchors');
     expect(v).toHaveProperty('world');
+    expect(v.world).toHaveProperty('prop_anchor');
     expect(v).toHaveProperty('timing');
     expect(v.timing.total_seconds).toBeLessThanOrEqual(8.0);
+    expect(v.timing.tolerance_s).toBe(0.2);
     expect(v).toHaveProperty('audio');
     expect(v.audio.overlap_policy).toContain('FORBIDDEN');
+    expect(v.audio).toHaveProperty('laugh');
     expect(v).toHaveProperty('safety');
     expect(v.safety.device_invisible).toBe(true);
+    expect(v.safety.no_text_in_frame).toBe(true);
   });
 
-  it('blueprint has timing grid', () => {
+  it('blueprint has v2 timing grid and identity anchors', () => {
     const result = generate({
       input_mode: 'idea', character1_id: 'test_a', character2_id: 'test_b',
       seed: 'bp-test', characters: CHARS,
     });
     const bp = result.blueprint_json;
+    expect(bp.version).toBe('2.0');
     expect(bp).toHaveProperty('scenes');
-    expect(bp.scenes.length).toBeGreaterThanOrEqual(2);
+    expect(bp.scenes.length).toBe(4);
+    expect(bp.scenes[0].segment).toBe('hook');
+    expect(bp.scenes[0].end).toBe(0.8);
+    expect(bp.scenes[1].segment).toBe('act_A');
+    expect(bp.scenes[2].segment).toBe('act_B');
+    expect(bp.scenes[3].segment).toBe('release');
+    expect(bp.scenes[3].dialogue_ru).toBe('');
     expect(bp).toHaveProperty('timing_grid');
     expect(bp.timing_grid.killer_word_at).toBe(6.85);
+    expect(bp.timing_grid).toHaveProperty('release');
+    expect(bp.timing_grid).toHaveProperty('gap_between_speakers');
+    expect(bp).toHaveProperty('identity_anchors');
+  });
+
+  it('includes QC Gate in output', () => {
+    const result = generate({
+      input_mode: 'idea', character1_id: 'test_a', character2_id: 'test_b',
+      seed: 'qc-test', characters: CHARS,
+    });
+    expect(result).toHaveProperty('qc_gate');
+    expect(result.qc_gate).toHaveProperty('passed');
+    expect(result.qc_gate).toHaveProperty('total');
+    expect(result.qc_gate.total).toBe(10);
+    expect(result.qc_gate).toHaveProperty('ok');
+    expect(result.qc_gate).toHaveProperty('details');
+    expect(result.qc_gate.details).toHaveLength(10);
   });
 
   it('works in script mode', () => {

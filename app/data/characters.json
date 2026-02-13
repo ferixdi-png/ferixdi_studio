@@ -26,7 +26,15 @@
    "hook_style": "shows phone",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "round soft face, prominent cheekbones, deep nasolabial folds",
+   "signature_element": "bold earrings",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "babka_valya",
@@ -55,7 +63,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "round soft face, prominent cheekbones, deep nasolabial folds",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "babka_klava",
@@ -84,7 +100,15 @@
    "hook_style": "slams table",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "round soft face, prominent cheekbones, deep nasolabial folds",
+   "signature_element": "patterned shawl",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "babka_lyuda",
@@ -113,7 +137,15 @@
    "hook_style": "calm stare",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "round soft face, prominent cheekbones, deep nasolabial folds",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "babka_tamara",
@@ -142,7 +174,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "round soft face, prominent cheekbones, deep nasolabial folds",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "babka_shura",
@@ -171,7 +211,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "round soft face, prominent cheekbones, deep nasolabial folds",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "ded_petya",
@@ -200,7 +248,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "angular jaw, thick brow ridge, weathered nose bridge",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "chin stroke",
+   "wardrobe_anchor": "denim overall strap"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "ded_kolya",
@@ -229,7 +285,15 @@
    "hook_style": "calm stare",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "angular jaw, thick brow ridge, weathered nose bridge",
+   "signature_element": "rolled sleeves showing forearms",
+   "micro_gesture": "chin stroke",
+   "wardrobe_anchor": "denim overall strap"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "ded_ivan",
@@ -258,7 +322,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "angular jaw, thick brow ridge, weathered nose bridge",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "ded_vasya",
@@ -287,7 +359,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "angular jaw, thick brow ridge, weathered nose bridge",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "ded_grisha",
@@ -316,7 +396,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "angular jaw, thick brow ridge, weathered nose bridge",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "ded_senya",
@@ -345,7 +433,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "angular jaw, thick brow ridge, weathered nose bridge",
+   "signature_element": "lapel pin",
+   "micro_gesture": "chin stroke",
+   "wardrobe_anchor": "denim overall strap"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "mama_lena",
@@ -374,7 +470,15 @@
    "hook_style": "shows phone",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "oval face, defined jawline, subtle crow's feet",
+   "signature_element": "signature ring",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "mama_natasha",
@@ -403,7 +507,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "oval face, defined jawline, subtle crow's feet",
+   "signature_element": "feather brooch",
+   "micro_gesture": "hair toss / headscarf adjustment",
+   "wardrobe_anchor": "velvet jacket"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "mama_oksana",
@@ -432,7 +544,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "oval face, defined jawline, subtle crow's feet",
+   "signature_element": "bold earrings",
+   "micro_gesture": "hair toss / headscarf adjustment",
+   "wardrobe_anchor": "velvet jacket"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "mama_sveta",
@@ -461,7 +581,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "oval face, defined jawline, subtle crow's feet",
+   "signature_element": "worn leather belt",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "mama_ira",
@@ -490,7 +618,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "oval face, defined jawline, subtle crow's feet",
+   "signature_element": "patterned shawl",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "mama_galya",
@@ -519,7 +655,15 @@
    "hook_style": "slams table",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "oval face, defined jawline, subtle crow's feet",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "papa_dima",
@@ -548,7 +692,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "square jaw, broad forehead, stubble shadow",
+   "signature_element": "flat cap",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "papa_andrey",
@@ -577,7 +729,15 @@
    "hook_style": "calm stare",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "square jaw, broad forehead, stubble shadow",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "papa_sasha",
@@ -606,7 +766,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "square jaw, broad forehead, stubble shadow",
+   "signature_element": "patterned shawl",
+   "micro_gesture": "hair toss / headscarf adjustment",
+   "wardrobe_anchor": "velvet jacket"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "papa_igor",
@@ -635,7 +803,15 @@
    "hook_style": "slams table",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "square jaw, broad forehead, stubble shadow",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "papa_roma",
@@ -664,7 +840,15 @@
    "hook_style": "calm stare",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "square jaw, broad forehead, stubble shadow",
+   "signature_element": "wool vest button",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "papa_zhenya",
@@ -693,7 +877,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "square jaw, broad forehead, stubble shadow",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "doch_masha",
@@ -722,7 +914,15 @@
    "hook_style": "slams table",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "youthful oval face, smooth skin, bright eyes",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "doch_katya",
@@ -751,7 +951,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "youthful oval face, smooth skin, bright eyes",
+   "signature_element": "flat cap",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "doch_alina",
@@ -780,7 +988,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "youthful oval face, smooth skin, bright eyes",
+   "signature_element": "statement necklace",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "doch_nastya",
@@ -809,7 +1025,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "youthful oval face, smooth skin, bright eyes",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "doch_polina",
@@ -838,7 +1062,15 @@
    "hook_style": "slams table",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "youthful oval face, smooth skin, bright eyes",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "doch_sonya",
@@ -867,7 +1099,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "youthful oval face, smooth skin, bright eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "syn_pasha",
@@ -896,7 +1136,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "angular young face, sharp jawline, restless eyes",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "syn_artyom",
@@ -925,7 +1173,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "angular young face, sharp jawline, restless eyes",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "syn_danya",
@@ -954,7 +1210,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "angular young face, sharp jawline, restless eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "syn_kirill",
@@ -983,7 +1247,15 @@
    "hook_style": "waves hands",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "angular young face, sharp jawline, restless eyes",
+   "signature_element": "bold earrings",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "syn_maxim",
@@ -1012,7 +1284,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "angular young face, sharp jawline, restless eyes",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "syn_gleb",
@@ -1041,7 +1321,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "angular young face, sharp jawline, restless eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "teshcha_galya",
@@ -1070,7 +1358,15 @@
    "hook_style": "waves hands",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "rounded cheeks, pursed lips line, evaluating brow arch",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "teshcha_vera",
@@ -1099,7 +1395,15 @@
    "hook_style": "calm stare",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "rounded cheeks, pursed lips line, evaluating brow arch",
+   "signature_element": "flat cap",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "teshcha_nina",
@@ -1128,7 +1432,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "rounded cheeks, pursed lips line, evaluating brow arch",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "teshcha_rosa",
@@ -1157,7 +1469,15 @@
    "hook_style": "shows phone",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "rounded cheeks, pursed lips line, evaluating brow arch",
+   "signature_element": "feather brooch",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "svekrov_lyuba",
@@ -1186,7 +1506,15 @@
    "hook_style": "waves hands",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "refined bone structure, lifted chin, pearl-smooth skin",
+   "signature_element": "bold earrings",
+   "micro_gesture": "hair toss / headscarf adjustment",
+   "wardrobe_anchor": "velvet jacket"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "svekrov_rita",
@@ -1215,7 +1543,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "refined bone structure, lifted chin, pearl-smooth skin",
+   "signature_element": "statement necklace",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "svekrov_tamara",
@@ -1244,7 +1580,15 @@
    "hook_style": "calm stare",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "refined bone structure, lifted chin, pearl-smooth skin",
+   "signature_element": "rolled sleeves showing forearms",
+   "micro_gesture": "chin stroke",
+   "wardrobe_anchor": "denim overall strap"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "svekrov_emma",
@@ -1273,7 +1617,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "refined bone structure, lifted chin, pearl-smooth skin",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "sosed_gena",
@@ -1302,7 +1654,15 @@
    "hook_style": "shows phone",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "distinctive nose shape, asymmetric features, lived-in face",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "sosed_tolik",
@@ -1331,7 +1691,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "distinctive nose shape, asymmetric features, lived-in face",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "sosed_marina",
@@ -1360,7 +1728,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "distinctive nose shape, asymmetric features, lived-in face",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "sosed_borya",
@@ -1389,7 +1765,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "distinctive nose shape, asymmetric features, lived-in face",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "sosed_lyosha",
@@ -1418,7 +1802,15 @@
    "hook_style": "shows phone",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "distinctive nose shape, asymmetric features, lived-in face",
+   "signature_element": "feather brooch",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "sosed_tanya",
@@ -1447,7 +1839,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "distinctive nose shape, asymmetric features, lived-in face",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "prod_zoya",
@@ -1476,7 +1876,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "broad face, strong chin, weather-worn skin",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "prod_alla",
@@ -1505,7 +1913,15 @@
    "hook_style": "shows phone",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "broad face, strong chin, weather-worn skin",
+   "signature_element": "feather brooch",
+   "micro_gesture": "hair toss / headscarf adjustment",
+   "wardrobe_anchor": "velvet jacket"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "prod_misha",
@@ -1534,7 +1950,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "broad face, strong chin, weather-worn skin",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "prod_fatima",
@@ -1563,7 +1987,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "broad face, strong chin, weather-worn skin",
+   "signature_element": "signature ring",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "vrach_olga",
@@ -1592,7 +2024,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "composed features, analytical gaze, clean-cut",
+   "signature_element": "worn leather belt",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "vrach_sergey",
@@ -1621,7 +2061,15 @@
    "hook_style": "shows phone",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "composed features, analytical gaze, clean-cut",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "vrach_anna",
@@ -1650,7 +2098,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "composed features, analytical gaze, clean-cut",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "vrach_kostya",
@@ -1679,7 +2135,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "composed features, analytical gaze, clean-cut",
+   "signature_element": "feather brooch",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "uchitel_viktor",
@@ -1708,7 +2172,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "expressive brow, glasses-shaped marks on nose, kind wrinkles",
+   "signature_element": "patterned shawl",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "uchitel_anna",
@@ -1737,7 +2209,15 @@
    "hook_style": "calm stare",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "expressive brow, glasses-shaped marks on nose, kind wrinkles",
+   "signature_element": "wool vest button",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "uchitel_petr",
@@ -1766,7 +2246,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "expressive brow, glasses-shaped marks on nose, kind wrinkles",
+   "signature_element": "feather brooch",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "uchitel_olya",
@@ -1795,7 +2283,15 @@
    "hook_style": "slams table",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "expressive brow, glasses-shaped marks on nose, kind wrinkles",
+   "signature_element": "signature ring",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "bloger_vika",
@@ -1824,7 +2320,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "photogenic symmetry, ring-light catchlights, smooth skin",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "bloger_zheka",
@@ -1853,7 +2357,15 @@
    "hook_style": "waves hands",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "photogenic symmetry, ring-light catchlights, smooth skin",
+   "signature_element": "bold earrings",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "bloger_liza",
@@ -1882,7 +2394,15 @@
    "hook_style": "calm stare",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "photogenic symmetry, ring-light catchlights, smooth skin",
+   "signature_element": "rolled sleeves showing forearms",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "bloger_maks",
@@ -1911,7 +2431,15 @@
    "hook_style": "slams table",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "photogenic symmetry, ring-light catchlights, smooth skin",
+   "signature_element": "signature ring",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "bloger_dasha",
@@ -1940,7 +2468,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "photogenic symmetry, ring-light catchlights, smooth skin",
+   "signature_element": "rolled sleeves showing forearms",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "taxist_ahmed",
@@ -1969,7 +2505,15 @@
    "hook_style": "raises eyebrow",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "sun-weathered asymmetry, squint lines, road-worn",
+   "signature_element": "lapel pin",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "taxist_sanya",
@@ -1998,7 +2542,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "sun-weathered asymmetry, squint lines, road-worn",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "taxist_kostya",
@@ -2027,7 +2579,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "sun-weathered asymmetry, squint lines, road-worn",
+   "signature_element": "pocket watch chain",
+   "micro_gesture": "chin stroke",
+   "wardrobe_anchor": "denim overall strap"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "taxist_ruslan",
@@ -2056,7 +2616,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "sun-weathered asymmetry, squint lines, road-worn",
+   "signature_element": "signature ring",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "biz_oleg",
@@ -2085,7 +2653,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "groomed jawline, confident brow, power posture face",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "biz_vlad",
@@ -2114,7 +2690,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "groomed jawline, confident brow, power posture face",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "драматург — каждое слово как в театре",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "biz_marina",
@@ -2143,7 +2727,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "groomed jawline, confident brow, power posture face",
+   "signature_element": "signature ring",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "biz_artur",
@@ -2172,7 +2764,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "groomed jawline, confident brow, power posture face",
+   "signature_element": "flat cap",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "biz_kseniya",
@@ -2201,7 +2801,15 @@
    "hook_style": "slams table",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "groomed jawline, confident brow, power posture face",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "stud_kolya",
@@ -2230,7 +2838,15 @@
    "hook_style": "raises eyebrow",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "soft youthful features, slight acne, tired eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "chin stroke",
+   "wardrobe_anchor": "denim overall strap"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "stud_lera",
@@ -2259,7 +2875,15 @@
    "hook_style": "waves hands",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "soft youthful features, slight acne, tired eyes",
+   "signature_element": "bold earrings",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "stud_danil",
@@ -2288,7 +2912,15 @@
    "hook_style": "shows phone",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "soft youthful features, slight acne, tired eyes",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "stud_anya",
@@ -2317,7 +2949,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "soft youthful features, slight acne, tired eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "pens_fedor",
@@ -2346,7 +2986,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "dignified aging, silver temples shadow, wise eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "pens_lidiya",
@@ -2375,7 +3023,15 @@
    "hook_style": "calm stare",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "dignified aging, silver temples shadow, wise eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "pens_arkady",
@@ -2404,7 +3060,15 @@
    "hook_style": "slams table",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "dignified aging, silver temples shadow, wise eyes",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "pens_zoya",
@@ -2433,7 +3097,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "dignified aging, silver temples shadow, wise eyes",
+   "signature_element": "worn leather belt",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "chin_boris",
@@ -2462,7 +3134,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "bureaucratic neutrality, thin lips, measured expression",
+   "signature_element": "flat cap",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "chin_elena",
@@ -2491,7 +3171,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "bureaucratic neutrality, thin lips, measured expression",
+   "signature_element": "feather brooch",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "chin_gennady",
@@ -2520,7 +3208,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "bureaucratic neutrality, thin lips, measured expression",
+   "signature_element": "wool vest button",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "fit_mila",
@@ -2549,7 +3245,15 @@
    "hook_style": "waves hands",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "taut skin, defined cheekbones, energetic glow",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "fit_stas",
@@ -2578,7 +3282,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "taut skin, defined cheekbones, energetic glow",
+   "signature_element": "signature ring",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "fit_yana",
@@ -2607,7 +3319,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "taut skin, defined cheekbones, energetic glow",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "kosh_marfa",
@@ -2636,7 +3356,15 @@
    "hook_style": "raises eyebrow",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "gentle round face, warm eyes, soft wrinkles",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "kosh_vera",
@@ -2665,7 +3393,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "gentle round face, warm eyes, soft wrinkles",
+   "signature_element": "feather brooch",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "kosh_galya",
@@ -2694,7 +3430,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "gentle round face, warm eyes, soft wrinkles",
+   "signature_element": "flat cap",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "extr_dima",
@@ -2723,7 +3467,15 @@
    "hook_style": "shows phone",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "scar-touched features, adrenaline-bright eyes, weather-beaten tan",
+   "signature_element": "bold earrings",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "extr_nika",
@@ -2752,7 +3504,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "scar-touched features, adrenaline-bright eyes, weather-beaten tan",
+   "signature_element": "feather brooch",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "gop_serega",
@@ -2781,7 +3541,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "sharp cheekbones, intense brow, street-weathered",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "gop_dimon",
@@ -2810,7 +3578,15 @@
    "hook_style": "waves hands",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "sharp cheekbones, intense brow, street-weathered",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "gop_lyoha",
@@ -2839,7 +3615,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "sharp cheekbones, intense brow, street-weathered",
+   "signature_element": "wool vest button",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "mod_klara",
@@ -2868,7 +3652,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "painted brows, lifted cheeks, glamour bone structure",
+   "signature_element": "patterned shawl",
+   "micro_gesture": "hair toss / headscarf adjustment",
+   "wardrobe_anchor": "velvet jacket"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "mod_eleonora",
@@ -2897,7 +3689,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "painted brows, lifted cheeks, glamour bone structure",
+   "signature_element": "feather brooch",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "mod_faina",
@@ -2926,7 +3726,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "painted brows, lifted cheeks, glamour bone structure",
+   "signature_element": "patterned shawl",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "коммунальный реализм"
  },
  {
   "id": "tech_semyon",
@@ -2955,7 +3763,15 @@
    "hook_style": "calm stare",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "curious squint, glasses-mark indent, thinker's forehead",
+   "signature_element": "lapel pin",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "tech_arkady",
@@ -2984,7 +3800,15 @@
    "hook_style": "waves hands",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "curious squint, glasses-mark indent, thinker's forehead",
+   "signature_element": "bold earrings",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "tech_boris",
@@ -3013,7 +3837,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "curious squint, glasses-mark indent, thinker's forehead",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "head tilt with squint",
+   "wardrobe_anchor": "corduroy jacket"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "tik_arina",
@@ -3042,7 +3874,15 @@
    "hook_style": "slams table",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "filter-perfect symmetry, wide eyes, animated brows",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "tik_zhenya",
@@ -3071,7 +3911,15 @@
    "hook_style": "aggressive finger point",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "filter-perfect symmetry, wide eyes, animated brows",
+   "signature_element": "bright headscarf",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "блогер — всё на камеру, театральность",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "tik_nikita",
@@ -3100,7 +3948,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "filter-perfect symmetry, wide eyes, animated brows",
+   "signature_element": "signature ring",
+   "micro_gesture": "lean into camera",
+   "wardrobe_anchor": "faux-fur collar coat"
+  },
+  "vibe_archetype": "скандалист — врывается, перебивает, жестикулирует",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "ohr_valery",
@@ -3129,7 +3985,15 @@
    "hook_style": "calm stare",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "heavy brow, thick neck shadow, stoic jaw",
+   "signature_element": "lapel pin",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "ohr_roma",
@@ -3158,7 +4022,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "heavy brow, thick neck shadow, stoic jaw",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "dvor_jamshed",
@@ -3187,7 +4059,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "weathered skin, deep smile lines, honest eyes",
+   "signature_element": "reading glasses on neck cord",
+   "micro_gesture": "slow eyebrow raise",
+   "wardrobe_anchor": "striped telnyashka"
+  },
+  "vibe_archetype": "философ — длинная пауза, потом разрушительный панчлайн",
+  "world_aesthetic": "советская классика"
  },
  {
   "id": "dvor_petrovich",
@@ -3216,7 +4096,15 @@
    "hook_style": "calm stare",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "weathered skin, deep smile lines, honest eyes",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "cel_agafya",
@@ -3245,7 +4133,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "ancient bone structure, knowing squint, herb-stained fingers shadow on face",
+   "signature_element": "worn leather belt",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "cel_praskovya",
@@ -3274,7 +4170,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "ancient bone structure, knowing squint, herb-stained fingers shadow on face",
+   "signature_element": "worn leather belt",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "ворчун — бубнит, но метко",
+  "world_aesthetic": "городской гранж"
  },
  {
   "id": "kur_timur",
@@ -3303,7 +4207,15 @@
    "hook_style": "slams table",
    "laugh_style": "wheezing burst"
   },
-  "compatibility": "chaotic"
+  "compatibility": "chaotic",
+  "identity_anchors": {
+   "face_silhouette": "windswept features, helmet-hair indent, breathless cheeks",
+   "signature_element": "bold earrings",
+   "micro_gesture": "lip bite + lingering gaze",
+   "wardrobe_anchor": "silk floral blouse"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "kur_vanya",
@@ -3332,7 +4244,15 @@
    "hook_style": "holds prop up",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "windswept features, helmet-hair indent, breathless cheeks",
+   "signature_element": "chain bracelet",
+   "micro_gesture": "finger point with trembling hand",
+   "wardrobe_anchor": "leopard-print shawl"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "подъездный нуар"
  },
  {
   "id": "dom_stepanovna",
@@ -3361,7 +4281,15 @@
    "hook_style": "waves hands",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "authoritative chin, furrowed brow, clipboard posture",
+   "signature_element": "dramatic sleeve",
+   "micro_gesture": "slap on own thigh",
+   "wardrobe_anchor": "embroidered kaftan"
+  },
+  "vibe_archetype": "провокатор — пафос, энергия, давит харизмой",
+  "world_aesthetic": "дачный шик"
  },
  {
   "id": "dom_palych",
@@ -3390,7 +4318,15 @@
    "hook_style": "adjusts glasses",
    "laugh_style": "grudging smirk"
   },
-  "compatibility": "conflict"
+  "compatibility": "conflict",
+  "identity_anchors": {
+   "face_silhouette": "authoritative chin, furrowed brow, clipboard posture",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "quiet smirk building to grin",
+   "wardrobe_anchor": "wool fufaika vest"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "astr_zhanna",
@@ -3419,7 +4355,15 @@
    "hook_style": "shows phone",
    "laugh_style": "snort-laugh"
   },
-  "compatibility": "meme"
+  "compatibility": "meme",
+  "identity_anchors": {
+   "face_silhouette": "mystical bone structure, dreamy unfocused gaze, ringed fingers shadow",
+   "signature_element": "feather brooch",
+   "micro_gesture": "dramatic hand wave",
+   "wardrobe_anchor": "bright knit cardigan"
+  },
+  "vibe_archetype": "мотиватор — командует, не терпит возражений",
+  "world_aesthetic": "офисная тоска"
  },
  {
   "id": "astr_edgar",
@@ -3448,7 +4392,15 @@
    "hook_style": "slow head turn",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "mystical bone structure, dreamy unfocused gaze, ringed fingers shadow",
+   "signature_element": "flat cap",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "наблюдатель — видит всё, говорит редко, но в точку",
+  "world_aesthetic": "VIP-деревенский уют"
  },
  {
   "id": "psy_inna",
@@ -3477,7 +4429,15 @@
    "hook_style": "crosses arms",
    "laugh_style": "quiet chuckle"
   },
-  "compatibility": "calm"
+  "compatibility": "calm",
+  "identity_anchors": {
+   "face_silhouette": "empathetic brow, listening tilt, composed mouth",
+   "signature_element": "rolled sleeves showing forearms",
+   "micro_gesture": "arms-cross nod",
+   "wardrobe_anchor": "flannel shirt"
+  },
+  "vibe_archetype": "молчун — три слова и все легли",
+  "world_aesthetic": "рыночный хаос"
  },
  {
   "id": "psy_mark",
@@ -3506,6 +4466,14 @@
    "hook_style": "crosses arms",
    "laugh_style": "warm laugh"
   },
-  "compatibility": "balanced"
+  "compatibility": "balanced",
+  "identity_anchors": {
+   "face_silhouette": "empathetic brow, listening tilt, composed mouth",
+   "signature_element": "neck scarf knot",
+   "micro_gesture": "glasses push-up",
+   "wardrobe_anchor": "leather work apron"
+  },
+  "vibe_archetype": "база — спокойный циничный юмор, добрые глаза",
+  "world_aesthetic": "офисная тоска"
  }
 ]

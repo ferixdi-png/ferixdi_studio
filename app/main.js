@@ -400,10 +400,36 @@ function initGenerate() {
       document.getElementById('gen-warnings').classList.add('hidden');
     }
 
+    // QC Gate v2
+    if (result.qc_gate) {
+      const qc = result.qc_gate;
+      const qcEl = document.getElementById('gen-qc-gate');
+      if (qcEl) {
+        qcEl.classList.remove('hidden');
+        qcEl.innerHTML = `
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs font-mono text-gray-500">QC GATE v2</span>
+            <span class="text-sm font-bold font-mono ${qc.ok ? 'neon-text-green' : 'neon-text-pink'}">${qc.passed}/${qc.total} ${qc.ok ? '✓ PASS' : '✗ FAIL'}</span>
+          </div>
+          ${qc.details.map(c => `
+            <div class="flex items-center gap-2 text-xs">
+              <span class="${c.pass ? 'text-green-500' : c.hard ? 'text-red-500 font-bold' : 'text-yellow-500'}">${c.pass ? '✓' : '✗'}</span>
+              <span class="text-gray-400">${c.name}${c.hard && !c.pass ? ' [HARD FAIL]' : ''}</span>
+            </div>
+          `).join('')}
+        `;
+      }
+      if (qc.ok) {
+        log('OK', 'QC', `PASS ${qc.passed}/${qc.total}`);
+      } else {
+        log('WARN', 'QC', `FAIL ${qc.passed}/${qc.total}${qc.hard_fails.length ? ', HARD: ' + qc.hard_fails.join(', ') : ''}`);
+      }
+    }
+
     // Update timing
     updateTimingCoach(result);
 
-    log('OK', 'GEN', `Package generated! Duration: ${result.duration_estimate.total}s, Risk: ${result.duration_estimate.risk}`);
+    log('OK', 'GEN', `v2 Package generated! Duration: ${result.duration_estimate.total}s, Risk: ${result.duration_estimate.risk}`);
     if (result.auto_fixes.length > 0) {
       result.auto_fixes.forEach(f => log('INFO', 'FIX', f));
     }
