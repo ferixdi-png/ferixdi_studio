@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FERIXDI STUDIO — Командный центр ремикса видео</title>
-  <meta name="description" content="Уникализируй видео. Пересобери под себя. Забирай бесплатный трафик.">
+  <title>FERIXDI STUDIO — Генератор контента для Reels и TikTok</title>
+  <meta name="description" content="Выбери персонажей, опиши идею — получи готовый промпт для фото, видео и текст для поста с хештегами.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
   <!-- Tailwind CDN (no build required) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -315,11 +315,11 @@
           </div>
           <!-- Estimate -->
           <div id="timing-estimate" class="glass-panel p-4 space-y-2">
-            <div class="text-xs font-mono text-gray-500">Сгенерируйте пакет, чтобы увидеть оценку</div>
+            <div class="text-xs text-gray-500">Сначала сгенерируй пакет на шаге 3 — оценка появится здесь автоматически</div>
           </div>
           <!-- Trimming suggestions -->
           <div id="timing-suggestions" class="hidden space-y-2">
-            <div class="text-xs font-mono text-gray-500">TRIMMING SUGGESTIONS:</div>
+            <div class="text-xs text-gray-400 font-medium">Предложения по сокращению:</div>
             <div id="timing-suggestions-list" class="space-y-1"></div>
           </div>
           <div class="flex gap-2">
@@ -343,7 +343,7 @@
               <label class="text-xs text-gray-400 font-medium">Backend URL:</label>
               <input id="api-url" type="url" class="input-field" placeholder="https://your-backend.onrender.com">
               <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-400">Validate via backend</span>
+                <span class="text-xs text-gray-400">Валидация через сервер</span>
                 <div class="toggle-track" data-opt="backendValidation"><div class="toggle-thumb"></div></div>
               </div>
             </div>

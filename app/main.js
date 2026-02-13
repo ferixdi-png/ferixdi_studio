@@ -207,8 +207,8 @@ function selectChar(role, id) {
 }
 
 function updateCharDisplay() {
-  document.getElementById('char-a-name').textContent = state.selectedA ? `${state.selectedA.name_ru} (${state.selectedA.speech_pace}, мат ${state.selectedA.swear_level}/3)` : 'Не выбран';
-  document.getElementById('char-b-name').textContent = state.selectedB ? `${state.selectedB.name_ru} (${state.selectedB.speech_pace}, мат ${state.selectedB.swear_level}/3)` : 'Не выбран';
+  document.getElementById('char-a-name').textContent = state.selectedA ? `${state.selectedA.name_ru} • ${state.selectedA.group}` : 'Нажми на персонажа ↓';
+  document.getElementById('char-b-name').textContent = state.selectedB ? `${state.selectedB.name_ru} • ${state.selectedB.group}` : 'Нажми на второго ↓';
   document.getElementById('sidebar-char-a').textContent = `A: ${state.selectedA?.name_ru || '—'}`;
   document.getElementById('sidebar-char-b').textContent = `B: ${state.selectedB?.name_ru || '—'}`;
   document.getElementById('gen-char-a').textContent = state.selectedA?.name_ru || '—';
@@ -539,8 +539,8 @@ function initGenerate() {
         qcEl.classList.remove('hidden');
         qcEl.innerHTML = `
           <div class="flex items-center gap-2 mb-2">
-            <span class="text-xs font-mono text-gray-500">QC GATE v2</span>
-            <span class="text-sm font-bold font-mono ${qc.ok ? 'neon-text-green' : 'neon-text-pink'}">${qc.passed}/${qc.total} ${qc.ok ? '✓ PASS' : '✗ FAIL'}</span>
+            <span class="text-xs text-gray-500">Контроль качества</span>
+            <span class="text-sm font-bold ${qc.ok ? 'neon-text-green' : 'neon-text-pink'}">${qc.passed}/${qc.total} ${qc.ok ? '✓ ОК' : '✗ ПРОБЛЕМЫ'}</span>
           </div>
           ${qc.details.map(c => `
             <div class="flex items-center gap-2 text-xs">
@@ -590,17 +590,17 @@ function updateTimingCoach(result) {
 
   el.innerHTML = `
     <div class="flex items-center justify-between mb-2">
-      <span class="text-xs font-mono text-gray-500">ОЦЕНКА ДЛИТЕЛЬНОСТИ v2</span>
-      <span class="text-sm font-bold font-mono ${riskColor}">${est.total}s / 8.0s ${riskLabel}</span>
+      <span class="text-xs text-gray-500">Оценка длительности</span>
+      <span class="text-sm font-bold ${riskColor}">${est.total}с / 8.0с ${riskLabel}</span>
     </div>
     ${est.perLine.map(l => `
       <div class="flex items-center gap-2 text-xs">
-        <span class="font-mono ${l.speaker === 'A' ? 'neon-text' : 'neon-text-purple'} w-4">${l.speaker}</span>
+        <span class="font-medium ${l.speaker === 'A' ? 'neon-text' : 'neon-text-purple'} w-4">${l.speaker}</span>
         <div class="flex-1 bg-glass rounded h-4 overflow-hidden relative">
           <div class="h-full ${l.overWindow ? 'bg-red-500/40' : l.speaker === 'A' ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded" style="width:${Math.min(100, (l.duration / (l.window || 3)) * 100)}%"></div>
           ${l.window ? `<div class="absolute top-0 h-full border-r border-dashed border-yellow-500/50" style="left:100%"></div>` : ''}
         </div>
-        <span class="font-mono ${l.overWindow ? 'text-red-400' : 'text-gray-500'} w-16 text-right">${l.duration}s/${l.window || '?'}s</span>
+        <span class="${l.overWindow ? 'text-red-400' : 'text-gray-500'} w-16 text-right">${l.duration}с/${l.window || '?'}с</span>
         <span class="text-gray-600 w-8">${l.wordCount}w</span>
       </div>
     `).join('')}
@@ -676,8 +676,8 @@ function initCopyButtons() {
       const text = pre.textContent || pre.innerText;
       navigator.clipboard.writeText(text).then(() => {
         const orig = btn.textContent;
-        btn.textContent = '✓';
-        setTimeout(() => { btn.textContent = orig; }, 1200);
+        btn.textContent = '✓ Скопировано!';
+        setTimeout(() => { btn.textContent = orig; }, 1500);
         log('OK', 'COPY', `${tab} prompt copied to clipboard`);
       }).catch(() => {
         log('WARN', 'COPY', 'Clipboard access denied');
@@ -741,13 +741,6 @@ function initCharFilters() {
   });
 }
 
-// ─── LOG CONSOLE ─────────────────────────────
-function initLogConsole() {
-  document.getElementById('log-clear')?.addEventListener('click', () => {
-    document.getElementById('log-output').innerHTML = '';
-  });
-}
-
 // ─── INIT ────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initAccessGate();
@@ -762,7 +755,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSettings();
   initLogout();
   initCharFilters();
-  initLogConsole();
   initCopyButtons();
   initHeaderSettings();
 });
