@@ -1025,14 +1025,15 @@ function populateInstaTab(result) {
 
     <!-- Share bait tip -->
     <div class="bg-gradient-to-r from-violet-500/8 to-cyan-500/8 rounded-lg p-4 border border-violet-500/15">
-      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">🚀 Байт на пересылку</div>
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">🚀 Порядок публикации в Instagram</div>
       <div class="text-xs text-gray-300 leading-relaxed space-y-1.5">
-        <div>1. <span class="text-gray-200 font-medium">Закрепи комментарий</span> — он провоцирует «отправь подруге»</div>
-        <div>2. <span class="text-gray-200 font-medium">Заголовок</span> — должен вызывать «ЧТО?! надо показать маме»</div>
-        <div>3. <span class="text-gray-200 font-medium">Первый коммент</span> — задаёт тон обсуждения</div>
-        <div>4. <span class="text-gray-200 font-medium">Хештеги</span> — микс ниша + средние + большие для охвата</div>
+        <div>1. <span class="text-amber-300 font-medium">Заголовок</span> → вставь в описание Reels (caption). Только заголовок, без хештегов!</div>
+        <div>2. <span class="text-gray-200 font-medium">Опубликуй</span> Reels</div>
+        <div>3. <span class="text-cyan-300 font-medium">Хештеги</span> → напиши ПЕРВЫЙ комментарий с хештегами (IG не режет охват)</div>
+        <div>4. <span class="text-emerald-300 font-medium">Закреп</span> → напиши второй коммент и закрепи его (провоцирует «отправь подруге»)</div>
+        <div>5. <span class="text-violet-300 font-medium">Первый коммент</span> → напиши третий коммент через 1-2 мин (запускает обсуждение)</div>
       </div>
-      <div class="text-[9px] text-gray-500 mt-3">Персонажи: ${charA.name_ru || 'A'} × ${charB.name_ru || 'B'}</div>
+      <div class="text-[9px] text-gray-500 mt-3">Серия: ${charA.name_ru || 'A'} × ${charB.name_ru || 'B'} — используй один серийный тег на все видео этой пары</div>
     </div>
   `;
 }
