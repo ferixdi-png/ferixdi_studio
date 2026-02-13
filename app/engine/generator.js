@@ -47,15 +47,28 @@ const HOOK_ACTIONS = [
 
 // ─── RELEASE ACTIONS v2 ──────────────────────
 const RELEASE_ACTIONS = [
-  { action_en: 'shared raspy wheeze-laugh, camera shakes from body tremor', action_ru: 'Общий хриплый смех, камера трясётся от тряски тела' },
-  { action_en: 'A slaps own knee, B doubles over, tears forming', action_ru: 'A хлопает по колену, B сгибается пополам, слёзы' },
-  { action_en: 'both lean into each other laughing, brief embrace', action_ru: 'Оба заваливаются друг на друга от смеха' },
-  { action_en: 'A covers mouth suppressing laugh, B slow triumphant grin', action_ru: 'A зажимает рот, B медленная победная ухмылка' },
-  { action_en: 'synchronized head-throw-back cackle, camera jolts', action_ru: 'Синхронный хохот с запрокинутой головой' },
+  { action_en: 'shared raspy wheeze-laugh, camera shakes from body tremor', action_ru: 'Общий хриплый смех, камера трясётся от тряски тела', audio: 'overlapping wheeze-laughs, gasping inhales, camera mic rumble from hand shake' },
+  { action_en: 'A slaps own knee, B doubles over, tears forming', action_ru: 'A хлопает по колену, B сгибается пополам, слёзы', audio: 'knee slap impact, strained laughing exhale, sniffling tears' },
+  { action_en: 'both lean into each other laughing, brief embrace', action_ru: 'Оба заваливаются друг на друга от смеха', audio: 'fabric collision rustle, dual belly-laugh, affectionate shoulder pat' },
+  { action_en: 'A covers mouth suppressing laugh, B slow triumphant grin', action_ru: 'A зажимает рот, B медленная победная ухмылка', audio: 'muffled snort through fingers, quiet satisfied chuckle, nose exhale' },
+  { action_en: 'synchronized head-throw-back cackle, camera jolts', action_ru: 'Синхронный хохот с запрокинутой головой', audio: 'explosive dual cackle, chair creak from lean-back, camera mic peak (near-clip)' },
 ];
 
 // ─── SERIAL PROP ANCHORS ─────────────────────
-const PROP_ANCHORS = ['old brass samovar', 'dented aluminum bucket', 'cast-iron poker', 'cracked enamel kettle', 'wobbly wooden stool', 'vintage radio', 'wall-mounted rotary phone'];
+const PROP_ANCHORS = [
+  'old brass samovar with tarnished patina and wooden handles',
+  'dented aluminum bucket with water condensation',
+  'cast-iron poker leaning against brick surface',
+  'cracked enamel kettle with chipped blue-white pattern',
+  'wobbly three-legged wooden stool with worn seat',
+  'vintage Rigonda radio with bakelite knobs',
+  'wall-mounted rotary phone with coiled cord',
+  'heavy glass ashtray with Soviet-era etching',
+  'rusted tin watering can with bent spout',
+  'dog-eared wall calendar from previous year',
+  'ceramic sugar bowl with missing lid, spoon inside',
+  'folded newspaper with visible Cyrillic headline',
+];
 
 const HUMOR_CATEGORIES = [
   { ru: 'Бытовой абсурд', en: 'Domestic absurdity' },
@@ -575,7 +588,7 @@ function buildTimingGridV2(hookObj, releaseObj) {
       { segment: 'hook', ...GRID_V2.hook, action_en: hookObj.action_en, audio: hookObj.audio },
       { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers short pompous provocation (6-9 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
       { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (6-11 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
-      { segment: 'release', ...GRID_V2.release, action_en: releaseObj.action_en, note: 'ZERO words, shared laughter only' },
+      { segment: 'release', ...GRID_V2.release, action_en: releaseObj.action_en, audio: releaseObj.audio, note: 'ZERO words, shared laughter only' },
     ],
   };
 }
@@ -712,39 +725,54 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Hyper-realistic close-up still frame. Two characters in heated comedic argument. ${location}. Natural backlight, hard shadows, dust motes in beams. ${aesthetic} aesthetic. Vertical 9:16. Shot on handheld phone, device invisible.`,
+    scene: `Hyper-realistic close-up still frame captured mid-argument. Two characters in heated comedic confrontation, faces 40-60cm from camera. ${location}. Natural backlight creating hard shadows and warm rim light on faces. Dust motes visible in light beams. ${aesthetic} aesthetic. Vertical 9:16 aspect ratio, 1080x1920px.`,
     characters: [
       {
-        role: 'A',
+        role: 'A — provocateur (speaking)',
         appearance: charA.prompt_tokens.character_en,
         face_anchor: anchorA.face_silhouette || 'distinctive face',
         signature: anchorA.signature_element || 'notable accessory',
-        expression: `mid-sentence animated, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact`,
+        skin_detail: cast.speaker_A.skin,
+        eyes_detail: cast.speaker_A.eyes,
+        mouth_detail: 'mouth open mid-word, realistic teeth/gums visible, lip moisture, micro saliva glint on lower lip',
+        expression: `mid-sentence animated, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, eyebrows raised in outrage, nostrils slightly flared`,
+        body: 'leaning forward aggressively, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised',
         wardrobe: wardrobeA,
+        spatial: 'positioned left of frame, body angled 30° toward B',
       },
       {
-        role: 'B',
+        role: 'B — punchline (listening, silent)',
         appearance: charB.prompt_tokens.character_en,
         face_anchor: anchorB.face_silhouette || 'distinctive face',
         signature: anchorB.signature_element || 'notable accessory',
-        expression: `stoic unimpressed, ${anchorB.micro_gesture || 'raised eyebrow'}, mouth firmly closed, arms crossed`,
+        skin_detail: cast.speaker_B.skin,
+        eyes_detail: cast.speaker_B.eyes,
+        mouth_detail: 'mouth FIRMLY SEALED, jaw still, lips pressed together, slight contemptuous curl at corner',
+        expression: `stoic unimpressed, ${anchorB.micro_gesture || 'raised eyebrow'}, eyes tracking A with subtle skepticism, one eyebrow 2mm higher than the other`,
+        body: 'arms crossed or hands on hips, leaning back slightly, weight on back foot, chin slightly raised',
         wardrobe: wardrobeB,
+        spatial: 'positioned right of frame, body angled 30° toward A',
       },
     ],
     environment: {
       location,
-      lighting: 'natural backlight with hard shadows, dust motes ONLY if backlight present, warm 3200K',
-      prop_anchor: propAnchor,
-      props: ['worn surface', propAnchor, 'ambient domestic detail'],
+      lighting: 'natural backlight with hard shadows, warm color temperature 3200K, dust motes ONLY in backlight beams, soft fill from environment bounce, realistic shadow under nose and cheekbones',
+      prop_anchor: `${propAnchor} visible in mid-ground, slightly out of focus`,
+      props: ['worn textured surface beneath characters', propAnchor, 'ambient domestic detail in soft bokeh background', 'natural clutter appropriate to location'],
+      atmosphere: 'lived-in, authentic, slightly chaotic domestic environment',
     },
     camera: {
-      angle: 'slightly below eye level, selfie POV at arm\'s length',
-      distance: 'close enough to read skin, both faces in frame',
-      lens: '24mm equivalent, f/2.0, shallow DOF',
+      angle: 'slightly below eye level (5-10°), selfie POV at arm\'s length, device INVISIBLE',
+      distance: 'close enough to read skin microtexture and pore detail, both faces fully in frame',
+      lens: '24mm equivalent, f/2.0, shallow DOF — faces sharp, background 20-30% bokeh',
+      focus: 'critical focus on eyes of speaking character (A), B in acceptable focus, background soft',
+      composition: 'loose rule-of-thirds, A occupies left third, B right third, slight headroom, intimate framing',
       realism: cameraPreset.realism_anchors.join(', '),
     },
-    style: 'photorealistic, cinematic grain, raw authentic feel, no filters',
-    negative: 'no text, no watermark, no logo, no phone visible, no camera visible, no overlay, no cartoon, no anime, no plastic skin',
+    color_mood: 'warm amber undertone, slightly desaturated shadows, natural skin tones (no orange/tan filter), subtle teal in shadows for cinematic contrast',
+    hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
+    style: 'photorealistic, cinematic grain (ISO 800-1600 feel), raw authentic feel, no filters, no beauty mode, skin imperfections VISIBLE and CELEBRATED',
+    negative: 'no text, no watermark, no logo, no phone visible, no camera visible, no overlay, no cartoon, no anime, no plastic skin, no airbrushed look, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting',
     ...(product_info?.description_en ? {
       product_placement: {
         instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as described — same shape, colors, branding, materials. It is the focal point of their argument.',
@@ -758,9 +786,26 @@ export function generate(input) {
   const video_prompt_en_json = {
     cast,
     identity_anchors: {
-      A: { silhouette: anchorA.face_silhouette, element: anchorA.signature_element, gesture: anchorA.micro_gesture },
-      B: { silhouette: anchorB.face_silhouette, element: anchorB.signature_element, gesture: anchorB.micro_gesture },
+      A: { silhouette: anchorA.face_silhouette, element: anchorA.signature_element, gesture: anchorA.micro_gesture, wardrobe: wardrobeA },
+      B: { silhouette: anchorB.face_silhouette, element: anchorB.signature_element, gesture: anchorB.micro_gesture, wardrobe: wardrobeB },
       serial: { aesthetic, prop_anchor: propAnchor },
+    },
+    dialogue: {
+      line_A_ru: dialogueA,
+      line_B_ru: dialogueB,
+      killer_word: killerWord,
+      language: 'Russian (spoken naturally with regional intonation)',
+      lip_sync: 'CRITICAL: mouth movements must match Russian phonemes precisely. Each syllable produces visible jaw/lip movement. Consonants: visible tongue/teeth contact. Vowels: proportional mouth opening.',
+    },
+    spatial: {
+      positioning: 'Both characters face camera at arm\'s length distance (selfie POV). A on left, B on right. They stand/sit shoulder-to-shoulder or slightly angled toward each other (30°). Close enough to touch but not touching.',
+      camera_movement: 'Handheld micro-jitter throughout. Hook: slight camera push-in. Act_A: subtle drift toward A. Act_B: micro-pan to B. Release: camera shakes from laughter tremor.',
+    },
+    emotion_arc: {
+      hook: 'tension spike — sudden attention-grabbing action, both characters alert',
+      act_A: 'escalation — A builds righteous indignation, volume rises, gestures amplify. B simmers silently, micro-reactions in eyes only',
+      act_B: 'reversal — B delivers measured response, voice drops to contrast A. Killer word lands with weight. A freezes in disbelief',
+      release: 'catharsis — both break into genuine laughter, tension dissolves, warmth between characters revealed',
     },
     vibe: {
       dynamic: `${charA.name_ru} (A, ${charA.vibe_archetype || 'провокатор'}) → ${charB.name_ru} (B, ${charB.vibe_archetype || 'база'})`,
@@ -771,19 +816,21 @@ export function generate(input) {
     camera: cameraPreset,
     world: {
       location,
-      lighting: 'natural backlight, hard shadows, dust motes in beams when applicable',
+      lighting: 'natural backlight, hard shadows, dust motes in beams when applicable, warm 3200K, no studio lighting',
       wardrobe_A: wardrobeA,
       wardrobe_B: wardrobeB,
-      prop_anchor: propAnchor,
+      prop_anchor: `${propAnchor} — visible in scene, may be interacted with during hook`,
     },
     timing: timingGrid,
     audio: {
-      room_tone: true,
-      cloth_rustle: 'on movement',
-      saliva_clicks: 'on consonants',
-      overlap_policy: 'STRICTLY FORBIDDEN. Gap 0.15-0.25s stitch between speakers.',
-      mouth_rule: 'Non-speaking character: sealed lips, jaw still, subtle eye tracking only',
-      laugh: 'louder than dialogue, no clipping, raspy and contagious',
+      room_tone: 'subtle ambient room sound appropriate to location (e.g., fridge hum, bird chirps, distant traffic)',
+      cloth_rustle: 'on every major body movement, fabric-appropriate sound',
+      saliva_clicks: 'subtle mouth sounds on hard consonants (т, к, п, д)',
+      breathing: 'audible inhale before each speaking turn, exhale on emphasis words',
+      overlap_policy: 'STRICTLY FORBIDDEN. Gap 0.15-0.25s silence stitch between speakers. No simultaneous speech ever.',
+      mouth_rule: 'Non-speaking character: sealed lips, jaw completely still, NO micro-movements of mouth. Eye tracking and subtle facial micro-expressions ONLY.',
+      laugh: 'louder than dialogue peak by 20-30%, no digital clipping, raspy and contagious, bodies visibly shaking',
+      foley: 'table/surface impacts if hook involves slap, object rattle on impact, fabric whoosh on dramatic gesture',
     },
     safety: {
       banned_words_replaced: true,
@@ -791,8 +838,9 @@ export function generate(input) {
       no_overlays: true,
       no_text_in_frame: true,
       content_type: 'satirical/domestic',
+      hands: 'exactly 5 fingers per hand at all times, anatomically correct',
     },
-    output: { format: 'mp4 h264', resolution: '1080x1920 vertical 9:16', fps: 30, duration: '8.0s ±0.2s' },
+    output: { format: 'mp4 h264', resolution: '1080x1920 vertical 9:16', fps: 30, duration: '8.0s ±0.2s', color: 'rec709, natural grade, no LUT' },
     ...(product_info?.description_en ? {
       product_placement: {
         instruction: 'CRITICAL: The product described below MUST appear in the video. Character A holds/shows it during their line. The product must be rendered with photorealistic accuracy matching the original reference photo exactly — same colors, shape, branding, materials, proportions.',
@@ -809,6 +857,12 @@ export function generate(input) {
   const hashMem = thread_memory ? (typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(thread_memory))).slice(0, 8) : 'mem') : 'none';
   const ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
+📂 Категория: ${cat.ru}
+📍 Локация: ${location.split(',')[0]}
+👗 A: ${wardrobeA.split(',')[0]}
+👔 B: ${wardrobeB.split(',')[0]}
+🪑 Реквизит: ${propAnchor}
+
 [0.00–0.80] 🎣 ХУК: ${hookObj.action_ru}
   🔊 Звук: ${hookObj.audio}
 
@@ -816,16 +870,16 @@ export function generate(input) {
   «${dialogueA}»
   💬 Темп: ${charA.speech_pace} | Слов: 6-9 | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers.hook_style}
-  ⛔ B молчит: губы сомкнуты, челюсть неподвижна
+  👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
 [3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
   «${dialogueB}»
   💬 Темп: ${charB.speech_pace} | Слов: 6-11 | паузы = сила
   💥 KILLER WORD «${killerWord}» → ближе к 7.0s
-  ⛔ A замерла в позе, рот закрыт
+  👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
 
 [7.10–8.00] 😂 RELEASE: ${releaseObj.action_ru}
-  🔊 Смех громче реплик, без клиппинга
+  🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
 
 ═══════════════════════════════════════════
 

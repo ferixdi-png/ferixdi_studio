@@ -98,18 +98,22 @@ app.post('/api/product/describe', async (req, res) => {
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
-    const prompt = `You are a product photography analyst. Analyze this product photo and provide an ULTRA-DETAILED description in English for AI image/video generation.
+    const prompt = `You are a product photography analyst specializing in creating descriptions for AI image and video generation. Analyze this product photo and provide an ULTRA-DETAILED description in English.
 
-Include ALL of the following in structured format:
-1. **PRODUCT TYPE**: What is this product (category, name if recognizable)
-2. **SHAPE & FORM**: Exact shape, proportions, dimensions feel, silhouette
-3. **COLORS & MATERIALS**: Every color, gradient, texture, material (matte/glossy/metallic/transparent etc.)
-4. **BRANDING & TEXT**: Any logos, labels, text, fonts visible on the product
-5. **DETAILS & FEATURES**: Buttons, caps, handles, patterns, seams, edges, surface details
-6. **LIGHTING & SHADOWS**: How light interacts with the product surface (reflections, highlights, shadows)
-7. **PACKAGING**: If visible — box, wrapper, tag details
+IGNORE the background completely — describe ONLY the product itself.
 
-Format your response as a single dense paragraph optimized for AI image generation prompts. Start directly with the product description, no preamble. Be extremely specific about every visual detail — the goal is that an AI model can recreate this EXACT product from the description alone.`;
+Include ALL of the following:
+1. **PRODUCT TYPE**: Category, brand name if recognizable, model if visible
+2. **SHAPE & FORM**: Exact silhouette, proportions, estimated dimensions (e.g., "approximately 15cm tall, 5cm diameter"), 3D form description
+3. **COLORS & MATERIALS**: Every color with specificity (e.g., "matte charcoal black with 5% warm undertone"), gradients, texture description, material type (matte/glossy/metallic/satin/transparent/frosted/brushed etc.)
+4. **BRANDING & TEXT**: All visible logos, labels, text — exact fonts if recognizable, colors of text, placement on product, size relative to product
+5. **SURFACE DETAILS**: Buttons, caps, handles, patterns, seams, edges, ridges, embossing, debossing, stitching, wear marks
+6. **REFLECTIONS & LIGHT BEHAVIOR**: How light interacts with each surface — specular highlights, diffuse reflection, transparency, refraction, shadow casting characteristics
+7. **CONDITION**: New/used/vintage, any wear, scratches, patina
+8. **PACKAGING**: If visible — box, wrapper, tag, ribbon, seal details
+9. **VIEWING ANGLE**: Describe the angle this photo was taken from (front, 3/4, top-down, etc.)
+
+Format your response as a single dense paragraph optimized for AI image generation prompts. Start directly with the product description, no preamble. Be extremely specific about every visual detail — the goal is that an AI model can recreate this EXACT product from the description alone, matching it to the original photo with 95%+ visual accuracy.`;
 
     const body = {
       contents: [{
