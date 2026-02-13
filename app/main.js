@@ -45,7 +45,10 @@ async function initAccessGate() {
   if (saved) {
     try {
       const data = JSON.parse(saved);
-      if (data.accessGranted) { unlockApp(); return; }
+      if (data.accessGranted) {
+        unlockApp(data.label || 'user');
+        return;
+      }
     } catch {}
   }
 
@@ -64,9 +67,9 @@ async function initAccessGate() {
       const data = await resp.json();
       const match = data.keys.find(k => k.hash === hash);
       if (match) {
-        localStorage.setItem('ferixdi_access', JSON.stringify({ accessGranted: true, ts: Date.now(), keyHash: hash }));
-        status.innerHTML = '<span class="neon-text-green">✓ Ключ принят. Добро пожаловать.</span>';
-        setTimeout(unlockApp, 600);
+        localStorage.setItem('ferixdi_access', JSON.stringify({ accessGranted: true, ts: Date.now(), keyHash: hash, label: match.label }));
+        status.innerHTML = `<span class="neon-text-green">✓ Доступ открыт. Привет, ${match.label}!</span>`;
+        setTimeout(() => unlockApp(match.label), 600);
         log('OK', 'AUTH', `Access granted (${match.label})`);
       } else {
         status.innerHTML = '<span class="text-red-400">✗ Неверный ключ. Проверьте и попробуйте снова.</span>';
@@ -81,12 +84,23 @@ async function initAccessGate() {
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); });
 }
 
-function unlockApp() {
+function unlockApp(label) {
   document.getElementById('access-gate').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
-  log('OK', 'SYSTEM', 'FERIXDI Studio initialized');
+  // Show user label in header
+  const modeEl = document.getElementById('header-mode');
+  if (modeEl && label) modeEl.textContent = label.toUpperCase();
+  log('OK', 'SYSTEM', `FERIXDI Studio v2.0 — welcome, ${label || 'user'}`);
   loadCharacters();
   updateCacheStats();
+  // Open Characters section by default so user knows what to do
+  const charsNav = document.querySelector('.nav-item[data-section="characters"]');
+  if (charsNav) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    charsNav.classList.add('active');
+    document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
+    document.getElementById('section-characters')?.classList.remove('hidden');
+  }
 }
 
 // ─── CHARACTERS ──────────────────────────────

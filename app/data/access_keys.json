@@ -4,7 +4,32 @@
       "hash": "baff2cc59ac00fd7a61a050b23379aec42a0f743d14ce5e23b9190f294d5fc61",
       "label": "demo",
       "created": "2026-02-13"
+    },
+    {
+      "hash": "bc6f301ecc9d72e7f2958ba89cb1524cc560984ca0131c5bf43a476c1d98d184",
+      "label": "vip",
+      "created": "2026-02-13"
+    },
+    {
+      "hash": "fa1d56c9d4fb4c53d3aee91884cdc877372366e142181e0fc9204f960d18c1d9",
+      "label": "friend-001",
+      "created": "2026-02-13"
+    },
+    {
+      "hash": "caa656679076b9a462e506818066816f0a4d932a566cdef38264dde5c027bb67",
+      "label": "friend-002",
+      "created": "2026-02-13"
+    },
+    {
+      "hash": "5cdc3c4472a10733a4ba6c222c13453ff385c2c2567b8b8d2e3bbe87c4a7d562",
+      "label": "friend-003",
+      "created": "2026-02-13"
+    },
+    {
+      "hash": "5021d3d6e7e6734f479a018c6c69bca0b403d6403bcd365ad6d29b59821da086",
+      "label": "test",
+      "created": "2026-02-13"
     }
   ],
-  "note": "SHA-256 hashes only. Never store plaintext keys. Demo key: FERIXDI-DEMO-2026"
+  "note": "SHA-256 hashes only. Never store plaintext keys."
 }
