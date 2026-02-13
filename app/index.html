@@ -40,29 +40,8 @@
   <div class="stars-bg"></div>
   <div class="scanline-overlay"></div>
 
-  <!-- ACCESS GATE -->
-  <div id="access-gate" class="fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(10,10,15,0.98)">
-    <div class="glass-panel-solid p-8 w-full max-w-md text-center relative overflow-hidden">
-      <!-- Top accent line -->
-      <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500/50 to-transparent"></div>
-      <div class="relative z-10">
-        <div class="text-4xl font-black tracking-widest neon-text mb-2">FERIXDI</div>
-        <div class="text-sm text-gray-400 mb-1 tracking-[0.3em] font-light">STUDIO</div>
-        <div class="text-[11px] text-gray-600 mb-8 tracking-wide">Генератор контента для соцсетей</div>
-        <div class="mb-6">
-          <label class="block text-xs text-gray-400 mb-2 text-left font-medium">Промо-код</label>
-          <input id="access-key-input" type="password" class="input-field text-center tracking-widest text-lg" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
-        </div>
-        <button id="access-key-btn" class="btn-primary w-full mb-4 text-base">Войти</button>
-        <div id="access-status" class="text-sm h-6"></div>
-        <div class="mt-6 text-[11px] text-gray-600/60">Введите промо-код для доступа</div>
-        <div class="mt-3 text-[11px] text-gray-600/50">Нужен доступ? <a href="https://t.me/ferixdiii" target="_blank" class="text-violet-400/70 hover:text-violet-300 transition-colors">Написать в Telegram →</a></div>
-      </div>
-    </div>
-  </div>
-
   <!-- MAIN APP -->
-  <div id="app" class="hidden fixed inset-0 z-10 flex flex-col">
+  <div id="app" class="fixed inset-0 z-10 flex flex-col">
     <!-- Header -->
     <header class="flex items-center justify-between px-5 py-3 border-b border-space-border relative" style="background:rgba(8,8,20,0.92); backdrop-filter:blur(24px)">
       <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/20 to-transparent"></div>
@@ -72,9 +51,8 @@
         <div class="pulse-dot"></div>
       </div>
       <div class="flex items-center gap-4">
-        <span id="header-mode" class="tag text-xs">DEMO</span>
+        <span id="header-mode" class="tag text-xs">ДЕМО</span>
         <button id="btn-settings" class="text-gray-500 hover:text-gray-300 transition-colors text-sm">⚙️</button>
-        <button id="btn-logout" class="text-gray-500 hover:text-red-400 transition-colors text-xs">Выход</button>
       </div>
     </header>
 
@@ -372,16 +350,30 @@
         <!-- SECTION: Settings -->
         <section id="section-settings" class="section-panel hidden space-y-4">
           <h2 class="text-lg font-semibold text-white">⚙️ Настройки</h2>
+
+          <!-- Промо-код -->
+          <div class="glass-panel p-4 space-y-3">
+            <div class="text-xs text-gray-400 font-medium">🔑 Промо-код</div>
+            <div class="flex gap-2">
+              <input id="promo-input" type="password" class="input-field flex-1 text-center tracking-widest" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
+              <button id="promo-save-btn" class="btn-neon text-xs whitespace-nowrap">Сохранить</button>
+            </div>
+            <div id="promo-status" class="text-xs h-5"></div>
+            <p class="text-[11px] text-gray-500/70">Без промо-кода вы можете просматривать персонажей, но генерация недоступна.</p>
+            <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-violet-400/70 hover:text-violet-300 transition-colors">Написать в Telegram →</a></p>
+          </div>
+
+          <!-- Режим -->
           <div class="glass-panel p-4 space-y-4">
             <div>
-              <label class="text-xs text-gray-400 mb-1 block font-medium">Режим</label>
+              <label class="text-xs text-gray-400 mb-1 block font-medium">Режим генерации</label>
               <div class="flex gap-2">
-                <button class="mode-btn active" data-setting="demo">Demo (локально)</button>
-                <button class="mode-btn" data-setting="api">API (backend)</button>
+                <button class="mode-btn active" data-setting="demo">Демо (локально)</button>
+                <button class="mode-btn" data-setting="api">API (сервер)</button>
               </div>
             </div>
             <div id="api-settings" class="hidden space-y-3">
-              <label class="text-xs text-gray-400 font-medium">Backend URL:</label>
+              <label class="text-xs text-gray-400 font-medium">URL сервера:</label>
               <input id="api-url" type="url" class="input-field" placeholder="https://your-backend.onrender.com">
               <div class="flex items-center justify-between">
                 <span class="text-xs text-gray-400">Валидация через сервер</span>
@@ -389,13 +381,15 @@
               </div>
             </div>
             <div>
-              <label class="text-xs text-gray-400 mb-1 block font-medium">Кеш истории</label>
+              <label class="text-xs text-gray-400 mb-1 block font-medium">Кеш истории генераций</label>
               <div class="flex gap-2 items-center">
                 <span id="cache-stats" class="text-xs text-gray-500">—</span>
                 <button id="btn-clear-cache" class="btn-neon-pink text-xs">Очистить</button>
               </div>
             </div>
           </div>
+
+          <!-- О проекте -->
           <div class="glass-panel p-4 relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/15 to-transparent"></div>
             <div class="text-xs text-gray-400 font-medium mb-2">О проекте</div>
@@ -403,6 +397,8 @@
             <p class="text-xs text-gray-400 mt-1.5 leading-relaxed">Выбери персонажей → опиши идею → получи промпт для фото, видео и текст для поста.</p>
             <p class="text-[11px] text-gray-500/70 mt-2.5 leading-relaxed">Ремикс структуры и темпа. Оригинальный контент без копирования.</p>
           </div>
+
+          <!-- Поддержка -->
           <div class="glass-panel p-4 relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/15 to-transparent"></div>
             <div class="text-xs text-gray-400 font-medium mb-2">Поддержка</div>
@@ -423,7 +419,7 @@
   <div id="log-panel" class="fixed bottom-4 right-4 z-40 w-80 max-h-48 hidden">
     <div class="glass-panel-solid rounded-lg overflow-hidden border border-space-border shadow-xl">
       <div class="flex items-center justify-between px-3 py-1.5 border-b border-gray-800/50 cursor-pointer" id="log-toggle">
-        <span class="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Console</span>
+        <span class="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Консоль</span>
         <span class="text-[10px] text-gray-600" id="log-toggle-icon">▼</span>
       </div>
       <div id="log-output" class="p-2 overflow-y-auto max-h-36 text-[10px] font-mono leading-relaxed space-y-0.5"></div>

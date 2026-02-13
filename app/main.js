@@ -41,32 +41,39 @@ function log(level, module, msg) {
   while (el.children.length > 200) el.removeChild(el.firstChild);
 }
 
-// ─── ACCESS GATE ─────────────────────────────
+// ─── PROMO CODE ──────────────────────────────
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-async function initAccessGate() {
-  // Check localStorage
+function isPromoValid() {
   const saved = localStorage.getItem('ferixdi_access');
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      if (data.accessGranted) {
-        unlockApp(data.label || 'user');
-        return;
-      }
-    } catch {}
-  }
+  if (!saved) return false;
+  try {
+    const data = JSON.parse(saved);
+    return !!data.accessGranted;
+  } catch { return false; }
+}
 
-  const btn = document.getElementById('access-key-btn');
-  const input = document.getElementById('access-key-input');
-  const status = document.getElementById('access-status');
+function initPromoCode() {
+  const btn = document.getElementById('promo-save-btn');
+  const input = document.getElementById('promo-input');
+  const status = document.getElementById('promo-status');
+  if (!btn || !input) return;
+
+  // Show saved state
+  if (isPromoValid()) {
+    const saved = JSON.parse(localStorage.getItem('ferixdi_access'));
+    status.innerHTML = `<span class="neon-text-green">✓ Промо-код активен (${saved.label || 'user'})</span>`;
+    input.placeholder = '••••••••';
+    const modeEl = document.getElementById('header-mode');
+    if (modeEl) modeEl.textContent = (saved.label || 'ДЕМО').toUpperCase();
+  }
 
   btn.addEventListener('click', async () => {
     const key = input.value.trim();
-    if (!key) { status.innerHTML = '<span class="text-red-400">Введите ключ</span>'; return; }
+    if (!key) { status.innerHTML = '<span class="text-red-400">Введите промо-код</span>'; return; }
     status.innerHTML = '<span class="text-gray-500">Проверяю...</span>';
 
     try {
@@ -76,29 +83,27 @@ async function initAccessGate() {
       const match = data.keys.find(k => k.hash === hash);
       if (match) {
         localStorage.setItem('ferixdi_access', JSON.stringify({ accessGranted: true, ts: Date.now(), keyHash: hash, label: match.label }));
-        status.innerHTML = `<span class="neon-text-green">✓ Доступ открыт. Привет, ${match.label}!</span>`;
-        setTimeout(() => unlockApp(match.label), 600);
-        log('OK', 'AUTH', `Access granted (${match.label})`);
+        status.innerHTML = `<span class="neon-text-green">✓ Промо-код активен! Привет, ${match.label}!</span>`;
+        input.value = '';
+        input.placeholder = '••••••••';
+        const modeEl = document.getElementById('header-mode');
+        if (modeEl) modeEl.textContent = match.label.toUpperCase();
+        log('OK', 'ПРОМО', `Промо-код принят (${match.label})`);
       } else {
-        status.innerHTML = '<span class="text-red-400">✗ Неверный ключ. Проверьте и попробуйте снова.</span>';
-        log('WARN', 'AUTH', 'Invalid key attempt');
+        status.innerHTML = '<span class="text-red-400">✗ Неверный промо-код. Проверьте и попробуйте снова.</span>';
+        log('WARN', 'ПРОМО', 'Неверный промо-код');
       }
     } catch (e) {
       status.innerHTML = '<span class="text-red-400">Ошибка проверки</span>';
-      log('ERR', 'AUTH', e.message);
+      log('ERR', 'ПРОМО', e.message);
     }
   });
 
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); });
 }
 
-function unlockApp(label) {
-  document.getElementById('access-gate').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-  // Show user label in header
-  const modeEl = document.getElementById('header-mode');
-  if (modeEl && label) modeEl.textContent = label.toUpperCase();
-  log('OK', 'SYSTEM', `FERIXDI Studio v2.0 — welcome, ${label || 'user'}`);
+function initApp() {
+  log('OK', 'СИСТЕМА', 'FERIXDI Studio v2.0 — добро пожаловать!');
   loadCharacters();
   updateCacheStats();
   navigateTo('characters');
@@ -726,6 +731,14 @@ function initGenerate() {
     }
 
     const btn = document.getElementById('btn-generate');
+
+    // Проверка промо-кода перед генерацией
+    if (!isPromoValid()) {
+      showGenStatus('🔑 Для генерации нужен промо-код. Введите его в разделе «Настройки».', 'text-amber-400');
+      log('WARN', 'ГЕНЕРАЦИЯ', 'Промо-код не введён — генерация заблокирована');
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = '⏳ Генерирую...';
 
@@ -772,20 +785,20 @@ function initGenerate() {
 
     if (isApiMode && localResult._apiContext) {
       showGenStatus('🤖 Gemini дорабатывает контент...', 'text-violet-400');
-      log('INFO', 'GEMINI', 'Sending context to Gemini API...');
+      log('INFO', 'GEMINI', 'Отправляю контекст в Gemini API...');
 
       try {
         const geminiData = await callGeminiAPI(localResult._apiContext);
         if (geminiData) {
           const merged = mergeGeminiResult(localResult, geminiData);
-          log('OK', 'GEMINI', 'Creative content merged from Gemini');
+          log('OK', 'GEMINI', 'Творческий контент от Gemini объединён');
           displayResult(merged);
         } else {
           showGenStatus('❌ API не настроен. Укажите Backend URL в настройках.', 'text-red-400');
-          log('ERR', 'GEMINI', 'API URL or JWT not configured');
+          log('ERR', 'GEMINI', 'API URL или токен не настроены');
         }
       } catch (apiErr) {
-        log('ERR', 'GEMINI', `API error: ${apiErr.message}`);
+        log('ERR', 'GEMINI', `Ошибка API: ${apiErr.message}`);
         showGenStatus('', '');
         document.getElementById('gen-results').classList.remove('hidden');
         document.getElementById('gen-results').innerHTML = `
@@ -800,7 +813,7 @@ function initGenerate() {
       }
     } else if (!isApiMode) {
       showGenStatus('❌ Переключитесь на режим API в настройках для генерации.', 'text-red-400');
-      log('WARN', 'GEN', 'Demo mode disabled — API mode required');
+      log('WARN', 'ГЕНЕРАЦИЯ', 'Режим демо отключён — нужен режим API');
     } else {
       displayResult(localResult);
     }
@@ -893,7 +906,7 @@ function initTimingCoach() {
   });
 
   document.getElementById('timing-highlight')?.addEventListener('click', () => {
-    log('INFO', 'TIMING', 'Ударные слова подсвечены в RU Package');
+    log('INFO', 'ТАЙМИНГ', 'Ударные слова подсвечены');
     // Highlight killer word in ru_package display
     if (state.lastResult) {
       const pre = document.querySelector('#tab-ru pre');
@@ -923,9 +936,9 @@ function initCopyButtons() {
         const orig = btn.textContent;
         btn.textContent = '✓ Скопировано!';
         setTimeout(() => { btn.textContent = orig; }, 1500);
-        log('OK', 'COPY', `${tab} prompt copied to clipboard`);
+        log('OK', 'КОПИЯ', `${tab} скопировано в буфер`);
       }).catch(() => {
-        log('WARN', 'COPY', 'Clipboard access denied');
+        log('WARN', 'КОПИЯ', 'Доступ к буферу запрещён');
       });
     });
   });
@@ -946,8 +959,8 @@ function initSettings() {
       btn.classList.add('active');
       state.settingsMode = btn.dataset.setting;
       document.getElementById('api-settings')?.classList.toggle('hidden', btn.dataset.setting !== 'api');
-      document.getElementById('header-mode').textContent = btn.dataset.setting === 'api' ? 'API' : 'DEMO';
-      log('INFO', 'SETTINGS', `Mode: ${btn.dataset.setting}`);
+      document.getElementById('header-mode').textContent = btn.dataset.setting === 'api' ? 'API' : 'ДЕМО';
+      log('INFO', 'НАСТРОЙКИ', `Режим: ${btn.dataset.setting}`);
     });
   });
 
@@ -960,7 +973,7 @@ function initSettings() {
       return;
     }
     localStorage.setItem('ferixdi_api_url', url);
-    log('INFO', 'API', `Backend URL saved: ${url}`);
+    log('INFO', 'API', `URL сервера сохранён: ${url}`);
 
     // Auto-authenticate against server using the saved access key
     const savedAccess = localStorage.getItem('ferixdi_access');
@@ -968,7 +981,7 @@ function initSettings() {
       try {
         const { keyHash } = JSON.parse(savedAccess);
         if (keyHash) {
-          log('INFO', 'API', 'Authenticating with server...');
+          log('INFO', 'API', 'Авторизация на сервере...');
           const resp = await fetch(`${url}/api/auth/validate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -978,14 +991,14 @@ function initSettings() {
             const data = await resp.json();
             if (data.jwt) {
               localStorage.setItem('ferixdi_jwt', data.jwt);
-              log('OK', 'API', `Authenticated! Token received for: ${data.label}`);
+              log('OK', 'API', `Авторизовано! Токен получен: ${data.label}`);
             }
           } else {
-            log('WARN', 'API', 'Server auth failed — check URL and key');
+            log('WARN', 'API', 'Ошибка авторизации — проверьте URL и ключ');
           }
         }
       } catch (err) {
-        log('WARN', 'API', `Cannot reach server: ${err.message}`);
+        log('WARN', 'API', `Не удалось связаться с сервером: ${err.message}`);
       }
     }
   });
@@ -993,7 +1006,7 @@ function initSettings() {
   document.getElementById('btn-clear-cache')?.addEventListener('click', () => {
     historyCache.clear();
     updateCacheStats();
-    log('OK', 'CACHE', 'History cache cleared');
+    log('OK', 'КЕШ', 'Кеш истории очищен');
   });
 }
 
@@ -1008,17 +1021,6 @@ function initHeaderSettings() {
   document.getElementById('btn-settings')?.addEventListener('click', () => navigateTo('settings'));
 }
 
-// ─── LOGOUT ──────────────────────────────────
-function initLogout() {
-  document.getElementById('btn-logout')?.addEventListener('click', () => {
-    localStorage.removeItem('ferixdi_access');
-    document.getElementById('app').classList.add('hidden');
-    document.getElementById('access-gate').classList.remove('hidden');
-    document.getElementById('access-key-input').value = '';
-    document.getElementById('access-status').innerHTML = '';
-    log('INFO', 'AUTH', 'Logged out');
-  });
-}
 
 // ─── CHAR FILTERS ────────────────────────────
 function initCharFilters() {
@@ -1029,7 +1031,7 @@ function initCharFilters() {
     [state.selectedA, state.selectedB] = [state.selectedB, state.selectedA];
     updateCharDisplay();
     renderCharacters(getCurrentFilters());
-    log('INFO', 'CHAR', 'Swapped A ⇄ B');
+    log('INFO', 'ПЕРСОНАЖИ', 'Местами: A ⇄ B');
   });
 }
 
@@ -1047,7 +1049,8 @@ function initLogPanel() {
 
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  initAccessGate();
+  initApp();
+  initPromoCode();
   initNavigation();
   initModeSwitcher();
   initToggles();
@@ -1058,7 +1061,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initGenerate();
   initTimingCoach();
   initSettings();
-  initLogout();
   initCharFilters();
   initCopyButtons();
   initHeaderSettings();
