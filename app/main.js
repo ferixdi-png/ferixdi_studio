@@ -424,6 +424,21 @@ function getCurrentFilters() {
   };
 }
 
+// ─── RANDOM PAIR ─────────────────────────────
+function initRandomPair() {
+  document.getElementById('btn-random-pair')?.addEventListener('click', () => {
+    const chars = state.characters;
+    if (!chars || chars.length < 2) return;
+    // Pick two different random characters
+    const idxA = Math.floor(Math.random() * chars.length);
+    let idxB = Math.floor(Math.random() * (chars.length - 1));
+    if (idxB >= idxA) idxB++;
+    selectChar('A', chars[idxA].id);
+    selectChar('B', chars[idxB].id);
+    log('INFO', 'ПЕРСОНАЖИ', `🎲 Случайная пара: ${chars[idxA].name_ru} × ${chars[idxB].name_ru}`);
+  });
+}
+
 // ─── NAVIGATION ──────────────────────────────
 function navigateTo(section) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1672,6 +1687,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDialogueEditor();
   initSettings();
   initCharFilters();
+  initRandomPair();
   initCopyButtons();
   initHeaderSettings();
   initLogPanel();
