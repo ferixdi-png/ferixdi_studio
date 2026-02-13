@@ -62,11 +62,11 @@
   <!-- MAIN APP -->
   <div id="app" class="hidden fixed inset-0 z-10 flex flex-col">
     <!-- Header -->
-    <header class="flex items-center justify-between px-4 py-2 border-b border-space-border" style="background:rgba(12,12,18,0.95)">
+    <header class="flex items-center justify-between px-5 py-3 border-b border-space-border" style="background:rgba(8,8,20,0.9); backdrop-filter:blur(20px)">
       <div class="flex items-center gap-3">
-        <span class="text-lg font-black font-mono neon-text tracking-wider">FERIXDI</span>
-        <span class="text-xs font-mono text-gray-600">STUDIO v2.0</span>
-        <div class="pulse-dot ml-2"></div>
+        <span class="text-lg font-bold neon-text tracking-wide">FERIXDI</span>
+        <span class="text-xs text-gray-500 font-light">STUDIO</span>
+        <div class="pulse-dot"></div>
       </div>
       <div class="flex items-center gap-4">
         <span id="header-mode" class="tag text-xs">DEMO</span>
@@ -78,9 +78,9 @@
     <!-- Body: Sidebar + Workspace -->
     <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar -->
-      <nav id="sidebar" class="w-56 flex-shrink-0 border-r border-space-border overflow-y-auto py-4" style="background:rgba(14,14,20,0.95)">
-        <div class="px-4 mb-4">
-          <div class="text-xs font-mono text-gray-600 uppercase tracking-widest">Модули</div>
+      <nav id="sidebar" class="w-56 flex-shrink-0 border-r border-space-border overflow-y-auto py-5" style="background:rgba(8,8,20,0.85); backdrop-filter:blur(20px)">
+        <div class="px-4 mb-5">
+          <div class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-medium">Навигация</div>
         </div>
         <div id="nav-items" class="space-y-1 px-2">
           <div class="nav-item active" data-section="characters"><span>👥</span><span>Персонажи</span></div>
@@ -324,14 +324,6 @@
       </main>
     </div>
 
-    <!-- Log Console -->
-    <div id="log-bar" class="border-t border-space-border px-4 py-2 flex-shrink-0" style="background:rgba(10,10,14,0.98);height:150px">
-      <div class="flex items-center justify-between mb-1">
-        <span class="text-xs font-mono text-gray-600">LOG CONSOLE</span>
-        <button id="log-clear" class="text-xs text-gray-600 hover:text-gray-400 font-mono">clear</button>
-      </div>
-      <div id="log-output" class="log-console"></div>
-    </div>
   </div>
 
   <script type="module" src="./main.js"></script>
