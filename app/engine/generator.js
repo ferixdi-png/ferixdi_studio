@@ -624,6 +624,49 @@ function buildCameraPreset() {
   };
 }
 
+// ─── REMAKE INSTRUCTION BUILDER ──────────────
+// When user provides a video reference, build a detailed instruction for Gemini
+// to recreate the video's vibe, structure, and dialogue with our characters
+function buildRemakeInstruction(video_meta, charA, charB) {
+  const parts = [];
+  parts.push('🎬 РЕЖИМ РЕМЕЙКА — ВОСПРОИЗВЕДИ ОРИГИНАЛЬНОЕ ВИДЕО');
+  parts.push('');
+  parts.push('Пользователь предоставил референс-видео. Твоя задача:');
+  parts.push('1. Воспроизвести СТРУКТУРУ и ЭНЕРГИЮ оригинала максимально точно');
+  parts.push('2. Заменить людей на наших персонажей (A и B)');
+  parts.push('3. Сохранить СТИЛЬ диалога, ТЕМП, ПАУЗЫ и ЭМОЦИИ из оригинала');
+  parts.push('4. Адаптировать текст под характеры наших персонажей, но сохранить суть');
+  parts.push('5. Если в оригинале есть визуальный гэг или действие — воспроизвести его');
+  parts.push('');
+
+  if (video_meta.title) {
+    parts.push(`📝 Название оригинала: "${video_meta.title}"`);
+  }
+  if (video_meta.author) {
+    parts.push(`👤 Автор: @${video_meta.author} (${video_meta.platform || 'TikTok/Instagram'})`);
+  }
+  if (video_meta.duration) {
+    parts.push(`⏱ Длительность оригинала: ${video_meta.duration}с`);
+  }
+  if (video_meta.music) {
+    parts.push(`🎵 Музыка: ${video_meta.music}`);
+  }
+
+  parts.push('');
+  parts.push(`🅰️ Персонаж A: ${charA.name_ru} — ${charA.vibe_archetype || 'провокатор'}, темп ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
+  parts.push(`🅱️ Персонаж B: ${charB.name_ru} — ${charB.vibe_archetype || 'панчлайн'}, темп ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
+  parts.push('');
+  parts.push('⚠️ ВАЖНО:');
+  parts.push('- Диалог ОБЯЗАТЕЛЬНО на русском языке');
+  parts.push('- Реплика A: 4-7 слов, окно 2.8 секунды');
+  parts.push('- Реплика B: 4-8 слов, окно 3.5 секунды');
+  parts.push('- Killer word — последнее ударное слово B, ближе к 7.0с');
+  parts.push('- Если к сообщению приложено фото обложки оригинала — используй его как визуальный референс');
+  parts.push('- Воспроизведи композицию кадра, позы, энергию из обложки');
+
+  return parts.join('\n');
+}
+
 // ─── TIMING GRID BUILDER (v2) ────────────────
 function buildTimingGridV2(hookObj, releaseObj) {
   return {
@@ -1137,6 +1180,9 @@ ${engage.hashtags.join(' ')}
       input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
       propAnchor, lightingMood, hookAction: hookObj, releaseAction: releaseObj,
       aesthetic, script_ru,
+      // Remake instruction — when video reference is provided, Gemini must replicate it
+      remake_mode: !!(video_meta?.url || video_meta?.title),
+      remake_instruction: (video_meta?.url || video_meta?.title) ? buildRemakeInstruction(video_meta, charA, charB) : null,
     },
   };
 }

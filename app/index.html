@@ -159,7 +159,7 @@
 
           <!-- Input — simple by default -->
           <div class="glass-panel p-4 space-y-3" id="section-remix">
-            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею (необязательно) — или оставь пустым, AI придумает сам..."></textarea>
+            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею, вставь ссылку на TikTok/Instagram — или оставь пустым, AI придумает сам..."></textarea>
             <div class="text-[10px] text-gray-600">Категория юмора, диалог и тайминг подберутся автоматически</div>
 
             <!-- Expandable: script / video / product -->
@@ -201,6 +201,9 @@
                       <button id="video-url-fetch" class="btn-neon text-xs whitespace-nowrap">Скачать</button>
                     </div>
                     <div id="video-url-status" class="text-xs hidden"></div>
+                    <div id="video-remake-badge" class="hidden text-[11px] text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-lg p-2.5 leading-relaxed">
+                      🎬 <strong>Режим ремейка</strong> — Gemini воспроизведёт это видео с твоими персонажами: тот же стиль, энергия и похожий диалог на русском
+                    </div>
                     <div id="video-url-result" class="hidden space-y-2">
                       <div class="flex gap-3 items-start">
                         <img id="video-url-cover" class="w-16 h-16 rounded-lg object-cover hidden" alt="cover">

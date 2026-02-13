@@ -311,6 +311,24 @@ function initModeSwitcher() {
       log('INFO', 'РЕЖИМ', `Ввод: ${mode === 'idea' ? 'идея' : mode === 'script' ? 'диалог' : 'видео'}`);
     });
   });
+
+  // Smart URL detection: if user pastes a TikTok/Instagram link into the main idea field,
+  // auto-switch to video mode and trigger fetch
+  document.getElementById('idea-input')?.addEventListener('paste', (e) => {
+    setTimeout(() => {
+      const text = e.target.value.trim();
+      if (text.includes('tiktok.com/') || text.includes('instagram.com/')) {
+        log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключаю в режим ремейка');
+        // Copy URL to video input
+        const videoInput = document.getElementById('video-url-input');
+        if (videoInput) videoInput.value = text;
+        // Clear idea input — it will be auto-filled after fetch
+        e.target.value = '';
+        // Auto-click fetch button
+        document.getElementById('video-url-fetch')?.click();
+      }
+    }, 50);
+  });
 }
 
 // ─── TOGGLES ─────────────────────────────────
@@ -456,7 +474,27 @@ function initVideoUrlFetch() {
         } catch { /* cover download failed, not critical */ }
       }
 
-      log('OK', 'ВИДЕО', `${data.platform}: ${data.title || 'видео'} (${data.duration || '?'}с)`);
+      // Show remake badge
+      document.getElementById('video-remake-badge')?.classList.remove('hidden');
+
+      // Auto-fill scene hint from video title for better Gemini context
+      if (data.title) {
+        const sceneHintEl = document.getElementById('scene-hint');
+        if (sceneHintEl && !sceneHintEl.value.trim()) {
+          sceneHintEl.value = data.title;
+        }
+      }
+
+      // Auto-fill idea input with video context if empty
+      const ideaInput = document.getElementById('idea-input');
+      if (ideaInput && !ideaInput.value.trim() && data.title) {
+        ideaInput.value = `Ремейк видео: ${data.title}`;
+      }
+
+      // Switch to video mode automatically
+      state.inputMode = 'video';
+
+      log('OK', 'ВИДЕО', `🎬 РЕМЕЙК: ${data.platform} — "${data.title || 'видео'}" (${data.duration || '?'}с)`);
 
     } catch (e) {
       showVideoStatus(`❌ Сетевая ошибка: ${e.message}`, 'text-red-400');
