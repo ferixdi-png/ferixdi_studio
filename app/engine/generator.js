@@ -890,7 +890,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       background: '2-3 environmental details in deep bokeh. Recognizable as shapes/colors but NOT sharp. A wall, a shelf, a window — NOT a detailed set. Smartphone portrait mode makes background deliberately simple.',
       headroom: '5-10% of frame above heads. Characters slightly below center (natural selfie composition — arm extends slightly up). No chin-crop, no forehead-crop.',
       aspect_ratio: '9:16 vertical (portrait mode). This is non-negotiable for Reels/TikTok. Characters fill the vertical frame. Horizontal detail is naturally limited by the narrow width.',
-      forbidden: 'No text/logos/watermarks in frame. No phones/screens visible. No mirror reflections showing camera. No perfect production design. No more than 5 distinct visual elements total. CLUTTERED = FAKE, CLEAN = REAL.',
+      forbidden: 'ABSOLUTELY NO text overlays, NO subtitles, NO captions, NO letters/numbers on screen, NO REC badge, NO timestamp, NO timecode, NO frames, NO borders, NO watermarks, NO logos, NO UI elements, NO phones/screens visible, NO mirror reflections showing camera, NO graphic overlays of any kind. Image/video must be CLEAN — only the scene with characters, ZERO visual overlays. No more than 5 distinct visual elements total. CLUTTERED = FAKE, CLEAN = REAL.',
       detail_budget: 'Visual element cap: 2 faces + 2 wardrobe reads + 1 prop + 2 background shapes = 7 maximum. Every extra item competes with faces for attention and reduces realism.',
     },
 

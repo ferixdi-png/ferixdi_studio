@@ -334,7 +334,7 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    Фон: ${cinematography.frame_cleanliness?.background || '2-3 shapes in deep blur'}.
    Композиция: ${cinematography.frame_cleanliness?.headroom || '5-10% headroom, selfie framing'}. ${cinematography.frame_cleanliness?.aspect_ratio || '9:16 vertical'}.
    Бюджет: ${cinematography.frame_cleanliness?.detail_budget || '7 elements max'}.
-   ЗАПРЕТ: ${cinematography.frame_cleanliness?.forbidden || 'No text, no logos, no phones visible'}.
+   ЗАПРЕТ: ${cinematography.frame_cleanliness?.forbidden || 'ABSOLUTELY NO text overlays, NO subtitles, NO captions, NO letters/numbers on screen, NO REC badge, NO timestamp, NO timecode, NO frames, NO borders, NO watermarks, NO logos, NO UI elements, NO phones visible, NO graphic overlays of any kind. The image/video must be CLEAN — only the scene with characters, ZERO visual overlays'}.
 
 8. ТЕКСТУРЫ (анти-AI сигнал):
    Приоритет: ${cinematography.textures?.texture_priority || 'Wool > denim > leather > corduroy > linen > cotton'}.
@@ -429,11 +429,13 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
 • Кожа (pillar 9): 5 цветовых зон на лице (лоб светлее, щёки розовее, нос краснее, под глазами темнее). НЕ оранжевый загар, НЕ серое лицо!
 • Глаза (pillar 6): A в камеру, B следит за A. Блик от источника в зрачках, мокрая склера, текстура радужки
 • Руки: СТРОГО 5 пальцев, анатомические пропорции, ногти, текстура кожи рук по возрасту
-• Негатив: no cartoon, no anime, no plastic skin, no 6th finger, no watermark, no airbrushed look, no orange tan, no grey face, no ring light, no cinema bokeh, no DSLR look, no beauty mode, no skin smoothing
+• АБСОЛЮТНЫЙ ЗАПРЕТ — В КАДРЕ НЕ ДОЛЖНО БЫТЬ: никакого текста, никаких надписей, никаких субтитров, никаких captions, никаких букв, никаких цифр поверх изображения, никаких рамок, никаких borders, никаких frames, никаких REC-значков, никаких таймкодов, никаких timestamps, никаких watermarks, никаких логотипов, никаких UI-элементов, никаких overlay-элементов. Изображение должно быть ЧИСТЫМ — только сцена с персонажами, без ЛЮБЫХ графических наложений
+• Негатив: no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no cartoon, no anime, no plastic skin, no 6th finger, no airbrushed look, no orange tan, no grey face, no ring light, no cinema bokeh, no DSLR look, no beauty mode, no skin smoothing, no graphic overlays, no title cards, no speech bubbles, no name tags
 ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опиши товар ультра-детально в сцене, точь-в-точь как на прикреплённом фото` : ''}
 
 ПРАВИЛА ВИДЕО (video_emotion_arc) — ВСЕ 12 ПИЛЛАРОВ АКТИВНЫ:
 • Пиши на АНГЛИЙСКОМ, побитово с таймкодами
+• АБСОЛЮТНЫЙ ЗАПРЕТ: никакого текста на видео, никаких субтитров, никаких надписей, никаких REC-значков, никаких таймкодов в кадре, никаких рамок, никаких borders, никаких UI-элементов. Видео = чистая сцена с персонажами, БЕЗ ЛЮБЫХ графических наложений
 • Каждый сегмент описывает: (a) что делает говорящий, (b) что делает молчащий, (c) куда смотрят глаза ОБОИХ, (d) что делает камера
 • hook (pillar 11+6): ВИЗУАЛЬНЫЙ хук — эмоция на лице с кадра 0, взгляд в камеру, действие. Энергия ≥ 80% пика. НЕ текстовый хук!
 • act_A (pillar 4+5+6): моргание каждые 2-3с, дыхание между фразами, жесты с асимметричными бровями. B: губы сомкнуты (pillar 5), медленные моргания 4-6с, side-eye на A (pillar 6), пальцы постукивают (pillar 4)
