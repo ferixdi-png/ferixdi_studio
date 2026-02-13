@@ -654,6 +654,159 @@ function showProductStatus(text, cls) {
 
 // Category is always auto-picked by generator — no manual selection needed
 
+// ─── PRE-FLIGHT: Professional parameter breakdown ────
+function renderPreflight(localResult) {
+  const el = document.getElementById('gen-preflight');
+  if (!el) return;
+
+  const ctx = localResult._apiContext;
+  if (!ctx) { el.classList.add('hidden'); return; }
+
+  const charA = ctx.charA;
+  const charB = ctx.charB;
+  const cat = ctx.category;
+  const lm = ctx.lightingMood;
+  const cin = ctx.cinematography || {};
+
+  // Timing estimate
+  const est = localResult.duration_estimate || {};
+  const riskColor = est.risk === 'high' ? 'text-red-400' : est.risk === 'medium' ? 'text-amber-400' : 'text-emerald-400';
+  const riskIcon = est.risk === 'high' ? '🔴' : est.risk === 'medium' ? '🟡' : '🟢';
+
+  // Build pillar summaries (short)
+  const pillars = [
+    { icon: '💡', name: 'Свет', val: `${lm.mood} · ${lm.sources || '1+1'}`, detail: lm.style?.slice(0, 60) + '...' },
+    { icon: '📷', name: 'Оптика', val: cin.optics?.focal_length || '24-28mm', detail: `${cin.optics?.aperture || 'f/1.9-2.2'} · ${cin.optics?.sensor_signature?.slice(0, 40) || 'phone sensor'}` },
+    { icon: '📱', name: 'Камера', val: cin.camera_movement?.directive || 'Handheld selfie', detail: cin.camera_movement?.base_motion?.slice(0, 50) || 'micro-jitter' },
+    { icon: '🫁', name: 'Микродвижения', val: `Моргание ${cin.micro_movements?.blink_rate?.slice(0, 15) || '3-5s'} · Дыхание ${cin.micro_movements?.breathing?.slice(0, 15) || '3-4s'}`, detail: cin.micro_movements?.asymmetry_rule?.slice(0, 50) || 'L/R independent' },
+    { icon: '👄', name: 'Стабильность лица', val: cin.face_stability?.mouth_visibility || '100% visible', detail: `Yaw ${cin.face_stability?.head_rotation_limit?.slice(0, 20) || '≤25°'} · AF ${cin.face_stability?.front_camera_face_lock?.slice(0, 30) || 'face-lock'}` },
+    { icon: '👁', name: 'Взгляд', val: 'По таймингу 4 сегмента', detail: `Hook: ${cin.gaze?.hook_gaze?.slice(0, 25) || 'direct camera'} · Саккады: ${cin.gaze?.micro_saccades?.slice(0, 25) || '0.5-1°'}` },
+    { icon: '🖼', name: 'Чистота кадра', val: `${cin.frame_cleanliness?.detail_budget || '7'} элементов max`, detail: `${cin.frame_cleanliness?.foreground?.slice(0, 20) || '60-70% chars'} · ${cin.frame_cleanliness?.aspect_ratio || '9:16'}` },
+    { icon: '🧶', name: 'Текстуры', val: cin.textures?.texture_priority?.slice(0, 35) || 'Wool > denim > leather', detail: cin.textures?.skin_as_texture?.slice(0, 50) || 'pores, fine lines' },
+    { icon: '🎨', name: 'Цвет/кожа', val: cin.color_skin?.deadly_sins?.slice(0, 40) || 'NO orange, NO grey', detail: `WB: ${cin.color_skin?.white_balance?.slice(0, 30) || 'locked'} · ${cin.color_skin?.skin_zones?.slice(0, 30) || '5 zones'}` },
+    { icon: '🎤', name: 'Звук', val: cin.sound_anchor?.voice_proximity?.slice(0, 40) || 'Phone mic 35-60cm', detail: `Room tone ${cin.sound_anchor?.room_tone?.slice(0, 20) || '-20/-30dB'} · ${cin.sound_anchor?.mouth_sounds?.slice(0, 30) || 'saliva clicks'}` },
+    { icon: '🎣', name: 'Хук', val: cin.visual_hook?.face_emotion?.slice(0, 35) || 'EXTREME emotion frame 0', detail: `Энергия: ${cin.visual_hook?.energy_level?.slice(0, 25) || '≥80% peak'} · ${cin.visual_hook?.gaze_hook?.slice(0, 25) || 'direct eye'}` },
+    { icon: '🎬', name: 'Монтаж', val: cin.edit_logic?.start?.slice(0, 35) || 'Cold open mid-scene', detail: `${cin.edit_logic?.energy_curve?.slice(0, 40) || '80→90→60→95→100→70%'} · Loop: ${cin.edit_logic?.loop_seam?.slice(0, 25) || 'auto-loop ready'}` },
+  ];
+
+  el.classList.remove('hidden');
+  el.innerHTML = `
+    <div class="glass-panel p-5 space-y-4 border-l-2 border-cyan-400/40">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600/20 border border-cyan-500/30">
+            <span class="text-xs">⚙️</span>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-cyan-400 tracking-wide">PRODUCTION CONTRACT</div>
+            <div class="text-[10px] text-gray-500">Параметры системы перед генерацией</div>
+          </div>
+        </div>
+        <div class="text-[10px] text-gray-600 font-mono">v2.0</div>
+      </div>
+
+      <!-- Scene overview -->
+      <div class="grid grid-cols-2 gap-2">
+        <div class="bg-black/30 rounded-lg p-2.5">
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Персонажи</div>
+          <div class="text-[11px] text-cyan-300">${charA.name_ru || 'A'} <span class="text-gray-600">×</span> ${charB.name_ru || 'B'}</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">${charA.vibe_archetype || '—'} vs ${charB.vibe_archetype || '—'}</div>
+        </div>
+        <div class="bg-black/30 rounded-lg p-2.5">
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Категория</div>
+          <div class="text-[11px] text-gray-200">${cat.ru || '—'}</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">${cat.en || ''}</div>
+        </div>
+        <div class="bg-black/30 rounded-lg p-2.5">
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Локация</div>
+          <div class="text-[11px] text-gray-200">${(ctx.location || '—').split(',')[0]}</div>
+        </div>
+        <div class="bg-black/30 rounded-lg p-2.5">
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Тайминг</div>
+          <div class="text-[11px] ${riskColor}">${riskIcon} ${est.total || '8.0'}с · риск: ${est.risk || '—'}</div>
+        </div>
+      </div>
+
+      <!-- Wardrobe -->
+      <div class="bg-black/30 rounded-lg p-2.5">
+        <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Гардероб</div>
+        <div class="flex gap-3">
+          <div class="flex-1"><span class="text-[10px] text-cyan-400/70">A:</span> <span class="text-[10px] text-gray-300">${ctx.wardrobeA?.slice(0, 60) || '—'}${ctx.wardrobeA?.length > 60 ? '...' : ''}</span></div>
+          <div class="flex-1"><span class="text-[10px] text-purple-400/70">B:</span> <span class="text-[10px] text-gray-300">${ctx.wardrobeB?.slice(0, 60) || '—'}${ctx.wardrobeB?.length > 60 ? '...' : ''}</span></div>
+        </div>
+      </div>
+
+      <!-- 12 Pillars compact -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider">12 Production Pillars · Smartphone Realism</div>
+          <button id="preflight-toggle-pillars" class="text-[10px] text-cyan-400/60 hover:text-cyan-400 transition-colors cursor-pointer">развернуть ▸</button>
+        </div>
+        <div class="grid grid-cols-3 md:grid-cols-4 gap-1.5" id="preflight-pillars-compact">
+          ${pillars.map((p, i) => `
+            <div class="bg-black/20 rounded px-2 py-1.5 group cursor-default" title="${p.detail}">
+              <div class="text-[10px] text-gray-400 flex items-center gap-1"><span>${p.icon}</span><span class="text-[9px] text-gray-500">${i + 1}</span></div>
+              <div class="text-[10px] text-gray-300 leading-tight mt-0.5 truncate">${p.name}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="hidden space-y-1 mt-2" id="preflight-pillars-full">
+          ${pillars.map((p, i) => `
+            <div class="flex items-start gap-2 py-1 border-b border-gray-800/30 last:border-0">
+              <span class="text-xs mt-0.5 w-5 text-center">${p.icon}</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] text-gray-500 font-mono w-4">${i + 1}.</span>
+                  <span class="text-[11px] text-gray-200 font-medium">${p.name}</span>
+                </div>
+                <div class="text-[10px] text-gray-400 mt-0.5 leading-relaxed">${p.val}</div>
+                <div class="text-[9px] text-gray-500 leading-relaxed">${p.detail}</div>
+              </div>
+              <span class="text-emerald-500 text-[10px] mt-1">✓</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Engagement preview -->
+      <div class="bg-black/30 rounded-lg p-2.5">
+        <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Engagement · Instagram</div>
+        <div class="flex gap-3 text-[10px]">
+          <div><span class="text-gray-500">Хук:</span> <span class="text-gray-300">${ctx.hookAction?.action_ru?.slice(0, 30) || '—'}</span></div>
+          <div><span class="text-gray-500">Реквизит:</span> <span class="text-gray-300">${ctx.propAnchor?.slice(0, 25) || '—'}</span></div>
+        </div>
+        <div class="text-[10px] text-gray-500 mt-1">Хештеги: ${localResult.log?.engagement?.hashtag_count || '~18'} шт · Заголовок + закреп + первый коммент</div>
+      </div>
+
+      <!-- Status -->
+      <div id="preflight-status" class="text-center py-2 rounded-lg text-xs font-medium bg-cyan-500/8 text-cyan-400 border border-cyan-500/15">
+        <span class="inline-block animate-pulse mr-1">◉</span> Gemini обрабатывает контракт...
+      </div>
+    </div>
+  `;
+
+  // Toggle pillars expand/collapse
+  document.getElementById('preflight-toggle-pillars')?.addEventListener('click', function() {
+    const compact = document.getElementById('preflight-pillars-compact');
+    const full = document.getElementById('preflight-pillars-full');
+    if (!compact || !full) return;
+    const isExpanded = !full.classList.contains('hidden');
+    full.classList.toggle('hidden', isExpanded);
+    compact.classList.toggle('hidden', !isExpanded);
+    this.textContent = isExpanded ? 'развернуть ▸' : 'свернуть ▾';
+  });
+
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updatePreflightStatus(text, color) {
+  const el = document.getElementById('preflight-status');
+  if (!el) return;
+  el.className = `text-center py-2 rounded-lg text-xs font-medium ${color}`;
+  el.innerHTML = text;
+}
+
 // ─── GENERATE ────────────────────────────────
 function displayResult(result) {
   state.lastResult = result;
@@ -824,11 +977,14 @@ function initGenerate() {
       return;
     }
 
+    // Step 1.5: Show pre-flight parameter breakdown
+    renderPreflight(localResult);
+
     // Step 2: If API mode — send context to Gemini for creative refinement
     const isApiMode = state.settingsMode === 'api' && localStorage.getItem('ferixdi_api_url');
 
     if (isApiMode && localResult._apiContext) {
-      showGenStatus('🤖 Gemini дорабатывает контент...', 'text-violet-400');
+      showGenStatus('', '');
       log('INFO', 'GEMINI', 'Отправляю контекст в Gemini API...');
 
       try {
@@ -836,15 +992,18 @@ function initGenerate() {
         if (geminiData) {
           const merged = mergeGeminiResult(localResult, geminiData);
           log('OK', 'GEMINI', 'Творческий контент от Gemini объединён');
+          updatePreflightStatus('✅ Контракт обработан · Gemini вернул уникальный контент', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
           displayResult(merged);
         } else {
           // No JWT token — try to auto-auth and show local result for now
           log('WARN', 'GEMINI', 'Нет токена — показываю локальный результат');
+          updatePreflightStatus('⚠️ Нет токена — показан локальный шаблон', 'bg-amber-500/8 text-amber-400 border border-amber-500/15');
           if (isPromoValid()) autoAuth();
           displayResult(localResult);
         }
       } catch (apiErr) {
         log('ERR', 'GEMINI', `Ошибка API: ${apiErr.message}`);
+        updatePreflightStatus(`❌ Ошибка Gemini: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
         showGenStatus('', '');
         document.getElementById('gen-results').classList.remove('hidden');
         document.getElementById('gen-results').innerHTML = `
@@ -859,6 +1018,7 @@ function initGenerate() {
       }
     } else {
       // Demo mode or API without _apiContext — show local result
+      updatePreflightStatus('📋 Локальный режим · Контракт собран, Gemini не подключён', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
       displayResult(localResult);
     }
 
