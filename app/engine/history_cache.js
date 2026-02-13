@@ -17,6 +17,7 @@ export class HistoryCache {
 
   _load() {
     try {
+      if (typeof localStorage === 'undefined') return;
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const data = JSON.parse(raw);
@@ -30,6 +31,7 @@ export class HistoryCache {
 
   _save() {
     try {
+      if (typeof localStorage === 'undefined') return;
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         locations: this.locations.slice(-MAX_HISTORY),
         props: this.props.slice(-MAX_HISTORY),
