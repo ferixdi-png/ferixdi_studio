@@ -423,7 +423,27 @@ function initVideoUrlFetch() {
         duration: data.duration,
         width: data.width,
         height: data.height,
+        cover: data.cover || null,
+        cover_base64: null,
       };
+
+      // Download cover image as base64 for Gemini multimodal
+      if (data.cover) {
+        try {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            state.videoMeta.cover_base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+            log('OK', 'VIDEO', 'Cover image captured for Gemini');
+          };
+          img.onerror = () => log('WARN', 'VIDEO', 'Cover image CORS blocked — Gemini won\'t see it');
+          img.src = data.cover;
+        } catch { /* cover download failed, not critical */ }
+      }
 
       log('OK', 'VIDEO', `${data.platform}: ${data.title || 'video'} (${data.duration || '?'}s)`);
 
@@ -645,13 +665,28 @@ async function callGeminiAPI(apiContext) {
   const apiUrl = localStorage.getItem('ferixdi_api_url') || '';
   if (!apiUrl || !token) return null;
 
+  // Build payload with optional multimodal attachments
+  const payload = { context: apiContext };
+
+  // Attach product photo if available — Gemini will SEE the actual product
+  if (state.productInfo?.image_base64) {
+    payload.product_image = state.productInfo.image_base64;
+    payload.product_mime = state.productInfo.mime_type || 'image/jpeg';
+  }
+
+  // Attach video cover if available — Gemini will SEE the original video
+  if (state.videoMeta?.cover_base64) {
+    payload.video_cover = state.videoMeta.cover_base64;
+    payload.video_cover_mime = 'image/jpeg';
+  }
+
   const resp = await fetch(`${apiUrl}/api/generate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ context: apiContext }),
+    body: JSON.stringify(payload),
   });
 
   if (!resp.ok) {
