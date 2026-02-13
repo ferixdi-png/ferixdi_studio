@@ -40,7 +40,9 @@ app.post('/api/auth/validate', async (req, res) => {
   const { key } = req.body;
   if (!key) return res.status(400).json({ error: 'Key required' });
 
-  const hash = crypto.createHash('sha256').update(key).digest('hex');
+  // Support both plain-text key and pre-hashed key from frontend
+  const isHex64 = /^[a-f0-9]{64}$/.test(key);
+  const hash = isHex64 ? key : crypto.createHash('sha256').update(key).digest('hex');
   try {
     const keysPath = join(__dirname, '..', 'app', 'data', 'access_keys.json');
     const keys = JSON.parse(readFileSync(keysPath, 'utf-8'));
@@ -72,15 +74,182 @@ app.post('/api/fun/category', authMiddleware, (req, res) => {
   res.json(cat);
 });
 
-// ─── POST /api/remix/generate ────────────────
-app.post('/api/remix/generate', authMiddleware, (req, res) => {
-  // In production: call Gemini API or other LLM
-  // For now: return demo package stub
-  res.json({
-    status: 'demo',
-    message: 'Production generation requires Gemini API key. Configure GEMINI_API_KEY env var.',
-    demo_hint: 'Use frontend Demo mode for full local generation without API.',
-  });
+// ─── Gemini Meta-Prompt Builder ──────────────
+function buildGeminiPrompt(ctx) {
+  const { charA, charB, category, topic_ru, scene_hint, input_mode, video_meta,
+    product_info, location, wardrobeA, wardrobeB, propAnchor, lightingMood,
+    hookAction, releaseAction, aesthetic, script_ru } = ctx;
+
+  let modeBlock = '';
+  if (input_mode === 'video' && (video_meta || scene_hint)) {
+    modeBlock = `
+РЕЖИМ: ВИДЕО-РЕМИКС
+Пользователь хочет пересоздать концепцию видео с этими персонажами.
+${scene_hint ? `Описание оригинального видео: "${scene_hint}"` : ''}
+${video_meta ? `Метаданные видео: title="${video_meta.title || ''}", author="${video_meta.author || ''}", duration=${video_meta.duration || '?'}s` : ''}
+Проанализируй оригинальную концепцию, извлеки комедийную структуру и энергию, затем АДАПТИРУЙ под персонажей ниже. Сохрани вайб оригинала, но диалог должен быть 100% оригинальным и in-character.`;
+  } else if (input_mode === 'script' && script_ru) {
+    modeBlock = `
+РЕЖИМ: ДОРАБОТКА СКРИПТА
+Пользователь написал свой диалог. Доработай его — сделай панчевее, больше в характере персонажей, оптимизируй для 8-секундной подачи.
+Реплика A (исходная): "${script_ru.A || '—'}"
+Реплика B (исходная): "${script_ru.B || '—'}"
+Сохрани суть, но сделай ВИРУСНЫМ. Можешь переписать полностью если нужно.`;
+  } else {
+    modeBlock = `
+РЕЖИМ: ОТ ИДЕИ К КОНТЕНТУ
+${topic_ru ? `Идея пользователя: "${topic_ru}"` : 'Придумай свежую комедийную концепцию на основе категории.'}
+Создай полностью оригинальный, неожиданный диалог который эта конкретная пара персонажей сказала бы естественно.`;
+  }
+
+  return `Ты — FERIXDI, элитный креативный директор, специализирующийся на вирусных 8-секундных комедийных видео для TikTok/Reels. Ты создаёшь контент с пожилыми русскими персонажами, которые спорят в гиперреалистичных AI-видео.
+${modeBlock}
+
+═══════════════════════════════════════════
+ПЕРСОНАЖ A (ПРОВОКАТОР — говорит первый, начинает конфликт):
+Имя: ${charA.name_ru}
+Возраст: ${charA.biology_override?.age || 'elderly'}
+Внешность: ${charA.appearance_ru || 'elderly Russian character'}
+Стиль речи: ${charA.speech_style_ru || 'expressive'}
+Темп: ${charA.speech_pace || 'normal'}
+Уровень мата: ${charA.swear_level || 0}/3
+Вайб: ${charA.vibe_archetype || 'провокатор'}
+Фирменные слова: ${(charA.signature_words_ru || []).join(', ') || '—'}
+Стиль смеха: ${charA.modifiers?.laugh_style || 'natural'}
+Стиль хука: ${charA.modifiers?.hook_style || 'attention grab'}
+
+ПЕРСОНАЖ B (ПАНЧЛАЙН — отвечает разрушительным ответом):
+Имя: ${charB.name_ru}
+Возраст: ${charB.biology_override?.age || 'elderly'}
+Внешность: ${charB.appearance_ru || 'elderly Russian character'}
+Стиль речи: ${charB.speech_style_ru || 'measured'}
+Темп: ${charB.speech_pace || 'normal'}
+Уровень мата: ${charB.swear_level || 0}/3
+Вайб: ${charB.vibe_archetype || 'база'}
+Фирменные слова: ${(charB.signature_words_ru || []).join(', ') || '—'}
+Стиль смеха: ${charB.modifiers?.laugh_style || 'quiet chuckle'}
+
+═══════════════════════════════════════════
+КОНТЕКСТ СЦЕНЫ:
+Категория: ${category.ru} (${category.en})
+Локация: ${location}
+Освещение: ${lightingMood.style} — настроение: ${lightingMood.mood}
+Реквизит: ${propAnchor}
+Эстетика: ${aesthetic}
+Гардероб A: ${wardrobeA}
+Гардероб B: ${wardrobeB}
+${product_info?.description_en ? `\nТОВАР В КАДРЕ: ${product_info.description_en}\nТовар ОБЯЗАН быть вплетён в диалог и сцену естественно.` : ''}
+
+═══════════════════════════════════════════
+ТАЙМИНГ-КОНТРАКТ (строго 8 секунд):
+[0.00–0.80] ХУК: Физическое действие A (${hookAction.action_ru}), без слов
+[0.80–3.60] AKT A: ${charA.name_ru} произносит провокацию (6-9 русских слов, темп ${charA.speech_pace})
+[3.60–7.10] AKT B: ${charB.name_ru} отвечает панчлайном (6-11 русских слов, темп ${charB.speech_pace})
+  → KILLER WORD должен приземлиться около отметки 7.0s — это слово вызывает реакцию
+[7.10–8.00] RELEASE: Оба смеются (${releaseAction.action_ru}), НОЛЬ слов
+
+═══════════════════════════════════════════
+ФОРМАТ ОТВЕТА — строго JSON с этими полями:
+{
+  "dialogue_A_ru": "Реплика A на русском. Используй | для естественных пауз-вдохов. 6-9 слов макс. Должно звучать как ЕСТЕСТВЕННАЯ речь этого персонажа — используй его фирменные слова и манеру.",
+  "dialogue_B_ru": "Разрушительный ответ B на русском. Используй | для пауз. 6-11 слов. Должен строиться к killer_word в самом конце.",
+  "killer_word": "Одно русское слово которое бьёт как пощёчина. Должно быть последним значимым словом в реплике B.",
+  "photo_scene_en": "Ультра-детализированный абзац для AI-генерации изображений на английском. Гиперреалистичный крупный план обоих персонажей в момент спора. Включи конкретные микро-выражения, как свет взаимодействует с кожей, текстуру окружения, эмоциональное напряжение видимое в языке тела. Начни со слова 'Hyper-realistic'. 150-200 слов.",
+  "video_emotion_arc": {
+    "hook_en": "Опиши на английском точное физическое действие, выражение лица и энергию первых 0.8 секунд",
+    "act_A_en": "На английском опиши подачу A — жесты, изменения лица побитово. Как B реагирует молча?",
+    "act_B_en": "На английском опиши подачу B — темп, паузы, как произносится killer word. Как A реагирует?",
+    "release_en": "На английском опиши как именно вспыхивает смех, язык тела, трансформация лица от напряжения к радости"
+  },
+  "video_atmosphere_en": "Детальное описание окружения для видео-генерации на английском — звуки, изменения света, движение фона, частицы в воздухе, текстуры поверхностей. 80-100 слов.",
+  "viral_title_ru": "Заголовок для Instagram/TikTok на русском. Провокационный, заставляет НУЖНО посмотреть. Используй имена персонажей. Макс 150 символов.",
+  "pin_comment_ru": "Закреплённый коммент автора на русском. Создаёт спор/дебаты. Отсылает к killer word или панчлайну.",
+  "first_comment_ru": "Первый коммент для публикации сразу после видео. Задаёт вопрос провоцирующий дискуссию.",
+  "hashtags": ["массив", "из", "15-20", "русских", "хештегов", "без решётки"]
+}
+
+ПРАВИЛА:
+- Диалог должен быть 100% естественная русская речь — разговорная, с манерами конкретного персонажа
+- НИКОГДА не используй английские слова в диалоге
+- Killer word должен быть неожиданным но логичным — такое слово заставляет пересматривать
+- Фото-сцена должна быть настолько детализирована, что AI отрендерит её без малейшей двусмысленности
+- Видео emotion arc должен описывать МИКРО-ВЫРАЖЕНИЯ и тонкие физические изменения
+- Каждая генерация должна быть УНИКАЛЬНОЙ — никогда не повторяй паттерны, всегда удивляй
+- Уровень мата должен точно соответствовать данным персонажа (0=нет, 1=мягкий, 2=средний, 3=тяжёлый)
+- Весь текст должен уважать ограничение 8 секунд
+
+ОТВЕЧАЙ ТОЛЬКО ВАЛИДНЫМ JSON. Без markdown, без блоков кода, без объяснений.`;
+}
+
+// ─── POST /api/generate — Gemini-powered generation ──────────
+app.post('/api/generate', authMiddleware, async (req, res) => {
+  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+  if (!GEMINI_KEY) {
+    return res.status(503).json({ error: 'GEMINI_API_KEY не настроен. Добавьте переменную окружения на сервере.' });
+  }
+
+  const { context } = req.body;
+  if (!context || !context.charA || !context.charB) {
+    return res.status(400).json({ error: 'Context with charA, charB required' });
+  }
+
+  try {
+    const prompt = buildGeminiPrompt(context);
+
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.88,
+        maxOutputTokens: 4096,
+        responseMimeType: 'application/json',
+      },
+    };
+
+    const resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      const errMsg = data.error?.message || JSON.stringify(data.error) || 'Gemini API error';
+      console.error('Gemini generate error:', errMsg);
+      return res.status(resp.status).json({ error: `Gemini: ${errMsg}` });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      return res.status(422).json({ error: 'Gemini не вернул контент. Попробуйте ещё раз.' });
+    }
+
+    // Parse JSON response from Gemini
+    let geminiResult;
+    try {
+      geminiResult = JSON.parse(text);
+    } catch (parseErr) {
+      // Try to extract JSON from markdown code blocks if Gemini wrapped it
+      const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (jsonMatch) {
+        geminiResult = JSON.parse(jsonMatch[1]);
+      } else {
+        console.error('Gemini JSON parse error:', text.slice(0, 500));
+        return res.status(422).json({ error: 'Gemini вернул невалидный JSON. Попробуйте ещё раз.' });
+      }
+    }
+
+    res.json({
+      gemini: geminiResult,
+      model: 'gemini-2.0-flash',
+      tokens: data.usageMetadata?.totalTokenCount || 0,
+    });
+
+  } catch (e) {
+    console.error('Generate error:', e.message);
+    res.status(500).json({ error: `Ошибка генерации: ${e.message}` });
+  }
 });
 
 // ─── POST /api/product/describe — Gemini Vision: описание товара по фото ──

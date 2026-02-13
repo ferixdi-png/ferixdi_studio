@@ -3,7 +3,7 @@
  * Космический хакерский командный центр для ремикса видео
  */
 
-import { generate, getRandomCategory } from './engine/generator.js';
+import { generate, getRandomCategory, mergeGeminiResult } from './engine/generator.js';
 import { estimateDialogue } from './engine/estimator.js';
 import { autoTrim } from './engine/auto_trim.js';
 import { historyCache } from './engine/history_cache.js';
@@ -578,8 +578,93 @@ function initHumor() {
 }
 
 // ─── GENERATE ────────────────────────────────
+function displayResult(result) {
+  state.lastResult = result;
+
+  if (result.error) {
+    showGenStatus(`❌ ${result.error}`, 'text-red-400');
+    log('ERR', 'GEN', result.error);
+    return;
+  }
+
+  // Show results
+  document.getElementById('gen-results').classList.remove('hidden');
+  document.querySelector('#tab-photo pre').textContent = JSON.stringify(result.photo_prompt_en_json, null, 2);
+  document.querySelector('#tab-video pre').textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
+  document.querySelector('#tab-ru pre').textContent = result.ru_package;
+  document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
+  showGenStatus('', 'hidden');
+  document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Warnings
+  if (result.warnings?.length > 0) {
+    document.getElementById('gen-warnings').classList.remove('hidden');
+    document.getElementById('gen-warnings-list').innerHTML = result.warnings.map(w => `<div class="text-xs">⚠️ ${escapeHtml(w)}</div>`).join('');
+  } else {
+    document.getElementById('gen-warnings')?.classList.add('hidden');
+  }
+
+  // QC Gate v2
+  if (result.qc_gate) {
+    const qc = result.qc_gate;
+    const qcEl = document.getElementById('gen-qc-gate');
+    if (qcEl) {
+      qcEl.classList.remove('hidden');
+      qcEl.innerHTML = `
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs text-gray-500">Контроль качества</span>
+          <span class="text-sm font-bold ${qc.ok ? 'neon-text-green' : 'neon-text-pink'}">${qc.passed}/${qc.total} ${qc.ok ? '✓ ОК' : '✗ ПРОБЛЕМЫ'}</span>
+        </div>
+        ${qc.details.map(c => `
+          <div class="flex items-center gap-2 text-xs">
+            <span class="${c.pass ? 'text-green-500' : c.hard ? 'text-red-500 font-bold' : 'text-yellow-500'}">${c.pass ? '✓' : '✗'}</span>
+            <span class="text-gray-400">${c.name}${c.hard && !c.pass ? ' [HARD FAIL]' : ''}</span>
+          </div>
+        `).join('')}
+      `;
+    }
+    if (qc.ok) {
+      log('OK', 'QC', `PASS ${qc.passed}/${qc.total}`);
+    } else {
+      log('WARN', 'QC', `FAIL ${qc.passed}/${qc.total}${qc.hard_fails.length ? ', HARD: ' + qc.hard_fails.join(', ') : ''}`);
+    }
+  }
+
+  // Update timing
+  updateTimingCoach(result);
+
+  const ver = result.log?.generator_version || '2.0';
+  log('OK', 'GEN', `${ver} Package generated! Duration: ${result.duration_estimate?.total || '?'}s, Risk: ${result.duration_estimate?.risk || '?'}`);
+  if (result.auto_fixes?.length > 0) {
+    result.auto_fixes.forEach(f => log('INFO', 'FIX', f));
+  }
+}
+
+async function callGeminiAPI(apiContext) {
+  const token = localStorage.getItem('ferixdi_jwt');
+  const apiUrl = localStorage.getItem('ferixdi_api_url') || '';
+  if (!apiUrl || !token) return null;
+
+  const resp = await fetch(`${apiUrl}/api/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ context: apiContext }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+    throw new Error(err.error || `API error ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  return data.gemini;
+}
+
 function initGenerate() {
-  document.getElementById('btn-generate')?.addEventListener('click', () => {
+  document.getElementById('btn-generate')?.addEventListener('click', async () => {
     if (!state.selectedA || !state.selectedB) {
       showGenStatus('⚠️ Сначала выбери двух персонажей на шаге 1', 'text-orange-400');
       return;
@@ -599,10 +684,9 @@ function initGenerate() {
       }
     }
 
-    showGenStatus('⏳ Генерирую пакет...', 'text-gray-400');
-
-    // Use requestAnimationFrame so the loading state renders before sync generation
-    requestAnimationFrame(() => {
+    const btn = document.getElementById('btn-generate');
+    btn.disabled = true;
+    btn.textContent = '⏳ Генерирую...';
 
     const input = {
       input_mode: state.inputMode,
@@ -623,76 +707,55 @@ function initGenerate() {
       characters: state.characters,
     };
 
-    let result;
+    // Step 1: Local generation (instant, structural template)
+    let localResult;
     try {
-      result = generate(input);
+      localResult = generate(input);
     } catch (e) {
       showGenStatus(`❌ Ошибка генерации: ${e.message}`, 'text-red-400');
       log('ERR', 'GEN', e.message);
+      btn.disabled = false;
+      btn.textContent = '🚀 Сгенерировать';
       return;
     }
 
-    state.lastResult = result;
-
-    if (result.error) {
-      showGenStatus(`❌ ${result.error}`, 'text-red-400');
-      log('ERR', 'GEN', result.error);
+    if (localResult.error) {
+      displayResult(localResult);
+      btn.disabled = false;
+      btn.textContent = '🚀 Сгенерировать';
       return;
     }
 
-    // Show results
-    document.getElementById('gen-results').classList.remove('hidden');
-    document.querySelector('#tab-photo pre').textContent = JSON.stringify(result.photo_prompt_en_json, null, 2);
-    document.querySelector('#tab-video pre').textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
-    document.querySelector('#tab-ru pre').textContent = result.ru_package;
-    document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
-    showGenStatus('', 'hidden');
-    // Scroll to results
-    document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Step 2: If API mode — send context to Gemini for creative refinement
+    const isApiMode = state.settingsMode === 'api' && localStorage.getItem('ferixdi_api_url');
 
-    // Warnings
-    if (result.warnings.length > 0) {
-      document.getElementById('gen-warnings').classList.remove('hidden');
-      document.getElementById('gen-warnings-list').innerHTML = result.warnings.map(w => `<div class="text-xs">⚠️ ${w}</div>`).join('');
+    if (isApiMode && localResult._apiContext) {
+      showGenStatus('🤖 Gemini дорабатывает контент...', 'text-violet-400');
+      log('INFO', 'GEMINI', 'Sending context to Gemini API...');
+
+      try {
+        const geminiData = await callGeminiAPI(localResult._apiContext);
+        if (geminiData) {
+          const merged = mergeGeminiResult(localResult, geminiData);
+          log('OK', 'GEMINI', 'Creative content merged from Gemini');
+          displayResult(merged);
+        } else {
+          log('WARN', 'GEMINI', 'API not configured, using local generation');
+          displayResult(localResult);
+        }
+      } catch (apiErr) {
+        log('WARN', 'GEMINI', `API failed: ${apiErr.message}. Fallback to local.`);
+        showGenStatus('⚠️ Gemini недоступен — используется локальная генерация', 'text-yellow-400');
+        await new Promise(r => setTimeout(r, 1500));
+        displayResult(localResult);
+      }
     } else {
-      document.getElementById('gen-warnings').classList.add('hidden');
+      // Demo mode: use local generation directly
+      displayResult(localResult);
     }
 
-    // QC Gate v2
-    if (result.qc_gate) {
-      const qc = result.qc_gate;
-      const qcEl = document.getElementById('gen-qc-gate');
-      if (qcEl) {
-        qcEl.classList.remove('hidden');
-        qcEl.innerHTML = `
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-xs text-gray-500">Контроль качества</span>
-            <span class="text-sm font-bold ${qc.ok ? 'neon-text-green' : 'neon-text-pink'}">${qc.passed}/${qc.total} ${qc.ok ? '✓ ОК' : '✗ ПРОБЛЕМЫ'}</span>
-          </div>
-          ${qc.details.map(c => `
-            <div class="flex items-center gap-2 text-xs">
-              <span class="${c.pass ? 'text-green-500' : c.hard ? 'text-red-500 font-bold' : 'text-yellow-500'}">${c.pass ? '✓' : '✗'}</span>
-              <span class="text-gray-400">${c.name}${c.hard && !c.pass ? ' [HARD FAIL]' : ''}</span>
-            </div>
-          `).join('')}
-        `;
-      }
-      if (qc.ok) {
-        log('OK', 'QC', `PASS ${qc.passed}/${qc.total}`);
-      } else {
-        log('WARN', 'QC', `FAIL ${qc.passed}/${qc.total}${qc.hard_fails.length ? ', HARD: ' + qc.hard_fails.join(', ') : ''}`);
-      }
-    }
-
-    // Update timing
-    updateTimingCoach(result);
-
-    log('OK', 'GEN', `v2 Package generated! Duration: ${result.duration_estimate.total}s, Risk: ${result.duration_estimate.risk}`);
-    if (result.auto_fixes.length > 0) {
-      result.auto_fixes.forEach(f => log('INFO', 'FIX', f));
-    }
-
-    }); // end requestAnimationFrame
+    btn.disabled = false;
+    btn.textContent = '🚀 Сгенерировать';
   });
 
   // Result tabs
@@ -819,14 +882,61 @@ function initCopyButtons() {
 
 // ─── SETTINGS ────────────────────────────────
 function initSettings() {
+  // Restore saved API URL
+  const savedApiUrl = localStorage.getItem('ferixdi_api_url');
+  if (savedApiUrl) {
+    const urlInput = document.getElementById('api-url');
+    if (urlInput) urlInput.value = savedApiUrl;
+  }
+
   document.querySelectorAll('#section-settings .mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#section-settings .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.settingsMode = btn.dataset.setting;
       document.getElementById('api-settings')?.classList.toggle('hidden', btn.dataset.setting !== 'api');
+      document.getElementById('header-mode').textContent = btn.dataset.setting === 'api' ? 'API' : 'DEMO';
       log('INFO', 'SETTINGS', `Mode: ${btn.dataset.setting}`);
     });
+  });
+
+  // Save API URL on change and auto-authenticate
+  document.getElementById('api-url')?.addEventListener('change', async (e) => {
+    const url = e.target.value.trim().replace(/\/+$/, '');
+    if (!url) {
+      localStorage.removeItem('ferixdi_api_url');
+      localStorage.removeItem('ferixdi_jwt');
+      return;
+    }
+    localStorage.setItem('ferixdi_api_url', url);
+    log('INFO', 'API', `Backend URL saved: ${url}`);
+
+    // Auto-authenticate against server using the saved access key
+    const savedAccess = localStorage.getItem('ferixdi_access');
+    if (savedAccess) {
+      try {
+        const { keyHash } = JSON.parse(savedAccess);
+        if (keyHash) {
+          log('INFO', 'API', 'Authenticating with server...');
+          const resp = await fetch(`${url}/api/auth/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: keyHash }),
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.jwt) {
+              localStorage.setItem('ferixdi_jwt', data.jwt);
+              log('OK', 'API', `Authenticated! Token received for: ${data.label}`);
+            }
+          } else {
+            log('WARN', 'API', 'Server auth failed — check URL and key');
+          }
+        }
+      } catch (err) {
+        log('WARN', 'API', `Cannot reach server: ${err.message}`);
+      }
+    }
   });
 
   document.getElementById('btn-clear-cache')?.addEventListener('click', () => {

@@ -1123,5 +1123,161 @@ ${engage.hashtags.join(' ')}
     auto_fixes: [...autoFixes, ...validation.auto_fixes],
     duration_estimate: estimate,
     qc_gate: qc,
+    // Context for API mode — sent to server for Gemini refinement
+    _apiContext: {
+      charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
+      input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
+      propAnchor, lightingMood, hookAction: hookObj, releaseAction: releaseObj,
+      aesthetic, script_ru,
+    },
   };
+}
+
+// ─── MERGE GEMINI RESULT INTO LOCAL TEMPLATE ──
+// Takes local generation (structural) + Gemini output (creative) → merged result
+export function mergeGeminiResult(localResult, geminiData) {
+  if (!geminiData) return localResult;
+
+  const ctx = localResult._apiContext;
+  const g = geminiData;
+
+  // Deep clone to avoid mutating original
+  const r = JSON.parse(JSON.stringify(localResult));
+
+  // ── 1. Photo prompt: replace scene with Gemini's ultra-detailed version ──
+  if (g.photo_scene_en) {
+    r.photo_prompt_en_json.scene = g.photo_scene_en;
+  }
+
+  // ── 2. Video prompt: replace dialogue ──
+  if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.line_A_ru = g.dialogue_A_ru;
+  if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.line_B_ru = g.dialogue_B_ru;
+  if (g.killer_word) r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
+
+  // ── 3. Video prompt: replace emotion arc ──
+  if (g.video_emotion_arc) {
+    const arc = g.video_emotion_arc;
+    r.video_prompt_en_json.emotion_arc = {
+      hook: arc.hook_en || r.video_prompt_en_json.emotion_arc.hook,
+      act_A: arc.act_A_en || r.video_prompt_en_json.emotion_arc.act_A,
+      act_B: arc.act_B_en || r.video_prompt_en_json.emotion_arc.act_B,
+      release: arc.release_en || r.video_prompt_en_json.emotion_arc.release,
+    };
+  }
+
+  // ── 4. Video prompt: replace atmosphere ──
+  if (g.video_atmosphere_en) {
+    r.video_prompt_en_json.spatial.environment_interaction = g.video_atmosphere_en;
+  }
+
+  // ── 5. Blueprint: replace dialogue in scenes ──
+  if (g.dialogue_A_ru) {
+    if (r.blueprint_json.scenes[1]) r.blueprint_json.scenes[1].dialogue_ru = g.dialogue_A_ru;
+    if (r.blueprint_json.dialogue_segments[0]) r.blueprint_json.dialogue_segments[0].text_ru = g.dialogue_A_ru;
+  }
+  if (g.dialogue_B_ru) {
+    if (r.blueprint_json.scenes[2]) r.blueprint_json.scenes[2].dialogue_ru = g.dialogue_B_ru;
+    if (r.blueprint_json.dialogue_segments[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
+  }
+
+  // ── 6. Rebuild RU package with Gemini's creative content ──
+  const dA = g.dialogue_A_ru || ctx.dialogueA || '—';
+  const dB = g.dialogue_B_ru || ctx.dialogueB || '—';
+  const kw = g.killer_word || '—';
+  const charA = ctx.charA;
+  const charB = ctx.charB;
+  const cast = r.video_prompt_en_json.cast || {};
+  const anchorA = charA.identity_anchors || {};
+  const anchorB = charB.identity_anchors || {};
+
+  const pairDynamic = charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? '🔥 Взрывная пара: хаос vs спокойствие'
+    : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? '🌪 Хаотичная пара'
+    : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? '⚡ Конфликтная пара'
+    : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
+    : '⚖️ Сбалансированная пара';
+
+  // Engagement from Gemini
+  const viralTitle = g.viral_title_ru || r.log?.engagement?.viral_title || '';
+  const pinComment = g.pin_comment_ru || r.log?.engagement?.pin_comment || '';
+  const firstComment = g.first_comment_ru || r.log?.engagement?.first_comment || '';
+  const hashtags = (g.hashtags || r.log?.engagement?.hashtags || []).map(t => t.startsWith('#') ? t : '#' + t);
+  const seriesTag = '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
+
+  r.ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Gemini Production)
+═══════════════════════════════════════════
+📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}
+🤖 Сгенерировано Gemini — уникальный контент
+👥 Пара: ${charA.name_ru} (${cast.speaker_A?.age || 'elderly'}) × ${charB.name_ru} (${cast.speaker_B?.age || 'elderly'})
+🎭 Динамика: ${pairDynamic}
+📍 Локация: ${ctx.location.split(',')[0]}
+💡 Освещение: ${ctx.lightingMood.mood}
+👗 A: ${ctx.wardrobeA}
+👔 B: ${ctx.wardrobeB}
+🪑 Реквизит: ${ctx.propAnchor}
+
+[0.00–0.80] 🎣 ХУК: ${ctx.hookAction.action_ru}
+  🔊 Звук: ${ctx.hookAction.audio}
+  🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
+
+[0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
+  «${dA}»
+  💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индignация'}
+  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
+  👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
+
+[3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
+  «${dB}»
+  💬 Темп: ${charB.speech_pace} | паузы = сила
+  🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
+  💥 KILLER WORD «${kw}» → ближе к 7.0s
+  👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
+
+[7.10–8.00] 😂 RELEASE: ${ctx.releaseAction.action_ru}
+  🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
+  🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
+  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
+
+═══════════════════════════════════════════
+
+📱 ЗАГОЛОВОК (копируй как есть):
+${viralTitle}
+
+📌 ЗАКРЕП (первый коммент от автора):
+${pinComment}
+
+💬 ПЕРВЫЙ КОММЕНТ (сразу после публикации):
+${firstComment}
+
+#️⃣ ХЭШТЕГИ (${hashtags.length} шт — вставлять В ПЕРВЫЙ КОММЕНТ, не в описание):
+${hashtags.join(' ')}
+
+💡 СТРАТЕГИЯ:
+• Заголовок → в описание поста (caption). Точка. Без хештегов.
+• Хештеги → в ПЕРВЫЙ коммент от автора (IG не режет охват).
+• Закреп → закрепить коммент сверху.
+• Первый коммент → постить через 1-2 мин после публикации.
+• Серия: используй ${seriesTag} на каждом видео этой пары.${ctx.product_info?.description_en ? `
+
+📦 ТОВАР В КАДРЕ:
+═══════════════════════════════════════════
+Описание товара (EN, для промпта): ${ctx.product_info.description_en.slice(0, 300)}${ctx.product_info.description_en.length > 300 ? '...' : ''}
+
+⚠️ ВАЖНО: Товар должен быть в кадре точно как на исходном фото!
+• Персонаж A держит/показывает товар во время своей реплики
+• Товар остаётся видимым на протяжении всего ролика
+• Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
+
+  // ── 7. Update log ──
+  r.log.generator_version = '2.0-gemini';
+  r.log.gemini_model = 'gemini-2.0-flash';
+  if (g.viral_title_ru) r.log.engagement.viral_title = g.viral_title_ru;
+  if (g.pin_comment_ru) r.log.engagement.pin_comment = g.pin_comment_ru;
+  if (g.first_comment_ru) r.log.engagement.first_comment = g.first_comment_ru;
+  if (g.hashtags) {
+    r.log.engagement.hashtags = hashtags;
+    r.log.engagement.hashtag_count = hashtags.length;
+  }
+
+  return r;
 }
