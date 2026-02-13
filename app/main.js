@@ -1151,6 +1151,11 @@ function initGenerate() {
     btn.disabled = true;
     btn.textContent = '⏳ Генерирую...';
 
+    // Reset previous results and preflight status
+    document.getElementById('gen-results')?.classList.add('hidden');
+    const pfEl = document.getElementById('gen-preflight');
+    if (pfEl) { pfEl.classList.add('hidden'); pfEl.innerHTML = ''; }
+
     const input = {
       input_mode: state.inputMode,
       character1_id: state.selectedA.id,
