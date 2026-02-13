@@ -1636,6 +1636,12 @@ export function mergeGeminiResult(localResult, geminiData) {
   // Deep clone to avoid mutating original
   const r = JSON.parse(JSON.stringify(localResult));
 
+  // ── 0. Humor category: Gemini invents its own category ──
+  if (g.humor_category_ru) {
+    r.log.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
+    ctx.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
+  }
+
   // ── 1. Photo prompt: replace scene with Gemini's ultra-detailed version ──
   if (g.photo_scene_en) {
     r.photo_prompt_en_json.scene = g.photo_scene_en;
