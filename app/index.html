@@ -13,17 +13,18 @@
       theme: {
         extend: {
           colors: {
-            'space-black': '#0a0a0f',
-            'space-dark': '#12121a',
-            'space-panel': '#1a1a2e',
-            'space-border': '#2a2a3e',
-            'neon-blue': '#00d4ff',
-            'neon-purple': '#a855f7',
-            'neon-green': '#00ff88',
-            'neon-pink': '#ff006e',
-            'neon-orange': '#ff8800',
-            'glass': 'rgba(255,255,255,0.05)',
-            'glass-light': 'rgba(255,255,255,0.1)',
+            'space-black': '#06080f',
+            'space-dark': '#0a0d18',
+            'space-panel': '#0e1220',
+            'space-border': '#1a2035',
+            'accent': '#00e5ff',
+            'accent-dim': 'rgba(0,229,255,0.12)',
+            'neon-purple': '#7c5cfc',
+            'neon-green': '#2dd4a8',
+            'neon-pink': '#e879a8',
+            'neon-amber': '#f0a040',
+            'glass': 'rgba(255,255,255,0.025)',
+            'glass-light': 'rgba(255,255,255,0.06)',
           },
           fontFamily: {
             mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
@@ -43,8 +44,8 @@
   <!-- MAIN APP -->
   <div id="app" class="fixed inset-0 z-10 flex flex-col">
     <!-- Header -->
-    <header class="flex items-center justify-between px-5 py-3 border-b border-space-border relative" style="background:rgba(8,8,20,0.92); backdrop-filter:blur(24px)">
-      <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/20 to-transparent"></div>
+    <header class="flex items-center justify-between px-5 py-3 border-b border-space-border relative" style="background:rgba(6,8,15,0.92); backdrop-filter:blur(28px)">
+      <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
       <div class="flex items-center gap-3">
         <span class="text-lg font-bold neon-text tracking-wide">FERIXDI</span>
         <span class="text-xs text-gray-500 font-light">STUDIO</span>
@@ -59,10 +60,10 @@
     <!-- Body: Sidebar + Workspace -->
     <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar -->
-      <nav id="sidebar" class="w-56 flex-shrink-0 border-r border-space-border overflow-y-auto py-5 relative" style="background:rgba(8,8,20,0.88); backdrop-filter:blur(24px)">
-        <div class="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-violet-500/10 via-transparent to-violet-500/10"></div>
+      <nav id="sidebar" class="w-56 flex-shrink-0 border-r border-space-border overflow-y-auto py-5 relative" style="background:rgba(6,8,15,0.88); backdrop-filter:blur(28px)">
+        <div class="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-cyan-400/8 via-transparent to-cyan-400/8"></div>
         <div class="px-4 mb-5">
-          <div class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-medium">Навигация</div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-[0.25em] font-medium">навигация</div>
         </div>
         <div id="nav-items" class="space-y-1 px-2">
           <div class="nav-item active" data-section="characters"><span>👥</span><span>Персонажи</span></div>
@@ -72,8 +73,8 @@
         <!-- Selected characters mini-display -->
         <div class="px-4 mt-6 pt-4 border-t border-gray-800/50">
           <div class="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-3">Выбранная пара</div>
-          <div id="sidebar-char-a" class="text-xs text-gray-400 mb-1.5 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500/60 inline-block"></span>A: —</div>
-          <div id="sidebar-char-b" class="text-xs text-gray-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500/60 inline-block"></span>B: —</div>
+          <div id="sidebar-char-a" class="text-xs text-gray-400 mb-1.5 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400/50 inline-block"></span>A: —</div>
+          <div id="sidebar-char-b" class="text-xs text-gray-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400/50 inline-block"></span>B: —</div>
         </div>
       </nav>
 
@@ -84,7 +85,7 @@
         <section id="section-characters" class="section-panel space-y-5">
           <!-- Step indicator -->
           <div class="flex items-center gap-3 mb-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">1</div>
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">1</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Выбери двух персонажей</h2>
               <p class="text-xs text-gray-400">Первый клик — персонаж A (провокатор). Второй — персонаж B (отвечает). Потом жми «Далее».</p>
@@ -110,12 +111,12 @@
           <!-- Selected pair -->
           <div class="flex gap-3 items-center">
             <div id="char-a-slot" class="glass-panel p-4 flex-1 min-h-[70px]">
-              <div class="text-[11px] text-violet-400 mb-1 font-medium">A · провокатор</div>
+              <div class="text-[11px] text-cyan-400 mb-1 font-medium">A · провокатор</div>
               <div id="char-a-name" class="text-sm text-gray-400">Нажми на персонажа ↓</div>
             </div>
             <button id="char-swap" class="btn-neon text-lg px-3">⇄</button>
             <div id="char-b-slot" class="glass-panel p-4 flex-1 min-h-[70px]">
-              <div class="text-[11px] text-indigo-400 mb-1 font-medium">B · панчлайн</div>
+              <div class="text-[11px] text-purple-400 mb-1 font-medium">B · панчлайн</div>
               <div id="char-b-name" class="text-sm text-gray-400">Нажми на второго ↓</div>
             </div>
           </div>
@@ -135,7 +136,7 @@
 
           <!-- Step 2: Configure -->
           <div class="flex items-center gap-3 mb-1">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">2</div>
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">2</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Опиши идею или просто жми «Сгенерировать»</h2>
               <p class="text-xs text-gray-400">AI сам подберёт категорию, диалог и тайминг. Или опиши тему — и он отталкивается от неё.</p>
@@ -145,15 +146,15 @@
           <!-- Selected chars summary -->
           <div class="glass-panel p-4 flex gap-4 items-center">
             <div class="flex-1">
-              <div class="text-[11px] text-violet-400 font-medium">A · провокатор</div>
+              <div class="text-[11px] text-cyan-400 font-medium">A · провокатор</div>
               <div id="gen-char-a" class="text-sm text-gray-200 mt-0.5">—</div>
             </div>
             <div class="text-gray-600">×</div>
             <div class="flex-1">
-              <div class="text-[11px] text-indigo-400 font-medium">B · панчлайн</div>
+              <div class="text-[11px] text-purple-400 font-medium">B · панчлайн</div>
               <div id="gen-char-b" class="text-sm text-gray-200 mt-0.5">—</div>
             </div>
-            <button id="gen-back-chars" class="text-xs text-gray-500 hover:text-violet-400 transition-colors">← Сменить персонажей</button>
+            <button id="gen-back-chars" class="text-xs text-gray-500 hover:text-cyan-400 transition-colors">← Сменить персонажей</button>
           </div>
 
           <!-- Location picker -->
@@ -164,7 +165,7 @@
                 <select id="loc-group-filter" class="input-field text-[11px] py-1 px-2 max-w-[130px]">
                   <option value="">Все</option>
                 </select>
-                <button id="loc-random-btn" class="text-[11px] text-gray-500 hover:text-violet-400 transition-colors">🎲 Случайная</button>
+                <button id="loc-random-btn" class="text-[11px] text-gray-500 hover:text-cyan-400 transition-colors">🎲 Случайная</button>
               </div>
             </div>
             <div id="loc-grid" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1"></div>
@@ -197,11 +198,11 @@
                 <!-- mode-script -->
                 <div id="mode-script" class="hidden space-y-3">
                   <div>
-                    <label class="text-xs text-violet-400 font-medium mb-1 block">Реплика A (провокация):</label>
+                    <label class="text-xs text-cyan-400 font-medium mb-1 block">Реплика A (провокация):</label>
                     <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
                   </div>
                   <div>
-                    <label class="text-xs text-indigo-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
+                    <label class="text-xs text-purple-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
                     <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
                   </div>
                 </div>
@@ -229,14 +230,14 @@
                   <!-- Step 2: Upload downloaded video -->
                   <div class="glass-panel p-4 space-y-3">
                     <div class="text-xs text-gray-300 font-medium">Шаг 2 · Загрузи скачанное видео</div>
-                    <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-violet-500/40 transition-colors" id="video-dropzone">
+                    <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone">
                       <div class="text-lg mb-1">📁</div>
                       <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
                       <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
                       <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
                     </div>
                     <div id="video-meta" class="hidden text-xs text-gray-500"></div>
-                    <div id="video-remake-badge" class="hidden text-[11px] text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-lg p-2.5 leading-relaxed">
+                    <div id="video-remake-badge" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
                       🎬 <strong>Режим ремейка</strong> — Gemini проанализирует видео и воспроизведёт его с твоими персонажами: тот же стиль, энергия и похожий диалог на русском
                     </div>
                   </div>
@@ -249,7 +250,7 @@
                 <div class="space-y-3" id="section-product">
                   <div class="text-[10px] text-gray-500 mb-1">Фото товара (необязательно)</div>
                   <div class="flex gap-3 items-start">
-                    <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-3 text-center cursor-pointer hover:border-violet-500/50 transition-colors flex-1 min-h-[80px] flex flex-col items-center justify-center">
+                    <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-3 text-center cursor-pointer hover:border-cyan-400/30 transition-colors flex-1 min-h-[80px] flex flex-col items-center justify-center">
                       <div id="product-preview-zone">
                         <div class="text-xl mb-1">📦</div>
                         <div class="text-[10px] text-gray-500">Перетащи фото или нажми</div>
@@ -286,14 +287,14 @@
 
           <!-- Step 3: Generate -->
           <div class="flex items-center gap-3 mt-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">3</div>
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">3</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Получи готовый пакет</h2>
               <p class="text-xs text-gray-400">Нажми кнопку — через секунду получишь промпт для фото, видео, текст для поста и хештеги.</p>
             </div>
           </div>
 
-          <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide">🚀 Сгенерировать</button>
+          <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide">Сгенерировать</button>
 
           <!-- Results -->
           <div id="gen-results" class="hidden space-y-4">
@@ -301,7 +302,7 @@
               <div class="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white text-xs font-bold">✓</div>
               <span class="text-sm font-semibold text-emerald-400">Готово! Скопируй нужное:</span>
             </div>
-            <div class="h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"></div>
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
             <div class="flex gap-2 flex-wrap">
               <button class="mode-btn active" data-tab="photo">📸 Фото-промпт</button>
               <button class="mode-btn" data-tab="video">🎬 Видео-промпт</button>
@@ -315,19 +316,19 @@
             <div id="tab-log" class="hidden"></div>
 
             <!-- Dialogue Editor (trim words from ready prompt) -->
-            <div id="dialogue-editor" class="hidden glass-panel p-4 space-y-3 border-l-2 border-violet-500/40">
+            <div id="dialogue-editor" class="hidden glass-panel p-4 space-y-3 border-l-2 border-cyan-400/30">
               <div class="flex items-center justify-between">
-                <div class="text-xs text-violet-400 font-medium">✏️ Редактор диалога — сократи лишние слова</div>
+                <div class="text-xs text-cyan-400 font-medium">✏️ Редактор диалога — сократи лишние слова</div>
                 <span id="editor-timing-badge" class="tag text-[10px]">—</span>
               </div>
               <div class="space-y-2">
                 <div>
-                  <label class="text-[10px] text-violet-400 font-medium block mb-1">🅰️ Реплика A (провокация) — макс. 7 слов, окно 2.8с:</label>
+                  <label class="text-[10px] text-cyan-400 font-medium block mb-1">🅰️ Реплика A (провокация) — макс. 7 слов, окно 2.8с:</label>
                   <input id="editor-line-a" type="text" class="input-field text-xs" placeholder="Реплика A...">
                   <div id="editor-est-a" class="text-[10px] text-gray-500 mt-0.5"></div>
                 </div>
                 <div>
-                  <label class="text-[10px] text-indigo-400 font-medium block mb-1">🅱️ Реплика B (панчлайн) — макс. 8 слов, окно 3.5с:</label>
+                  <label class="text-[10px] text-purple-400 font-medium block mb-1">🅱️ Реплика B (панчлайн) — макс. 8 слов, окно 3.5с:</label>
                   <input id="editor-line-b" type="text" class="input-field text-xs" placeholder="Реплика B...">
                   <div id="editor-est-b" class="text-[10px] text-gray-500 mt-0.5"></div>
                 </div>
@@ -363,7 +364,7 @@
             </div>
             <div id="promo-status" class="text-xs h-5"></div>
             <p class="text-[11px] text-gray-500/70">Без промо-кода вы можете просматривать персонажей, но генерация недоступна.</p>
-            <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-violet-400/70 hover:text-violet-300 transition-colors">Написать в Telegram →</a></p>
+            <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400/70 hover:text-cyan-300 transition-colors">написать в Telegram →</a></p>
           </div>
 
           <!-- Сервер -->
@@ -388,7 +389,7 @@
 
           <!-- О проекте -->
           <div class="glass-panel p-4 relative overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/15 to-transparent"></div>
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent"></div>
             <div class="text-xs text-gray-400 font-medium mb-2">О проекте</div>
             <p class="text-xs text-gray-400 leading-relaxed">FERIXDI Studio — генератор контент-пакетов для видео в соцсетях.</p>
             <p class="text-xs text-gray-400 mt-1.5 leading-relaxed">Выбери персонажей → опиши идею → получи промпт для фото, видео и текст для поста.</p>
@@ -397,10 +398,10 @@
 
           <!-- Поддержка -->
           <div class="glass-panel p-4 relative overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/15 to-transparent"></div>
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent"></div>
             <div class="text-xs text-gray-400 font-medium mb-2">Поддержка</div>
             <div class="flex items-center gap-3">
-              <a href="https://t.me/ferixdiii" target="_blank" class="flex items-center gap-2 text-xs text-violet-400 hover:text-violet-300 transition-colors">
+              <a href="https://t.me/ferixdiii" target="_blank" class="flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
                 <span>💬</span><span>Telegram: @ferixdiii</span>
               </a>
             </div>
