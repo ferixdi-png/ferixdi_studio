@@ -6,6 +6,33 @@
   <title>FERIXDI STUDIO — Командный центр ремикса видео</title>
   <meta name="description" content="Уникализируй видео. Пересобери под себя. Забирай бесплатный трафик.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <!-- Tailwind CDN (no build required) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'space-black': '#0a0a0f',
+            'space-dark': '#12121a',
+            'space-panel': '#1a1a2e',
+            'space-border': '#2a2a3e',
+            'neon-blue': '#00d4ff',
+            'neon-purple': '#a855f7',
+            'neon-green': '#00ff88',
+            'neon-pink': '#ff006e',
+            'neon-orange': '#ff8800',
+            'glass': 'rgba(255,255,255,0.05)',
+            'glass-light': 'rgba(255,255,255,0.1)',
+          },
+          fontFamily: {
+            mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
   <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
