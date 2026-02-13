@@ -210,8 +210,8 @@ function selectChar(role, id) {
 function updateCharDisplay() {
   document.getElementById('char-a-name').textContent = state.selectedA ? `${state.selectedA.name_ru} • ${state.selectedA.group}` : 'Нажми на персонажа ↓';
   document.getElementById('char-b-name').textContent = state.selectedB ? `${state.selectedB.name_ru} • ${state.selectedB.group}` : 'Нажми на второго ↓';
-  document.getElementById('sidebar-char-a').textContent = `A: ${state.selectedA?.name_ru || '—'}`;
-  document.getElementById('sidebar-char-b').textContent = `B: ${state.selectedB?.name_ru || '—'}`;
+  document.getElementById('sidebar-char-a').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-violet-500/60 inline-block"></span>A: ${state.selectedA?.name_ru || '—'}`;
+  document.getElementById('sidebar-char-b').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500/60 inline-block"></span>B: ${state.selectedB?.name_ru || '—'}`;
   document.getElementById('gen-char-a').textContent = state.selectedA?.name_ru || '—';
   document.getElementById('gen-char-b').textContent = state.selectedB?.name_ru || '—';
 
@@ -778,6 +778,8 @@ function initTimingCoach() {
         let text = pre.textContent;
         const kw = state.lastResult.blueprint_json?.timing_grid?.killer_word_at;
         if (kw) {
+          // Escape HTML entities before setting innerHTML to prevent XSS
+          text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
           text = text.replace(/KILLER WORD «([^»]+)»/, 'KILLER WORD «<mark style="background:rgba(255,0,110,0.3);color:#ff006e">$1</mark>»');
           pre.innerHTML = text;
         }

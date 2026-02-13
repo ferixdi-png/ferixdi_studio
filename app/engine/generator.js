@@ -537,7 +537,7 @@ function buildCastContract(charA, charB) {
     const defaultSkin = ['deep wrinkles', 'age spots', 'visible pores', 'subtle skin sheen (not plastic)'];
     const defaultEyes = ['wet glint', 'slight sclera redness', 'micro-saccades'];
     return {
-      character_en: char.prompt_tokens.character_en,
+      character_en: char.prompt_tokens?.character_en || 'elderly character, hyper-realistic detail',
       age: bio.age || 'elderly',
       skin: (bio.skin_tokens || defaultSkin).join(', '),
       eyes: (bio.eye_tokens || defaultEyes).join(', '),
@@ -729,7 +729,7 @@ export function generate(input) {
     characters: [
       {
         role: 'A — provocateur (speaking)',
-        appearance: charA.prompt_tokens.character_en,
+        appearance: charA.prompt_tokens?.character_en || cast.speaker_A.character_en,
         face_anchor: anchorA.face_silhouette || 'distinctive face',
         signature: anchorA.signature_element || 'notable accessory',
         skin_detail: cast.speaker_A.skin,
@@ -742,7 +742,7 @@ export function generate(input) {
       },
       {
         role: 'B — punchline (listening, silent)',
-        appearance: charB.prompt_tokens.character_en,
+        appearance: charB.prompt_tokens?.character_en || cast.speaker_B.character_en,
         face_anchor: anchorB.face_silhouette || 'distinctive face',
         signature: anchorB.signature_element || 'notable accessory',
         skin_detail: cast.speaker_B.skin,
@@ -869,7 +869,7 @@ export function generate(input) {
 [0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dialogueA}»
   💬 Темп: ${charA.speech_pace} | Слов: 6-9 | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
-  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers.hook_style}
+  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
 [3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
@@ -915,10 +915,10 @@ ${engage.hashtags.join(' ')}
   const blueprint_json = {
     version: '2.0',
     scenes: [
-      { id: 1, segment: 'hook', action: hookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${hookObj.audio}, ${charA.modifiers.hook_style}` },
+      { id: 1, segment: 'hook', action: hookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${hookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
       { id: 2, segment: 'act_A', action: 'Pompous provocation delivery', speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-9 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed` },
       { id: 3, segment: 'act_B', action: 'Punchline response', speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-11 words, killer word "${killerWord}" near end, A frozen` },
-      { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers.laugh_style}, shared laugh` },
+      { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers?.laugh_style || 'natural laugh'}, shared laugh` },
     ],
     dialogue_segments: [
       { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '6-9' },
