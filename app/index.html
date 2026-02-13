@@ -67,7 +67,6 @@
         <div id="nav-items" class="space-y-1 px-2">
           <div class="nav-item active" data-section="characters"><span>👥</span><span>Персонажи</span></div>
           <div class="nav-item" data-section="generate"><span>⚡</span><span>Генерация</span></div>
-          <div class="nav-item" data-section="timing"><span>⏱</span><span>Тайминг</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
         </div>
         <!-- Selected characters mini-display -->
@@ -332,40 +331,6 @@
             </div>
             <!-- QC Gate -->
             <div id="gen-qc-gate" class="hidden glass-panel p-4 border-l-2 border-emerald-500/40 space-y-1"></div>
-          </div>
-        </section>
-
-        <!-- SECTION: Timing Coach -->
-        <section id="section-timing" class="section-panel hidden space-y-4">
-          <h2 class="text-lg font-semibold text-white">⏱ Тайминг-коуч</h2>
-          <div class="glass-panel p-4 text-xs text-yellow-400/70 border-l-2 border-yellow-500/25 leading-relaxed">
-            Оценивает длительность диалога. Если текст не помещается в 8 секунд — сокращай слова или используй автообрезку.
-          </div>
-          <!-- Timeline bar -->
-          <div>
-            <div class="text-xs text-gray-400 font-medium mb-2">Шкала 0–8 сек</div>
-            <div id="timing-bar" class="timing-bar">
-              <div class="timing-segment timing-hook" style="left:0;width:10%"><span class="text-[10px]">хук</span></div>
-              <div class="timing-segment timing-a" style="left:10%;width:35%"><span class="text-[10px]">A</span></div>
-              <div class="timing-segment timing-b" style="left:45%;width:43.75%"><span class="text-[10px]">B</span></div>
-              <div class="timing-segment timing-laugh" style="left:88.75%;width:11.25%"><span class="text-[10px]">😂</span></div>
-            </div>
-            <div class="flex justify-between text-[10px] font-mono text-gray-600 mt-1">
-              <span>0.0</span><span>0.8</span><span>3.6</span><span>7.1</span><span>8.0</span>
-            </div>
-          </div>
-          <!-- Estimate -->
-          <div id="timing-estimate" class="glass-panel p-4 space-y-2">
-            <div class="text-xs text-gray-500">Сначала сгенерируй пакет на шаге 3 — оценка появится здесь автоматически</div>
-          </div>
-          <!-- Trimming suggestions -->
-          <div id="timing-suggestions" class="hidden space-y-2">
-            <div class="text-xs text-gray-400 font-medium">Предложения по сокращению:</div>
-            <div id="timing-suggestions-list" class="space-y-1"></div>
-          </div>
-          <div class="flex gap-2">
-            <button id="timing-auto-trim" class="btn-neon-green text-xs" disabled>Укоротить автоматически</button>
-            <button id="timing-highlight" class="btn-neon text-xs">Подсветить ударные слова</button>
           </div>
         </section>
 

@@ -676,9 +676,6 @@ function displayResult(result) {
     renderQCGate(result.qc_gate);
   }
 
-  // Update timing
-  updateTimingCoach(result);
-
   // Populate dialogue editor
   populateDialogueEditor(result);
 
@@ -870,102 +867,7 @@ function initGenerate() {
   });
 }
 
-// ─── TIMING COACH ────────────────────────────
-function updateTimingCoach(result) {
-  if (!result || !result.duration_estimate) return;
-  const est = result.duration_estimate;
-  const el = document.getElementById('timing-estimate');
-
-  const riskColor = { low: 'neon-text-green', medium: 'text-yellow-400', high: 'neon-text-pink' }[est.risk];
-  const riskLabel = { low: '✓ ОК', medium: '⚠️ БЛИЗКО', high: '🚨 ПРЕВЫШЕНИЕ' }[est.risk];
-
-  el.innerHTML = `
-    <div class="flex items-center justify-between mb-2">
-      <span class="text-xs text-gray-500">Оценка длительности</span>
-      <span class="text-sm font-bold ${riskColor}">${est.total}с / 8.0с ${riskLabel}</span>
-    </div>
-    ${est.perLine.map(l => `
-      <div class="flex items-center gap-2 text-xs">
-        <span class="font-medium ${l.speaker === 'A' ? 'neon-text' : 'neon-text-purple'} w-4">${l.speaker}</span>
-        <div class="flex-1 bg-glass rounded h-4 overflow-hidden relative">
-          <div class="h-full ${l.overWindow ? 'bg-red-500/40' : l.speaker === 'A' ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded" style="width:${Math.min(100, (l.duration / (l.window || 3)) * 100)}%"></div>
-          ${l.window ? `<div class="absolute top-0 h-full border-r border-dashed border-yellow-500/50" style="left:100%"></div>` : ''}
-        </div>
-        <span class="${l.overWindow ? 'text-red-400' : 'text-gray-500'} w-16 text-right">${l.duration}с/${l.window || '?'}с</span>
-        <span class="text-gray-600 w-8">${l.wordCount}w</span>
-      </div>
-    `).join('')}
-    ${est.notes.map(n => `<div class="text-xs ${n.includes('НЕ ВЛЕЗЕТ') ? 'text-red-400' : 'text-yellow-400/80'} mt-1">📝 ${n}</div>`).join('')}
-  `;
-
-  // Update bar colors
-  if (est.risk === 'high') {
-    document.querySelector('.timing-b')?.classList.add('timing-over');
-  } else {
-    document.querySelector('.timing-b')?.classList.remove('timing-over');
-  }
-
-  // Trimming suggestions
-  if (est.trimming_suggestions.length > 0) {
-    const sugEl = document.getElementById('timing-suggestions');
-    sugEl.classList.remove('hidden');
-    document.getElementById('timing-suggestions-list').innerHTML = est.trimming_suggestions.map(s =>
-      `<div class="text-xs text-gray-400 glass-panel p-2">💡 ${s}</div>`
-    ).join('');
-    document.getElementById('timing-auto-trim').disabled = false;
-  }
-}
-
-function initTimingCoach() {
-  document.getElementById('timing-auto-trim')?.addEventListener('click', () => {
-    if (!state.lastResult) return;
-    const bp = state.lastResult.blueprint_json;
-    if (!bp) return;
-
-    const lines = bp.dialogue_segments.map(s => ({
-      speaker: s.speaker,
-      text: s.text_ru,
-      pace: s.speaker === 'A' ? state.selectedA?.speech_pace : state.selectedB?.speech_pace
-    }));
-
-    const trimResult = autoTrim(lines);
-    if (trimResult.trimmed) {
-      trimResult.auto_fixes.forEach(f => log('OK', 'ТАЙМИНГ', f));
-
-      // Update actual dialogue text in all prompt structures
-      const newA = trimResult.lines.find(l => l.speaker === 'A')?.text;
-      const newB = trimResult.lines.find(l => l.speaker === 'B')?.text;
-      if (newA !== undefined && newB !== undefined) {
-        applyDialogueUpdate(newA, newB);
-      }
-
-      state.lastResult.duration_estimate = trimResult.estimate;
-      state.lastResult.auto_fixes.push(...trimResult.auto_fixes);
-      updateTimingCoach(state.lastResult);
-      log('OK', 'ТАЙМИНГ', `Новая оценка: ${trimResult.estimate.total}с`);
-    } else {
-      log('INFO', 'ТАЙМИНГ', 'Нечего сокращать автоматически');
-    }
-  });
-
-  document.getElementById('timing-highlight')?.addEventListener('click', () => {
-    log('INFO', 'ТАЙМИНГ', 'Ударные слова подсвечены');
-    // Highlight killer word in ru_package display
-    if (state.lastResult) {
-      const pre = document.querySelector('#tab-ru pre');
-      if (pre) {
-        let text = pre.textContent;
-        const kw = state.lastResult.blueprint_json?.timing_grid?.killer_word_at;
-        if (kw) {
-          // Escape HTML entities before setting innerHTML to prevent XSS
-          text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          text = text.replace(/KILLER WORD «([^»]+)»/, 'KILLER WORD «<mark style="background:rgba(255,0,110,0.3);color:#ff006e">$1</mark>»');
-          pre.innerHTML = text;
-        }
-      }
-    }
-  });
-}
+// Timing section removed — timing info shown inline in dialogue editor
 
 // ─── QC GATE RENDERER (v3) ──────────────────
 function renderQCGate(qc) {
@@ -1320,7 +1222,6 @@ function initDialogueEditor() {
     if (!inputA || !inputB) return;
 
     applyDialogueUpdate(inputA.value.trim(), inputB.value.trim());
-    updateTimingCoach(state.lastResult);
 
     // Visual feedback
     const applyBtn = document.getElementById('editor-apply');
@@ -1378,7 +1279,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductUpload();
   initGenerate();
   initDialogueEditor();
-  initTimingCoach();
   initSettings();
   initCharFilters();
   initCopyButtons();
