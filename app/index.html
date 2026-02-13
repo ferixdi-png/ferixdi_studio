@@ -37,18 +37,20 @@
   <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
-  <!-- Stars + Scanline -->
+  <!-- Stars + Scanline + Matrix -->
   <div class="stars-bg"></div>
-  <div class="scanline-overlay"></div>
+  <div class="scanline-active"></div>
+  <canvas id="matrix-rain"></canvas>
 
   <!-- MAIN APP -->
   <div id="app" class="fixed inset-0 z-10 flex flex-col">
     <!-- Header -->
     <header class="flex items-center justify-between px-5 py-3 border-b border-space-border relative" style="background:rgba(6,8,15,0.92); backdrop-filter:blur(28px)">
       <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
+      <div class="absolute top-0 left-0 right-0 h-3 data-stream opacity-30"></div>
       <div class="flex items-center gap-3">
-        <span class="text-lg font-bold neon-text tracking-wide">FERIXDI</span>
-        <span class="text-xs text-gray-500 font-light">STUDIO</span>
+        <span class="text-lg font-bold neon-text tracking-wide glitch" data-text="FERIXDI">FERIXDI</span>
+        <span class="text-xs text-gray-500 font-light neon-flicker">STUDIO</span>
         <div class="pulse-dot"></div>
       </div>
       <div class="flex items-center gap-4">
