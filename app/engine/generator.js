@@ -616,6 +616,146 @@ function buildCameraPreset() {
   };
 }
 
+// ─── CINEMATOGRAPHY CONTRACT (12 production pillars) ───
+// Everything the user does NOT choose — Gemini decides using this contract.
+// These 12 blocks make video look "alive and expensive".
+function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, hookObj, releaseObj, propAnchor) {
+  return {
+    // ── 1. LIGHTING ──────────────────────────────
+    lighting: {
+      directive: 'Lighting is the single biggest realism factor. Choose ONE clear setup and commit.',
+      primary_source: lightingMood.style,
+      mood: lightingMood.mood,
+      source_count: 'One dominant source + one soft fill bounce from environment (wall/ceiling/floor). Never more than two. NEVER ring light or studio softbox.',
+      shadow_quality: 'Soft but PRESENT shadows under nose, cheekbones, chin, brow ridge. Shadow edges slightly diffused, not razor-sharp, not invisible. Shadows give face its 3D structure.',
+      skin_highlights: 'Subtle overexposure allowed on skin highlights (forehead, nose bridge, cheekbone top). This is NATURAL and desired — do NOT flatten it. Slight specular sheen on oily skin zones.',
+      consistency: 'Lighting MUST NOT change during 8 seconds. Same direction, same color temperature, same intensity throughout. No flickering unless location-appropriate (fluorescent).',
+      forbidden: 'No flat frontal lighting, no beauty dish glow, no studio rim lights, no colored RGB gels, no dramatic film noir unless location demands it.',
+    },
+
+    // ── 2. OPTICS & DISTANCE ─────────────────────
+    optics: {
+      directive: 'Portrait-close framing with shallow DOF = expensive look. This is non-negotiable for the series.',
+      focal_length: '35-50mm equivalent (portrait range). NOT ultra-wide (no face distortion). NOT telephoto (no flat compression). Sweet spot: 40mm.',
+      aperture: 'f/1.8–f/2.8 equivalent. Faces SHARP, background 20-35% blurred (natural bokeh, not gaussian). Ears may be slightly softer than eyes — this is correct.',
+      distance_to_subject: '40-70cm from lens to face. Close enough to see pore texture, far enough for both faces in frame without barrel distortion.',
+      depth_of_field: 'Eyes of speaking character = critical sharpness plane. Listening character 5-10cm behind = acceptable soft. Background = gentle bokeh with recognizable shapes (not smeared).',
+      series_lock: 'EVERY episode in this series uses the same focal length and distance range. This is the visual signature of the format.',
+    },
+
+    // ── 3. CAMERA MOVEMENT ───────────────────────
+    camera_movement: {
+      directive: 'Handheld selfie feel — NOT tripod static, NOT gimbal smooth. Organic human holding a phone.',
+      base_motion: 'Constant micro-jitter: 0.5-1.5px random drift at 2-4Hz. This is breathing + hand tremor. NEVER perfectly still.',
+      hook_motion: 'First 0.8s: slight push-in toward speaker (2-3% zoom), adds urgency.',
+      act_A_motion: 'Subtle drift toward A (0.5-1° rotation over 2.8s). Almost imperceptible, creates subconscious focus.',
+      act_B_motion: 'Micro-pan toward B as they start speaking. Slight pull-back (1-2% zoom out) for "reveal" energy.',
+      release_motion: 'Camera shakes from laughter — 3-5px oscillation at 6-8Hz for 0.5s, then settles. Bodies physically moving cause this.',
+      forbidden: 'No smooth dolly moves, no crane shots, no whip pans, no rack focus pulls, no drone moves. This is a PHONE in a HAND.',
+      series_lock: 'Same movement style every episode. Consistency = brand recognition.',
+    },
+
+    // ── 4. MICRO-MOVEMENT TEMPO ──────────────────
+    micro_movements: {
+      directive: 'The difference between "alive" and "mannequin". Too few = uncanny valley. Too many = cartoon. Find the sweet spot.',
+      blink_rate: 'Natural blink: every 3-5 seconds. Stress/argument increases to every 2-3s. NEVER unblinking for >5s. Both eyes blink simultaneously (no winking unless character-specific).',
+      breathing: 'Visible chest/shoulder rise every 3-4 seconds. Speaking character: breathing syncs with speech pauses. Listening character: slow steady breathing, maybe one deep inhale before their line.',
+      head_micro_turns: 'Tiny 1-3° head tilts and rotations every 2-4 seconds. Speaking: animated, 5-10° range. Listening: minimal, weighted nods or slight cocks.',
+      facial_micro_expressions: 'Eyebrow micro-raises (1-2mm), nostril micro-flares on emphasis, jaw tension shifts, lip corner twitches on listening character. These fire every 1-2 seconds subtly.',
+      weight_shifts: 'Body weight shifts every 4-6 seconds. Small shoulder adjustments. Finger movements if gesturing. Clothing shifts with body.',
+      forbidden: 'No perfectly still mannequin frames (>1.5s without ANY movement). No hyperactive twitching. No symmetrical simultaneous movements on both characters.',
+    },
+
+    // ── 5. FACE & LIP STABILITY ──────────────────
+    face_stability: {
+      directive: 'Mouth ALWAYS visible and unobstructed. This directly controls lip-sync quality.',
+      mouth_visibility: 'CRITICAL: Lower face (mouth, chin, jaw) must be in frame and unobstructed for 100% of the video. No hand over mouth (except intentional gesture), no hair covering lips, no prop blocking jaw.',
+      head_rotation_limit: 'Maximum 25° turn from camera. Beyond this, far-side mouth becomes invisible → lip-sync breaks. During speech: keep within 15° of front-facing.',
+      hair_and_accessories: 'No bangs/fringe/mustache/scarf covering lips AT ANY POINT during speech. If character has facial hair: keep it trimmed/clear of lip line in prompt. Glasses: above mouth line only.',
+      jaw_tracking: 'Every Russian syllable produces visible jaw movement. Consonants (т, д, п, б, м, н) = visible lip closure. Vowels (а, о, у) = proportional jaw opening. No "ventriloquist" speech.',
+      non_speaking_mouth: 'When NOT speaking: mouth FIRMLY SEALED. Jaw still. Lips pressed. NO phantom lip movements, no mouthing along, no chewing. ONLY subtle lip-press changes allowed.',
+    },
+
+    // ── 6. EYES & GAZE ──────────────────────────
+    gaze: {
+      directive: 'Eyes create hypnosis and retention. First 1-2 seconds of eye contact with camera = highest hook power.',
+      hook_gaze: '0.0-0.8s: Speaking character (A) locks DIRECT EYE CONTACT with camera lens. Piercing, challenging, pulling viewer in. This is the #1 retention weapon.',
+      act_A_gaze: '0.8-3.6s: A maintains 70% camera contact, 30% glancing at B. B watches A with side-eye or direct stare — tracking A\'s words with visible processing.',
+      act_B_gaze: '3.6-7.1s: B delivers punchline with direct camera contact (80%). A\'s eyes go wide → dart between B and camera, showing shock.',
+      release_gaze: '7.1-8.0s: Both break into natural laughter gaze — eyes crinkle, look at each other, occasional camera glance. Warm, genuine.',
+      pupil_detail: 'Pupils visible with micro-reflections of environment lighting. Wet glint on sclera. Micro-saccades (tiny rapid eye movements) every 0.5-1s — this is what makes eyes feel ALIVE.',
+      forbidden: 'No dead stare (eyes open, no movement for >2s). No cross-eyed moments. No looking at nothing. No simultaneous identical eye movements on both characters.',
+    },
+
+    // ── 7. FRAME CLEANLINESS ─────────────────────
+    frame_cleanliness: {
+      directive: 'Clean background with 2-4 purposeful details. No visual noise, no random objects, no clutter that distracts from faces.',
+      foreground: 'Characters occupy 60-70% of vertical frame. Nothing between camera and faces.',
+      midground: `1 prop anchor: ${propAnchor} — slightly out of focus, provides texture and context.`,
+      background: '2-3 environmental details appropriate to location, all in soft bokeh. Recognizable shapes but not sharp enough to read text or count objects.',
+      negative_space: 'Slight headroom above characters (5-8% of frame). No dead empty zones larger than 15% of frame.',
+      forbidden: 'No text anywhere in frame. No logos. No screens/phones visible. No random floating objects. No visual elements that compete with faces for attention.',
+      detail_budget: 'Total distinct visual elements in frame: faces (2) + wardrobe (2) + prop (1) + background details (2-3) = 7-8 maximum. Anything more is clutter.',
+    },
+
+    // ── 8. WARDROBE & TEXTURES ───────────────────
+    textures: {
+      directive: 'Textured materials = realism. Smooth/flat surfaces = AI giveaway. Every fabric must have visible weave, wrinkles, or grain.',
+      wardrobe_A: wardrobeA,
+      wardrobe_B: wardrobeB,
+      texture_priority: 'PRIORITIZE materials with visible texture: wool knit patterns, denim weave, leather grain, cotton wrinkles, corduroy ridges, linen creases. These read as REAL.',
+      wrinkle_rule: 'Clothing MUST have natural wrinkles at elbows, shoulders, waist. Freshly-ironed flat fabric = fake. Lived-in creases = real.',
+      skin_as_texture: 'Skin is the most important texture. Visible pores, fine lines, age spots (if elderly), slight oiliness on nose/forehead, imperfect tone. NO airbrushed smooth skin.',
+      forbidden: 'No plastic-looking fabrics. No perfectly smooth surfaces. No CGI-shiny materials. No rubber-looking skin. No uniform untextured color blocks.',
+    },
+
+    // ── 9. COLOR & SKIN TONE ─────────────────────
+    color_skin: {
+      directive: 'Correct color grading is what separates AI video from real. Lock white balance, protect skin tones, avoid the two deadly sins: orange tan and grey face.',
+      white_balance: 'Lock to ONE color temperature matching the light source. Kitchen/barn: 3200-3800K warm. Fluorescent: 4500-5000K cool. Daylight: 5500-6000K neutral. NO shifts during the clip.',
+      skin_tone_A: `${charA.prompt_tokens?.character_en?.includes('dark skin') || charA.prompt_tokens?.character_en?.includes('tan') ? 'Warm rich undertone, never ashy' : charA.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, never grey or yellow' : 'Natural warm undertone, slight pink in cheeks, never flat or monochrome'}`,
+      skin_tone_B: `${charB.prompt_tokens?.character_en?.includes('dark skin') || charB.prompt_tokens?.character_en?.includes('tan') ? 'Warm rich undertone, never ashy' : charB.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, never grey or yellow' : 'Natural warm undertone, slight pink in cheeks, never flat or monochrome'}`,
+      deadly_sins: 'FORBIDDEN: (1) Orange spray-tan skin — most common AI artifact. (2) Grey/blue lifeless face — second most common. (3) Uniform skin tone with no variation — third.',
+      color_grade: 'Subtle cinematic grade only. Slight lift in shadows (not crushed black), gentle rolloff in highlights (not clipped white). Saturation: 90-100% of natural (slightly muted = cinematic, never oversaturated).',
+      consistency: 'Skin tone MUST remain identical across all 8 seconds. No color shifts, no random warmth/coolness changes between cuts or movements.',
+    },
+
+    // ── 10. SOUND AS REALITY ANCHOR ──────────────
+    sound_anchor: {
+      directive: 'Sound makes the brain believe the image is real. Even simple room tone converts "AI video" into "footage". Sound is the cheapest realism upgrade.',
+      room_tone: 'MANDATORY: continuous low-level ambient sound matching location. This runs UNDER all dialogue at -20dB to -30dB. Never silence between words — real rooms have sound.',
+      voice_volume: 'Dialogue at -6dB to -3dB peak. Natural dynamic range — louder on emphasis, softer on asides. NO compression, NO limiter, NO uniform volume. Real speech has volume variation.',
+      voice_room_match: 'Voice must have reverb/reflection matching the space. Kitchen: slight hard-surface reflection. Outdoors: minimal reverb. Stairwell: concrete echo. Tiny room: close/dry.',
+      breathing_sounds: 'Audible inhale before each speaking turn (0.1-0.2s). Nose exhale from listening character during pauses. This is what makes speech feel embodied.',
+      cloth_and_foley: 'Fabric rustle on every major body movement. Surface contact sounds (chair creak, table touch). Prop interaction sounds if hook involves object.',
+      laugh_audio: 'Release laughter: 20-30% louder than dialogue peak. Raspy, breathy, contagious. Camera mic slightly distorts from proximity (realistic). Bodies audibly shaking.',
+      forbidden: 'No dead silence ever (even 0.3s of pure silence feels wrong). No echo-free "studio" voice in a kitchen. No uniform volume speech. No music unless explicitly requested.',
+    },
+
+    // ── 11. FIRST-FRAME VISUAL HOOK ──────────────
+    visual_hook: {
+      directive: 'The hook is VISUAL, not verbal. In the first 0.5-0.8 seconds, the viewer must be grabbed by what they SEE before anyone speaks.',
+      primary_hook: `${hookObj.action_en} — this is the visual grab. It must be IN PROGRESS when video starts (no setup, no walking into frame).`,
+      face_emotion: 'Character A\'s face shows EXTREME emotion from frame 1: fury, disbelief, righteous indignation, theatrical shock. This is the #1 scroll-stopper.',
+      object_hook: `${propAnchor} or character signature element visible from frame 1 — gives context instantly.`,
+      composition_hook: 'Both faces visible from frame 1. No fade-in, no black frame, no title card. INSTANT scene.',
+      gaze_hook: 'Direct eye contact with camera from frame 1. This activates primal "someone is looking at me" response — strongest hook.',
+      forbidden: 'No text overlays as hook. No "wait for it" buildup. No slow fade-in. No empty frame first. No back-of-head shots. FACE + EMOTION + EYES from frame 0.',
+    },
+
+    // ── 12. EDIT LOGIC (single-take feel) ────────
+    edit_logic: {
+      directive: 'Even without cuts, the internal rhythm must follow edit logic. The viewer should feel beginning-middle-end in 8 seconds.',
+      start: 'COLD OPEN: Video starts MID-SCENE. Characters are already in position, emotion already building. No "hello", no setup, no walking in. Viewer drops into an argument already happening.',
+      pre_punch_pause: 'At 3.4-3.6s (transition from A to B): 0.15-0.25s of SILENCE. A finishes, brief beat of tension, then B drops the hammer. This pause is the "inhale before the punchline" — it makes the audience lean in.',
+      killer_delivery: 'B\'s killer word at ~7.0s mark. Slight camera micro-push toward B. A\'s physical reaction (freeze, eye-widen, jaw-drop) is what sells it.',
+      end_on_reaction: 'Final 0.5-0.8s: end on the REACTION, not the punchline. Shared laughter, A\'s defeated smile, mutual shoulder shake. This is what makes people REWATCH — they want to see that reaction again.',
+      rewatch_bait: 'The reaction in the last 0.5s should be slightly ambiguous or extra-funny — a micro-expression, a gesture, an eye-roll — that rewards rewatching. Rewatch = algorithm boost.',
+      forbidden: 'No clean ending (fade out, wave goodbye, "thanks for watching"). No setup before the action. No dead air at start or end. Every frame earns its place.',
+    },
+  };
+}
+
 // ─── REMAKE INSTRUCTION BUILDER ──────────────
 // When user provides a video reference, build a detailed instruction for Gemini
 // to recreate the video's vibe, structure, and dialogue with our characters
@@ -886,7 +1026,12 @@ export function generate(input) {
   const cast = buildCastContract(charA, charB);
   const cameraPreset = buildCameraPreset();
   const timingGrid = buildTimingGridV2(hookObj, releaseObj);
+  const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, hookObj, releaseObj, propAnchor);
   const aesthetic = charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют';
+
+  // ── Location-specific overrides from catalog ──
+  const locAudioHints = locationObj?.audio_hints || null;
+  const locLighting = locationObj?.lighting || null;
 
   // ── PHOTO PROMPT (EN) ──
   const anchorA = charA.identity_anchors || {};
@@ -925,7 +1070,7 @@ export function generate(input) {
     ],
     environment: {
       location,
-      lighting: `${lightingMood.style}, soft fill from environment bounce, realistic shadow under nose and cheekbones`,
+      lighting: `${locLighting || lightingMood.style}, soft fill from environment bounce, realistic shadow under nose and cheekbones`,
       lighting_mood: lightingMood.mood,
       prop_anchor: `${propAnchor} visible in mid-ground, slightly out of focus`,
       props: ['worn textured surface beneath characters', propAnchor, 'ambient domestic detail in soft bokeh background', 'natural clutter appropriate to location'],
@@ -1002,9 +1147,10 @@ export function generate(input) {
       tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy — physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension — understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull — both characters committed, natural escalation to punchline'}`,
     },
     camera: cameraPreset,
+    cinematography,
     world: {
       location,
-      lighting: `${lightingMood.style}, no studio lighting`,
+      lighting: `${locLighting || lightingMood.style}, no studio lighting`,
       lighting_mood: lightingMood.mood,
       wardrobe_A: wardrobeA,
       wardrobe_B: wardrobeB,
@@ -1012,7 +1158,8 @@ export function generate(input) {
     },
     timing: timingGrid,
     audio: {
-      room_tone: location.includes('kitchen') || location.includes('fridge')
+      room_tone: locAudioHints
+        || (location.includes('kitchen') || location.includes('fridge')
         ? 'humming Saratov fridge compressor cycle, wall clock tick, distant plumbing gurgle, occasional window draft whistle'
         : location.includes('garden') || location.includes('greenhouse') || location.includes('sunflower')
         ? 'bird song (sparrows, distant cuckoo), wind through foliage, buzzing insects, soil crunch underfoot'
@@ -1030,7 +1177,7 @@ export function generate(input) {
         ? 'creaking wood, wind through plank gaps, distant animal sounds, swinging lightbulb chain clink'
         : location.includes('attic') || location.includes('rafter')
         ? 'roof rain patter or wind howl, creaking rafters, moth flutter, dust settling whisper'
-        : 'subtle ambient room sound — quiet hum, occasional creak, authentic space acoustics matching location',
+        : 'subtle ambient room sound — quiet hum, occasional creak, authentic space acoustics matching location'),
       cloth_rustle: `on every major body movement: A wears ${wardrobeA.split(',')[0]} — ${wardrobeA.includes('silk') || wardrobeA.includes('chiffon') ? 'soft whisper swish' : wardrobeA.includes('leather') ? 'stiff leather creak' : wardrobeA.includes('knit') || wardrobeA.includes('mohair') || wardrobeA.includes('wool') ? 'soft fibrous drag' : 'medium fabric rustle'}; B wears ${wardrobeB.split(',')[0]} — ${wardrobeB.includes('telnyashka') || wardrobeB.includes('cotton') ? 'cotton stretch snap' : wardrobeB.includes('corduroy') ? 'corduroy ridge whisper' : wardrobeB.includes('quilted') || wardrobeB.includes('fufaika') ? 'padded fabric thump' : 'natural fabric rustle'}`,
       saliva_clicks: 'subtle mouth sounds on hard consonants (т, к, п, д)',
       breathing: 'audible inhale before each speaking turn, exhale on emphasis words',
@@ -1225,10 +1372,10 @@ ${engage.hashtags.join(' ')}
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
       input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
       propAnchor, lightingMood, hookAction: hookObj, releaseAction: releaseObj,
-      aesthetic, script_ru,
+      aesthetic, script_ru, cinematography,
       // Remake instruction — when video reference is provided, Gemini must replicate it
-      remake_mode: !!(video_meta?.url || video_meta?.title),
-      remake_instruction: (video_meta?.url || video_meta?.title) ? buildRemakeInstruction(video_meta, charA, charB) : null,
+      remake_mode: !!(video_meta?.url || video_meta?.title || video_meta?.cover_base64),
+      remake_instruction: (video_meta?.url || video_meta?.title || video_meta?.cover_base64) ? buildRemakeInstruction(video_meta, charA, charB) : null,
     },
   };
 }
