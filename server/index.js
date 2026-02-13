@@ -201,35 +201,124 @@ ${productBlock}
 • Категория юмора: ${category.ru} (${category.en})
 • Локация: ${location}
 • Освещение: ${lightingMood.style} | Настроение: ${lightingMood.mood}
+• Источники: ${lightingMood.sources || '1 dominant + 1 fill'} | Направление: ${lightingMood.direction || 'environmental'}
+• Тени: ${lightingMood.shadow_softness || 'soft present'} | Пересвет: ${lightingMood.overexposure_budget || '+0.5 EV on skin'}
+• Цветовая температура: ${lightingMood.color_temp || 'locked to source'}
 • Реквизит в кадре: ${propAnchor}
 • Эстетика мира: ${aesthetic}
 ${cinematography ? `
 ════════════════════════════════════════════════════════════════
 CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учитывай при создании промптов):
+Главный принцип: всё должно выглядеть как РЕАЛЬНОЕ селфи-видео со смартфона, не кино, не студия, не DSLR.
 
-1. СВЕТ: ${cinematography.lighting?.source_count || 'One dominant + one fill'}. ${cinematography.lighting?.shadow_quality || 'Soft present shadows'}. ${cinematography.lighting?.skin_highlights || 'Subtle overexposure on skin highlights allowed'}. ${cinematography.lighting?.forbidden || 'No flat frontal, no ring light'}.
+1. СВЕТ: ${cinematography.lighting?.source_count || 'One dominant + one fill'}.
+   Направление: ${cinematography.lighting?.source_direction || 'Environmental key + wall bounce fill'}.
+   Тени: ${cinematography.lighting?.shadow_quality || 'Soft present shadows under nose/cheekbones'}.
+   Пересвет: ${cinematography.lighting?.skin_highlights || 'Allow +0.5 EV on skin highlights — phone sensor clipping'}.
+   Температура: ${cinematography.lighting?.color_temperature || 'Lock to dominant source'}.
+   Смартфон: ${cinematography.lighting?.smartphone_behavior || 'Auto-exposure targets faces, background may clip'}.
+   ЗАПРЕТ: ${cinematography.lighting?.forbidden || 'No ring light, no flat frontal, no studio rim light'}.
 
-2. ОПТИКА: ${cinematography.optics?.focal_length || '35-50mm'}. ${cinematography.optics?.aperture || 'f/1.8-2.8'}. ${cinematography.optics?.depth_of_field || 'Eyes sharp, background 20-35% bokeh'}. ${cinematography.optics?.distance_to_subject || '40-70cm'}.
+2. ОПТИКА (фронтальная камера телефона):
+   Фокусное: ${cinematography.optics?.focal_length || '24-28mm equiv (phone front camera)'}.
+   Диафрагма: ${cinematography.optics?.aperture || 'f/1.9-2.2 + computational portrait bokeh'}.
+   Глубина резкости: ${cinematography.optics?.depth_of_field || 'Both faces sharp, bg via computational blur'}.
+   Дистанция: ${cinematography.optics?.distance_to_subject || '35-60cm selfie distance'}.
+   Сенсор: ${cinematography.optics?.sensor_signature || 'Noise in shadows ISO 400-1600, JPEG artifacts, limited DR'}.
+   Дефекты линзы: ${cinematography.optics?.lens_flaws || 'Slight purple fringing on backlit edges, minor CA in corners'}.
+   Серийный стиль: ${cinematography.optics?.series_lock || 'Same phone-camera look every episode'}.
 
-3. КАМЕРА: ${cinematography.camera_movement?.directive || 'Handheld selfie feel'}. ${cinematography.camera_movement?.base_motion || 'Micro-jitter 0.5-1.5px'}. Hook: ${cinematography.camera_movement?.hook_motion || 'push-in'}. Release: ${cinematography.camera_movement?.release_motion || 'laughter shake'}. ${cinematography.camera_movement?.forbidden || 'No dolly, no crane, no gimbal'}.
+3. КАМЕРА (телефон в руке):
+   База: ${cinematography.camera_movement?.base_motion || 'Micro-jitter 0.8-2px at 2-5Hz, hand tremor + breathing'}.
+   Дыхание держащего: ${cinematography.camera_movement?.breathing_oscillation || '0.3-0.5px vertical at 0.25Hz'}.
+   Hook: ${cinematography.camera_movement?.hook_motion || 'push-in + grip adjust'}.
+   Act A: ${cinematography.camera_movement?.act_A_motion || 'drift toward speaker'}.
+   Act B: ${cinematography.camera_movement?.act_B_motion || 'reframe toward B, brief AF hunt'}.
+   Release: ${cinematography.camera_movement?.release_motion || 'laughter shake 3-6px, phone tilt 5-8°'}.
+   OIS/EIS: ${cinematography.camera_movement?.stabilization_artifacts || 'Jello wobble on fast moves, rolling shutter lean'}.
+   ЗАПРЕТ: ${cinematography.camera_movement?.forbidden || 'No dolly, no crane, no gimbal, no tripod'}.
 
-4. МИКРОДВИЖЕНИЯ: ${cinematography.micro_movements?.blink_rate || 'Blink every 3-5s'}. ${cinematography.micro_movements?.breathing || 'Chest rise every 3-4s'}. ${cinematography.micro_movements?.head_micro_turns || '1-3° tilts every 2-4s'}. ${cinematography.micro_movements?.facial_micro_expressions || 'Eyebrow raises, nostril flares every 1-2s'}. ${cinematography.micro_movements?.forbidden || 'No mannequin stillness >1.5s'}.
+4. МИКРОДВИЖЕНИЯ (ключ к живости):
+   Моргание: ${cinematography.micro_movements?.blink_rate || 'Every 3-5s baseline, 2-3s during speech'}.
+   Дыхание: ${cinematography.micro_movements?.breathing || 'Chest rise 3-4s, inhale between phrases'}.
+   Голова: ${cinematography.micro_movements?.head_micro_turns || '1-3° tilts 2-4s, speaker animated 5-10°'}.
+   Мимика: ${cinematography.micro_movements?.facial_micro_expressions || 'Eyebrow raise, nostril flare, jaw clench — every 1-2s, involuntary, asymmetric'}.
+   Тело: ${cinematography.micro_movements?.weight_shifts || 'Weight shift 4-6s, shoulder adjust, clothing responds'}.
+   Руки: ${cinematography.micro_movements?.hand_micro_movements || 'Hands never frozen: gesturing/fidgeting, min 1 movement per 3-5s'}.
+   Асимметрия: ${cinematography.micro_movements?.asymmetry_rule || 'Left/right move independently, symmetry = fake'}.
+   ЗАПРЕТ: ${cinematography.micro_movements?.forbidden || 'No mannequin freeze >1.5s, no puppet twitching'}.
 
-5. СТАБИЛЬНОСТЬ ЛИЦА: ${cinematography.face_stability?.mouth_visibility || 'Mouth visible 100%'}. ${cinematography.face_stability?.head_rotation_limit || 'Max 25° turn, 15° during speech'}. ${cinematography.face_stability?.hair_and_accessories || 'No hair/mustache covering lips'}. ${cinematography.face_stability?.jaw_tracking || 'Every syllable = visible jaw movement'}. ${cinematography.face_stability?.non_speaking_mouth || 'Non-speaking: sealed, jaw still'}.
+5. СТАБИЛЬНОСТЬ ЛИЦА/ГУБ:
+   Рот: ${cinematography.face_stability?.mouth_visibility || 'Visible 100%, never obstructed'}.
+   Поворот яв: ${cinematography.face_stability?.head_rotation_limit || 'Max 25°, 15° during speech'}.
+   Наклон: ${cinematography.face_stability?.head_tilt_limit || 'Max 10° roll, 15° pitch, combined <30°'}.
+   Волосы: ${cinematography.face_stability?.hair_and_accessories || 'Nothing covering lips at any point'}.
+   Челюсть: ${cinematography.face_stability?.jaw_tracking || 'Every syllable = jaw movement, consonants = lip closure'}.
+   Молчание: ${cinematography.face_stability?.non_speaking_mouth || 'Sealed lips, jaw immobile, no phantom movements'}.
+   AF: ${cinematography.face_stability?.front_camera_face_lock || 'Phone face-tracking AF keeps face sharpest, 50-100ms lag'}.
 
-6. ГЛАЗА И ВЗГЛЯД: Hook: ${cinematography.gaze?.hook_gaze || 'direct camera contact'}. Act A: ${cinematography.gaze?.act_A_gaze || '70% camera, 30% B'}. Act B: ${cinematography.gaze?.act_B_gaze || '80% camera'}. Release: ${cinematography.gaze?.release_gaze || 'look at each other'}. ${cinematography.gaze?.pupil_detail || 'Micro-saccades every 0.5-1s, wet glint on sclera'}.
+6. ГЛАЗА И ВЗГЛЯД (по таймингу):
+   Hook 0-0.8с: ${cinematography.gaze?.hook_gaze || 'A → direct camera eye contact'}.
+   Act A 0.8-3.6с: ${cinematography.gaze?.act_A_gaze || 'A 70% camera 30% B; B side-eye tracking A'}.
+   Act B 3.6-7.1с: ${cinematography.gaze?.act_B_gaze || 'B 80% camera; A eyes widen, dart between B and camera'}.
+   Release 7.1-8.0с: ${cinematography.gaze?.release_gaze || 'Both look at each other, occasional camera glance'}.
+   Зрачки: ${cinematography.gaze?.pupil_detail || '3-5mm, catch-light from source, wet sclera, iris texture'}.
+   Микросаккады: ${cinematography.gaze?.micro_saccades || 'Tiny 0.5-1° jumps every 0.5-1.5s — eyes NEVER still'}.
+   Фронталка: ${cinematography.gaze?.smartphone_eye_contact || 'Camera 2-5cm above screen; mix 60% lens contact + 40% screen look'}.
+   ЗАПРЕТ: ${cinematography.gaze?.forbidden || 'No dead stare >2s, no cross-eyed'}.
 
-7. ЧИСТОТА КАДРА: ${cinematography.frame_cleanliness?.detail_budget || '7-8 elements max'}. ${cinematography.frame_cleanliness?.foreground || '60-70% characters'}. ${cinematography.frame_cleanliness?.midground || '1 prop anchor in soft focus'}. ${cinematography.frame_cleanliness?.background || '2-3 bokeh details'}. ${cinematography.frame_cleanliness?.forbidden || 'No text, no logos, no phones'}.
+7. ЧИСТОТА КАДРА:
+   Передний план: ${cinematography.frame_cleanliness?.foreground || '60-70% characters'}.
+   Средний: ${cinematography.frame_cleanliness?.midground || '1 prop in computational bokeh'}.
+   Фон: ${cinematography.frame_cleanliness?.background || '2-3 shapes in deep blur'}.
+   Композиция: ${cinematography.frame_cleanliness?.headroom || '5-10% headroom, selfie framing'}. ${cinematography.frame_cleanliness?.aspect_ratio || '9:16 vertical'}.
+   Бюджет: ${cinematography.frame_cleanliness?.detail_budget || '7 elements max'}.
+   ЗАПРЕТ: ${cinematography.frame_cleanliness?.forbidden || 'No text, no logos, no phones visible'}.
 
-8. ТЕКСТУРЫ: ${cinematography.textures?.texture_priority || 'Wool, denim, leather, cotton > smooth plastic'}. ${cinematography.textures?.wrinkle_rule || 'Natural wrinkles at elbows/shoulders'}. ${cinematography.textures?.skin_as_texture || 'Visible pores, fine lines, slight oiliness'}. ${cinematography.textures?.forbidden || 'No plastic skin, no CGI-shiny'}.
+8. ТЕКСТУРЫ (анти-AI сигнал):
+   Приоритет: ${cinematography.textures?.texture_priority || 'Wool > denim > leather > corduroy > linen > cotton'}.
+   Складки: ${cinematography.textures?.wrinkle_rule || 'Creases at elbows/shoulders/waist mandatory'}.
+   Кожа: ${cinematography.textures?.skin_as_texture || 'Pores, fine lines, oiliness on T-zone, age marks'}.
+   Волосы: ${cinematography.textures?.hair_texture || 'Individual strands at temples, flyaways in backlight'}.
+   Поверхности: ${cinematography.textures?.surface_detail || 'Wood grain, paint chips, fabric weave in focus'}.
+   ЗАПРЕТ: ${cinematography.textures?.forbidden || 'No plastic skin, no uniform color blocks, no smooth surfaces'}.
 
-9. ЦВЕТ И КОЖА: ${cinematography.color_skin?.white_balance || 'Lock WB to light source temp'}. Skin A: ${cinematography.color_skin?.skin_tone_A || 'natural warm'}. Skin B: ${cinematography.color_skin?.skin_tone_B || 'natural warm'}. ${cinematography.color_skin?.deadly_sins || 'NO orange tan, NO grey face, NO uniform tone'}. ${cinematography.color_skin?.consistency || 'Same skin tone all 8 seconds'}.
+9. ЦВЕТ И КОЖА:
+   WB: ${cinematography.color_skin?.white_balance || 'Lock to source temp, phone may lean +200K warm'}.
+   Кожа A: ${cinematography.color_skin?.skin_tone_A || 'natural with zone variation'}.
+   Кожа B: ${cinematography.color_skin?.skin_tone_B || 'natural with zone variation'}.
+   Зоны лица: ${cinematography.color_skin?.skin_zones || '5+ color zones: forehead lighter, cheeks pinker, nose reddest, under-eye darker, chin neutral'}.
+   Смертные грехи: ${cinematography.color_skin?.deadly_sins || 'NO orange tan, NO grey face, NO uniform tone'}.
+   Грейд: ${cinematography.color_skin?.color_grade || 'Smartphone color: slightly warm, lifted shadows, 90-95% saturation'}.
+   Консистентность: ${cinematography.color_skin?.consistency || 'Identical skin tone all 8 seconds'}.
 
-10. ЗВУК: ${cinematography.sound_anchor?.room_tone || 'Mandatory room tone -20/-30dB'}. ${cinematography.sound_anchor?.voice_volume || 'Dialogue -6/-3dB, natural dynamics'}. ${cinematography.sound_anchor?.voice_room_match || 'Reverb matches space'}. ${cinematography.sound_anchor?.breathing_sounds || 'Audible inhale before each turn'}. ${cinematography.sound_anchor?.forbidden || 'No dead silence, no studio voice'}.
+10. ЗВУК (якорь реальности, микрофон телефона):
+   Фон: ${cinematography.sound_anchor?.room_tone || 'Mandatory room tone -20/-30dB'}.
+   Голос: ${cinematography.sound_anchor?.voice_volume || '-6/-3dB peak, natural dynamics ±6dB'}.
+   Проксимити: ${cinematography.sound_anchor?.voice_proximity || 'Phone mic 35-60cm, room coloring, plosive pops, sibilant harshness'}.
+   Реверб: ${cinematography.sound_anchor?.voice_room_match || 'RT60 matches space: kitchen 0.3-0.5s, outdoor <0.1s, stairwell 1.0-1.5s'}.
+   Дыхание: ${cinematography.sound_anchor?.breathing_sounds || 'Inhale before each turn, nose exhale from listener'}.
+   Фоли: ${cinematography.sound_anchor?.cloth_and_foley || 'Fabric rustle on every movement, chair creak, prop sounds'}.
+   Смех: ${cinematography.sound_anchor?.laugh_audio || '20-30% louder, phone mic distortion on peaks'}.
+   Рот: ${cinematography.sound_anchor?.mouth_sounds || 'Saliva clicks on т/к/п/д, lip smack, tongue contact on л/н'}.
+   ЗАПРЕТ: ${cinematography.sound_anchor?.forbidden || 'No silence, no studio voice, no uniform volume'}.
 
-11. ХУК (кадр 0): ${cinematography.visual_hook?.face_emotion || 'EXTREME emotion from frame 1'}. ${cinematography.visual_hook?.gaze_hook || 'Direct eye contact from frame 0'}. ${cinematography.visual_hook?.composition_hook || 'Both faces visible, no fade-in'}. ${cinematography.visual_hook?.forbidden || 'No text hook, no slow buildup'}.
+11. ХУК (кадр 0 — визуальный, НЕ текстовый):
+   Эмоция: ${cinematography.visual_hook?.face_emotion || 'EXTREME emotion from FRAME 0'}.
+   Взгляд: ${cinematography.visual_hook?.gaze_hook || 'Direct eye contact with camera from frame 1'}.
+   Композиция: ${cinematography.visual_hook?.composition_hook || 'Both faces visible, no fade-in, scene already happening'}.
+   Энергия: ${cinematography.visual_hook?.energy_level || 'Frame 1 energy ≥ 80% of peak'}.
+   ЗАПРЕТ: ${cinematography.visual_hook?.forbidden || 'No text hook, no slow buildup, no fade-in'}.
 
-12. МОНТАЖНАЯ ЛОГИКА: ${cinematography.edit_logic?.start || 'Cold open mid-scene'}. ${cinematography.edit_logic?.pre_punch_pause || '0.15-0.25s silence before punchline'}. ${cinematography.edit_logic?.end_on_reaction || 'End on reaction, not punchline'}. ${cinematography.edit_logic?.rewatch_bait || 'Ambiguous micro-expression in last 0.5s'}. ${cinematography.edit_logic?.forbidden || 'No fade out, no setup, no dead air'}.
+12. МОНТАЖНАЯ ЛОГИКА (один дубль, внутренний ритм):
+   Старт: ${cinematography.edit_logic?.start || 'Cold open mid-scene, argument already happening'}.
+   Энергия: ${cinematography.edit_logic?.energy_curve || 'hook 80% → A 85-90% → dip 60% → B 90-95% → killer 100% → release 70%'}.
+   Пауза: ${cinematography.edit_logic?.pre_punch_pause || '0.15-0.25s loaded silence before B'}.
+   Killer: ${cinematography.edit_logic?.killer_delivery || 'Camera push, A freezes/widens eyes'}.
+   Финал: ${cinematography.edit_logic?.end_on_reaction || 'End on REACTION, not punchline'}.
+   Rewatch: ${cinematography.edit_logic?.rewatch_bait || 'Micro-expression in last 0.3-0.5s for rewatch discovery'}.
+   Луп: ${cinematography.edit_logic?.loop_seam || 'Final frame energy compatible with frame 1 for auto-loop'}.
+   ЗАПРЕТ: ${cinematography.edit_logic?.forbidden || 'No fade out, no setup, no dead air'}.
 ` : ''}
 ТАЙМИНГ (строго 8 секунд ±0.2s):
 [0.00–0.80] ХУК — ${hookAction.action_ru} (звук: ${hookAction.audio}). Без слов. Зрителя надо зацепить за 0.8 секунды.
@@ -247,38 +336,38 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
 • Killer word — последнее значимое слово в реплике B. Оно должно быть НЕОЖИДАННЫМ но ЛОГИЧНЫМ. Это слово заставляет пересматривать видео.
 • Между репликами A и B — тишина 0.15-0.25 секунд (gap stitch)
 
-ПРАВИЛА ФОТО-ПРОМПТА (photo_scene_en):
-• Пиши на АНГЛИЙСКОМ, начинай со слова "Hyper-realistic"
+ПРАВИЛА ФОТО-ПРОМПТА (photo_scene_en) — СМАРТФОННЫЙ РЕАЛИЗМ:
+• Пиши на АНГЛИЙСКОМ, начинай: "Smartphone selfie photo taken mid-argument"
 • 150-250 слов, единый плотный абзац
-• Формат: вертикальное 9:16, 1080×1920, selfie POV
-• Оба персонажа в кадре, лица 40-60см от камеры
-• ПРИМЕНЯЙ ВСЕ 12 PILLARS выше: оптика (35-50mm f/1.8-2.8), свет (1-2 источника, мягкие тени), чистота кадра (7-8 элементов max)
-• Описывай конкретные микро-выражения: ширину открытия рта, положение бровей, направление взгляда, натяжение мышц лица
-• Свет: как именно он падает на кожу, тени под носом и скулами, блики в глазах. НЕ flat frontal, НЕ ring light
-• Текстуры (pillar 8): поры, морщины, влага на губах, сосуды в склерах, текстура ТКАНИ (шерсть, джинса, кожа — с видимым переплетением). Складки на одежде обязательны!
-• Кожа (pillar 9): естественный оттенок, НЕ оранжевый загар, НЕ серое лицо. Лёгкий блеск на Т-зоне
-• Глаза (pillar 6): направление взгляда A в камеру, B следит за A. Мокрый блик на склере, видимые зрачки
-• Руки: СТРОГО 5 пальцев, анатомически корректные пропорции
-• Негатив: no cartoon, no anime, no plastic skin, no 6th finger, no watermark, no airbrushed look, no orange tan, no grey face
+• Камера: фронталка смартфона (24-28mm, f/1.9-2.2, маленький сенсор). НЕ DSLR, НЕ кинокамера!
+• Формат: 9:16, 1080×1920, selfie POV, лица 35-55см от камеры
+• Сенсорные артефакты (pillar 2): шум в тенях ISO 400-1600, лёгкие JPEG-артефакты, пурпурный фринджинг, виньетирование в углах
+• Боке (pillar 2): вычислительное размытие фона (smooth gaussian), НЕ кинематографическое (нет шестигранных бликов)
+• Свет (pillar 1): ОДИН средовой источник + отражённый филл. Направление, тени под носом/скулами, пересвет допустим (+0.5-1.5 EV). НЕ ring light!
+• Микро-выражения: ширина рта, асимметричные брови, натяжение мышц, носогубные складки
+• Текстуры (pillar 8): поры, морщины, отдельные волоски, влага на губах, сосуды в склерах, складки одежды, переплетение ткани
+• Кожа (pillar 9): 5 цветовых зон на лице (лоб светлее, щёки розовее, нос краснее, под глазами темнее). НЕ оранжевый загар, НЕ серое лицо!
+• Глаза (pillar 6): A в камеру, B следит за A. Блик от источника в зрачках, мокрая склера, текстура радужки
+• Руки: СТРОГО 5 пальцев, анатомические пропорции, ногти, текстура кожи рук по возрасту
+• Негатив: no cartoon, no anime, no plastic skin, no 6th finger, no watermark, no airbrushed look, no orange tan, no grey face, no ring light, no cinema bokeh, no DSLR look, no beauty mode, no skin smoothing
 ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опиши товар ультра-детально в сцене, точь-в-точь как на прикреплённом фото` : ''}
 
-ПРАВИЛА ВИДЕО (video_emotion_arc):
-• Пиши на АНГЛИЙСКОМ
-• Описывай МИКРО-ВЫРАЖЕНИЯ и физические изменения побитово
-• ПРИМЕНЯЙ PILLARS 4 (микродвижения), 5 (стабильность лица), 6 (взгляд), 11 (хук), 12 (монтажная логика)
-• hook (pillar 11): ВИЗУАЛЬНЫЙ хук — эмоция на лице с кадра 0, взгляд в камеру, действие в руках. НЕ текстовый хук.
-• act_A (pillar 4+6): как A подаёт реплику (жесты, мимика, моргание каждые 2-3с), как B молча реагирует (губы сомкнуты pillar 5, глаза следят pillar 6, микро-поднятие бровей)
-• act_B (pillar 4+6): как B отвечает (темп, паузы, как именно произносит killer word), A: глаза широко → дёргаются между B и камерой (pillar 6)
-• release (pillar 12): конец на РЕАКЦИИ, не на панчлайне. Трясутся ли плечи, слезы, хлопок по коленке. Rewatch-bait: неоднозначное микро-выражение в последние 0.5с
+ПРАВИЛА ВИДЕО (video_emotion_arc) — ВСЕ 12 ПИЛЛАРОВ АКТИВНЫ:
+• Пиши на АНГЛИЙСКОМ, побитово с таймкодами
+• Каждый сегмент описывает: (a) что делает говорящий, (b) что делает молчащий, (c) куда смотрят глаза ОБОИХ, (d) что делает камера
+• hook (pillar 11+6): ВИЗУАЛЬНЫЙ хук — эмоция на лице с кадра 0, взгляд в камеру, действие. Энергия ≥ 80% пика. НЕ текстовый хук!
+• act_A (pillar 4+5+6): моргание каждые 2-3с, дыхание между фразами, жесты с асимметричными бровями. B: губы сомкнуты (pillar 5), медленные моргания 4-6с, side-eye на A (pillar 6), пальцы постукивают (pillar 4)
+• act_B (pillar 4+5+6+12): как B произносит killer word (голос падает, глаза сужаются, камера микро-push). A: замирает середине жеста, глаза расширяются → дёргаются между B и камерой 2-3Hz (pillar 6). Пауза 0.15-0.25с перед B (pillar 12)
+• release (pillar 12): конец на РЕАКЦИИ, не на панчлайне. Плечи трясутся, слёзы, хлопок по коленке. Rewatch-bait: неоднозначное микро-выражение в последние 0.3-0.5с. Энергия финального кадра совместима с кадром 1 для авто-лупа
 
-ПРАВИЛА АТМОСФЕРЫ (video_atmosphere_en):
+ПРАВИЛА АТМОСФЕРЫ (video_atmosphere_en) — ЗВУК КАК ЯКОРЬ РЕАЛЬНОСТИ:
 • Пиши на АНГЛИЙСКОМ, 80-120 слов
 • ПРИМЕНЯЙ PILLARS 1 (свет), 3 (камера), 7 (чистота кадра), 10 (звук)
-• Конкретные звуки данной локации (pillar 10): room tone -20/-30dB ПОД диалогом. НЕ generic "ambient sound" а конкретные звуки: гул холодильника, скрип дерева, шум машин и т.д.
-• Свет (pillar 1): как он падает, тени, пересвет на коже. Свет НЕ меняется 8 секунд
-• Камера (pillar 3): handheld micro-jitter, дыхание держащего, конкретные движения по сегментам
-• Частицы в воздухе (пыль, пар, пыльца — зависит от локации)
-• Текстуры поверхностей которых касаются персонажи (pillar 8)
+• Звук (pillar 10): room tone -20/-30dB ПОД диалогом. КОНКРЕТНЫЕ звуки локации: гул холодильника, скрип дерева, шум машин. Микрофон телефона на 35-60см: ловит всё — щелчки слюны, шорох ткани, скрип стула. Плозивы (п/б) = лёгкий поп в микрофоне. Реверб СТРОГО по размеру комнаты (pillar 10 voice_room_match). НЕ студийный звук!
+• Свет (pillar 1): как он падает, направление, тени на коже, пересвет на бликах. Цветовая температура заблокирована на 8 секунд
+• Камера (pillar 3): телефон в руке — micro-jitter от тремора, вертикальная осцилляция от дыхания, OIS/EIS артефакты (jello на резких движениях). Конкретные движения по сегментам (hook push-in, release shake)
+• Частицы: пыль/пар/пыльца в свете (зависит от локации). Пылинки подсвечены доминантным источником
+• Текстуры (pillar 8): поверхности под руками, ткань при движении, кожа при крупном плане
 
 ПРАВИЛА ХЕШТЕГОВ:
 • 15-20 штук, на РУССКОМ, без символа #

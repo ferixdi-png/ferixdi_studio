@@ -93,12 +93,80 @@ const PROP_HINTS = {
 };
 
 // ─── LIGHTING VARIATIONS BY LOCATION TYPE ───
+// Each preset: smartphone-grade realism with explicit source count, direction, shadow softness, overexposure budget, color temp
 const LIGHTING_MOODS = [
-  { style: 'warm amber backlight through dusty window, hard shadows, 3200K, golden dust motes in light beams', mood: 'nostalgic warmth' },
-  { style: 'cool fluorescent overhead with greenish tint, flat institutional light, subtle flicker', mood: 'sterile tension' },
-  { style: 'dappled natural light through foliage, shifting leaf shadows on faces, warm-cool contrast', mood: 'organic chaos' },
-  { style: 'single bare bulb overhead, harsh directional light from above, deep eye-socket shadows', mood: 'dramatic intimacy' },
-  { style: 'overcast diffused daylight from large window, soft shadowless fill, slight blue undertone', mood: 'calm before storm' },
+  {
+    style: 'warm amber backlight through dusty window, single dominant source camera-right at 45°, hard-to-medium shadows cast left, golden dust motes in light beams',
+    mood: 'nostalgic warmth',
+    sources: '1 dominant (window backlight) + 1 ambient fill (wall bounce). No other lights.',
+    direction: 'Key light from camera-right at 45° through window; fill is diffuse wall bounce from left.',
+    shadow_softness: 'medium-hard — shadow edges visible under nose and cheekbones, diffused at 15-20% feather, NOT razor-sharp.',
+    overexposure_budget: 'Allow +1.5 EV on window, +0.5 EV on forehead/nose bridge highlight — this is natural smartphone clipping.',
+    color_temp: '3200-3500K warm amber. Shadows lean slightly blue (natural daylight mix).',
+  },
+  {
+    style: 'cool fluorescent overhead with greenish tint, flat institutional light, subtle 50Hz flicker visible in background only',
+    mood: 'sterile tension',
+    sources: '1 dominant (ceiling fluorescent tube) + 1 weak ambient (corridor light bleeding through doorframe).',
+    direction: 'Key light directly overhead, slightly forward; creates raccoon-eye shadows under brow ridge.',
+    shadow_softness: 'soft-flat — minimal shadow contrast, characteristic of diffuse overhead tube. Subtle chin shadow only.',
+    overexposure_budget: 'Allow +0.3 EV on forehead only. Fluorescent rarely clips — image should feel slightly underlit.',
+    color_temp: '4500-5000K with green shift (+5 on green channel). Skin looks slightly sallow — this is correct.',
+  },
+  {
+    style: 'dappled natural light through foliage, shifting leaf-shadow patterns on faces, warm sunlight mixed with cool shade',
+    mood: 'organic chaos',
+    sources: '1 dominant (direct sun through leaves) + 1 fill (open sky from above/behind). Dappled pattern on faces.',
+    direction: 'Sun high camera-left at 60°, leaf pattern breaks the light into moving spots on faces.',
+    shadow_softness: 'mixed — sharp leaf shadow edges overlaid on soft ambient fill. Complex light-dark pattern across cheeks.',
+    overexposure_budget: 'Allow +2.0 EV in sun spots on fabric/hair. Skin spots +0.8 EV max. Shade areas correctly exposed.',
+    color_temp: '5500K in sun spots, 6500K in shade — dual temp is natural and correct for outdoor dappled.',
+  },
+  {
+    style: 'single bare bulb overhead, harsh directional light from above-center, deep eye-socket shadows, warm tungsten',
+    mood: 'dramatic intimacy',
+    sources: '1 only (bare filament bulb on ceiling). Zero fill. Shadows are DEEP and real.',
+    direction: 'Directly overhead, slightly toward camera. Creates strong nose shadow, chin shadow, eye-socket pools.',
+    shadow_softness: 'hard — small point source means crisp shadow edges. Under-nose shadow clearly defined.',
+    overexposure_budget: 'Allow +1.0 EV on top-of-head, +0.5 EV on nose/forehead. Lower face 1-2 stops darker than forehead.',
+    color_temp: '2700-3000K deep warm tungsten. Everything amber-orange. Shadows go brownish-black, not blue.',
+  },
+  {
+    style: 'overcast diffused daylight from large window camera-left, soft near-shadowless fill, slight cool blue undertone',
+    mood: 'calm before storm',
+    sources: '1 dominant (large overcast window left) + 1 ambient (room bounce from right wall). Ratio ~3:1.',
+    direction: 'Broad soft key from camera-left window; fill from room bounce. Shadows present but gentle.',
+    shadow_softness: 'very soft — large source means gradual falloff. Shadow under nose barely visible, cheek shadow smooth gradient.',
+    overexposure_budget: 'Allow +0.5 EV on window-side cheek. Almost no clipping — overcast light is inherently balanced.',
+    color_temp: '5800-6200K neutral-cool. Slight blue undertone in shadows. Skin reads accurate, no warmth.',
+  },
+  {
+    style: 'late golden hour sun streaming horizontally through doorframe, one-sided warm blast, strong shadow side on far face',
+    mood: 'golden confrontation',
+    sources: '1 dominant (low sun through door/window) + 1 weak fill (ambient sky from behind camera).',
+    direction: 'Hard horizontal key from camera-left at 15° above horizon. B-side face half in shadow.',
+    shadow_softness: 'medium — low sun is moderately hard. Clear nose shadow, defined jaw shadow on shadow side.',
+    overexposure_budget: 'Allow +2.5 EV on direct sun patch (fabric/wall). Skin highlight on sun side +1.0 EV — golden glow.',
+    color_temp: '2800-3200K deep gold on sun side. Shadow side reads 5500K blue-ish from sky fill. Dual temp = golden hour.',
+  },
+  {
+    style: 'mixed interior: overhead room light + blue TV glow from off-screen, two-tone lighting, face half warm half cool',
+    mood: 'domestic tension',
+    sources: '1 warm overhead (ceiling fixture, 3200K) + 1 cool side fill (TV/screen glow, 7000K blue).',
+    direction: 'Warm key from overhead slightly behind; cool fill from camera-right low (TV bounce on face).',
+    shadow_softness: 'medium-soft — overhead is diffuse fixture, TV bounce is broad. Two overlapping soft shadow sets.',
+    overexposure_budget: 'Allow +0.5 EV on warm-lit forehead. Cool side may clip on reflective surfaces only.',
+    color_temp: 'DUAL: 3200K warm dominant + 7000K cool fill. Split lighting on face — warm cheek left, blue tint right.',
+  },
+  {
+    style: 'bright midday outdoor shade, open sky overhead as giant softbox, reflected ground bounce from below, very even',
+    mood: 'exposed clarity',
+    sources: '1 dominant (open sky above) + 1 fill (ground bounce from pavement/dirt). Very even ratio.',
+    direction: 'Overhead from sky, fill from below-camera via ground reflection. Minimal shadows, bright.',
+    shadow_softness: 'minimal — sky is enormous soft source. Only subtle shadows under chin and brow ridge.',
+    overexposure_budget: 'Allow +0.3 EV on top of head/shoulders. Sky in background +3.0 EV blown — this is normal for phones.',
+    color_temp: '5500-6000K neutral. Clean accurate color. Skin reads true. Slight warmth from ground bounce.',
+  },
 ];
 
 const HUMOR_CATEGORIES = [
@@ -618,140 +686,161 @@ function buildCameraPreset() {
 
 // ─── CINEMATOGRAPHY CONTRACT (12 production pillars) ───
 // Everything the user does NOT choose — Gemini decides using this contract.
-// These 12 blocks make video look "alive and expensive".
+// Calibrated for SMARTPHONE FRONT-CAMERA realism — the gold standard is "indistinguishable from a real selfie video".
 function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, hookObj, releaseObj, propAnchor) {
   return {
     // ── 1. LIGHTING ──────────────────────────────
     lighting: {
-      directive: 'Lighting is the single biggest realism factor. Choose ONE clear setup and commit.',
+      directive: 'Lighting is the single biggest realism factor. REAL smartphone footage has ONE dominant environmental source + ambient fill. No studio lights exist in this world.',
       primary_source: lightingMood.style,
       mood: lightingMood.mood,
-      source_count: 'One dominant source + one soft fill bounce from environment (wall/ceiling/floor). Never more than two. NEVER ring light or studio softbox.',
-      shadow_quality: 'Soft but PRESENT shadows under nose, cheekbones, chin, brow ridge. Shadow edges slightly diffused, not razor-sharp, not invisible. Shadows give face its 3D structure.',
-      skin_highlights: 'Subtle overexposure allowed on skin highlights (forehead, nose bridge, cheekbone top). This is NATURAL and desired — do NOT flatten it. Slight specular sheen on oily skin zones.',
-      consistency: 'Lighting MUST NOT change during 8 seconds. Same direction, same color temperature, same intensity throughout. No flickering unless location-appropriate (fluorescent).',
-      forbidden: 'No flat frontal lighting, no beauty dish glow, no studio rim lights, no colored RGB gels, no dramatic film noir unless location demands it.',
+      source_count: lightingMood.sources || 'One dominant source + one soft fill bounce from environment. Never more than two. NEVER ring light or studio softbox.',
+      source_direction: lightingMood.direction || 'Key light from environment (window/lamp/overhead); fill is indirect bounce from nearest wall/ceiling.',
+      shadow_quality: lightingMood.shadow_softness || 'Soft but PRESENT shadows under nose, cheekbones, chin, brow ridge. Shadow edges 15-25% feathered — NOT razor-sharp, NOT invisible.',
+      skin_highlights: lightingMood.overexposure_budget || 'Allow +0.5 EV overexposure on skin highlights (forehead, nose bridge). This is NORMAL for smartphone sensors — do NOT flatten. Slight specular sheen on T-zone (oily skin).',
+      color_temperature: lightingMood.color_temp || 'Lock WB to dominant source. Indoor warm: 3200-3800K. Fluorescent: 4500-5000K. Daylight: 5500-6000K.',
+      smartphone_behavior: 'Phone auto-exposure targets faces → background may clip or crush. This is CORRECT behavior. Slight exposure hunting (±0.2 EV drift over 8s) is realistic. Face brightness should be ~70% histogram.',
+      consistency: 'Light direction and color temp MUST NOT change during 8 seconds. Intensity may drift ±5% (clouds, flickering fluorescent). No sudden jumps.',
+      forbidden: 'No flat frontal beauty lighting, no ring light catch-lights, no studio rim/hair light, no colored RGB gels, no dual-key setups, no perfectly even illumination.',
     },
 
     // ── 2. OPTICS & DISTANCE ─────────────────────
     optics: {
-      directive: 'Portrait-close framing with shallow DOF = expensive look. This is non-negotiable for the series.',
-      focal_length: '35-50mm equivalent (portrait range). NOT ultra-wide (no face distortion). NOT telephoto (no flat compression). Sweet spot: 40mm.',
-      aperture: 'f/1.8–f/2.8 equivalent. Faces SHARP, background 20-35% blurred (natural bokeh, not gaussian). Ears may be slightly softer than eyes — this is correct.',
-      distance_to_subject: '40-70cm from lens to face. Close enough to see pore texture, far enough for both faces in frame without barrel distortion.',
-      depth_of_field: 'Eyes of speaking character = critical sharpness plane. Listening character 5-10cm behind = acceptable soft. Background = gentle bokeh with recognizable shapes (not smeared).',
-      series_lock: 'EVERY episode in this series uses the same focal length and distance range. This is the visual signature of the format.',
+      directive: 'This is a SMARTPHONE FRONT CAMERA, not a cinema camera. The optical signature must match: wide-angle close-up with computational bokeh.',
+      focal_length: '24-28mm equivalent (smartphone front camera native). Slight wide-angle barrel distortion on edges is CORRECT and expected. Faces at center are relatively undistorted.',
+      aperture: 'f/1.9-f/2.2 physical aperture (phone sensor). Computational portrait mode adds bokeh to background — result is sharp faces with 15-25% gaussian-ish background blur. NOT cinema bokeh (no hexagonal highlights).',
+      distance_to_subject: '35-60cm from lens to face (arm\'s length selfie distance). Close enough to see individual pores, far enough for two faces without extreme fish-eye.',
+      depth_of_field: 'Smartphone DOF: both faces sharp (they\'re roughly in the same plane at 35-60cm). Background separates via computational blur starting ~30cm behind subjects. Bokeh is slightly artificial/smooth — this is CORRECT for phones.',
+      sensor_signature: 'Small smartphone sensor: visible luminance noise in shadows (ISO 400-1600 equivalent), slight color noise in dark areas, limited dynamic range (10-12 stops), JPEG compression artifacts at 85-92% quality.',
+      lens_flaws: 'Slight purple fringing on high-contrast edges (backlight). Minor chromatic aberration in corners. Faint lens flare if strong light source in frame. These imperfections = authenticity.',
+      series_lock: 'EVERY episode uses the same phone-camera look. Same focal length, same distance, same computational bokeh style. This is the visual fingerprint.',
     },
 
     // ── 3. CAMERA MOVEMENT ───────────────────────
     camera_movement: {
-      directive: 'Handheld selfie feel — NOT tripod static, NOT gimbal smooth. Organic human holding a phone.',
-      base_motion: 'Constant micro-jitter: 0.5-1.5px random drift at 2-4Hz. This is breathing + hand tremor. NEVER perfectly still.',
-      hook_motion: 'First 0.8s: slight push-in toward speaker (2-3% zoom), adds urgency.',
-      act_A_motion: 'Subtle drift toward A (0.5-1° rotation over 2.8s). Almost imperceptible, creates subconscious focus.',
-      act_B_motion: 'Micro-pan toward B as they start speaking. Slight pull-back (1-2% zoom out) for "reveal" energy.',
-      release_motion: 'Camera shakes from laughter — 3-5px oscillation at 6-8Hz for 0.5s, then settles. Bodies physically moving cause this.',
-      forbidden: 'No smooth dolly moves, no crane shots, no whip pans, no rack focus pulls, no drone moves. This is a PHONE in a HAND.',
-      series_lock: 'Same movement style every episode. Consistency = brand recognition.',
+      directive: 'One person holds a phone at arm\'s length. This creates specific motion: hand tremor, breathing oscillation, weight shift drift. NOT smooth, NOT static, NOT gimbal.',
+      base_motion: 'Constant micro-jitter: 0.8-2px random drift at 2-5Hz. This is hand tremor + breathing + pulse. Slightly more on Y-axis (vertical) than X. NEVER perfectly still for >0.3s.',
+      breathing_oscillation: 'Slow 0.3-0.5px vertical oscillation at 0.25-0.33Hz (15-20 breaths/min). The holder breathes — camera rises and falls slightly with chest.',
+      hook_motion: '0.0-0.8s: slight push-in (arm extends, 2-3% scale increase) + micro-rotation as holder adjusts grip. Phone OIS may kick in — brief stabilization artifact.',
+      act_A_motion: '0.8-3.6s: subtle drift toward A (holder naturally tracks the speaker). 0.5-1° rotation over 2.8s. Jitter increases slightly as A gets animated.',
+      act_B_motion: '3.6-7.1s: micro-reframe toward B. Possible brief 0.1s autofocus hunt as phone re-acquires B\'s face. Slight pull-back (holder unconsciously leans back from B\'s intensity).',
+      release_motion: '7.1-8.0s: camera shakes 3-6px at 6-10Hz from laughter body tremor. Brief phone tilt (5-8°) as holder loses composure. Partial stabilization from OIS fights the shake.',
+      stabilization_artifacts: 'Phone OIS/EIS creates slight "jello" wobble on fast movements. Rolling shutter visible on quick jerks (vertical lines lean 2-3°). These are MARKERS of real phone footage.',
+      forbidden: 'No smooth dolly/crane/gimbal moves. No rack focus pulls. No cinematic camera work. No perfectly static tripod shots. No drone. This is a HAND holding a PHONE.',
     },
 
     // ── 4. MICRO-MOVEMENT TEMPO ──────────────────
     micro_movements: {
-      directive: 'The difference between "alive" and "mannequin". Too few = uncanny valley. Too many = cartoon. Find the sweet spot.',
-      blink_rate: 'Natural blink: every 3-5 seconds. Stress/argument increases to every 2-3s. NEVER unblinking for >5s. Both eyes blink simultaneously (no winking unless character-specific).',
-      breathing: 'Visible chest/shoulder rise every 3-4 seconds. Speaking character: breathing syncs with speech pauses. Listening character: slow steady breathing, maybe one deep inhale before their line.',
-      head_micro_turns: 'Tiny 1-3° head tilts and rotations every 2-4 seconds. Speaking: animated, 5-10° range. Listening: minimal, weighted nods or slight cocks.',
-      facial_micro_expressions: 'Eyebrow micro-raises (1-2mm), nostril micro-flares on emphasis, jaw tension shifts, lip corner twitches on listening character. These fire every 1-2 seconds subtly.',
-      weight_shifts: 'Body weight shifts every 4-6 seconds. Small shoulder adjustments. Finger movements if gesturing. Clothing shifts with body.',
-      forbidden: 'No perfectly still mannequin frames (>1.5s without ANY movement). No hyperactive twitching. No symmetrical simultaneous movements on both characters.',
+      directive: 'ALIVE vs MANNEQUIN. Real people NEVER stop moving. Every 0.5-1.5 seconds, something changes — blink, breath, twitch, shift. Absence of micro-movement is the #1 AI tell.',
+      blink_rate: 'Natural blink: every 3-5s baseline. During heated speech: every 2-3s. Hard blinks on emphasis words. Listening character: slower 4-6s blinks. NEVER unblinking >5s. Both lids close simultaneously, 100-200ms duration.',
+      breathing: 'Visible chest/shoulder rise every 3-4s. Speaking: breathing syncs with pauses (inhale between phrases, exhale on first word). Listening: slow steady rhythm. Deep preparation inhale 0.3s before their turn.',
+      head_micro_turns: 'Tiny 1-3° tilts/rotations every 2-4s. Speaking character: animated 5-10° range, nods for emphasis, head follows gesture direction. Listening: minimal, weighted nods on key words, slight skeptical head-cock.',
+      facial_micro_expressions: 'Every 1-2 seconds SOMETHING fires: eyebrow micro-raise (1-2mm), nostril flare on emphasis, jaw clench/release, lip corner twitch, cheek muscle pulse, forehead furrow shift. These are INVOLUNTARY and asymmetric.',
+      weight_shifts: 'Body weight shifts every 4-6s. Shoulder adjustments. Finger movements if gesturing (fidgeting when listening). Clothing responds to movement (sleeve shifts, collar adjusts). Weight on one foot then other.',
+      hand_micro_movements: 'Hands NEVER frozen: gesturing (speaker), fidgeting/adjusting (listener), finger curling/uncurling, rubbing thumb against finger, adjusting glasses/hair/collar. At minimum one hand movement every 3-5s.',
+      asymmetry_rule: 'LEFT and RIGHT sides of face/body move INDEPENDENTLY. One eyebrow higher. One shoulder slightly forward. One hand active while other rests. Symmetry = artificial.',
+      forbidden: 'No mannequin freeze (>1.5s without ANY visible movement anywhere on body). No hyperactive puppet twitching. No mirror-symmetry between characters. No synchronized movements (they are NOT choreographed).',
     },
 
     // ── 5. FACE & LIP STABILITY ──────────────────
     face_stability: {
-      directive: 'Mouth ALWAYS visible and unobstructed. This directly controls lip-sync quality.',
-      mouth_visibility: 'CRITICAL: Lower face (mouth, chin, jaw) must be in frame and unobstructed for 100% of the video. No hand over mouth (except intentional gesture), no hair covering lips, no prop blocking jaw.',
-      head_rotation_limit: 'Maximum 25° turn from camera. Beyond this, far-side mouth becomes invisible → lip-sync breaks. During speech: keep within 15° of front-facing.',
-      hair_and_accessories: 'No bangs/fringe/mustache/scarf covering lips AT ANY POINT during speech. If character has facial hair: keep it trimmed/clear of lip line in prompt. Glasses: above mouth line only.',
-      jaw_tracking: 'Every Russian syllable produces visible jaw movement. Consonants (т, д, п, б, м, н) = visible lip closure. Vowels (а, о, у) = proportional jaw opening. No "ventriloquist" speech.',
-      non_speaking_mouth: 'When NOT speaking: mouth FIRMLY SEALED. Jaw still. Lips pressed. NO phantom lip movements, no mouthing along, no chewing. ONLY subtle lip-press changes allowed.',
+      directive: 'Mouth ALWAYS visible and unobstructed. This is the #1 prerequisite for believable lip-sync. If mouth is hidden/turned → illusion breaks.',
+      mouth_visibility: 'CRITICAL: Lower face (mouth, chin, jaw) in frame and unobstructed for 100% of video. No hand over mouth except brief gesture (<0.3s). No hair/scarf/collar covering lips. No prop blocking jaw.',
+      head_rotation_limit: 'Maximum 25° yaw from camera at any time. During active speech: keep within 15° of front-facing. Beyond 25°: far-side lips invisible → lip-sync catastrophe.',
+      head_tilt_limit: 'Maximum 10° roll (head tilt). Maximum 15° pitch (nod). Combined rotation budget: sqrt(yaw² + roll² + pitch²) < 30°. Head must feel MOBILE but never turn away.',
+      hair_and_accessories: 'No bangs/fringe over lips. No thick mustache obscuring lip line (if character has mustache: trimmed clear of lip edge). No sunglasses blocking eye area. Glasses: clear lenses only, frame above mouth.',
+      jaw_tracking: 'Every Russian syllable = visible jaw movement. Consonants т/д/п/б/м/н = clear lip closure/contact. Vowels а/о/у = proportional jaw opening (а = wide, у = pursed). Speed matches speech pace. Jaw moves DOWN, not just lips moving.',
+      non_speaking_mouth: 'NOT speaking = mouth FIRMLY SEALED. Jaw immobile. Lips softly pressed. NO phantom movements, NO mouthing along, NO chewing, NO lip-licking (unless character-motivated brief moment). ONLY subtle lip-pressure changes from emotion.',
+      front_camera_face_lock: 'Phone front camera has face-tracking AF. Face should always be the sharpest element. If head moves, focus follows with 50-100ms lag (realistic AF tracking delay).',
     },
 
     // ── 6. EYES & GAZE ──────────────────────────
     gaze: {
-      directive: 'Eyes create hypnosis and retention. First 1-2 seconds of eye contact with camera = highest hook power.',
-      hook_gaze: '0.0-0.8s: Speaking character (A) locks DIRECT EYE CONTACT with camera lens. Piercing, challenging, pulling viewer in. This is the #1 retention weapon.',
-      act_A_gaze: '0.8-3.6s: A maintains 70% camera contact, 30% glancing at B. B watches A with side-eye or direct stare — tracking A\'s words with visible processing.',
-      act_B_gaze: '3.6-7.1s: B delivers punchline with direct camera contact (80%). A\'s eyes go wide → dart between B and camera, showing shock.',
-      release_gaze: '7.1-8.0s: Both break into natural laughter gaze — eyes crinkle, look at each other, occasional camera glance. Warm, genuine.',
-      pupil_detail: 'Pupils visible with micro-reflections of environment lighting. Wet glint on sclera. Micro-saccades (tiny rapid eye movements) every 0.5-1s — this is what makes eyes feel ALIVE.',
-      forbidden: 'No dead stare (eyes open, no movement for >2s). No cross-eyed moments. No looking at nothing. No simultaneous identical eye movements on both characters.',
+      directive: 'Eyes create the hypnotic connection. In selfie video, "looking at camera" = "looking into viewer\'s eyes". This is the most powerful retention tool.',
+      hook_gaze: '0.0-0.8s: A locks DIRECT EYE CONTACT with camera lens. Pupil-to-lens alignment. Challenging, urgent, pulling viewer in. This triggers primal "someone is staring at me" response. STRONGEST hook possible.',
+      act_A_gaze: '0.8-3.6s: A maintains 70% camera contact (speaking TO viewer), 30% quick glances at B (acknowledging opponent). Gaze breaks are FAST (0.2-0.4s) then back to camera. B: side-eye at A (60%), occasional slow blink, pupils tracking A\'s gestures.',
+      act_B_gaze: '3.6-7.1s: B locks camera (80% direct) for punchline delivery — "I\'m telling YOU this". On killer word: maximum eye intensity, slight squint. A: eyes progressively widen (shock), dart between B and camera at 2-3Hz (processing what B said).',
+      release_gaze: '7.1-8.0s: gaze releases — both look at each other (warm recognition), then one or both glance back at camera with laugh-crinkled eyes. This "shared moment caught on camera" feeling.',
+      pupil_detail: 'Pupils: 3-5mm diameter (adjusting to light). Visible catch-light from dominant light source (window = rectangular, bulb = round). Wet glint on sclera. Thin red vessels visible at 35cm. Iris texture visible.',
+      micro_saccades: 'Tiny rapid eye movements every 0.5-1.5s — eyes NEVER perfectly still. These 0.5-1° micro-jumps are involuntary and are the single biggest "alive eyes" signal. Without them, eyes look like glass.',
+      smartphone_eye_contact: 'Front camera is 2-5cm ABOVE the screen. True "camera eye contact" means looking slightly UP. Most people look at screen (their own face) → gaze is 2-3° below lens. Mix both: 60% at lens (contact), 40% at screen (natural).',
+      forbidden: 'No dead fixed stare (>2s without any eye movement). No cross-eyed. No rolled-back eyes. No simultaneous identical eye movements. No perfectly centered pupils (natural resting gaze drifts).',
     },
 
     // ── 7. FRAME CLEANLINESS ─────────────────────
     frame_cleanliness: {
-      directive: 'Clean background with 2-4 purposeful details. No visual noise, no random objects, no clutter that distracts from faces.',
-      foreground: 'Characters occupy 60-70% of vertical frame. Nothing between camera and faces.',
-      midground: `1 prop anchor: ${propAnchor} — slightly out of focus, provides texture and context.`,
-      background: '2-3 environmental details appropriate to location, all in soft bokeh. Recognizable shapes but not sharp enough to read text or count objects.',
-      negative_space: 'Slight headroom above characters (5-8% of frame). No dead empty zones larger than 15% of frame.',
-      forbidden: 'No text anywhere in frame. No logos. No screens/phones visible. No random floating objects. No visual elements that compete with faces for attention.',
-      detail_budget: 'Total distinct visual elements in frame: faces (2) + wardrobe (2) + prop (1) + background details (2-3) = 7-8 maximum. Anything more is clutter.',
+      directive: 'Real selfie video has 3-5 clear elements: faces, clothes, one object, blurred background. Not a production design showcase — a person\'s actual environment.',
+      foreground: 'Characters occupy 60-70% of vertical frame. Nothing between camera and faces except air (and possibly a gesturing hand briefly crossing frame).',
+      midground: `1 prop anchor: ${propAnchor} — at arm\'s length behind characters, in computational bokeh blur (recognizable shape, fuzzy edges). Provides context.`,
+      background: '2-3 environmental details in deep bokeh. Recognizable as shapes/colors but NOT sharp. A wall, a shelf, a window — NOT a detailed set. Smartphone portrait mode makes background deliberately simple.',
+      headroom: '5-10% of frame above heads. Characters slightly below center (natural selfie composition — arm extends slightly up). No chin-crop, no forehead-crop.',
+      aspect_ratio: '9:16 vertical (portrait mode). This is non-negotiable for Reels/TikTok. Characters fill the vertical frame. Horizontal detail is naturally limited by the narrow width.',
+      forbidden: 'No text/logos/watermarks in frame. No phones/screens visible. No mirror reflections showing camera. No perfect production design. No more than 5 distinct visual elements total. CLUTTERED = FAKE, CLEAN = REAL.',
+      detail_budget: 'Visual element cap: 2 faces + 2 wardrobe reads + 1 prop + 2 background shapes = 7 maximum. Every extra item competes with faces for attention and reduces realism.',
     },
 
     // ── 8. WARDROBE & TEXTURES ───────────────────
     textures: {
-      directive: 'Textured materials = realism. Smooth/flat surfaces = AI giveaway. Every fabric must have visible weave, wrinkles, or grain.',
+      directive: 'Texture is the anti-AI signal. Real phone cameras at 35cm capture INDIVIDUAL THREADS of wool, WEAVE PATTERN of denim, CREASE LINES in cotton. If fabric looks smooth/flat → instant AI detection.',
       wardrobe_A: wardrobeA,
       wardrobe_B: wardrobeB,
-      texture_priority: 'PRIORITIZE materials with visible texture: wool knit patterns, denim weave, leather grain, cotton wrinkles, corduroy ridges, linen creases. These read as REAL.',
-      wrinkle_rule: 'Clothing MUST have natural wrinkles at elbows, shoulders, waist. Freshly-ironed flat fabric = fake. Lived-in creases = real.',
-      skin_as_texture: 'Skin is the most important texture. Visible pores, fine lines, age spots (if elderly), slight oiliness on nose/forehead, imperfect tone. NO airbrushed smooth skin.',
-      forbidden: 'No plastic-looking fabrics. No perfectly smooth surfaces. No CGI-shiny materials. No rubber-looking skin. No uniform untextured color blocks.',
+      texture_priority: 'HIERARCHY of convincing textures: hand-knit wool (best) > worn denim > real leather > corduroy > linen > cotton > polyester (worst). Choose materials high on this list. Every fabric must show its STRUCTURE at close range.',
+      wrinkle_rule: 'ALL clothing has wrinkles: elbow creases, shoulder pull lines, waist bunching, collar fold memory. Freshly-ironed flat fabric = FAKE. Lived-in asymmetric creases = REAL. Deeper wrinkles cast micro-shadows.',
+      skin_as_texture: 'Skin is THE most important texture. At 35-50cm phone distance: visible pores on nose/cheeks, fine lines around eyes (crow\'s feet), nasolabial folds, slight oiliness on T-zone (forehead/nose), age spots on elderly, uneven skin tone across face. NO airbrushed smooth skin EVER.',
+      hair_texture: 'Individual hair strands visible at temples and hairline. Flyaway hairs catching backlight. Grey/white hair has different texture than dark. Facial hair: individual whisker direction visible. Eyebrows: individual hairs, not painted blocks.',
+      surface_detail: 'Any surface in sharp focus must show texture: wood grain, paint chips, fabric weave, metal patina, glass smudges, ceramic glaze. Smooth featureless surfaces scream "CGI".',
+      forbidden: 'No plastic skin. No uniform color blocks. No textureless fabrics. No perfectly smooth surfaces. No rubber/wax skin appearance. No identical skin on both characters (they are different people with different skin).',
     },
 
     // ── 9. COLOR & SKIN TONE ─────────────────────
     color_skin: {
-      directive: 'Correct color grading is what separates AI video from real. Lock white balance, protect skin tones, avoid the two deadly sins: orange tan and grey face.',
-      white_balance: 'Lock to ONE color temperature matching the light source. Kitchen/barn: 3200-3800K warm. Fluorescent: 4500-5000K cool. Daylight: 5500-6000K neutral. NO shifts during the clip.',
-      skin_tone_A: `${charA.prompt_tokens?.character_en?.includes('dark skin') || charA.prompt_tokens?.character_en?.includes('tan') ? 'Warm rich undertone, never ashy' : charA.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, never grey or yellow' : 'Natural warm undertone, slight pink in cheeks, never flat or monochrome'}`,
-      skin_tone_B: `${charB.prompt_tokens?.character_en?.includes('dark skin') || charB.prompt_tokens?.character_en?.includes('tan') ? 'Warm rich undertone, never ashy' : charB.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, never grey or yellow' : 'Natural warm undertone, slight pink in cheeks, never flat or monochrome'}`,
-      deadly_sins: 'FORBIDDEN: (1) Orange spray-tan skin — most common AI artifact. (2) Grey/blue lifeless face — second most common. (3) Uniform skin tone with no variation — third.',
-      color_grade: 'Subtle cinematic grade only. Slight lift in shadows (not crushed black), gentle rolloff in highlights (not clipped white). Saturation: 90-100% of natural (slightly muted = cinematic, never oversaturated).',
-      consistency: 'Skin tone MUST remain identical across all 8 seconds. No color shifts, no random warmth/coolness changes between cuts or movements.',
+      directive: 'Smartphone color science: slightly warm, auto-WB biased toward pleasing skin tones. The 3 deadly AI sins are orange tan, grey face, and uniform plastic tone.',
+      white_balance: lightingMood.color_temp ? `Lock to: ${lightingMood.color_temp}` : 'Lock WB to dominant source. Indoor warm: 3200-3800K. Fluorescent: 4500-5000K with green shift. Daylight: 5500-6000K. Phone auto-WB may lean 200K warm to flatter skin.',
+      skin_tone_A: `${charA.prompt_tokens?.character_en?.includes('dark skin') || charA.prompt_tokens?.character_en?.includes('tan') ? 'Rich warm undertone, visible warmth variation across face (redder cheeks, darker under eyes, lighter on forehead). Never ashy or grey.' : charA.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, visible pink in cheeks/nose tip/ear tips, slight blue veins at temples. Never grey or uniformly white.' : 'Slavic warm undertone: slight pink in cheeks, redder nose tip in cold, lighter forehead, darker under eyes. Natural variation across face — NOT one uniform color.'}`,
+      skin_tone_B: `${charB.prompt_tokens?.character_en?.includes('dark skin') || charB.prompt_tokens?.character_en?.includes('tan') ? 'Rich warm undertone, visible warmth variation across face. Never ashy or grey.' : charB.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, visible pink in cheeks/nose/ears. Never grey or uniform.' : 'Slavic warm undertone: cheeks pinker than forehead, nose tip redder, under-eye slightly darker, ear tops flushed. Living skin has COLOR VARIATION.'}`,
+      skin_zones: 'EVERY face has 5+ color zones: (1) forehead — lighter/oilier, (2) cheeks — pinker/redder, (3) nose — reddest/oiliest, (4) under-eye — slightly darker/bluer, (5) chin — matches forehead. These zones are DIFFERENT colors. Uniform tone = plastic = AI.',
+      deadly_sins: 'THREE forbidden skin looks: (1) Orange spray-tan (#D4845B range) — MOST COMMON AI artifact, never ever do this. (2) Grey/blue lifeless face — like a corpse, no blood in skin. (3) Uniform tone — same exact color everywhere on face, no zone variation.',
+      color_grade: 'Smartphone color: slightly warm bias (+3% orange in highlights), gentle contrast (not crushed blacks — phone cameras lift shadows), saturation 90-95% natural (phones slightly boost). No heavy film emulation, no teal-and-orange, no Instagram filter look.',
+      consistency: 'Skin tone IDENTICAL across all 8 seconds. No sudden warmth shifts. No frame-to-frame color flicker. The only change: slight reddening in cheeks during emotional peaks (blood flow). This is realistic and welcome.',
     },
 
     // ── 10. SOUND AS REALITY ANCHOR ──────────────
     sound_anchor: {
-      directive: 'Sound makes the brain believe the image is real. Even simple room tone converts "AI video" into "footage". Sound is the cheapest realism upgrade.',
-      room_tone: 'MANDATORY: continuous low-level ambient sound matching location. This runs UNDER all dialogue at -20dB to -30dB. Never silence between words — real rooms have sound.',
-      voice_volume: 'Dialogue at -6dB to -3dB peak. Natural dynamic range — louder on emphasis, softer on asides. NO compression, NO limiter, NO uniform volume. Real speech has volume variation.',
-      voice_room_match: 'Voice must have reverb/reflection matching the space. Kitchen: slight hard-surface reflection. Outdoors: minimal reverb. Stairwell: concrete echo. Tiny room: close/dry.',
-      breathing_sounds: 'Audible inhale before each speaking turn (0.1-0.2s). Nose exhale from listening character during pauses. This is what makes speech feel embodied.',
-      cloth_and_foley: 'Fabric rustle on every major body movement. Surface contact sounds (chair creak, table touch). Prop interaction sounds if hook involves object.',
-      laugh_audio: 'Release laughter: 20-30% louder than dialogue peak. Raspy, breathy, contagious. Camera mic slightly distorts from proximity (realistic). Bodies audibly shaking.',
-      forbidden: 'No dead silence ever (even 0.3s of pure silence feels wrong). No echo-free "studio" voice in a kitchen. No uniform volume speech. No music unless explicitly requested.',
+      directive: 'Sound is what makes the BRAIN believe the IMAGE is real. Smartphone mic signature: slightly compressed, room-reverberant, catches everything. This is NOT a studio recording.',
+      room_tone: 'MANDATORY: continuous ambient sound matching location. Runs UNDER dialogue at -20 to -30dB. Real rooms NEVER have silence — there is always hum, wind, distant traffic, appliance drone. This is the bed everything sits on.',
+      voice_volume: 'Dialogue: -6dB to -3dB peak. NATURAL dynamic range — louder on shouts, softer on asides, voice cracks on emotion. NO compression, NO limiter. Real speech volume varies ±6dB within a sentence.',
+      voice_proximity: 'Phone mic is 35-60cm from mouths. Voice has slight room coloring — NOT dry studio sound. Plosives (п, б) may cause brief mic pop. Sibilants (с, ш) slightly harsh. This is PHONE MIC character.',
+      voice_room_match: 'Reverb MUST match space size. Kitchen: 0.3-0.5s RT60, hard reflections. Outdoors: <0.1s, almost dry. Stairwell: 1.0-1.5s echo. Small room: 0.2-0.3s tight reflection. Mismatch = instant fake detection.',
+      breathing_sounds: 'Audible inhale before each speaking turn (0.15-0.25s). Phone mic picks up breathing. Nose exhale from listener. Sharp inhale of surprise from A when B delivers killer word.',
+      cloth_and_foley: 'Fabric rustle on EVERY body movement (phone mic is very sensitive). Chair/surface creak. Prop interaction sounds. Footstep shuffle on weight shift. These environmental sounds anchor the reality.',
+      laugh_audio: 'Release laughter: 20-30% louder than dialogue. Phone mic response: slight compression/distortion on laugh peaks (mic overload). Breathy, raspy, bodies shaking. Camera mic picks up hand-grip rustle from holder shaking.',
+      mouth_sounds: 'Subtle: saliva clicks on hard consonants (т, к, п, д), lip smack at sentence start, tongue contact on л/н. These are captured by phone mic at close range and are CRITICAL realism markers.',
+      forbidden: 'No dead silence (even 0.1s of pure silence is wrong — room tone fills everything). No studio-clean voice. No uniform volume. No reverb mismatch. No music unless explicitly in scene.',
     },
 
     // ── 11. FIRST-FRAME VISUAL HOOK ──────────────
     visual_hook: {
-      directive: 'The hook is VISUAL, not verbal. In the first 0.5-0.8 seconds, the viewer must be grabbed by what they SEE before anyone speaks.',
-      primary_hook: `${hookObj.action_en} — this is the visual grab. It must be IN PROGRESS when video starts (no setup, no walking into frame).`,
-      face_emotion: 'Character A\'s face shows EXTREME emotion from frame 1: fury, disbelief, righteous indignation, theatrical shock. This is the #1 scroll-stopper.',
-      object_hook: `${propAnchor} or character signature element visible from frame 1 — gives context instantly.`,
-      composition_hook: 'Both faces visible from frame 1. No fade-in, no black frame, no title card. INSTANT scene.',
-      gaze_hook: 'Direct eye contact with camera from frame 1. This activates primal "someone is looking at me" response — strongest hook.',
-      forbidden: 'No text overlays as hook. No "wait for it" buildup. No slow fade-in. No empty frame first. No back-of-head shots. FACE + EMOTION + EYES from frame 0.',
+      directive: 'The viewer decides in 0.3-0.5 seconds: watch or scroll. The hook is 100% VISUAL — no one reads text or waits for words. Frame 1 must DEMAND attention.',
+      primary_hook: `${hookObj.action_en} — this physical action is ALREADY IN PROGRESS when video starts. No lead-up, no preparation, no "1-2-3-go". We enter MID-ACTION.`,
+      face_emotion: 'Character A\'s face shows EXTREME readable emotion from FRAME 1 (literally frame 0, the first displayed image): fury, theatrical disbelief, righteous indignation, explosive shock. The face IS the hook. Neutral face = scroll-away.',
+      gaze_hook: 'Direct eye contact with camera lens from frame 1. Pupils visible and pointed at viewer. This triggers hardwired primal response: "someone is staring at ME". 3x more effective than any text overlay.',
+      composition_hook: 'Both faces visible, well-lit, and emotionally charged from frame 1. No fade-in, no black frame, no title card, no text, no logo. The SCENE is already happening when we arrive.',
+      object_hook: `${propAnchor} or character\'s signature element visible from frame 1 — gives instant visual context. The viewer\'s eye goes: FACE → EMOTION → OBJECT → "oh, a story" in 0.3s.`,
+      energy_level: 'Frame 1 energy ≥ 80% of peak energy. We do NOT build up to the conflict — we drop INTO it. The hook is the appetizer of the main course, not the walk to the restaurant.',
+      forbidden: 'No text hook (text overlay, title card, "wait for it"). No slow buildup. No fade-in. No empty/dark frame. No back-of-head. No neutral expressions. No walking into frame. FACE + EMOTION + EYES + ACTION from literal pixel 0.',
     },
 
     // ── 12. EDIT LOGIC (single-take feel) ────────
     edit_logic: {
-      directive: 'Even without cuts, the internal rhythm must follow edit logic. The viewer should feel beginning-middle-end in 8 seconds.',
-      start: 'COLD OPEN: Video starts MID-SCENE. Characters are already in position, emotion already building. No "hello", no setup, no walking in. Viewer drops into an argument already happening.',
-      pre_punch_pause: 'At 3.4-3.6s (transition from A to B): 0.15-0.25s of SILENCE. A finishes, brief beat of tension, then B drops the hammer. This pause is the "inhale before the punchline" — it makes the audience lean in.',
-      killer_delivery: 'B\'s killer word at ~7.0s mark. Slight camera micro-push toward B. A\'s physical reaction (freeze, eye-widen, jaw-drop) is what sells it.',
-      end_on_reaction: 'Final 0.5-0.8s: end on the REACTION, not the punchline. Shared laughter, A\'s defeated smile, mutual shoulder shake. This is what makes people REWATCH — they want to see that reaction again.',
-      rewatch_bait: 'The reaction in the last 0.5s should be slightly ambiguous or extra-funny — a micro-expression, a gesture, an eye-roll — that rewards rewatching. Rewatch = algorithm boost.',
-      forbidden: 'No clean ending (fade out, wave goodbye, "thanks for watching"). No setup before the action. No dead air at start or end. Every frame earns its place.',
+      directive: 'Single continuous take, no cuts. But internal rhythm follows storytelling beats. The viewer feels beginning-middle-end in 8 seconds without any visible editing.',
+      start: 'COLD OPEN MID-SCENE: Video starts with argument ALREADY HAPPENING. Characters positioned, emotion at 70%+, voices possibly already raised. No "hello", no setup, no walking in. The viewer eavesdrops on a fight already in progress.',
+      energy_curve: 'Energy graph: hook 80% → A speaks 85-90% → transition dip 60% (the pause) → B responds 90-95% → killer word 100% → release 70% warm. This curve creates MOMENTUM that pulls through the whole 8s.',
+      pre_punch_pause: 'At 3.4-3.6s (A→B transition): 0.15-0.25s of LOADED SILENCE. A finishes, brief beat where B\'s expression shifts (processing → ready to destroy). This pause makes the audience LEAN IN. The gap is filled by room tone + breathing, not dead silence.',
+      killer_delivery: 'B\'s killer word at ~7.0s: slight camera push (phone holder leans forward unconsciously). A\'s physical reaction is VISIBLE and SIMULTANEOUS: freeze mid-gesture, eyes widen, jaw slackens. The REACTION sells the punchline.',
+      end_on_reaction: 'Final 0.5-0.8s: end on the REACTION to the punchline, NOT the punchline itself. Shared laughter, A\'s defeated smile, mutual physical contact. This is what makes people REWATCH — they want to see that moment of surrender again.',
+      rewatch_bait: 'In the final 0.3-0.5s: one character makes a micro-expression that rewards re-watching: a barely-visible eye-roll, a "I can\'t believe I\'m laughing" lip-bite, a subtle "you got me" head-shake. Something new to discover on rewatch #2-3.',
+      loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (TikTok/Reels) feels semi-continuous. Not identical, but compatible mood — warmth transitioning back to tension.',
+      forbidden: 'No clean endings (fade out, wave, "that\'s all folks"). No setup before the action. No dead air at start or end. No beat longer than 0.3s without visual/audio content. Every single frame of 240 frames (30fps×8s) earns its place.',
     },
   };
 }
@@ -1038,7 +1127,7 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Hyper-realistic close-up still frame captured mid-argument. Two characters in heated comedic confrontation, faces 40-60cm from camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Vertical 9:16 aspect ratio, 1080x1920px.`,
+    scene: `Smartphone selfie photo taken mid-argument — raw, unposed, real. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. The photo looks like someone paused a selfie video on the most intense frame.`,
     ...(topicEn ? { topic_context: topicEn } : {}),
     characters: [
       {
@@ -1070,19 +1159,26 @@ export function generate(input) {
     ],
     environment: {
       location,
-      lighting: `${locLighting || lightingMood.style}, soft fill from environment bounce, realistic shadow under nose and cheekbones`,
+      lighting: `${locLighting || lightingMood.style}`,
+      lighting_sources: lightingMood.sources || '1 dominant environmental + 1 ambient fill bounce',
+      lighting_direction: lightingMood.direction || 'Key from environment, fill from nearest reflective surface',
+      shadow_quality: lightingMood.shadow_softness || 'Soft but present shadows under nose and cheekbones',
+      overexposure: lightingMood.overexposure_budget || 'Allow +0.5 EV on skin highlights — natural smartphone sensor clipping',
+      color_temperature: lightingMood.color_temp || 'Locked to dominant source color temperature',
       lighting_mood: lightingMood.mood,
-      prop_anchor: `${propAnchor} visible in mid-ground, slightly out of focus`,
-      props: ['worn textured surface beneath characters', propAnchor, 'ambient domestic detail in soft bokeh background', 'natural clutter appropriate to location'],
-      atmosphere: `lived-in, authentic, slightly chaotic. Category vibe: ${cat.en.toLowerCase()}`,
+      prop_anchor: `${propAnchor} visible in mid-ground, in computational bokeh blur (recognizable shape, soft edges)`,
+      props: ['worn textured surface beneath characters', propAnchor, '1-2 ambient domestic details in deep bokeh background'],
+      atmosphere: `lived-in, authentic, slightly chaotic. NOT a set — a real place where people actually live/work. Category vibe: ${cat.en.toLowerCase()}`,
     },
     camera: {
-      angle: 'slightly below eye level (5-10°), selfie POV at arm\'s length, device INVISIBLE',
-      distance: 'close enough to read skin microtexture and pore detail, both faces fully in frame',
-      lens: '24mm equivalent, f/2.0, shallow DOF — faces sharp, background 20-30% bokeh',
-      focus: 'critical focus on eyes of speaking character (A), B in acceptable focus, background soft',
-      composition: 'loose rule-of-thirds, A occupies left third, B right third, slight headroom, intimate framing',
-      realism: cameraPreset.realism_anchors.join(', '),
+      device: 'Smartphone front camera (24-28mm equiv, f/1.9-2.2, small sensor). This is NOT a DSLR or cinema camera.',
+      angle: 'slightly below eye level (5-10°), selfie POV at arm\'s length (35-55cm), phone INVISIBLE, holder\'s arm NOT in frame',
+      distance: '35-55cm from lens to nearest face. Close enough to resolve individual pores, skin texture, iris detail. Both faces fill 60-70% of vertical 9:16 frame.',
+      lens: '24-28mm equivalent (front camera native). Slight barrel distortion at frame edges — this is CORRECT. Faces at center relatively undistorted. Computational portrait-mode bokeh on background.',
+      focus: 'Phone face-tracking AF: both faces sharp (same focal plane at selfie distance). Background separates via computational blur — smooth gaussian, NOT cinema hexagonal bokeh.',
+      composition: 'Natural selfie framing: A left third, B right third. 5-8% headroom. Characters slightly below center (arm holds phone slightly above eye level). Intimate, not perfectly composed.',
+      sensor_artifacts: 'Visible luminance noise in shadow areas (ISO 400-1600). Slight JPEG compression (quality 85-92%). Limited dynamic range — highlights may clip +0.5-1.5 EV on bright skin. Mild purple fringing on backlit edges. Faint rolling-shutter lean if any motion blur.',
+      realism_anchors: 'handheld micro-jitter frozen as slight motion blur on fast gestures, imperfect auto white-balance (±200K drift toward warm), realistic nose/cheekbone shadows from single environmental light source, slight sensor noise in dark clothing/shadows, natural vignetting in corners (-0.3 EV)',
     },
     color_mood: lightingMood.mood === 'nostalgic warmth'
       ? 'warm amber undertone, golden highlights, slightly desaturated shadows, natural skin tones, subtle teal in shadows for cinematic contrast'
@@ -1092,10 +1188,16 @@ export function generate(input) {
       ? 'dappled warm-cool mix, green-gold foliage reflections on skin, natural vibrant saturation, earthy tones'
       : lightingMood.mood === 'dramatic intimacy'
       ? 'high-contrast chiaroscuro, deep amber in highlights, rich black shadows, warm skin tones with cool shadow edges'
+      : lightingMood.mood === 'golden confrontation'
+      ? 'split warm/cool: gold highlights on sun side (2800K), blue-tinted shadows on shade side (5500K), skin glows warm, rich contrast'
+      : lightingMood.mood === 'domestic tension'
+      ? 'dual-tone: warm overhead amber + cool blue TV-bounce side-fill, face split between warm and cool, moody domestic ambiance'
+      : lightingMood.mood === 'exposed clarity'
+      ? 'bright even daylight, minimal color cast, accurate skin tones, clean and honest look, slight warmth from ground bounce'
       : 'soft neutral palette, slight blue undertone, gentle contrast, natural skin tones with minimal color cast',
     hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
-    style: 'photorealistic, cinematic grain (ISO 800-1600 feel), raw authentic feel, no filters, no beauty mode, skin imperfections VISIBLE and CELEBRATED',
-    negative: 'no text, no watermark, no logo, no phone visible, no camera visible, no overlay, no cartoon, no anime, no plastic skin, no airbrushed look, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting',
+    style: 'Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, wrinkles, age marks, oily sheen VISIBLE and CELEBRATED. This looks like someone pulled out a phone and took a photo mid-argument.',
+    negative: 'no text, no watermark, no logo, no phone/camera visible in frame, no overlay, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
     ...(product_info?.description_en ? {
       product_placement: {
         instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as described — same shape, colors, branding, materials. It is the focal point of their argument.',
