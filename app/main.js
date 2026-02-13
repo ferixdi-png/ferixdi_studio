@@ -461,157 +461,78 @@ function initVideoUpload() {
 
 function handleVideoFile(file) {
   if (!file.type.startsWith('video/')) { log('WARN', 'ВИДЕО', 'Не видеофайл'); return; }
+  if (file.size > 50 * 1024 * 1024) { log('WARN', 'ВИДЕО', 'Файл больше 50 MB'); return; }
+
   const url = URL.createObjectURL(file);
   const video = document.createElement('video');
-  video.preload = 'metadata';
-  video.onloadedmetadata = () => {
-    state.videoMeta = { duration: Math.round(video.duration * 100) / 100, size: file.size, name: file.name };
+  video.preload = 'auto';
+  video.muted = true;
+  video.playsInline = true;
+
+  video.onloadeddata = () => {
+    const duration = Math.round(video.duration * 100) / 100;
+    state.videoMeta = {
+      duration,
+      size: file.size,
+      name: file.name,
+      platform: 'upload',
+      cover_base64: null,
+    };
+
+    // Show meta
     const meta = document.getElementById('video-meta');
-    meta.classList.remove('hidden');
-    meta.innerHTML = `
-      <div>📁 ${file.name}</div>
-      <div>⏱ ${state.videoMeta.duration}s · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
-    `;
-    URL.revokeObjectURL(url);
-    log('OK', 'ВИДЕО', `Загружено: ${file.name} (${state.videoMeta.duration}с)`);
+    if (meta) {
+      meta.classList.remove('hidden');
+      meta.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400">✓</span>
+          <span>📁 ${escapeHtml(file.name)}</span>
+        </div>
+        <div>⏱ ${duration}s · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
+      `;
+    }
+
+    // Capture frame at 1s (or 25% of duration) as cover for Gemini
+    const seekTime = Math.min(1, duration * 0.25);
+    video.currentTime = seekTime;
   };
+
+  video.onseeked = () => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.min(video.videoWidth, 640);
+      canvas.height = Math.round(canvas.width * (video.videoHeight / video.videoWidth));
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      state.videoMeta.cover_base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+      state.videoMeta.width = video.videoWidth;
+      state.videoMeta.height = video.videoHeight;
+      log('OK', 'ВИДЕО', 'Кадр захвачен для Gemini');
+    } catch (e) {
+      log('WARN', 'ВИДЕО', `Не удалось захватить кадр: ${e.message}`);
+    }
+    URL.revokeObjectURL(url);
+
+    // Show remake badge
+    document.getElementById('video-remake-badge')?.classList.remove('hidden');
+
+    // Auto-switch to video mode
+    state.inputMode = 'video';
+
+    log('OK', 'ВИДЕО', `🎬 Загружено: ${file.name} (${state.videoMeta.duration}с) — кадр для Gemini готов`);
+  };
+
+  video.onerror = () => {
+    URL.revokeObjectURL(url);
+    log('ERR', 'ВИДЕО', 'Не удалось прочитать видеофайл');
+  };
+
   video.src = url;
 }
 
-// ─── VIDEO URL FETCH (TikTok / Instagram) ───
+// ─── VIDEO URL FETCH (removed — now using external download services) ───
 function initVideoUrlFetch() {
-  const btn = document.getElementById('video-url-fetch');
-  const input = document.getElementById('video-url-input');
-  if (!btn || !input) return;
-
-  btn.addEventListener('click', async () => {
-    const url = input.value.trim();
-    if (!url) { showVideoStatus('Вставьте ссылку на видео', 'text-red-400'); return; }
-    if (!url.includes('tiktok.com') && !url.includes('instagram.com')) {
-      showVideoStatus('Поддерживаются только TikTok и Instagram ссылки', 'text-red-400');
-      return;
-    }
-
-    showVideoStatus('⏳ Загружаю...', 'text-gray-400');
-    btn.disabled = true;
-    log('INFO', 'VIDEO', `Fetching: ${url}`);
-
-    try {
-      // Determine API base (same origin on Render, localhost in dev)
-      const apiBase = window.location.origin;
-      const resp = await fetch(`${apiBase}/api/video/fetch`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      });
-      const data = await resp.json();
-
-      if (!resp.ok) {
-        showVideoStatus(`❌ ${data.error || 'Ошибка'}`, 'text-red-400');
-        log('ERR', 'VIDEO', data.error || 'Fetch failed');
-        return;
-      }
-
-      // Show result
-      const resultEl = document.getElementById('video-url-result');
-      resultEl.classList.remove('hidden');
-
-      // Cover
-      const coverEl = document.getElementById('video-url-cover');
-      if (data.cover) { coverEl.src = data.cover; coverEl.classList.remove('hidden'); }
-      else { coverEl.classList.add('hidden'); }
-
-      // Meta
-      document.getElementById('video-url-title').textContent = data.title || 'Без названия';
-      document.getElementById('video-url-author').textContent = `@${data.author || 'unknown'} · ${data.platform}`;
-      const metaParts = [];
-      if (data.duration) metaParts.push(`${data.duration}s`);
-      if (data.width && data.height) metaParts.push(`${data.width}×${data.height}`);
-      if (data.music) metaParts.push(`🎵 ${data.music}`);
-      document.getElementById('video-url-meta').textContent = metaParts.join(' · ') || '';
-
-      // Download link
-      const dlLink = document.getElementById('video-url-download');
-      if (data.video_url) {
-        dlLink.href = data.video_url;
-        dlLink.classList.remove('hidden');
-        showVideoStatus('✅ Видео найдено!', 'neon-text-green');
-      } else {
-        dlLink.classList.add('hidden');
-        showVideoStatus(data.note || '⚠️ Прямая ссылка недоступна', 'text-yellow-400');
-      }
-
-      // Save to state for generation
-      state.videoMeta = {
-        platform: data.platform,
-        url: url,
-        title: data.title,
-        author: data.author,
-        duration: data.duration,
-        width: data.width,
-        height: data.height,
-        cover: data.cover || null,
-        cover_base64: null,
-      };
-
-      // Download cover image as base64 for Gemini multimodal
-      if (data.cover) {
-        try {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-            canvas.getContext('2d').drawImage(img, 0, 0);
-            state.videoMeta.cover_base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
-            log('OK', 'ВИДЕО', 'Обложка захвачена для Gemini');
-          };
-          img.onerror = () => log('WARN', 'ВИДЕО', 'Обложка заблокирована CORS — Gemini не увидит');
-          img.src = data.cover;
-        } catch { /* cover download failed, not critical */ }
-      }
-
-      // Show remake badge
-      document.getElementById('video-remake-badge')?.classList.remove('hidden');
-
-      // Auto-fill scene hint from video title for better Gemini context
-      if (data.title) {
-        const sceneHintEl = document.getElementById('scene-hint');
-        if (sceneHintEl && !sceneHintEl.value.trim()) {
-          sceneHintEl.value = data.title;
-        }
-      }
-
-      // Auto-fill idea input with video context if empty
-      const ideaInput = document.getElementById('idea-input');
-      if (ideaInput && !ideaInput.value.trim() && data.title) {
-        ideaInput.value = `Ремейк видео: ${data.title}`;
-      }
-
-      // Switch to video mode automatically
-      state.inputMode = 'video';
-
-      log('OK', 'ВИДЕО', `🎬 РЕМЕЙК: ${data.platform} — "${data.title || 'видео'}" (${data.duration || '?'}с)`);
-
-    } catch (e) {
-      showVideoStatus(`❌ Сетевая ошибка: ${e.message}`, 'text-red-400');
-      log('ERR', 'VIDEO', e.message);
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  // Enter key
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); });
-}
-
-function showVideoStatus(text, cls) {
-  const el = document.getElementById('video-url-status');
-  if (!el) return;
-  el.classList.remove('hidden');
-  el.className = `text-xs ${cls}`;
-  el.textContent = text;
+  // No-op: TikTok/Instagram downloads handled via external links
+  // (tikvideo.app / saveclip.app) — user downloads MP4, then uploads here
 }
 
 function showGenStatus(text, cls) {

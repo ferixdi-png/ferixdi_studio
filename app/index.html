@@ -208,40 +208,41 @@
 
                 <!-- mode-video -->
                 <div id="mode-video" class="hidden space-y-3">
-                  <div class="glass-panel p-3 space-y-2">
-                    <div class="text-xs text-gray-400 font-medium">Ссылка на TikTok или Instagram Reel</div>
+
+                  <!-- Step 1: Download video from TikTok or Instagram -->
+                  <div class="glass-panel p-4 space-y-3">
+                    <div class="text-xs text-gray-300 font-medium">Шаг 1 · Скачай видео-референс</div>
+                    <div class="text-[11px] text-gray-500 leading-relaxed">Скопируй ссылку на видео → скачай через один из сервисов → вернись сюда и загрузи файл</div>
                     <div class="flex gap-2">
-                      <input id="video-url-input" type="url" class="input-field flex-1" placeholder="https://www.tiktok.com/@user/video/...">
-                      <button id="video-url-fetch" class="btn-neon text-xs whitespace-nowrap">Скачать</button>
+                      <a href="https://tikvideo.app/ru" target="_blank" class="btn-neon text-xs flex-1 text-center">
+                        🎵 TikTok → tikvideo.app
+                      </a>
+                      <a href="https://saveclip.app/ru/download-video-instagram" target="_blank" class="btn-neon text-xs flex-1 text-center">
+                        📸 Instagram → saveclip.app
+                      </a>
                     </div>
-                    <div id="video-url-status" class="text-xs hidden"></div>
+                    <div class="text-[10px] text-gray-600 leading-relaxed">
+                      Откроется сайт для скачивания → вставь ссылку на видео → скачай MP4 → вернись сюда ↓
+                    </div>
+                  </div>
+
+                  <!-- Step 2: Upload downloaded video -->
+                  <div class="glass-panel p-4 space-y-3">
+                    <div class="text-xs text-gray-300 font-medium">Шаг 2 · Загрузи скачанное видео</div>
+                    <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-violet-500/40 transition-colors" id="video-dropzone">
+                      <div class="text-lg mb-1">📁</div>
+                      <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
+                      <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
+                      <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
+                    </div>
+                    <div id="video-meta" class="hidden text-xs text-gray-500"></div>
                     <div id="video-remake-badge" class="hidden text-[11px] text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-lg p-2.5 leading-relaxed">
-                      🎬 <strong>Режим ремейка</strong> — Gemini воспроизведёт это видео с твоими персонажами: тот же стиль, энергия и похожий диалог на русском
-                    </div>
-                    <div id="video-url-result" class="hidden space-y-2">
-                      <div class="flex gap-3 items-start">
-                        <img id="video-url-cover" class="w-16 h-16 rounded-lg object-cover hidden" alt="cover">
-                        <div class="flex-1 space-y-1">
-                          <div id="video-url-title" class="text-xs text-gray-300"></div>
-                          <div id="video-url-author" class="text-xs text-gray-500"></div>
-                          <div id="video-url-meta" class="text-xs text-gray-600"></div>
-                        </div>
-                      </div>
-                      <a id="video-url-download" href="#" target="_blank" class="btn-neon-green text-xs inline-block hidden">💾 Открыть видео</a>
+                      🎬 <strong>Режим ремейка</strong> — Gemini проанализирует видео и воспроизведёт его с твоими персонажами: тот же стиль, энергия и похожий диалог на русском
                     </div>
                   </div>
-                  <div class="flex items-center gap-3 text-xs text-gray-600">
-                    <div class="flex-1 border-t border-gray-800"></div>
-                    <span>или загрузи файл</span>
-                    <div class="flex-1 border-t border-gray-800"></div>
-                  </div>
-                  <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg" id="video-dropzone">
-                    <div class="text-lg mb-1">📁</div>
-                    <div class="text-xs text-gray-500">mp4 / mov</div>
-                    <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
-                  </div>
-                  <div id="video-meta" class="hidden text-xs text-gray-500"></div>
-                  <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео (необязательно)"></textarea>
+
+                  <!-- Step 3: Optional context -->
+                  <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст (необязательно)"></textarea>
                 </div>
 
                 <!-- Product photo -->
