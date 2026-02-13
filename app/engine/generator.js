@@ -31,11 +31,16 @@ const FALLBACK_LOCATIONS = [
 
 // ─── HOOK ACTIONS v2 ─────────────────────────
 const HOOK_ACTIONS = [
-  { action_en: 'sharp finger jab at lens, near-miss touch', action_ru: 'Палец в камеру, почти касаясь линзы', audio: 'mechanical trigger + sharp inhale' },
-  { action_en: 'object tap on glass — knuckle rap on invisible screen', action_ru: 'Стук костяшками по "стеклу"', audio: 'knocking + surprised gasp' },
-  { action_en: 'abrupt lean-in to camera, face filling frame', action_ru: 'Резкий наклон к камере, лицо заполняет кадр', audio: 'cloth rustle + tense exhale' },
-  { action_en: 'slap on table surface, objects rattle', action_ru: 'Удар по столу, предметы подпрыгивают', audio: 'table slap + glass rattle' },
-  { action_en: 'dramatic removal of glasses/hat as reveal', action_ru: 'Драматичное снятие очков/шапки', audio: 'fabric whoosh + stare-down silence' },
+  { action_en: 'sharp finger jab at lens, near-miss touch, finger trembling with rage', action_ru: 'Палец в камеру, почти касаясь линзы, палец дрожит от злости', audio: 'mechanical trigger + sharp inhale' },
+  { action_en: 'knuckle rap on invisible screen, leaning forward with intensity', action_ru: 'Стук костяшками по «стеклу», наклон вперёд', audio: 'knocking + surprised gasp' },
+  { action_en: 'abrupt lean-in to camera, face filling 80% of frame, eyes wide', action_ru: 'Резкий наклон к камере, лицо заполняет кадр, глаза широко', audio: 'cloth rustle + tense exhale' },
+  { action_en: 'slap on table surface, objects rattle and jump, hand stays flat', action_ru: 'Удар ладонью по столу, предметы подпрыгивают', audio: 'table slap + glass rattle + sharp exhale' },
+  { action_en: 'dramatic removal of glasses with one hand, stare directly into lens', action_ru: 'Драматичное снятие очков одной рукой, взгляд прямо в камеру', audio: 'fabric whoosh + stare-down silence' },
+  { action_en: 'phone thrust at camera showing screen, arm fully extended, screen glowing', action_ru: 'Тычет телефоном в камеру, рука вытянута, экран светится', audio: 'phone buzz + sharp gasp' },
+  { action_en: 'both hands slam on table simultaneously, body jolts forward', action_ru: 'Обе ладони по столу одновременно, тело дёргается вперёд', audio: 'double impact + dishes rattle + sharp inhale' },
+  { action_en: 'grabs other person by sleeve, pulls them toward camera', action_ru: 'Хватает другого за рукав, тянет к камере', audio: 'fabric grab + startled yelp' },
+  { action_en: 'throws hands up in disbelief, mouth drops open, eyes bulging', action_ru: 'Вскидывает руки в шоке, рот открыт, глаза выпучены', audio: 'whoosh of arms + exasperated gasp' },
+  { action_en: 'leans back, crosses arms, slow deliberate head shake with narrowed eyes', action_ru: 'Откидывается назад, скрещивает руки, медленно качает головой', audio: 'chair creak + slow nose exhale + fabric shift' },
 ];
 
 // ─── RELEASE ACTIONS v2 ──────────────────────
@@ -493,53 +498,53 @@ const FIRST_COMMENTS = {
 // Max 1 pause(+0.3s) per line. Total speech must fit 6.3s (A+B windows)
 const DEMO_DIALOGUES = {
   'Бытовой абсурд': {
-    A_lines: ['Хлеб теперь КВАДРАТНЫЙ! Квадратный!', 'Пульт опять потеряла! Третий раз!'],
-    B_lines: ['Земля тоже не круглая | живёшь.', 'Хватит класть его в холодильник.'],
+    A_lines: ['Хлеб теперь КВАДРАТНЫЙ! Квадратный!', 'Пульт опять потеряла! Третий раз!', 'Зубная паста кончилась! Опять!'],
+    B_lines: ['Земля тоже не круглая | живёшь.', 'Хватит класть его в холодильник.', 'Зато похудеем нам всем красота неземная.'],
     killer_word: 'живёшь'
   },
   'AI и технологии': {
-    A_lines: ['Твой интеллект мне борщ сварит?!', 'Она с телефоном как с человеком!'],
-    B_lines: ['Он уже внуков воспитывает | заметила?', 'А ты с телевизором тридцать лет.'],
+    A_lines: ['Твой интеллект мне борщ сварит?!', 'Она с телефоном как с человеком!', 'Робот пылесос умнее тебя стал!'],
+    B_lines: ['Он уже внуков воспитывает | заметила?', 'А ты с телевизором тридцать лет.', 'Он хотя бы убирает за собой.'],
     killer_word: 'заметила'
   },
   'Цены и инфляция': {
-    A_lines: ['Молоко! Восемьсот рублей! МОЛОКО!', 'Яйца по триста! Десяток! ЯЙЦА!'],
-    B_lines: ['В девяносто третьем я машину купил.', 'Курица теперь живёт лучше пенсионера.'],
+    A_lines: ['Молоко! Восемьсот рублей! МОЛОКО!', 'Яйца по триста! Десяток! ЯЙЦА!', 'Хлеб дороже бензина! Хлеб!'],
+    B_lines: ['В девяносто третьем я машину купил.', 'Курица теперь живёт лучше пенсионера.', 'Скоро хлеб по талонам | как раньше.'],
     killer_word: 'машину'
   },
   'Отношения': {
-    A_lines: ['Он пишет «привет как дела» | ухаживание?!', 'Муж пять лет «ты права дорогая»!'],
-    B_lines: ['Раньше мужик забор чинил | любовь.', 'Значит давно сдался и спит спокойно.'],
+    A_lines: ['Он пишет «привет как дела» | ухаживание?!', 'Муж пять лет «ты права дорогая»!', 'Цветы последний раз на свадьбе были!'],
+    B_lines: ['Раньше мужик забор чинил | любовь.', 'Значит давно сдался и спит спокойно.', 'Зато не врёт | уже прогресс.'],
     killer_word: 'любовь'
   },
   'Разрыв поколений': {
-    A_lines: ['Внучка теперь «контент-мейкер» | чё?!', 'Внук говорит «ок бумер» | бумер?!'],
-    B_lines: ['Значит тоже ничего не делает | с телефоном.', 'Бумер построил дом | где твой вайфай.'],
+    A_lines: ['Внучка теперь «контент мейкер» | чё?!', 'Внук говорит «ок бумер» | бумер?!', 'Она весь день в телефоне! Весь!'],
+    B_lines: ['Значит тоже ничего не делает | с телефоном.', 'Бумер построил дом | где твой вайфай.', 'А ты весь день в телевизоре | разница?'],
     killer_word: 'телефоном'
   },
   'ЖКХ и коммуналка': {
-    A_lines: ['Отопление шесть тыщ | батарея холодная!', 'Лифт опять сдох! Шестой этаж пешком!'],
-    B_lines: ['Зато душу тебе давно натопили.', 'Зато ноги красивые | бесплатный фитнес.'],
+    A_lines: ['Отопление шесть тыщ | батарея холодная!', 'Лифт опять сдох! Шестой этаж пешком!', 'Вода ржавая! Платим за ржавчину!'],
+    B_lines: ['Зато душу тебе давно натопили.', 'Зато ноги красивые | бесплатный фитнес.', 'Зато иммунитет | закаляешься бесплатно.'],
     killer_word: 'натопили'
   },
   'Здоровье и поликлиника': {
-    A_lines: ['Врач говорит ГУГЛИТЕ! Серьёзно?!', 'К врачу через три недели | выздоровею!'],
-    B_lines: ['Хорошо не сказал спроси нейросеть | похоронит.', 'Система работает | экономят на лекарствах.'],
+    A_lines: ['Врач говорит ГУГЛИТЕ! Серьёзно?!', 'К врачу через три недели | выздоровею!', 'Таблетки дороже чем болезнь!'],
+    B_lines: ['Хорошо не сказал спроси нейросеть | похоронит.', 'Система работает | экономят на лекарствах.', 'Зато бесплатно | чего ты хочешь.'],
     killer_word: 'похоронит'
   },
   'Соцсети и тренды': {
-    A_lines: ['Миллион подписчиков | а посуду не моет!', 'Она еду час фоткает! Суп остыл!'],
-    B_lines: ['Миллион смотрят как не моет | лайкают.', 'Зато миллион знают что ты варишь.'],
+    A_lines: ['Миллион подписчиков | а посуду не моет!', 'Она еду час фоткает! Суп остыл!', 'Селфи двести штук! Двести одинаковых!'],
+    B_lines: ['Миллион смотрят как не моет | лайкают.', 'Зато миллион знают что ты варишь.', 'Зато память на телефоне | не в голове.'],
     killer_word: 'лайкают'
   },
   'Дача и огород': {
-    A_lines: ['Помидоры сожрали! Все до единого!', 'Сосед забор на двадцать сантиметров!'],
-    B_lines: ['Михалыч теперь веган | ему положено.', 'Это его совесть растёт в нашу сторону.'],
+    A_lines: ['Помидоры сожрали! Все до единого!', 'Сосед забор на двадцать сантиметров!', 'Кроты весь огород перекопали! Кроты!'],
+    B_lines: ['Михалыч теперь веган | ему положено.', 'Это его совесть растёт в нашу сторону.', 'Зато земля рыхлая | бесплатно вскопали.'],
     killer_word: 'положено'
   },
   'Транспорт и пробки': {
-    A_lines: ['Два часа стояла! Самокат обогнал!', 'Двести рублей за пятьсот метров!'],
-    B_lines: ['Самокат транспорт будущего | ты прошлого.', 'Зато довёз | за пятьсот метров пробок нет.'],
+    A_lines: ['Два часа стояла! Самокат обогнал!', 'Двести рублей за пятьсот метров!', 'Автобус ушёл! Перед носом! Перед!'],
+    B_lines: ['Самокат транспорт будущего | ты прошлого.', 'Зато довёз | за пятьсот метров пробок нет.', 'Зато прогулялась | свежий воздух бесплатно.'],
     killer_word: 'прошлого'
   },
 };
@@ -639,10 +644,10 @@ function buildCastContract(charA, charB) {
   const buildBiology = (char, role) => {
     const bio = char.biology_override || {};
     const anchors = char.identity_anchors || {};
-    const defaultSkin = ['deep wrinkles', 'age spots', 'visible pores', 'subtle skin sheen (not plastic)'];
-    const defaultEyes = ['wet glint', 'slight sclera redness', 'micro-saccades'];
+    const defaultSkin = ['deep wrinkles with varying depth', 'age spots and sun damage', 'visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'micro-wrinkles around eyes (crow\'s feet)', 'nasolabial folds', 'uneven skin tone with natural redness on cheeks/nose', 'visible blood capillaries on nose bridge', 'skin texture like real phone photo NOT AI render'];
+    const defaultEyes = ['wet glint on cornea', 'slight sclera redness with visible micro-vessels', 'micro-saccades every 0.3-0.5s', 'natural iris detail with color variation', 'slight asymmetry between left and right eye', 'realistic eyelash detail (not perfect)', 'tear film moisture visible'];
     return {
-      character_en: char.prompt_tokens?.character_en || 'elderly character, hyper-realistic detail',
+      character_en: char.prompt_tokens?.character_en || 'elderly character, hyper-realistic detail, NEVER plastic or smooth',
       age: bio.age || 'elderly',
       skin: (bio.skin_tokens || defaultSkin).join(', '),
       eyes: (bio.eye_tokens || defaultEyes).join(', '),
@@ -669,18 +674,20 @@ function buildCameraPreset() {
     pov: 'held at arm\'s length, front-facing portrait look, device INVISIBLE',
     distance: 'close enough to read skin microtexture, both faces in frame',
     artifacts: [
-      'handheld micro-jitter',
-      'subtle exposure breathing',
+      'handheld micro-jitter (NEVER perfectly still)',
+      'subtle exposure breathing (±0.2 EV drift)',
       'mild rolling shutter only on quick micro-moves',
       'brief autofocus hunt ≤0.15s on lens approach',
     ],
     realism_anchors: [
-      'slight sensor noise',
-      'mild compression artifacts',
-      'imperfect white balance drift',
+      'slight sensor noise in shadows (ISO 800-1600)',
+      'mild JPEG compression artifacts (quality 85-92%)',
+      'imperfect white balance drift (±200K)',
       'micro motion blur on sharp gesture (finger/slap)',
-      'realistic shadowing under nose/cheekbones',
+      'realistic shadowing under nose/cheekbones/brow ridge',
     ],
+    ANTI_PLASTIC_MANDATE: 'CRITICAL: Faces must NEVER look plastic, waxy, smooth, or AI-generated. Every face MUST have: visible pores (especially nose/cheeks), fine wrinkles around eyes and mouth, age spots, uneven skin tone, slight oily sheen on T-zone, visible blood vessels on nose/cheeks, asymmetric features (one eye slightly different from other), natural skin imperfections (moles, scars, redness). Skin must look like REAL human skin photographed on a phone, not rendered by AI. If the face looks "too perfect" or "too smooth" — it is WRONG.',
+    ANTI_ROBOT_MANDATE: 'CRITICAL: All movement must be ORGANIC and HUMAN. No robotic transitions, no mechanical head turns, no perfectly timed gestures. Every movement has: slight delay/anticipation before action, natural acceleration/deceleration curves, micro-tremor from muscles, weight and momentum (heavy body parts move slower). Facial expressions must flow naturally — eyebrows lead, then eyes, then mouth. Emotions build gradually, never snap on/off. Breathing affects ALL movement. Intonation rises and falls naturally with emotion, voice cracks on intense moments, slight hoarseness from shouting.',
   };
 }
 
@@ -1115,6 +1122,23 @@ export function generate(input) {
   dialogueB = safeB.text;
   if (safeA.fixes.length) autoFixes.push(...safeA.fixes);
   if (safeB.fixes.length) autoFixes.push(...safeB.fixes);
+
+  // ── STRICT: Strip dashes/hyphens from speech ──
+  // Dashes (—, –, -) are unpronounceable and cause TTS/Veo artifacts.
+  // Only pipe | is allowed as pause marker.
+  const stripDashes = (text) => {
+    let cleaned = text
+      .replace(/\s*[—–]\s*/g, ' ')   // em-dash, en-dash → space
+      .replace(/(\S)-(\S)/g, '$1 $2') // hyphenated-words → separate words
+      .replace(/\s*-\s*/g, ' ')       // standalone hyphens → space
+      .replace(/\s{2,}/g, ' ')        // collapse double spaces
+      .trim();
+    return cleaned;
+  };
+  const cleanA = stripDashes(dialogueA);
+  const cleanB = stripDashes(dialogueB);
+  if (cleanA !== dialogueA) { autoFixes.push('Убраны тире из реплики A (непроизносимые символы)'); dialogueA = cleanA; }
+  if (cleanB !== dialogueB) { autoFixes.push('Убраны тире из реплики B (непроизносимые символы)'); dialogueB = cleanB; }
 
   // ── Build all blocks ──
   const cast = buildCastContract(charA, charB);
