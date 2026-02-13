@@ -540,6 +540,16 @@ function handleVideoFile(file) {
   video.muted = true;
   video.playsInline = true;
 
+  // Read the actual video file as base64 for Gemini multimodal input
+  const reader = new FileReader();
+  reader.onload = () => {
+    const videoBase64 = reader.result.split(',')[1]; // strip data:video/mp4;base64, prefix
+    state._videoFileBase64 = videoBase64;
+    state._videoFileMime = file.type; // video/mp4 or video/quicktime
+    log('OK', 'ВИДЕО', `📦 Видео закодировано (${(file.size / 1024 / 1024).toFixed(1)} MB) — будет отправлено в Gemini`);
+  };
+  reader.readAsDataURL(file);
+
   video.onloadeddata = () => {
     const duration = Math.round(video.duration * 100) / 100;
     state.videoMeta = {
@@ -563,7 +573,7 @@ function handleVideoFile(file) {
       `;
     }
 
-    // Capture frame at 1s (or 25% of duration) as cover for Gemini
+    // Capture frame at 1s (or 25% of duration) as cover fallback
     const seekTime = Math.min(1, duration * 0.25);
     video.currentTime = seekTime;
   };
@@ -577,7 +587,7 @@ function handleVideoFile(file) {
       state.videoMeta.cover_base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
       state.videoMeta.width = video.videoWidth;
       state.videoMeta.height = video.videoHeight;
-      log('OK', 'ВИДЕО', 'Кадр захвачен для Gemini');
+      log('OK', 'ВИДЕО', 'Кадр захвачен (fallback)');
     } catch (e) {
       log('WARN', 'ВИДЕО', `Не удалось захватить кадр: ${e.message}`);
     }
@@ -589,7 +599,7 @@ function handleVideoFile(file) {
     // Auto-switch to video mode
     state.inputMode = 'video';
 
-    log('OK', 'ВИДЕО', `🎬 Загружено: ${file.name} (${state.videoMeta.duration}с) — кадр для Gemini готов`);
+    log('OK', 'ВИДЕО', `🎬 Загружено: ${file.name} (${state.videoMeta.duration}с) — видео будет отправлено в Gemini`);
   };
 
   video.onerror = () => {
@@ -1058,7 +1068,12 @@ async function callGeminiAPI(apiContext) {
     payload.product_mime = state.productInfo.mime_type || 'image/jpeg';
   }
 
-  // Attach video cover if available — Gemini will SEE the original video
+  // Attach actual video file if available — Gemini will WATCH the original video
+  if (state._videoFileBase64) {
+    payload.video_file = state._videoFileBase64;
+    payload.video_file_mime = state._videoFileMime || 'video/mp4';
+  }
+  // Attach video cover as fallback if video file too large or unavailable
   if (state.videoMeta?.cover_base64) {
     payload.video_cover = state.videoMeta.cover_base64;
     payload.video_cover_mime = 'image/jpeg';

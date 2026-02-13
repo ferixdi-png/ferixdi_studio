@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'ferixdi-dev-secret-change-me';
 
 app.use(cors());
-app.use(express.json({ limit: '15mb' }));
+app.use(express.json({ limit: '75mb' }));
 
 // ─── Serve Frontend (app/) ──────────────────
 const appDir = join(__dirname, '..', 'app');
@@ -97,16 +97,25 @@ ${video_meta ? `
 • Размер: ${video_meta.width || '?'}×${video_meta.height || '?'}` : ''}
 ${scene_hint ? `• Описание от пользователя: "${scene_hint}"` : ''}
 
-${ctx.hasVideoCover ? 'К этому сообщению ПРИКРЕПЛЁН КАДР ИЗ ОРИГИНАЛЬНОГО ВИДЕО. Внимательно проанализируй его: настроение, позы, фон, цветовую палитру, ракурс, выражения лиц, одежду, предметы в кадре.' : ''}
+${ctx.hasVideoFile ? '' : ctx.hasVideoCover ? 'К этому сообщению ПРИКРЕПЛЁН КАДР ИЗ ОРИГИНАЛЬНОГО ВИДЕО. Внимательно проанализируй его: настроение, позы, фон, цветовую палитру, ракурс, выражения лиц, одежду, предметы в кадре.' : ''}
 ${remake_instruction ? `\n${remake_instruction}` : ''}
 
+${ctx.hasVideoFile ? `⚠️ К ЭТОМУ СООБЩЕНИЮ ПРИКРЕПЛЕНО ОРИГИНАЛЬНОЕ ВИДЕО. ТЫ ДОЛЖЕН ЕГО ПОСМОТРЕТЬ И ПРОСЛУШАТЬ.
+
 ЧТО ДЕЛАТЬ:
+1. ПОСМОТРИ ВИДЕО ПОЛНОСТЬЮ — прослушай каждое слово, каждую интонацию, каждую паузу
+2. РАСШИФРУЙ ДИАЛОГ из видео — запиши что говорит каждый человек, дословно
+3. Диалог в твоём ответе должен быть на 90% ИДЕНТИЧЕН оригиналу — те же слова, тот же смысл, та же энергия
+4. Адаптируй ТОЛЬКО под наших персонажей: замени имена, подстрой манеру речи под их характер
+5. Сохрани ВСЕ ключевые фразы, панчлайны, killer words из оригинала
+6. Темп, паузы, эмоциональная кривая — КОПИРУЙ из оригинала максимально точно
+7. Если в оригинале есть визуальный гэг или действие — воспроизведи его` : `ЧТО ДЕЛАТЬ:
 1. Проанализируй структуру и энергию оригинала (темп, подача, тип юмора)
 2. Извлеки КЛЮЧЕВУЮ комедийную механику (что именно смешно, какой тип конфликта)
-3. ПРИДУМАЙ ПОЛНОСТЬЮ НОВЫЙ ДИАЛОГ САМ — на ту же тему, но от лица персонажей ниже
+3. Создай диалог МАКСИМАЛЬНО БЛИЗКИЙ к оригиналу — на 90% те же слова и смысл, адаптированные под наших персонажей
 4. Реплики должны звучать как РЕАЛЬНАЯ речь этих конкретных персонажей (возраст, манера, вайб)
 5. Адаптируй подачу под темп речи и характер каждого персонажа
-6. Сохрани энергию и вайб оригинала, но слова должны быть 100% оригинальными и СМЕШНЫМИ`;
+6. Сохрани энергию, вайб и ключевые фразы оригинала`}`;
 
   } else if (input_mode === 'script' && script_ru) {
     taskBlock = `
@@ -434,13 +443,14 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(503).json({ error: 'GEMINI_API_KEY не настроен. Добавьте переменную окружения на сервере.' });
   }
 
-  const { context, product_image, product_mime, video_cover, video_cover_mime } = req.body;
+  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime } = req.body;
   if (!context || !context.charA || !context.charB) {
     return res.status(400).json({ error: 'Context with charA, charB required' });
   }
 
   // Flag for prompt builder
   context.hasProductImage = !!product_image;
+  context.hasVideoFile = !!video_file;
   context.hasVideoCover = !!video_cover;
 
   try {
@@ -459,10 +469,18 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       });
     }
 
-    // Attach video cover if provided — Gemini SEES the original video
-    if (video_cover) {
+    // Attach actual video file if provided — Gemini WATCHES the original video
+    if (video_file) {
       parts.push({
-        text: '\n\n[ПРИКРЕПЛЁННАЯ ОБЛОЖКА ОРИГИНАЛЬНОГО ВИДЕО — проанализируй настроение, позы, фон, ракурс, стиль]'
+        text: '\n\n[ПРИКРЕПЛЁННОЕ ОРИГИНАЛЬНОЕ ВИДЕО — ПОСМОТРИ ЕГО ПОЛНОСТЬЮ. Внимательно прослушай диалог, интонации, паузы, эмоции. Проанализируй: кто что говорит, какие слова используют, какой темп, какие жесты, какое настроение. Диалог в твоём ответе должен быть на 90% идентичен оригиналу — те же слова, тот же смысл, та же энергия, адаптированные под наших персонажей.]'
+      });
+      parts.push({
+        inline_data: { mime_type: video_file_mime || 'video/mp4', data: video_file }
+      });
+    } else if (video_cover) {
+      // Fallback: only cover image if video file not available
+      parts.push({
+        text: '\n\n[ПРИКРЕПЛЁННАЯ ОБЛОЖКА ОРИГИНАЛЬНОГО ВИДЕО — проанализируй настроение, позы, фон, ракурс, стиль. Видео не прикреплено, только кадр.]'
       });
       parts.push({
         inline_data: { mime_type: video_cover_mime || 'image/jpeg', data: video_cover }
