@@ -207,6 +207,75 @@ function initLocationPicker() {
   });
 }
 
+// ─── AUTO-TRANSLATE EN→RU for character card fields ──
+const EN_RU_DICT = {
+  // hook_style
+  'thrusts phone screen at camera': 'тычет экраном телефона в камеру',
+  'slams palm flat on table': 'хлопает ладонью по столу',
+  'slow deliberate head turn toward camera': 'медленный поворот головы к камере',
+  'adjusts glasses and peers over them': 'поправляет очки и смотрит поверх',
+  'points finger directly at camera': 'тычет пальцем прямо в камеру',
+  'leans forward conspiratorially': 'наклоняется вперёд заговорщически',
+  'crosses arms and raises one eyebrow': 'скрещивает руки и поднимает бровь',
+  'waves dismissively': 'отмахивается пренебрежительно',
+  'grabs other person by sleeve': 'хватает другого за рукав',
+  'raises both hands in disbelief': 'поднимает обе руки в недоумении',
+  'slaps own knee': 'хлопает себя по колену',
+  'wags finger at camera': 'грозит пальцем в камеру',
+  'dramatic gasp with hand on chest': 'драматический вздох с рукой на груди',
+  'leans back and squints': 'откидывается назад и щурится',
+  'rubs hands together': 'потирает руки',
+  'snaps fingers': 'щёлкает пальцами',
+  'taps temple knowingly': 'стучит по виску со знанием дела',
+  'pulls out phone dramatically': 'достаёт телефон с драмой',
+  'shakes head slowly': 'медленно качает головой',
+  'claps once loudly': 'один громкий хлопок',
+  // laugh_style
+  'wheezing cackle that turns into cough': 'хрипящий хохот переходящий в кашель',
+  'grudging one-sided smirk': 'неохотная ухмылка одним уголком рта',
+  'explosive belly laugh shaking whole body': 'взрывной хохот от живота, трясётся всё тело',
+  'silent shoulder shake with closed eyes': 'беззвучная тряска плечами с закрытыми глазами',
+  'quiet chuckle': 'тихий смешок',
+  'loud burst': 'громкий взрыв смеха',
+  'snort laugh': 'фыркающий смех',
+  'giggle behind hand': 'хихиканье за ладонью',
+  'dry sarcastic huff': 'сухой саркастический выдох',
+  'belly laugh': 'хохот от живота',
+  'wheezing laugh': 'хрипящий смех',
+  'cackle': 'кудахтающий хохот',
+  // signature_element
+  'turquoise clip-on earrings': 'бирюзовые серьги-клипсы',
+  'reading glasses dangling on beaded cord': 'очки для чтения на бисерной цепочке',
+  'bright hand-knitted shawl draped over shoulders': 'яркая вязаная шаль на плечах',
+  'vintage gold-rimmed spectacles on chain': 'старинные очки в золотой оправе на цепочке',
+  'gold dental crown': 'золотая коронка',
+  'amber pendant': 'янтарный кулон',
+  'flat cap': 'кепка-восьмиклинка',
+  'bold earrings': 'крупные серьги',
+  'pearl stud earrings': 'жемчужные серьги-гвоздики',
+  // micro_gesture
+  'dramatic hand wave with spread fingers': 'драматичный взмах рукой с растопыренными пальцами',
+  'arms crossed with slow disapproving nod': 'руки скрещены, медленный неодобрительный кивок',
+  'finger jabbing the air like conductor\'s baton': 'тычет пальцем в воздух как дирижёрской палочкой',
+  'slow head shake': 'медленное покачивание головой',
+  'dramatic hand wave': 'драматичный взмах рукой',
+  'grins deliberately to flash gold teeth as punctuation': 'нарочно скалится, показывая золотые зубы',
+};
+
+function translateEnRu(text) {
+  if (!text) return '';
+  const lower = text.toLowerCase().trim();
+  // Exact match
+  for (const [en, ru] of Object.entries(EN_RU_DICT)) {
+    if (lower === en.toLowerCase()) return ru;
+  }
+  // Partial match
+  for (const [en, ru] of Object.entries(EN_RU_DICT)) {
+    if (lower.includes(en.toLowerCase())) return ru;
+  }
+  return text;
+}
+
 // ─── CHARACTERS ──────────────────────────────
 async function loadCharacters() {
   try {
@@ -246,22 +315,23 @@ function renderCharacters(filter = {}) {
     const isB = state.selectedB?.id === c.id;
     const selCls = isA ? 'selected ring-2 ring-violet-500' : isB ? 'selected ring-2 ring-indigo-500' : '';
     const tagCls = c.compatibility === 'meme' ? 'tag-green' : c.compatibility === 'conflict' ? 'tag-pink' : c.compatibility === 'chaotic' ? 'tag-orange' : c.compatibility === 'calm' ? '' : 'tag-purple';
+    const compatRu = { meme: 'мем', conflict: 'конфликт', chaotic: 'хаос', calm: 'спокойный', balanced: 'баланс' };
+    const paceRu = { fast: 'быстрая', normal: 'средняя', slow: 'медленная' };
 
     // Detail sections
     const anchors = c.identity_anchors || {};
     const sigWords = (c.signature_words_ru || []).join(', ');
-    const promptEn = c.prompt_tokens?.character_en || '';
 
     return `
     <div class="char-card ${selCls}" data-id="${c.id}">
       <div class="flex items-center justify-between mb-1">
         <span class="text-sm font-bold text-white">${c.name_ru}</span>
-        <span class="tag text-[10px] ${tagCls}">${c.compatibility}</span>
+        <span class="tag text-[10px] ${tagCls}">${compatRu[c.compatibility] || c.compatibility}</span>
       </div>
       ${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}
       <div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2">
         <span>🎭 ${c.group}</span>
-        <span>⚡ ${c.speech_pace}</span>
+        <span>⚡ ${paceRu[c.speech_pace] || c.speech_pace}</span>
         <span>🔥 мат ${c.swear_level}/3</span>
         <span>${c.role_default === 'A' ? '🅰️' : '🅱️'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span>
       </div>
@@ -283,25 +353,17 @@ function renderCharacters(filter = {}) {
 
           ${sigWords ? `<div><span class="text-violet-400 font-medium">💬 Фразы:</span> <span class="text-amber-300/80">«${sigWords}»</span></div>` : ''}
 
-          ${anchors.wardrobe_anchor ? `<div><span class="text-violet-400 font-medium">👔 Одежда:</span> <span class="text-gray-300">${anchors.wardrobe_anchor}</span></div>` : ''}
+          ${anchors.signature_element ? `<div><span class="text-violet-400 font-medium">✨ Фишка:</span> <span class="text-gray-300">${translateEnRu(anchors.signature_element)}</span></div>` : ''}
 
-          ${anchors.signature_element ? `<div><span class="text-violet-400 font-medium">✨ Фишка:</span> <span class="text-gray-300">${anchors.signature_element}</span></div>` : ''}
+          ${anchors.micro_gesture ? `<div><span class="text-violet-400 font-medium">🤌 Жест:</span> <span class="text-gray-300">${translateEnRu(anchors.micro_gesture)}</span></div>` : ''}
 
-          ${anchors.micro_gesture ? `<div><span class="text-violet-400 font-medium">🤌 Жест:</span> <span class="text-gray-300">${anchors.micro_gesture}</span></div>` : ''}
-
-          ${c.modifiers?.hook_style ? `<div><span class="text-violet-400 font-medium">🎣 Хук:</span> <span class="text-gray-300">${c.modifiers.hook_style}</span></div>` : ''}
-          ${c.modifiers?.laugh_style ? `<div><span class="text-violet-400 font-medium">😂 Смех:</span> <span class="text-gray-300">${c.modifiers.laugh_style}</span></div>` : ''}
+          ${c.modifiers?.hook_style ? `<div><span class="text-violet-400 font-medium">🎣 Хук:</span> <span class="text-gray-300">${translateEnRu(c.modifiers.hook_style)}</span></div>` : ''}
+          ${c.modifiers?.laugh_style ? `<div><span class="text-violet-400 font-medium">😂 Смех:</span> <span class="text-gray-300">${translateEnRu(c.modifiers.laugh_style)}</span></div>` : ''}
 
           <div class="mt-2">
             <div class="text-violet-400 font-medium mb-1">📝 Внешность:</div>
             <div class="text-[10px] text-gray-400 leading-relaxed">${c.appearance_ru}</div>
           </div>
-
-          ${promptEn ? `
-          <div class="mt-2">
-            <div class="text-violet-400 font-medium mb-1">🖼 Промпт (EN):</div>
-            <div class="text-[10px] text-gray-400 leading-relaxed bg-black/30 rounded-lg p-2.5 select-all">${promptEn}</div>
-          </div>` : ''}
         </div>
       </details>
     </div>`;
@@ -673,20 +735,23 @@ function renderPreflight(localResult) {
   const riskColor = est.risk === 'high' ? 'text-red-400' : est.risk === 'medium' ? 'text-amber-400' : 'text-emerald-400';
   const riskIcon = est.risk === 'high' ? '🔴' : est.risk === 'medium' ? '🟡' : '🟢';
 
-  // Build pillar summaries (short)
+  // Translate risk
+  const riskRu = { high: 'высокий', medium: 'средний', low: 'низкий' };
+
+  // Build pillar summaries (short) — all in Russian
   const pillars = [
-    { icon: '💡', name: 'Свет', val: `${lm.mood} · ${lm.sources || '1+1'}`, detail: lm.style?.slice(0, 60) + '...' },
-    { icon: '📷', name: 'Оптика', val: cin.optics?.focal_length || '24-28mm', detail: `${cin.optics?.aperture || 'f/1.9-2.2'} · ${cin.optics?.sensor_signature?.slice(0, 40) || 'phone sensor'}` },
-    { icon: '📱', name: 'Камера', val: cin.camera_movement?.directive || 'Handheld selfie', detail: cin.camera_movement?.base_motion?.slice(0, 50) || 'micro-jitter' },
-    { icon: '🫁', name: 'Микродвижения', val: `Моргание ${cin.micro_movements?.blink_rate?.slice(0, 15) || '3-5s'} · Дыхание ${cin.micro_movements?.breathing?.slice(0, 15) || '3-4s'}`, detail: cin.micro_movements?.asymmetry_rule?.slice(0, 50) || 'L/R independent' },
-    { icon: '👄', name: 'Стабильность лица', val: cin.face_stability?.mouth_visibility || '100% visible', detail: `Yaw ${cin.face_stability?.head_rotation_limit?.slice(0, 20) || '≤25°'} · AF ${cin.face_stability?.front_camera_face_lock?.slice(0, 30) || 'face-lock'}` },
-    { icon: '👁', name: 'Взгляд', val: 'По таймингу 4 сегмента', detail: `Hook: ${cin.gaze?.hook_gaze?.slice(0, 25) || 'direct camera'} · Саккады: ${cin.gaze?.micro_saccades?.slice(0, 25) || '0.5-1°'}` },
-    { icon: '🖼', name: 'Чистота кадра', val: `${cin.frame_cleanliness?.detail_budget || '7'} элементов max`, detail: `${cin.frame_cleanliness?.foreground?.slice(0, 20) || '60-70% chars'} · ${cin.frame_cleanliness?.aspect_ratio || '9:16'}` },
-    { icon: '🧶', name: 'Текстуры', val: cin.textures?.texture_priority?.slice(0, 35) || 'Wool > denim > leather', detail: cin.textures?.skin_as_texture?.slice(0, 50) || 'pores, fine lines' },
-    { icon: '🎨', name: 'Цвет/кожа', val: cin.color_skin?.deadly_sins?.slice(0, 40) || 'NO orange, NO grey', detail: `WB: ${cin.color_skin?.white_balance?.slice(0, 30) || 'locked'} · ${cin.color_skin?.skin_zones?.slice(0, 30) || '5 zones'}` },
-    { icon: '🎤', name: 'Звук', val: cin.sound_anchor?.voice_proximity?.slice(0, 40) || 'Phone mic 35-60cm', detail: `Room tone ${cin.sound_anchor?.room_tone?.slice(0, 20) || '-20/-30dB'} · ${cin.sound_anchor?.mouth_sounds?.slice(0, 30) || 'saliva clicks'}` },
-    { icon: '🎣', name: 'Хук', val: cin.visual_hook?.face_emotion?.slice(0, 35) || 'EXTREME emotion frame 0', detail: `Энергия: ${cin.visual_hook?.energy_level?.slice(0, 25) || '≥80% peak'} · ${cin.visual_hook?.gaze_hook?.slice(0, 25) || 'direct eye'}` },
-    { icon: '🎬', name: 'Монтаж', val: cin.edit_logic?.start?.slice(0, 35) || 'Cold open mid-scene', detail: `${cin.edit_logic?.energy_curve?.slice(0, 40) || '80→90→60→95→100→70%'} · Loop: ${cin.edit_logic?.loop_seam?.slice(0, 25) || 'auto-loop ready'}` },
+    { icon: '💡', name: 'Свет', val: `${lm.mood} · ${lm.sources || '1 источник'}`, detail: lm.style?.slice(0, 60) + '...' },
+    { icon: '📷', name: 'Оптика', val: cin.optics?.focal_length || '24-28мм', detail: `${cin.optics?.aperture || 'f/1.9-2.2'} · сенсор телефона` },
+    { icon: '📱', name: 'Камера', val: 'Ручное селфи', detail: 'микро-дрожание 0.8-2пкс' },
+    { icon: '🫁', name: 'Микродвижения', val: `Моргание 3-5с · Дыхание 3-4с`, detail: 'Л/П независимые' },
+    { icon: '👄', name: 'Стабильность лица', val: 'Рот 100% виден', detail: `Поворот ≤25° · Автофокус на лицо` },
+    { icon: '👁', name: 'Взгляд', val: '4 сегмента по таймингу', detail: `Хук: прямо в камеру · Саккады: 0.5-1°` },
+    { icon: '🖼', name: 'Чистота кадра', val: `макс. ${cin.frame_cleanliness?.detail_budget || '7'} элементов`, detail: `60-70% персонажи · 9:16` },
+    { icon: '🧶', name: 'Текстуры', val: 'шерсть > джинса > кожа', detail: 'поры, морщины, текстура кожи' },
+    { icon: '🎨', name: 'Цвет/кожа', val: 'БЕЗ оранжевого, БЕЗ серого', detail: `ББ: зафиксирован · 5 зон кожи` },
+    { icon: '�', name: 'Звук', val: 'Микрофон телефона 35-60см', detail: `Фон помещения -20/-30дБ · звуки рта` },
+    { icon: '🎣', name: 'Хук', val: 'ЭКСТРЕМАЛЬНАЯ эмоция кадр 0', detail: `Энергия: ≥80% пик · взгляд в камеру` },
+    { icon: '🎬', name: 'Монтаж', val: 'Холодный старт с середины', detail: `80→90→60→95→100→70% · Луп: авто` },
   ];
 
   el.classList.remove('hidden');
@@ -699,7 +764,7 @@ function renderPreflight(localResult) {
             <span class="text-xs">⚙️</span>
           </div>
           <div>
-            <div class="text-xs font-semibold text-cyan-400 tracking-wide">PRODUCTION CONTRACT</div>
+            <div class="text-xs font-semibold text-cyan-400 tracking-wide">КОНТРАКТ ПРОИЗВОДСТВА</div>
             <div class="text-[10px] text-gray-500">Параметры системы перед генерацией</div>
           </div>
         </div>
@@ -711,12 +776,11 @@ function renderPreflight(localResult) {
         <div class="bg-black/30 rounded-lg p-2.5">
           <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Персонажи</div>
           <div class="text-[11px] text-cyan-300">${charA.name_ru || 'A'} <span class="text-gray-600">×</span> ${charB.name_ru || 'B'}</div>
-          <div class="text-[10px] text-gray-500 mt-0.5">${charA.vibe_archetype || '—'} vs ${charB.vibe_archetype || '—'}</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">${charA.vibe_archetype || '—'} × ${charB.vibe_archetype || '—'}</div>
         </div>
         <div class="bg-black/30 rounded-lg p-2.5">
           <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Категория</div>
           <div class="text-[11px] text-gray-200">${cat.ru || '—'}</div>
-          <div class="text-[10px] text-gray-500 mt-0.5">${cat.en || ''}</div>
         </div>
         <div class="bg-black/30 rounded-lg p-2.5">
           <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Локация</div>
@@ -724,7 +788,7 @@ function renderPreflight(localResult) {
         </div>
         <div class="bg-black/30 rounded-lg p-2.5">
           <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Тайминг</div>
-          <div class="text-[11px] ${riskColor}">${riskIcon} ${est.total || '8.0'}с · риск: ${est.risk || '—'}</div>
+          <div class="text-[11px] ${riskColor}">${riskIcon} ${est.total || '8.0'}с · риск: ${riskRu[est.risk] || est.risk || '—'}</div>
         </div>
       </div>
 
@@ -740,7 +804,7 @@ function renderPreflight(localResult) {
       <!-- 12 Pillars compact -->
       <div>
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[9px] text-gray-500 uppercase tracking-wider">12 Production Pillars · Smartphone Realism</div>
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider">12 пилларов производства · Смартфон-реализм</div>
           <button id="preflight-toggle-pillars" class="text-[10px] text-cyan-400/60 hover:text-cyan-400 transition-colors cursor-pointer">развернуть ▸</button>
         </div>
         <div class="grid grid-cols-3 md:grid-cols-4 gap-1.5" id="preflight-pillars-compact">
@@ -771,7 +835,7 @@ function renderPreflight(localResult) {
 
       <!-- Engagement preview -->
       <div class="bg-black/30 rounded-lg p-2.5">
-        <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Engagement · Instagram</div>
+        <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Вовлечение · Instagram</div>
         <div class="flex gap-3 text-[10px]">
           <div><span class="text-gray-500">Хук:</span> <span class="text-gray-300">${ctx.hookAction?.action_ru?.slice(0, 30) || '—'}</span></div>
           <div><span class="text-gray-500">Реквизит:</span> <span class="text-gray-300">${ctx.propAnchor?.slice(0, 25) || '—'}</span></div>
