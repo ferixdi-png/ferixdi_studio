@@ -576,13 +576,24 @@ function initGenerate() {
       return;
     }
 
-    // Check that there's at least some input for idea mode
+    // Check that there's at least some input for the selected mode
     if (state.inputMode === 'idea' && !document.getElementById('idea-input')?.value.trim()) {
       showGenStatus('⚠️ Опиши идею в текстовом поле выше', 'text-orange-400');
       return;
     }
+    if (state.inputMode === 'script') {
+      const scriptA = document.getElementById('script-a')?.value.trim();
+      const scriptB = document.getElementById('script-b')?.value.trim();
+      if (!scriptA && !scriptB) {
+        showGenStatus('⚠️ Напиши хотя бы одну реплику (A или B)', 'text-orange-400');
+        return;
+      }
+    }
 
     showGenStatus('⏳ Генерирую пакет...', 'text-gray-400');
+
+    // Use requestAnimationFrame so the loading state renders before sync generation
+    requestAnimationFrame(() => {
 
     const input = {
       input_mode: state.inputMode,
@@ -671,6 +682,8 @@ function initGenerate() {
     if (result.auto_fixes.length > 0) {
       result.auto_fixes.forEach(f => log('INFO', 'FIX', f));
     }
+
+    }); // end requestAnimationFrame
   });
 
   // Result tabs
