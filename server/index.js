@@ -317,6 +317,7 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    Челюсть: ${cinematography.face_stability?.jaw_tracking || 'Every syllable = jaw movement, consonants = lip closure'}.
    Молчание: ${cinematography.face_stability?.non_speaking_mouth || 'Sealed lips, jaw immobile, no phantom movements'}.
    AF: ${cinematography.face_stability?.front_camera_face_lock || 'Phone face-tracking AF keeps face sharpest, 50-100ms lag'}.
+   ЗАПРЕТ: ${cinematography.face_stability?.forbidden || 'No hand over mouth >0.3s, no hair covering lips, no head turn >25°, no phantom mouth movements when not speaking'}.
 
 6. ГЛАЗА И ВЗГЛЯД (по таймингу):
    Hook 0-0.6с: ${cinematography.gaze?.hook_gaze || 'A → direct camera eye contact'}.
@@ -352,6 +353,7 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    Смертные грехи: ${cinematography.color_skin?.deadly_sins || 'NO orange tan, NO grey face, NO uniform tone'}.
    Грейд: ${cinematography.color_skin?.color_grade || 'Smartphone color: slightly warm, lifted shadows, 90-95% saturation'}.
    Консистентность: ${cinematography.color_skin?.consistency || 'Identical skin tone all 8 seconds'}.
+   ЗАПРЕТ: ${cinematography.color_skin?.forbidden || 'NO orange spray-tan, NO grey/blue lifeless face, NO uniform plastic skin tone, NO beauty filter, NO skin smoothing, NO Instagram filter look'}.
 
 10. ЗВУК (якорь реальности, микрофон телефона):
    Фон: ${cinematography.sound_anchor?.room_tone || 'Mandatory room tone -20/-30dB'}.
@@ -369,7 +371,7 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    Взгляд: ${cinematography.visual_hook?.gaze_hook || 'Direct eye contact with camera from frame 1'}.
    Композиция: ${cinematography.visual_hook?.composition_hook || 'Both faces visible, no fade-in, scene already happening'}.
    Энергия: ${cinematography.visual_hook?.energy_level || 'Frame 1 energy ≥ 80% of peak'}.
-   ЗАПРЕТ: ${cinematography.visual_hook?.forbidden || 'No text hook, no slow buildup, no fade-in'}.
+   ЗАПРЕТ: ${cinematography.visual_hook?.forbidden || 'No text hook, no text on screen, no subtitles, no title cards, no slow buildup, no fade-in, no black frame, no text overlay of any kind'}.
 
 12. МОНТАЖНАЯ ЛОГИКА (один дубль, внутренний ритм):
    Старт: ${cinematography.edit_logic?.start || 'Cold open mid-scene, argument already happening'}.
@@ -379,7 +381,7 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    Финал: ${cinematography.edit_logic?.end_on_reaction || 'End on REACTION, not punchline'}.
    Rewatch: ${cinematography.edit_logic?.rewatch_bait || 'Micro-expression in last 0.3-0.5s for rewatch discovery'}.
    Луп: ${cinematography.edit_logic?.loop_seam || 'Final frame energy compatible with frame 1 for auto-loop'}.
-   ЗАПРЕТ: ${cinematography.edit_logic?.forbidden || 'No fade out, no setup, no dead air'}.
+   ЗАПРЕТ: ${cinematography.edit_logic?.forbidden || 'No fade out, no setup, no dead air, no text overlays, no subtitles, no frames/borders, no REC badge, no timestamp on screen'}.
 ` : ''}
 ТАЙМИНГ (строго 8 секунд ±0.2s):
 [0.00–0.60] ХУК — ${hookAction.action_ru} (звук: ${hookAction.audio}). Без слов. Зрителя надо зацепить за 0.6 секунды.
@@ -430,6 +432,7 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
 • Кожа (pillar 9): 5 цветовых зон на лице (лоб светлее, щёки розовее, нос краснее, под глазами темнее). НЕ оранжевый загар, НЕ серое лицо!
 • Глаза (pillar 6): A в камеру, B следит за A. Блик от источника в зрачках, мокрая склера, текстура радужки
 • Руки: СТРОГО 5 пальцев, анатомические пропорции, ногти, текстура кожи рук по возрасту
+• ВАЖНО: В конце photo_scene_en ОБЯЗАТЕЛЬНО добавь negative prompt: "Negative: no text, no subtitles, no captions, no watermark, no logo, no frames, no borders, no REC, no timestamp, no UI elements, no overlays, no cartoon, no anime, no plastic skin, no 6th finger"
 • АБСОЛЮТНЫЙ ЗАПРЕТ — В КАДРЕ НЕ ДОЛЖНО БЫТЬ: никакого текста, никаких надписей, никаких субтитров, никаких captions, никаких букв, никаких цифр поверх изображения, никаких рамок, никаких borders, никаких frames, никаких REC-значков, никаких таймкодов, никаких timestamps, никаких watermarks, никаких логотипов, никаких UI-элементов, никаких overlay-элементов. Изображение должно быть ЧИСТЫМ — только сцена с персонажами, без ЛЮБЫХ графических наложений
 • Негатив: no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no cartoon, no anime, no plastic skin, no 6th finger, no airbrushed look, no orange tan, no grey face, no ring light, no cinema bokeh, no DSLR look, no beauty mode, no skin smoothing, no graphic overlays, no title cards, no speech bubbles, no name tags
 ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опиши товар ультра-детально в сцене, точь-в-точь как на прикреплённом фото` : ''}
@@ -438,6 +441,7 @@ ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опи�
 • Пиши на АНГЛИЙСКОМ, побитово с таймкодами
 • АБСОЛЮТНЫЙ ЗАПРЕТ: никакого текста на видео, никаких субтитров, никаких надписей, никаких REC-значков, никаких таймкодов в кадре, никаких рамок, никаких borders, никаких UI-элементов. Видео = чистая сцена с персонажами, БЕЗ ЛЮБЫХ графических наложений
 • Каждый сегмент описывает: (a) что делает говорящий, (b) что делает молчащий, (c) куда смотрят глаза ОБОИХ, (d) что делает камера
+• В КАЖДОМ сегменте video_emotion_arc добавляй: "No text on screen, no subtitles, no overlays, no REC, no frames" — это критично для чистоты кадра
 • hook (pillar 11+6): ВИЗУАЛЬНЫЙ хук — эмоция на лице с кадра 0, взгляд в камеру, действие. Энергия ≥ 80% пика. НЕ текстовый хук!
 • act_A (pillar 4+5+6): моргание каждые 2-3с, дыхание между фразами, жесты с асимметричными бровями. B: губы сомкнуты (pillar 5), медленные моргания 4-6с, side-eye на A (pillar 6), пальцы постукивают (pillar 4)
 • act_B (pillar 4+5+6+12): как B произносит killer word (голос падает, глаза сужаются, камера микро-push). A: замирает середине жеста, глаза расширяются → дёргаются между B и камерой 2-3Hz (pillar 6). Пауза 0.15-0.25с перед B (pillar 12)
@@ -469,8 +473,8 @@ ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опи�
 ФОРМАТ ОТВЕТА — строго JSON:
 {
   "humor_category_ru": "Твоя категория юмора — 2-4 слова, точно описывающие тип юмора в этом ролике. Примеры: Кухонные войны, Технофобия бабки, Дачный абсурд, Ценовой шок, Свекровь атакует, Пенсионер vs прогресс, Транспортный хаос, Аптечная драма, Соседская война, Модный приговор. НЕ копируй примеры — придумай свою!",
-  "dialogue_A_ru": "реплика A | с паузами | 6-10 слов (макс 7 если медленный темп)",
-  "dialogue_B_ru": "ответ B | строится к | killer word в конце | 6-12 слов",
+  "dialogue_A_ru": "реплика A на 6-10 слов, максимум ОДИН символ | для паузы",
+  "dialogue_B_ru": "ответ B на 6-12 слов с killer word в конце, максимум ОДИН |",
   "killer_word": "одно_слово",
   "photo_scene_en": "Smartphone selfie photo taken mid-argument... 150-250 слов на английском",
   "video_emotion_arc": {
