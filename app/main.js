@@ -740,17 +740,27 @@ function initGenerate() {
           log('OK', 'GEMINI', 'Creative content merged from Gemini');
           displayResult(merged);
         } else {
-          log('WARN', 'GEMINI', 'API not configured, using local generation');
-          displayResult(localResult);
+          showGenStatus('❌ API не настроен. Укажите Backend URL в настройках.', 'text-red-400');
+          log('ERR', 'GEMINI', 'API URL or JWT not configured');
         }
       } catch (apiErr) {
-        log('WARN', 'GEMINI', `API failed: ${apiErr.message}. Fallback to local.`);
-        showGenStatus('⚠️ Gemini недоступен — используется локальная генерация', 'text-yellow-400');
-        await new Promise(r => setTimeout(r, 1500));
-        displayResult(localResult);
+        log('ERR', 'GEMINI', `API error: ${apiErr.message}`);
+        showGenStatus('', '');
+        document.getElementById('gen-results').classList.remove('hidden');
+        document.getElementById('gen-results').innerHTML = `
+          <div class="glass-panel p-6 text-center space-y-4">
+            <div class="text-4xl">⚠️</div>
+            <div class="text-lg text-red-400 font-semibold">Сервис временно недоступен</div>
+            <div class="text-sm text-gray-400">${escapeHtml(apiErr.message)}</div>
+            <div class="text-sm text-gray-300 mt-4">Повторите попытку позже или свяжитесь с поддержкой:</div>
+            <a href="https://t.me/ferixdiii" target="_blank" class="btn-primary inline-block px-6 py-2 text-sm">💬 Написать в Telegram</a>
+          </div>
+        `;
       }
+    } else if (!isApiMode) {
+      showGenStatus('❌ Переключитесь на режим API в настройках для генерации.', 'text-red-400');
+      log('WARN', 'GEN', 'Demo mode disabled — API mode required');
     } else {
-      // Demo mode: use local generation directly
       displayResult(localResult);
     }
 
