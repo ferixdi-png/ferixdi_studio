@@ -78,12 +78,13 @@ app.post('/api/fun/category', authMiddleware, (req, res) => {
 function buildGeminiPrompt(ctx) {
   const { charA, charB, category, topic_ru, scene_hint, input_mode, video_meta,
     product_info, location, wardrobeA, wardrobeB, propAnchor, lightingMood,
-    hookAction, releaseAction, aesthetic, script_ru } = ctx;
+    hookAction, releaseAction, aesthetic, script_ru, cinematography,
+    remake_mode, remake_instruction } = ctx;
 
   // ── MODE-SPECIFIC TASK BLOCK ──
   let taskBlock = '';
 
-  if (input_mode === 'video' && (video_meta || scene_hint)) {
+  if (input_mode === 'video' && (video_meta || scene_hint || remake_mode)) {
     taskBlock = `
 ══════════ ЗАДАНИЕ: КОПИЯ/РЕМИКС ВИДЕО ══════════
 Пользователь хочет ПЕРЕСОЗДАТЬ концепцию существующего видео с новыми персонажами.
@@ -96,7 +97,8 @@ ${video_meta ? `
 • Размер: ${video_meta.width || '?'}×${video_meta.height || '?'}` : ''}
 ${scene_hint ? `• Описание от пользователя: "${scene_hint}"` : ''}
 
-${video_meta?.cover ? 'К этому сообщению ПРИКРЕПЛЕНА ОБЛОЖКА оригинального видео. Внимательно проанализируй её: настроение, позы, фон, цветовую палитру, ракурс, выражения лиц.' : ''}
+${ctx.hasVideoCover ? 'К этому сообщению ПРИКРЕПЛЁН КАДР ИЗ ОРИГИНАЛЬНОГО ВИДЕО. Внимательно проанализируй его: настроение, позы, фон, цветовую палитру, ракурс, выражения лиц, одежду, предметы в кадре.' : ''}
+${remake_instruction ? `\n${remake_instruction}` : ''}
 
 ЧТО ДЕЛАТЬ:
 1. Проанализируй структуру и энергию оригинала (темп, подача, тип юмора)
@@ -201,7 +203,34 @@ ${productBlock}
 • Освещение: ${lightingMood.style} | Настроение: ${lightingMood.mood}
 • Реквизит в кадре: ${propAnchor}
 • Эстетика мира: ${aesthetic}
+${cinematography ? `
+════════════════════════════════════════════════════════════════
+CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учитывай при создании промптов):
 
+1. СВЕТ: ${cinematography.lighting?.source_count || 'One dominant + one fill'}. ${cinematography.lighting?.shadow_quality || 'Soft present shadows'}. ${cinematography.lighting?.skin_highlights || 'Subtle overexposure on skin highlights allowed'}. ${cinematography.lighting?.forbidden || 'No flat frontal, no ring light'}.
+
+2. ОПТИКА: ${cinematography.optics?.focal_length || '35-50mm'}. ${cinematography.optics?.aperture || 'f/1.8-2.8'}. ${cinematography.optics?.depth_of_field || 'Eyes sharp, background 20-35% bokeh'}. ${cinematography.optics?.distance_to_subject || '40-70cm'}.
+
+3. КАМЕРА: ${cinematography.camera_movement?.directive || 'Handheld selfie feel'}. ${cinematography.camera_movement?.base_motion || 'Micro-jitter 0.5-1.5px'}. Hook: ${cinematography.camera_movement?.hook_motion || 'push-in'}. Release: ${cinematography.camera_movement?.release_motion || 'laughter shake'}. ${cinematography.camera_movement?.forbidden || 'No dolly, no crane, no gimbal'}.
+
+4. МИКРОДВИЖЕНИЯ: ${cinematography.micro_movements?.blink_rate || 'Blink every 3-5s'}. ${cinematography.micro_movements?.breathing || 'Chest rise every 3-4s'}. ${cinematography.micro_movements?.head_micro_turns || '1-3° tilts every 2-4s'}. ${cinematography.micro_movements?.facial_micro_expressions || 'Eyebrow raises, nostril flares every 1-2s'}. ${cinematography.micro_movements?.forbidden || 'No mannequin stillness >1.5s'}.
+
+5. СТАБИЛЬНОСТЬ ЛИЦА: ${cinematography.face_stability?.mouth_visibility || 'Mouth visible 100%'}. ${cinematography.face_stability?.head_rotation_limit || 'Max 25° turn, 15° during speech'}. ${cinematography.face_stability?.hair_and_accessories || 'No hair/mustache covering lips'}. ${cinematography.face_stability?.jaw_tracking || 'Every syllable = visible jaw movement'}. ${cinematography.face_stability?.non_speaking_mouth || 'Non-speaking: sealed, jaw still'}.
+
+6. ГЛАЗА И ВЗГЛЯД: Hook: ${cinematography.gaze?.hook_gaze || 'direct camera contact'}. Act A: ${cinematography.gaze?.act_A_gaze || '70% camera, 30% B'}. Act B: ${cinematography.gaze?.act_B_gaze || '80% camera'}. Release: ${cinematography.gaze?.release_gaze || 'look at each other'}. ${cinematography.gaze?.pupil_detail || 'Micro-saccades every 0.5-1s, wet glint on sclera'}.
+
+7. ЧИСТОТА КАДРА: ${cinematography.frame_cleanliness?.detail_budget || '7-8 elements max'}. ${cinematography.frame_cleanliness?.foreground || '60-70% characters'}. ${cinematography.frame_cleanliness?.midground || '1 prop anchor in soft focus'}. ${cinematography.frame_cleanliness?.background || '2-3 bokeh details'}. ${cinematography.frame_cleanliness?.forbidden || 'No text, no logos, no phones'}.
+
+8. ТЕКСТУРЫ: ${cinematography.textures?.texture_priority || 'Wool, denim, leather, cotton > smooth plastic'}. ${cinematography.textures?.wrinkle_rule || 'Natural wrinkles at elbows/shoulders'}. ${cinematography.textures?.skin_as_texture || 'Visible pores, fine lines, slight oiliness'}. ${cinematography.textures?.forbidden || 'No plastic skin, no CGI-shiny'}.
+
+9. ЦВЕТ И КОЖА: ${cinematography.color_skin?.white_balance || 'Lock WB to light source temp'}. Skin A: ${cinematography.color_skin?.skin_tone_A || 'natural warm'}. Skin B: ${cinematography.color_skin?.skin_tone_B || 'natural warm'}. ${cinematography.color_skin?.deadly_sins || 'NO orange tan, NO grey face, NO uniform tone'}. ${cinematography.color_skin?.consistency || 'Same skin tone all 8 seconds'}.
+
+10. ЗВУК: ${cinematography.sound_anchor?.room_tone || 'Mandatory room tone -20/-30dB'}. ${cinematography.sound_anchor?.voice_volume || 'Dialogue -6/-3dB, natural dynamics'}. ${cinematography.sound_anchor?.voice_room_match || 'Reverb matches space'}. ${cinematography.sound_anchor?.breathing_sounds || 'Audible inhale before each turn'}. ${cinematography.sound_anchor?.forbidden || 'No dead silence, no studio voice'}.
+
+11. ХУК (кадр 0): ${cinematography.visual_hook?.face_emotion || 'EXTREME emotion from frame 1'}. ${cinematography.visual_hook?.gaze_hook || 'Direct eye contact from frame 0'}. ${cinematography.visual_hook?.composition_hook || 'Both faces visible, no fade-in'}. ${cinematography.visual_hook?.forbidden || 'No text hook, no slow buildup'}.
+
+12. МОНТАЖНАЯ ЛОГИКА: ${cinematography.edit_logic?.start || 'Cold open mid-scene'}. ${cinematography.edit_logic?.pre_punch_pause || '0.15-0.25s silence before punchline'}. ${cinematography.edit_logic?.end_on_reaction || 'End on reaction, not punchline'}. ${cinematography.edit_logic?.rewatch_bait || 'Ambiguous micro-expression in last 0.5s'}. ${cinematography.edit_logic?.forbidden || 'No fade out, no setup, no dead air'}.
+` : ''}
 ТАЙМИНГ (строго 8 секунд ±0.2s):
 [0.00–0.80] ХУК — ${hookAction.action_ru} (звук: ${hookAction.audio}). Без слов. Зрителя надо зацепить за 0.8 секунды.
 [0.80–3.60] AKT A — ${charA.name_ru} произносит провокацию. 6-9 слов, темп: ${charA.speech_pace}. B молчит: губы сомкнуты, реагирует только глазами.
@@ -220,30 +249,36 @@ ${productBlock}
 
 ПРАВИЛА ФОТО-ПРОМПТА (photo_scene_en):
 • Пиши на АНГЛИЙСКОМ, начинай со слова "Hyper-realistic"
-• 150-200 слов, единый плотный абзац
+• 150-250 слов, единый плотный абзац
 • Формат: вертикальное 9:16, 1080×1920, selfie POV
 • Оба персонажа в кадре, лица 40-60см от камеры
+• ПРИМЕНЯЙ ВСЕ 12 PILLARS выше: оптика (35-50mm f/1.8-2.8), свет (1-2 источника, мягкие тени), чистота кадра (7-8 элементов max)
 • Описывай конкретные микро-выражения: ширину открытия рта, положение бровей, направление взгляда, натяжение мышц лица
-• Свет: как именно он падает на кожу, тени под носом и скулами, блики в глазах
-• Текстуры: поры, морщины, влага на губах, сосуды в склерах, текстура ткани одежды
+• Свет: как именно он падает на кожу, тени под носом и скулами, блики в глазах. НЕ flat frontal, НЕ ring light
+• Текстуры (pillar 8): поры, морщины, влага на губах, сосуды в склерах, текстура ТКАНИ (шерсть, джинса, кожа — с видимым переплетением). Складки на одежде обязательны!
+• Кожа (pillar 9): естественный оттенок, НЕ оранжевый загар, НЕ серое лицо. Лёгкий блеск на Т-зоне
+• Глаза (pillar 6): направление взгляда A в камеру, B следит за A. Мокрый блик на склере, видимые зрачки
 • Руки: СТРОГО 5 пальцев, анатомически корректные пропорции
-• Негатив: no cartoon, no anime, no plastic skin, no 6th finger, no watermark
+• Негатив: no cartoon, no anime, no plastic skin, no 6th finger, no watermark, no airbrushed look, no orange tan, no grey face
 ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опиши товар ультра-детально в сцене, точь-в-точь как на прикреплённом фото` : ''}
 
 ПРАВИЛА ВИДЕО (video_emotion_arc):
 • Пиши на АНГЛИЙСКОМ
 • Описывай МИКРО-ВЫРАЖЕНИЯ и физические изменения побитово
-• hook: точное физическое действие + звук + реакция камеры
-• act_A: как A подаёт реплику (жесты, мимика, движение глаз), как B молча реагирует
-• act_B: как B отвечает (темп, паузы, как именно произносит killer word), как A реагирует
-• release: как ИМЕННО вспыхивает смех — трясутся ли плечи, слезы, хлопок по коленке
+• ПРИМЕНЯЙ PILLARS 4 (микродвижения), 5 (стабильность лица), 6 (взгляд), 11 (хук), 12 (монтажная логика)
+• hook (pillar 11): ВИЗУАЛЬНЫЙ хук — эмоция на лице с кадра 0, взгляд в камеру, действие в руках. НЕ текстовый хук.
+• act_A (pillar 4+6): как A подаёт реплику (жесты, мимика, моргание каждые 2-3с), как B молча реагирует (губы сомкнуты pillar 5, глаза следят pillar 6, микро-поднятие бровей)
+• act_B (pillar 4+6): как B отвечает (темп, паузы, как именно произносит killer word), A: глаза широко → дёргаются между B и камерой (pillar 6)
+• release (pillar 12): конец на РЕАКЦИИ, не на панчлайне. Трясутся ли плечи, слезы, хлопок по коленке. Rewatch-bait: неоднозначное микро-выражение в последние 0.5с
 
 ПРАВИЛА АТМОСФЕРЫ (video_atmosphere_en):
-• Пиши на АНГЛИЙСКОМ, 80-100 слов
-• Конкретные звуки данной локации (не generic "ambient sound")
-• Изменения света в течение 8 секунд
+• Пиши на АНГЛИЙСКОМ, 80-120 слов
+• ПРИМЕНЯЙ PILLARS 1 (свет), 3 (камера), 7 (чистота кадра), 10 (звук)
+• Конкретные звуки данной локации (pillar 10): room tone -20/-30dB ПОД диалогом. НЕ generic "ambient sound" а конкретные звуки: гул холодильника, скрип дерева, шум машин и т.д.
+• Свет (pillar 1): как он падает, тени, пересвет на коже. Свет НЕ меняется 8 секунд
+• Камера (pillar 3): handheld micro-jitter, дыхание держащего, конкретные движения по сегментам
 • Частицы в воздухе (пыль, пар, пыльца — зависит от локации)
-• Текстуры поверхностей которых касаются персонажи
+• Текстуры поверхностей которых касаются персонажи (pillar 8)
 
 ПРАВИЛА ХЕШТЕГОВ:
 • 15-20 штук, на РУССКОМ, без символа #
