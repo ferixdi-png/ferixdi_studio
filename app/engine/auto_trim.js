@@ -1,21 +1,52 @@
 /**
- * FERIXDI Studio — Auto Trim
+ * FERIXDI Studio — Auto Trim v2
  * Автоматическое сокращение реплик под 8s grid
+ * 
+ * Pipeline (каждый шаг проверяет — если risk уже не high, стоп):
+ *   0. Убрать лишние паузы (|) — экономит 0.3s каждая
+ *   1. Убрать вводные слова (ну, вот, это, типа...)
+ *   2. Заменить длинные слова на короткие синонимы
+ *   3. Обрезать лишние слова у того спикера, который вылезает за окно
  */
 
-import { estimateDialogue } from './estimator.js';
+import { estimateDialogue, estimateLineDuration } from './estimator.js';
 
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
-// \b doesn't work with Cyrillic in JS — use word boundary via lookaround
 const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[,\\.!?])`, 'gi');
 
+// Speaker windows (must match estimator.js)
+const SPEAKER_WINDOW = { A: 2.8, B: 3.5 };
+const WORD_LIMITS = { A: 7, B: 8 };
+
+// ─── STEP 0: Remove excess pause markers ────
+function removePauses(text) {
+  const pauses = (text.match(/\|/g) || []).length;
+  if (pauses <= 1) return { text, changed: false, fix: null };
+  // Keep max 1 pause marker, remove the rest
+  let kept = 0;
+  const result = text.replace(/\s*\|\s*/g, (match) => {
+    kept++;
+    return kept === 1 ? ' | ' : ' ';
+  }).replace(/\s{2,}/g, ' ').trim();
+  return { text: result, changed: true, fix: `Убраны лишние паузы (было ${pauses}, оставлена 1)` };
+}
+
+// Remove ALL pause markers
+function removeAllPauses(text) {
+  if (!text.includes('|')) return { text, changed: false, fix: null };
+  const result = text.replace(/\s*\|\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  return { text: result, changed: true, fix: 'Убраны все паузы для экономии времени' };
+}
+
+// ─── STEP 1: Remove filler words ────────────
 function removeFillers(text) {
   const original = text;
   let result = text.replace(FILLER_REGEX, '').replace(/\s{2,}/g, ' ').replace(/^\s*[,|]\s*/, '').trim();
   if (result === original.trim()) return { text, changed: false, fix: null };
-  return { text: result, changed: true, fix: `Убраны вводные слова` };
+  return { text: result, changed: true, fix: 'Убраны вводные слова' };
 }
 
+// ─── STEP 2: Shorten long words ─────────────
 function shortenLongWords(text) {
   const words = text.split(/\s+/);
   const SHORT_MAP = {
@@ -24,6 +55,8 @@ function shortenLongWords(text) {
     'приблизительно': 'примерно', 'одновременно': 'разом', 'исключительно': 'только',
     'непосредственно': 'прямо', 'соответственно': 'значит', 'категорически': 'нет',
     'замечательно': 'класс', 'великолепно': 'круто', 'потрясающе': 'огонь',
+    'удовольствием': 'рад', 'определённо': 'точно', 'разумеется': 'ясно',
+    'первоначально': 'сначала', 'впоследствии': 'потом', 'самостоятельно': 'сам',
   };
   let changed = false;
   const result = words.map(w => {
@@ -34,30 +67,33 @@ function shortenLongWords(text) {
   return { text: result.join(' '), changed, fix: changed ? 'Заменены длинные слова на короткие' : null };
 }
 
-function mergePhrases(lines) {
-  if (lines.length <= 2) return { lines, changed: false, fix: null };
-  const merged = [];
-  let changed = false;
-  let i = 0;
-  while (i < lines.length) {
-    if (i + 1 < lines.length &&
-        lines[i].speaker === lines[i + 1].speaker &&
-        lines[i].text.split(/\s+/).length <= 3 &&
-        lines[i + 1].text.split(/\s+/).length <= 3) {
-      merged.push({ ...lines[i], text: lines[i].text + ' ' + lines[i + 1].text });
-      changed = true;
-      i += 2;
-    } else {
-      merged.push(lines[i]);
-      i++;
-    }
+// ─── STEP 3: Truncate words to fit window ───
+function truncateToFit(text, speaker, pace) {
+  const window = SPEAKER_WINDOW[speaker] || 3.0;
+  const maxWords = WORD_LIMITS[speaker] || 8;
+  const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0);
+  
+  if (words.length <= maxWords) return { text, changed: false, fix: null };
+  
+  // Keep first word (hook) and last 2 words (punchline), trim middle
+  const keep = maxWords;
+  const trimmed = [...words.slice(0, 2), ...words.slice(-(keep - 2))];
+  const result = trimmed.join(' ');
+  
+  // Verify it fits
+  const est = estimateLineDuration(result, pace);
+  if (est.duration <= window) {
+    return { text: result, changed: true, fix: `Обрезано с ${words.length} до ${trimmed.length} слов` };
   }
-  return { lines: merged, changed, fix: changed ? 'Слиты короткие фразы одного спикера' : null };
+  
+  // Still too long — aggressive trim: keep first + last N words
+  const aggressive = [...words.slice(0, 1), ...words.slice(-(maxWords - 2))];
+  return { text: aggressive.join(' '), changed: true, fix: `Агрессивная обрезка: ${words.length} → ${aggressive.length} слов` };
 }
 
+// ─── MAIN AUTO TRIM ─────────────────────────
 export function autoTrim(lines, options = {}) {
-  const { maxIterations = 3 } = options;
-  const TARGET = 8.0;
+  const { maxIterations = 5 } = options;
   const fixes = [];
   let currentLines = lines.map(l => ({ ...l }));
 
@@ -65,8 +101,25 @@ export function autoTrim(lines, options = {}) {
     const est = estimateDialogue(currentLines);
     if (est.risk !== 'high') break;
 
-    // Step 1: Remove fillers
     let anyChange = false;
+
+    // Step 0: Remove excess pauses (keep max 1 per line)
+    currentLines = currentLines.map(l => {
+      const r = removePauses(l.text);
+      if (r.changed) { anyChange = true; if (r.fix) fixes.push(`${l.speaker}: ${r.fix}`); }
+      return { ...l, text: r.text };
+    });
+    if (anyChange) continue;
+
+    // Step 0b: Remove ALL pauses if still over
+    currentLines = currentLines.map(l => {
+      const r = removeAllPauses(l.text);
+      if (r.changed) { anyChange = true; if (r.fix) fixes.push(`${l.speaker}: ${r.fix}`); }
+      return { ...l, text: r.text };
+    });
+    if (anyChange) continue;
+
+    // Step 1: Remove fillers
     currentLines = currentLines.map(l => {
       const r = removeFillers(l.text);
       if (r.changed) { anyChange = true; if (r.fix) fixes.push(`${l.speaker}: ${r.fix}`); }
@@ -82,9 +135,17 @@ export function autoTrim(lines, options = {}) {
     });
     if (anyChange) continue;
 
-    // Step 3: Merge short phrases
-    const m = mergePhrases(currentLines);
-    if (m.changed) { currentLines = m.lines; if (m.fix) fixes.push(m.fix); continue; }
+    // Step 3: Truncate words for speakers that are over window
+    for (const entry of est.perLine) {
+      if (entry.overWindow) {
+        const idx = currentLines.findIndex(l => l.speaker === entry.speaker);
+        if (idx >= 0) {
+          const r = truncateToFit(currentLines[idx].text, entry.speaker, currentLines[idx].pace);
+          if (r.changed) { anyChange = true; currentLines[idx] = { ...currentLines[idx], text: r.text }; fixes.push(`${entry.speaker}: ${r.fix}`); }
+        }
+      }
+    }
+    if (anyChange) continue;
 
     break; // Nothing more to trim safely
   }

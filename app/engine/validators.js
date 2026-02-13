@@ -20,8 +20,8 @@ const GRID_V2 = {
   release: { start: 7.1, end: 8.0 },
 };
 
-// v2 word count limits
-const WORD_LIMITS = { A: { min: 6, max: 9 }, B: { min: 6, max: 11 } };
+// v2 word count limits (tightened to fit timing windows)
+const WORD_LIMITS = { A: { min: 4, max: 7 }, B: { min: 4, max: 8 } };
 
 export function scanBannedWords(text) {
   const warnings = [];

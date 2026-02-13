@@ -7,7 +7,7 @@
 const PACE_WPS = { slow: 2.0, normal: 2.5, fast: 3.0 };
 const LONG_WORD_THRESHOLD = 8;
 const LONG_WORD_PENALTY = 0.15;
-const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще'];
+const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
 const FILLER_PENALTY = 0.12;
 const SHORT_PUNCH_BONUS = -0.1;
 const PAUSE_MARKER_DURATION = 0.3;

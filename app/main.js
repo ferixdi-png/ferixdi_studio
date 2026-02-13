@@ -4,7 +4,7 @@
  */
 
 import { generate, getRandomCategory, mergeGeminiResult } from './engine/generator.js';
-import { estimateDialogue } from './engine/estimator.js';
+import { estimateDialogue, estimateLineDuration } from './engine/estimator.js';
 import { autoTrim } from './engine/auto_trim.js';
 import { historyCache } from './engine/history_cache.js';
 
@@ -664,11 +664,31 @@ function displayResult(result) {
   // Update timing
   updateTimingCoach(result);
 
+  // Populate dialogue editor
+  populateDialogueEditor(result);
+
   const ver = result.log?.generator_version || '2.0';
-  log('OK', 'GEN', `${ver} Package generated! Duration: ${result.duration_estimate?.total || '?'}s, Risk: ${result.duration_estimate?.risk || '?'}`);
+  log('OK', 'ГЕНЕРАЦИЯ', `${ver} Пакет собран! Длительность: ${result.duration_estimate?.total || '?'}с, Риск: ${result.duration_estimate?.risk || '?'}`);
   if (result.auto_fixes?.length > 0) {
-    result.auto_fixes.forEach(f => log('INFO', 'FIX', f));
+    result.auto_fixes.forEach(f => log('INFO', 'ФИКС', f));
   }
+}
+
+function populateDialogueEditor(result) {
+  const editor = document.getElementById('dialogue-editor');
+  if (!editor || !result.blueprint_json?.dialogue_segments) return;
+  editor.classList.remove('hidden');
+
+  const segs = result.blueprint_json.dialogue_segments;
+  const lineA = segs.find(s => s.speaker === 'A');
+  const lineB = segs.find(s => s.speaker === 'B');
+
+  const inputA = document.getElementById('editor-line-a');
+  const inputB = document.getElementById('editor-line-b');
+  if (inputA && lineA) inputA.value = lineA.text_ru;
+  if (inputB && lineB) inputB.value = lineB.text_ru;
+
+  updateEditorEstimates();
 }
 
 async function callGeminiAPI(apiContext) {
@@ -1016,6 +1036,123 @@ function updateCacheStats() {
   if (el) el.textContent = `Лок: ${stats.locations} | Рекв: ${stats.props} | Одежда: ${stats.wardrobes}`;
 }
 
+// ─── DIALOGUE EDITOR ────────────────────
+function updateEditorEstimates() {
+  const inputA = document.getElementById('editor-line-a');
+  const inputB = document.getElementById('editor-line-b');
+  if (!inputA || !inputB) return;
+
+  const paceA = state.selectedA?.speech_pace || 'normal';
+  const paceB = state.selectedB?.speech_pace || 'normal';
+  const estA = estimateLineDuration(inputA.value, paceA);
+  const estB = estimateLineDuration(inputB.value, paceB);
+  const total = estA.duration + estB.duration;
+  const wordsA = inputA.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
+  const wordsB = inputB.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
+
+  const overA = estA.duration > 2.8;
+  const overB = estB.duration > 3.5;
+  const risk = total > 6.3 || overA || overB ? 'high' : total > 5.3 ? 'medium' : 'low';
+
+  document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 7 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 2.8с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 7 ? ' — много' : ''}</span>`;
+  document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 8 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 3.5с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 8 ? ' — много' : ''}</span>`;
+
+  const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
+  const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
+  document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 6.3с ${riskLabel}</span>`;
+
+  const badge = document.getElementById('editor-timing-badge');
+  if (badge) {
+    badge.textContent = `${total.toFixed(1)}с`;
+    badge.className = `tag text-[10px] ${risk === 'high' ? 'tag-pink' : risk === 'medium' ? 'tag-orange' : 'tag-green'}`;
+  }
+}
+
+function initDialogueEditor() {
+  // Real-time estimates on typing
+  document.getElementById('editor-line-a')?.addEventListener('input', updateEditorEstimates);
+  document.getElementById('editor-line-b')?.addEventListener('input', updateEditorEstimates);
+
+  // Auto-trim button
+  document.getElementById('editor-auto-trim')?.addEventListener('click', () => {
+    const inputA = document.getElementById('editor-line-a');
+    const inputB = document.getElementById('editor-line-b');
+    if (!inputA || !inputB) return;
+
+    const lines = [
+      { speaker: 'A', text: inputA.value, pace: state.selectedA?.speech_pace || 'normal' },
+      { speaker: 'B', text: inputB.value, pace: state.selectedB?.speech_pace || 'normal' },
+    ];
+
+    const result = autoTrim(lines);
+    if (result.trimmed) {
+      const newA = result.lines.find(l => l.speaker === 'A');
+      const newB = result.lines.find(l => l.speaker === 'B');
+      if (newA) inputA.value = newA.text;
+      if (newB) inputB.value = newB.text;
+      updateEditorEstimates();
+
+      const fixesEl = document.getElementById('editor-fixes');
+      if (fixesEl) {
+        fixesEl.classList.remove('hidden');
+        fixesEl.innerHTML = result.auto_fixes.map(f => `<div>✓ ${escapeHtml(f)}</div>`).join('');
+      }
+      log('OK', 'РЕДАКТОР', `Авто-сокращение: ${result.auto_fixes.length} исправлений`);
+    } else {
+      log('INFO', 'РЕДАКТОР', 'Нечего сокращать — всё в норме');
+    }
+  });
+
+  // Apply changes button
+  document.getElementById('editor-apply')?.addEventListener('click', () => {
+    if (!state.lastResult) return;
+    const inputA = document.getElementById('editor-line-a');
+    const inputB = document.getElementById('editor-line-b');
+    if (!inputA || !inputB) return;
+
+    const newA = inputA.value.trim();
+    const newB = inputB.value.trim();
+
+    // Update blueprint
+    const bp = state.lastResult.blueprint_json;
+    if (bp?.dialogue_segments) {
+      const segA = bp.dialogue_segments.find(s => s.speaker === 'A');
+      const segB = bp.dialogue_segments.find(s => s.speaker === 'B');
+      if (segA) segA.text_ru = newA;
+      if (segB) segB.text_ru = newB;
+    }
+    if (bp?.scenes) {
+      const sceneA = bp.scenes.find(s => s.segment === 'act_A');
+      const sceneB = bp.scenes.find(s => s.segment === 'act_B');
+      if (sceneA) sceneA.dialogue_ru = newA;
+      if (sceneB) sceneB.dialogue_ru = newB;
+    }
+
+    // Update video prompt
+    const vp = state.lastResult.video_prompt_en_json;
+    if (vp?.dialogue) {
+      vp.dialogue.line_A_ru = newA;
+      vp.dialogue.line_B_ru = newB;
+      const lastWord = newB.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
+      vp.dialogue.killer_word = lastWord;
+    }
+
+    // Re-estimate
+    const lines = [
+      { speaker: 'A', text: newA, pace: state.selectedA?.speech_pace || 'normal' },
+      { speaker: 'B', text: newB, pace: state.selectedB?.speech_pace || 'normal' },
+    ];
+    state.lastResult.duration_estimate = estimateDialogue(lines);
+
+    // Re-render affected tabs
+    document.querySelector('#tab-video pre').textContent = JSON.stringify(state.lastResult.video_prompt_en_json, null, 2);
+    document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(state.lastResult.blueprint_json, null, 2);
+    updateTimingCoach(state.lastResult);
+
+    log('OK', 'РЕДАКТОР', `Диалог обновлён. Новая оценка: ${state.lastResult.duration_estimate.total}с`);
+  });
+}
+
 // ─── HEADER SETTINGS BUTTON ─────────────────
 function initHeaderSettings() {
   document.getElementById('btn-settings')?.addEventListener('click', () => navigateTo('settings'));
@@ -1059,6 +1196,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductUpload();
   initHumor();
   initGenerate();
+  initDialogueEditor();
   initTimingCoach();
   initSettings();
   initCharFilters();
