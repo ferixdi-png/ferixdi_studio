@@ -20,7 +20,7 @@
       <div class="relative z-10">
         <div class="text-4xl font-black font-mono tracking-widest neon-text mb-2">FERIXDI</div>
         <div class="text-sm font-mono text-gray-500 mb-1">S T U D I O</div>
-        <div class="text-xs text-gray-600 mb-8 font-mono">v1.0 // космический командный центр</div>
+        <div class="text-xs text-gray-600 mb-8 font-mono">v2.0 // Golden Standard 2026</div>
         <div class="mb-6">
           <label class="block text-xs font-mono text-gray-500 mb-2 text-left">КЛЮЧ ДОСТУПА</label>
           <input id="access-key-input" type="password" class="input-field text-center tracking-widest" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
@@ -38,7 +38,7 @@
     <header class="flex items-center justify-between px-4 py-2 border-b border-space-border" style="background:rgba(12,12,18,0.95)">
       <div class="flex items-center gap-3">
         <span class="text-lg font-black font-mono neon-text tracking-wider">FERIXDI</span>
-        <span class="text-xs font-mono text-gray-600">STUDIO v1.0</span>
+        <span class="text-xs font-mono text-gray-600">STUDIO v2.0</span>
         <div class="pulse-dot ml-2"></div>
       </div>
       <div class="flex items-center gap-4">
@@ -213,11 +213,11 @@
               <button class="mode-btn" data-tab="blueprint">📐 Blueprint</button>
               <button class="mode-btn" data-tab="log">📋 Log</button>
             </div>
-            <div id="tab-photo" class="glass-panel p-4 max-h-[400px] overflow-y-auto"><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
-            <div id="tab-video" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden"><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
-            <div id="tab-ru" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden"><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
-            <div id="tab-blueprint" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden"><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
-            <div id="tab-log" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden"><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
+            <div id="tab-photo" class="glass-panel p-4 max-h-[400px] overflow-y-auto relative"><button class="copy-btn" data-tab="photo">📋</button><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
+            <div id="tab-video" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="video">📋</button><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
+            <div id="tab-ru" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="ru">📋</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
+            <div id="tab-blueprint" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="blueprint">📋</button><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
+            <div id="tab-log" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="log">📋</button><pre class="text-xs text-gray-300 whitespace-pre-wrap font-mono"></pre></div>
             <!-- Warnings -->
             <div id="gen-warnings" class="hidden glass-panel p-3 border-l-2 border-neon-orange">
               <div class="text-xs font-mono text-neon-orange mb-1">⚠️ WARNINGS:</div>

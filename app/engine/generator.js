@@ -294,8 +294,12 @@ export function generate(input) {
   const hookObj = pickRandom(HOOK_ACTIONS, rng);
   const releaseObj = pickRandom(RELEASE_ACTIONS, rng);
 
-  // ── Serial prop anchor ──
-  const propAnchor = pickRandom(PROP_ANCHORS, rng);
+  // ── Serial prop anchor (avoid repeats) ──
+  let propIdx = Math.floor(rng() * PROP_ANCHORS.length);
+  let propAnchor = PROP_ANCHORS[propIdx];
+  if (historyCache.hasProp(propAnchor)) {
+    propAnchor = PROP_ANCHORS[(propIdx + 1) % PROP_ANCHORS.length];
+  }
 
   // ── Dialogue based on mode ──
   let dialogueA, dialogueB, killerWord;

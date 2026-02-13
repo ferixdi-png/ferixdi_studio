@@ -23,6 +23,19 @@ describe('autoTrim', () => {
     expect(r.trimmed).toBe(false);
   });
 
+  it('removes Cyrillic fillers correctly (regex fix)', () => {
+    const lines = [
+      { speaker: 'A', text: 'Ну это вообще кошмар просто', pace: 'fast' },
+    ];
+    const r = autoTrim(lines);
+    expect(r.trimmed).toBe(true);
+    expect(r.lines[0].text).not.toMatch(/\bну\b/i);
+    expect(r.lines[0].text).not.toMatch(/\bэто\b/i);
+    expect(r.lines[0].text).not.toMatch(/\bвообще\b/i);
+    expect(r.lines[0].text).not.toMatch(/\bпросто\b/i);
+    expect(r.lines[0].text).toContain('кошмар');
+  });
+
   it('returns estimate after trimming', () => {
     const lines = [
       { speaker: 'A', text: 'Ну вот это абсолютно безусловно великолепно', pace: 'slow' },

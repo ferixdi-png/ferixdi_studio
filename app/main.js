@@ -535,6 +535,26 @@ function initTimingCoach() {
   });
 }
 
+// ─── COPY TO CLIPBOARD ──────────────────────
+function initCopyButtons() {
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      const pre = document.querySelector(`#tab-${tab} pre`);
+      if (!pre) return;
+      const text = pre.textContent || pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓';
+        setTimeout(() => { btn.textContent = orig; }, 1200);
+        log('OK', 'COPY', `${tab} prompt copied to clipboard`);
+      }).catch(() => {
+        log('WARN', 'COPY', 'Clipboard access denied');
+      });
+    });
+  });
+}
+
 // ─── SETTINGS ────────────────────────────────
 function initSettings() {
   document.querySelectorAll('#section-settings .mode-btn').forEach(btn => {
@@ -559,6 +579,18 @@ function updateCacheStats() {
   const stats = historyCache.getStats();
   const el = document.getElementById('cache-stats');
   if (el) el.textContent = `Лок: ${stats.locations} | Рекв: ${stats.props} | Одежда: ${stats.wardrobes}`;
+}
+
+// ─── HEADER SETTINGS BUTTON ─────────────────
+function initHeaderSettings() {
+  document.getElementById('btn-settings')?.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const settingsNav = document.querySelector('.nav-item[data-section="settings"]');
+    if (settingsNav) settingsNav.classList.add('active');
+    document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
+    document.getElementById('section-settings')?.classList.remove('hidden');
+    log('INFO', 'NAV', '→ settings');
+  });
 }
 
 // ─── LOGOUT ──────────────────────────────────
@@ -608,4 +640,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initLogout();
   initCharFilters();
   initLogConsole();
+  initCopyButtons();
+  initHeaderSettings();
 });

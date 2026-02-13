@@ -9,8 +9,11 @@ const CHARS = [
     speech_style_ru: 'быстрая', behavior_ru: 'активный',
     speech_pace: 'fast', swear_level: 1, role_default: 'A',
     signature_words_ru: ['тест'], compatibility: 'chaotic',
-    prompt_tokens: { character_en: 'Test character A for smoke testing, expressive face, detailed features' },
+    prompt_tokens: { character_en: '88 year old Russian woman, stocky build, thin white hair in tight bun, deep wrinkles, age spots, visible pores, small sharp eyes, wet glint, wide flat nose, thin lips, gold crown visible, hyper-realistic skin microtexture' },
     modifiers: { hook_style: 'points finger', laugh_style: 'loud burst' },
+    identity_anchors: { face_silhouette: 'round soft face, prominent cheekbones', signature_element: 'bold earrings', micro_gesture: 'dramatic hand wave', wardrobe_anchor: 'silk floral blouse with mother-of-pearl buttons, velvet collar' },
+    vibe_archetype: 'провокатор — пафос, блогерская манера',
+    world_aesthetic: 'VIP-деревенский уют',
   },
   {
     id: 'test_b', name_ru: 'Тест B', group: 'тест', tags: ['тест'],
@@ -18,8 +21,11 @@ const CHARS = [
     speech_style_ru: 'медленная', behavior_ru: 'спокойный',
     speech_pace: 'slow', swear_level: 0, role_default: 'B',
     signature_words_ru: ['база'], compatibility: 'calm',
-    prompt_tokens: { character_en: 'Test character B for smoke testing, calm demeanor, detailed features' },
+    prompt_tokens: { character_en: '90 year old Russian man, lean sinewy build, bald crown with white fringe, deeply furrowed forehead, weathered tan, deep-set eyes under heavy brows, bulbous nose, grey stubble, thin firm lips, hyper-realistic skin microtexture' },
     modifiers: { hook_style: 'raises eyebrow', laugh_style: 'quiet chuckle' },
+    identity_anchors: { face_silhouette: 'angular jaw, deep-set eyes', signature_element: 'flat cap', micro_gesture: 'slow head shake', wardrobe_anchor: 'worn striped sailor telnyashka under patched corduroy jacket, leather belt' },
+    vibe_archetype: 'база — спокойный циничный юмор',
+    world_aesthetic: 'советская классика',
   },
 ];
 
