@@ -91,14 +91,7 @@ function unlockApp(label) {
   log('OK', 'SYSTEM', `FERIXDI Studio v2.0 — welcome, ${label || 'user'}`);
   loadCharacters();
   updateCacheStats();
-  // Open Characters section by default so user knows what to do
-  const charsNav = document.querySelector('.nav-item[data-section="characters"]');
-  if (charsNav) {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    charsNav.classList.add('active');
-    document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
-    document.getElementById('section-characters')?.classList.remove('hidden');
-  }
+  navigateTo('characters');
 }
 
 // ─── CHARACTERS ──────────────────────────────
@@ -189,6 +182,16 @@ function updateCharDisplay() {
     badge.classList.remove('hidden');
     badge.querySelector('.tag').textContent = label;
   }
+
+  // Show/hide "Далее" button
+  const goBtn = document.getElementById('btn-go-generate');
+  if (goBtn) {
+    if (state.selectedA && state.selectedB) {
+      goBtn.classList.remove('hidden');
+    } else {
+      goBtn.classList.add('hidden');
+    }
+  }
 }
 
 function getCurrentFilters() {
@@ -200,17 +203,32 @@ function getCurrentFilters() {
 }
 
 // ─── NAVIGATION ──────────────────────────────
+function navigateTo(section) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-section="${section}"]`);
+  if (navItem) navItem.classList.add('active');
+  document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
+  const target = document.getElementById(`section-${section}`);
+  if (target) target.classList.remove('hidden');
+  // Scroll workspace to top
+  document.getElementById('workspace')?.scrollTo(0, 0);
+}
+
 function initNavigation() {
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      item.classList.add('active');
-      const section = item.dataset.section;
-      document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
-      const target = document.getElementById(`section-${section}`);
-      if (target) target.classList.remove('hidden');
-      log('INFO', 'NAV', `→ ${section}`);
+      navigateTo(item.dataset.section);
     });
+  });
+
+  // "Далее" button on step 1 → go to step 2
+  document.getElementById('btn-go-generate')?.addEventListener('click', () => {
+    navigateTo('generate');
+  });
+
+  // "← изменить" on step 2 → go back to step 1
+  document.getElementById('gen-back-chars')?.addEventListener('click', () => {
+    navigateTo('characters');
   });
 }
 
