@@ -595,18 +595,7 @@ function showProductStatus(text, cls) {
   el.textContent = text;
 }
 
-// ─── RANDOM HUMOR ────────────────────────────
-function initHumor() {
-  document.getElementById('humor-random')?.addEventListener('click', () => {
-    const cat = getRandomCategory(Date.now().toString());
-    state.category = cat;
-    document.getElementById('humor-result').classList.remove('hidden');
-    document.getElementById('humor-cat-ru').textContent = cat.ru;
-    document.getElementById('humor-cat-en').textContent = cat.en;
-    document.getElementById('gen-cat').textContent = cat.ru;
-    log('OK', 'КАТЕГОРИЯ', `${cat.ru} / ${cat.en}`);
-  });
-}
+// Category is always auto-picked by generator — no manual selection needed
 
 // ─── GENERATE ────────────────────────────────
 function displayResult(result) {
@@ -736,11 +725,7 @@ function initGenerate() {
       return;
     }
 
-    // Check that there's at least some input for the selected mode
-    if (state.inputMode === 'idea' && !document.getElementById('idea-input')?.value.trim()) {
-      showGenStatus('⚠️ Опиши идею в текстовом поле выше', 'text-orange-400');
-      return;
-    }
+    // No validation for idea mode — empty is fine, AI picks everything
     if (state.inputMode === 'script') {
       const scriptA = document.getElementById('script-a')?.value.trim();
       const scriptB = document.getElementById('script-b')?.value.trim();
@@ -776,7 +761,7 @@ function initGenerate() {
         B: document.getElementById('script-b')?.value || ''
       } : null,
       scene_hint_ru: document.getElementById('scene-hint')?.value || null,
-      category: state.category,
+      category: state.category || getRandomCategory(Date.now().toString()),
       thread_memory: null,
       video_meta: state.videoMeta,
       product_info: state.productInfo,
@@ -1236,7 +1221,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initVideoUpload();
   initVideoUrlFetch();
   initProductUpload();
-  initHumor();
   initGenerate();
   initDialogueEditor();
   initTimingCoach();

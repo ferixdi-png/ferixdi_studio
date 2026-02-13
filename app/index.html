@@ -138,8 +138,8 @@
           <div class="flex items-center gap-3 mb-1">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">2</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Настрой параметры</h2>
-              <p class="text-xs text-gray-400">Опиши идею или вставь ссылку на видео. Категория подберётся автоматически.</p>
+              <h2 class="text-lg font-semibold text-white">Опиши идею или просто жми «Сгенерировать»</h2>
+              <p class="text-xs text-gray-400">AI сам подберёт категорию, диалог и тайминг. Или опиши тему — и он отталкивается от неё.</p>
             </div>
           </div>
 
@@ -157,122 +157,114 @@
             <button id="gen-back-chars" class="text-xs text-gray-500 hover:text-violet-400 transition-colors">← Сменить персонажей</button>
           </div>
 
-          <!-- Input mode -->
+          <!-- Input — simple by default -->
           <div class="glass-panel p-4 space-y-3" id="section-remix">
-            <div class="text-xs text-gray-400 font-medium mb-1">Что хочешь сделать?</div>
-            <div class="flex gap-2">
-              <button class="mode-btn active" data-mode="idea">💡 Описать идею</button>
-              <button class="mode-btn" data-mode="script">📝 Написать диалог</button>
-              <button class="mode-btn" data-mode="video">🎥 Взять из видео</button>
-            </div>
+            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею (необязательно) — или оставь пустым, AI придумает сам..."></textarea>
+            <div class="text-[10px] text-gray-600">Категория юмора, диалог и тайминг подберутся автоматически</div>
 
-            <div id="mode-idea" class="space-y-2 mt-3">
-              <textarea id="idea-input" class="input-field h-24 resize-none" placeholder="Например: Бабка и дед спорят кто виноват что внук стал блогером..."></textarea>
-            </div>
-            <div id="mode-script" class="hidden space-y-3 mt-3">
-              <div>
-                <label class="text-xs text-violet-400 font-medium mb-1 block">Реплика A (провокация):</label>
-                <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
-              </div>
-              <div>
-                <label class="text-xs text-indigo-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
-                <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
-              </div>
-            </div>
-            <div id="mode-video" class="hidden space-y-3 mt-3">
-              <!-- URL Download -->
-              <div class="glass-panel p-3 space-y-2">
-                <div class="text-xs text-gray-400 font-medium">Вставь ссылку на TikTok или Instagram Reel</div>
-                <div class="flex gap-2">
-                  <input id="video-url-input" type="url" class="input-field flex-1" placeholder="https://www.tiktok.com/@user/video/...">
-                  <button id="video-url-fetch" class="btn-neon text-xs whitespace-nowrap">Скачать</button>
+            <!-- Expandable: script / video / product -->
+            <details class="group">
+              <summary class="text-[11px] text-gray-500 cursor-pointer hover:text-gray-300 transition-colors select-none">Расширенные параметры ▸</summary>
+              <div class="mt-3 space-y-4 border-t border-gray-800/50 pt-3">
+
+                <!-- Mode tabs -->
+                <div>
+                  <div class="text-[10px] text-gray-500 mb-2">Режим ввода</div>
+                  <div class="flex gap-2">
+                    <button class="mode-btn active" data-mode="idea">💡 Идея</button>
+                    <button class="mode-btn" data-mode="script">📝 Свой диалог</button>
+                    <button class="mode-btn" data-mode="video">🎥 По видео</button>
+                  </div>
                 </div>
-                <div id="video-url-status" class="text-xs hidden"></div>
-                <div id="video-url-result" class="hidden space-y-2">
-                  <div class="flex gap-3 items-start">
-                    <img id="video-url-cover" class="w-16 h-16 rounded-lg object-cover hidden" alt="cover">
-                    <div class="flex-1 space-y-1">
-                      <div id="video-url-title" class="text-xs text-gray-300"></div>
-                      <div id="video-url-author" class="text-xs text-gray-500"></div>
-                      <div id="video-url-meta" class="text-xs text-gray-600"></div>
+
+                <!-- mode-idea: nothing extra needed, main textarea above is enough -->
+                <div id="mode-idea" class="hidden"></div>
+
+                <!-- mode-script -->
+                <div id="mode-script" class="hidden space-y-3">
+                  <div>
+                    <label class="text-xs text-violet-400 font-medium mb-1 block">Реплика A (провокация):</label>
+                    <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
+                  </div>
+                  <div>
+                    <label class="text-xs text-indigo-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
+                    <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
+                  </div>
+                </div>
+
+                <!-- mode-video -->
+                <div id="mode-video" class="hidden space-y-3">
+                  <div class="glass-panel p-3 space-y-2">
+                    <div class="text-xs text-gray-400 font-medium">Ссылка на TikTok или Instagram Reel</div>
+                    <div class="flex gap-2">
+                      <input id="video-url-input" type="url" class="input-field flex-1" placeholder="https://www.tiktok.com/@user/video/...">
+                      <button id="video-url-fetch" class="btn-neon text-xs whitespace-nowrap">Скачать</button>
+                    </div>
+                    <div id="video-url-status" class="text-xs hidden"></div>
+                    <div id="video-url-result" class="hidden space-y-2">
+                      <div class="flex gap-3 items-start">
+                        <img id="video-url-cover" class="w-16 h-16 rounded-lg object-cover hidden" alt="cover">
+                        <div class="flex-1 space-y-1">
+                          <div id="video-url-title" class="text-xs text-gray-300"></div>
+                          <div id="video-url-author" class="text-xs text-gray-500"></div>
+                          <div id="video-url-meta" class="text-xs text-gray-600"></div>
+                        </div>
+                      </div>
+                      <a id="video-url-download" href="#" target="_blank" class="btn-neon-green text-xs inline-block hidden">💾 Открыть видео</a>
                     </div>
                   </div>
-                  <a id="video-url-download" href="#" target="_blank" class="btn-neon-green text-xs inline-block hidden">💾 Открыть видео</a>
+                  <div class="flex items-center gap-3 text-xs text-gray-600">
+                    <div class="flex-1 border-t border-gray-800"></div>
+                    <span>или загрузи файл</span>
+                    <div class="flex-1 border-t border-gray-800"></div>
+                  </div>
+                  <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg" id="video-dropzone">
+                    <div class="text-lg mb-1">📁</div>
+                    <div class="text-xs text-gray-500">mp4 / mov</div>
+                    <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
+                  </div>
+                  <div id="video-meta" class="hidden text-xs text-gray-500"></div>
+                  <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео (необязательно)"></textarea>
                 </div>
-              </div>
-              <div class="flex items-center gap-3 text-xs text-gray-600">
-                <div class="flex-1 border-t border-gray-800"></div>
-                <span>или загрузи файл</span>
-                <div class="flex-1 border-t border-gray-800"></div>
-              </div>
-              <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg" id="video-dropzone">
-                <div class="text-lg mb-1">📁</div>
-                <div class="text-xs text-gray-500">mp4 / mov</div>
-                <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
-              </div>
-              <div id="video-meta" class="hidden text-xs text-gray-500"></div>
-              <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео (необязательно)"></textarea>
-            </div>
-          </div>
 
-          <!-- Product Photo (optional) -->
-          <div class="glass-panel p-4 space-y-3" id="section-product">
-            <div class="flex items-center justify-between">
-              <div class="text-xs text-gray-400 font-medium">Фото товара (необязательно)</div>
-              <span class="text-[10px] text-gray-600">Gemini проанализирует фото и опишет товар</span>
-            </div>
-            <p class="text-[11px] text-gray-500">Если хочешь, чтобы в видео был конкретный товар — загрузи его фото. AI опишет каждую деталь, и товар появится в промпте точно как на исходном фото.</p>
-            <div class="flex gap-3 items-start">
-              <!-- Upload zone -->
-              <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-4 text-center cursor-pointer hover:border-violet-500/50 transition-colors flex-1 min-h-[100px] flex flex-col items-center justify-center">
-                <div id="product-preview-zone">
-                  <div class="text-2xl mb-1">📦</div>
-                  <div class="text-xs text-gray-500">Перетащи фото или нажми</div>
-                  <div class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP</div>
+                <!-- Product photo -->
+                <div class="space-y-3" id="section-product">
+                  <div class="text-[10px] text-gray-500 mb-1">Фото товара (необязательно)</div>
+                  <div class="flex gap-3 items-start">
+                    <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-3 text-center cursor-pointer hover:border-violet-500/50 transition-colors flex-1 min-h-[80px] flex flex-col items-center justify-center">
+                      <div id="product-preview-zone">
+                        <div class="text-xl mb-1">📦</div>
+                        <div class="text-[10px] text-gray-500">Перетащи фото или нажми</div>
+                      </div>
+                      <input type="file" id="product-file" accept="image/jpeg,image/png,image/webp" class="hidden">
+                    </div>
+                    <div id="product-preview" class="hidden">
+                      <img id="product-preview-img" class="w-24 h-24 rounded-lg object-cover border border-gray-700" alt="товар">
+                    </div>
+                  </div>
+                  <div id="product-status" class="hidden text-xs"></div>
+                  <div id="product-result" class="hidden space-y-2">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs text-emerald-400 font-medium">✓ Товар описан</span>
+                      <button id="product-clear" class="text-[10px] text-gray-500 hover:text-red-400 transition-colors">✕ Убрать</button>
+                    </div>
+                    <div id="product-description" class="text-[10px] text-gray-300 leading-relaxed bg-black/30 rounded-lg p-2 max-h-[100px] overflow-y-auto"></div>
+                    <div id="product-tokens" class="text-[10px] text-gray-600"></div>
+                  </div>
                 </div>
-                <input type="file" id="product-file" accept="image/jpeg,image/png,image/webp" class="hidden">
-              </div>
-              <!-- Preview -->
-              <div id="product-preview" class="hidden">
-                <img id="product-preview-img" class="w-28 h-28 rounded-lg object-cover border border-gray-700" alt="товар">
-              </div>
-            </div>
-            <!-- Status -->
-            <div id="product-status" class="hidden text-xs"></div>
-            <!-- Description result -->
-            <div id="product-result" class="hidden space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-emerald-400 font-medium">✓ Описание получено от Gemini</span>
-                <button id="product-clear" class="text-[10px] text-gray-500 hover:text-red-400 transition-colors">✕ Убрать товар</button>
-              </div>
-              <div id="product-description" class="text-[11px] text-gray-300 leading-relaxed bg-black/30 rounded-lg p-3 max-h-[150px] overflow-y-auto"></div>
-              <div id="product-tokens" class="text-[10px] text-gray-600"></div>
-            </div>
-          </div>
 
-          <!-- Category -->
-          <div class="glass-panel p-4 space-y-2">
-            <div class="text-xs text-gray-400 font-medium mb-1">Категория юмора</div>
-            <div class="flex gap-3 items-center">
-              <button id="humor-random" class="btn-neon text-xs">🎲 Случайная</button>
-              <span id="gen-cat" class="text-sm neon-text-green">подберётся автоматически</span>
-            </div>
-            <div id="humor-result" class="hidden mt-1">
-              <div id="humor-cat-ru" class="text-sm font-semibold neon-text-green"></div>
-              <div id="humor-cat-en" class="text-xs text-gray-500"></div>
-            </div>
-          </div>
+                <!-- Options -->
+                <div class="space-y-2">
+                  <div class="text-[10px] text-gray-500 mb-1">Опции генерации</div>
+                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Строго 8 секунд</span><div class="toggle-track active" data-opt="enforce8s"><div class="toggle-thumb"></div></div></div>
+                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Сохранить ритм</span><div class="toggle-track active" data-opt="preserveRhythm"><div class="toggle-thumb"></div></div></div>
+                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Точный липсинк</span><div class="toggle-track active" data-opt="strictLipSync"><div class="toggle-thumb"></div></div></div>
+                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Автообрезка</span><div class="toggle-track" data-opt="allowAutoTrim"><div class="toggle-thumb"></div></div></div>
+                </div>
 
-          <!-- Options (collapsed by default for simplicity) -->
-          <details class="glass-panel">
-            <summary class="p-4 text-xs text-gray-400 font-medium cursor-pointer hover:text-gray-300 transition-colors">Дополнительные опции ▾</summary>
-            <div class="px-4 pb-4 space-y-3">
-              <div class="flex items-center justify-between"><span class="text-xs text-gray-400">Строго 8 секунд</span><div class="toggle-track active" data-opt="enforce8s"><div class="toggle-thumb"></div></div></div>
-              <div class="flex items-center justify-between"><span class="text-xs text-gray-400">Сохранить ритм</span><div class="toggle-track active" data-opt="preserveRhythm"><div class="toggle-thumb"></div></div></div>
-              <div class="flex items-center justify-between"><span class="text-xs text-gray-400">Точный липсинк</span><div class="toggle-track active" data-opt="strictLipSync"><div class="toggle-thumb"></div></div></div>
-              <div class="flex items-center justify-between"><span class="text-xs text-gray-400">Автообрезка если длинно</span><div class="toggle-track" data-opt="allowAutoTrim"><div class="toggle-thumb"></div></div></div>
-            </div>
-          </details>
+              </div>
+            </details>
+          </div>
 
           <!-- Step 3: Generate -->
           <div class="flex items-center gap-3 mt-2">
