@@ -566,7 +566,7 @@ function handleVideoFile(file) {
     const videoBase64 = reader.result.split(',')[1]; // strip data:video/mp4;base64, prefix
     state._videoFileBase64 = videoBase64;
     state._videoFileMime = file.type; // video/mp4 or video/quicktime
-    log('OK', 'ВИДЕО', `📦 Видео закодировано (${(file.size / 1024 / 1024).toFixed(1)} MB) — будет отправлено в Gemini`);
+    log('OK', 'ВИДЕО', `📦 Видео закодировано (${(file.size / 1024 / 1024).toFixed(1)} MB) — готово к анализу`);
   };
   reader.readAsDataURL(file);
 
@@ -619,7 +619,7 @@ function handleVideoFile(file) {
     // Auto-switch to video mode
     state.inputMode = 'video';
 
-    log('OK', 'ВИДЕО', `🎬 Загружено: ${file.name} (${state.videoMeta.duration}с) — видео будет отправлено в Gemini`);
+    log('OK', 'ВИДЕО', `🎬 Загружено: ${file.name} (${state.videoMeta.duration}с) — готово к анализу`);
   };
 
   video.onerror = () => {
@@ -708,7 +708,7 @@ async function handleProductFile(file) {
     const base64 = dataUrl.split(',')[1];
     const mimeType = file.type;
 
-    showProductStatus('⏳ Gemini анализирует товар...', 'text-gray-400');
+    showProductStatus('⏳ AI анализирует товар...', 'text-gray-400');
 
     try {
       const apiBase = window.location.origin;
@@ -884,7 +884,7 @@ function renderPreflight(localResult) {
 
       <!-- Status -->
       <div id="preflight-status" class="text-center py-2 rounded-lg text-xs font-medium bg-cyan-500/8 text-cyan-400 border border-cyan-500/15">
-        <span class="inline-block animate-pulse mr-1">◉</span> Gemini обрабатывает контракт...
+        <span class="inline-block animate-pulse mr-1">◉</span> FERIXDI AI генерирует контент...
       </div>
     </div>
   `;
@@ -1199,25 +1199,25 @@ function initGenerate() {
 
     if (isApiMode && localResult._apiContext) {
       showGenStatus('', '');
-      log('INFO', 'GEMINI', 'Отправляю контекст в Gemini API...');
+      log('INFO', 'AI', 'Генерирую уникальный контент...');
 
       try {
         const geminiData = await callGeminiAPI(localResult._apiContext);
         if (geminiData) {
           const merged = mergeGeminiResult(localResult, geminiData);
-          log('OK', 'GEMINI', 'Творческий контент от Gemini объединён');
-          updatePreflightStatus('✅ Контракт обработан · Gemini вернул уникальный контент', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
+          log('OK', 'AI', 'Творческий контент сгенерирован');
+          updatePreflightStatus('✅ Готово · FERIXDI AI сгенерировал уникальный контент', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
           displayResult(merged);
         } else {
           // No JWT token — try to auto-auth and show local result for now
-          log('WARN', 'GEMINI', 'Нет токена — показываю локальный результат');
+          log('WARN', 'AI', 'Нет токена — показываю локальный результат');
           updatePreflightStatus('⚠️ Нет токена — показан локальный шаблон', 'bg-amber-500/8 text-amber-400 border border-amber-500/15');
           if (isPromoValid()) autoAuth();
           displayResult(localResult);
         }
       } catch (apiErr) {
-        log('ERR', 'GEMINI', `Ошибка API: ${apiErr.message}`);
-        updatePreflightStatus(`❌ Ошибка Gemini: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
+        log('ERR', 'AI', `Ошибка API: ${apiErr.message}`);
+        updatePreflightStatus(`❌ Ошибка генерации: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
         showGenStatus('', '');
         document.getElementById('gen-results').classList.remove('hidden');
         document.getElementById('gen-results').innerHTML = `
@@ -1232,7 +1232,7 @@ function initGenerate() {
       }
     } else {
       // Demo mode or API without _apiContext — show local result
-      updatePreflightStatus('📋 Локальный режим · Контракт собран, Gemini не подключён', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
+      updatePreflightStatus('📋 Демо-режим · Для полной генерации введи промо-код в настройках', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
       displayResult(localResult);
     }
 

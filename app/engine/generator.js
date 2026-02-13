@@ -1701,10 +1701,10 @@ export function mergeGeminiResult(localResult, geminiData) {
   const hashtags = (g.hashtags || r.log?.engagement?.hashtags || []).map(t => t.startsWith('#') ? t : '#' + t);
   const seriesTag = '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
 
-  r.ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Gemini Production)
+  r.ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (FERIXDI AI Production)
 ═══════════════════════════════════════════
 📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}
-🤖 Сгенерировано Gemini — уникальный контент
+🤖 Сгенерировано FERIXDI AI — уникальный контент
 👥 Пара: ${charA.name_ru} (${cast.speaker_A?.age || 'elderly'}) × ${charB.name_ru} (${cast.speaker_B?.age || 'elderly'})
 🎭 Динамика: ${pairDynamic}
 📍 Локация: ${ctx.location.split(',')[0]}

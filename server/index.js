@@ -443,7 +443,7 @@ ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опи�
 app.post('/api/generate', authMiddleware, async (req, res) => {
   const GEMINI_KEY = process.env.GEMINI_API_KEY;
   if (!GEMINI_KEY) {
-    return res.status(503).json({ error: 'GEMINI_API_KEY не настроен. Добавьте переменную окружения на сервере.' });
+    return res.status(503).json({ error: 'AI-движок не настроен. Обратитесь к администратору.' });
   }
 
   const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime } = req.body;
@@ -511,12 +511,12 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     if (!resp.ok) {
       const errMsg = data.error?.message || JSON.stringify(data.error) || 'Gemini API error';
       console.error('Gemini generate error:', errMsg);
-      return res.status(resp.status).json({ error: `Gemini: ${errMsg}` });
+      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
     }
 
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) {
-      return res.status(422).json({ error: 'Gemini не вернул контент. Попробуйте ещё раз.' });
+      return res.status(422).json({ error: 'AI не вернул контент. Попробуйте ещё раз.' });
     }
 
     let geminiResult;
@@ -579,7 +579,7 @@ app.post('/api/product/describe', authMiddleware, async (req, res) => {
 
   const GEMINI_KEY = process.env.GEMINI_API_KEY;
   if (!GEMINI_KEY) {
-    return res.status(503).json({ error: 'GEMINI_API_KEY не настроен. Добавьте переменную окружения на сервере.' });
+    return res.status(503).json({ error: 'AI-движок не настроен. Обратитесь к администратору.' });
   }
 
   try {
@@ -626,13 +626,13 @@ Format your response as a single dense paragraph optimized for AI image generati
     const data = await resp.json();
 
     if (!resp.ok) {
-      const errMsg = data.error?.message || JSON.stringify(data.error) || 'Gemini API error';
-      return res.status(resp.status).json({ error: `Gemini: ${errMsg}` });
+      const errMsg = data.error?.message || JSON.stringify(data.error) || 'AI error';
+      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
     }
 
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) {
-      return res.status(422).json({ error: 'Gemini не вернул описание. Попробуйте другое фото.' });
+      return res.status(422).json({ error: 'AI не вернул описание. Попробуйте другое фото.' });
     }
 
     res.json({
