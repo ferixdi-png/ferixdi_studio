@@ -836,10 +836,10 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       directive: 'One person holds a phone at arm\'s length. This creates specific motion: hand tremor, breathing oscillation, weight shift drift. NOT smooth, NOT static, NOT gimbal.',
       base_motion: 'Constant micro-jitter: 0.8-2px random drift at 2-5Hz. This is hand tremor + breathing + pulse. Slightly more on Y-axis (vertical) than X. NEVER perfectly still for >0.3s.',
       breathing_oscillation: 'Slow 0.3-0.5px vertical oscillation at 0.25-0.33Hz (15-20 breaths/min). The holder breathes — camera rises and falls slightly with chest.',
-      hook_motion: '0.0-0.8s: slight push-in (arm extends, 2-3% scale increase) + micro-rotation as holder adjusts grip. Phone OIS may kick in — brief stabilization artifact.',
-      act_A_motion: '0.8-3.6s: subtle drift toward A (holder naturally tracks the speaker). 0.5-1° rotation over 2.8s. Jitter increases slightly as A gets animated.',
-      act_B_motion: '3.6-7.1s: micro-reframe toward B. Possible brief 0.1s autofocus hunt as phone re-acquires B\'s face. Slight pull-back (holder unconsciously leans back from B\'s intensity).',
-      release_motion: '7.1-8.0s: camera shakes 3-6px at 6-10Hz from laughter body tremor. Brief phone tilt (5-8°) as holder loses composure. Partial stabilization from OIS fights the shake.',
+      hook_motion: '0.0-0.6s: slight push-in (arm extends, 2-3% scale increase) + micro-rotation as holder adjusts grip. Phone OIS may kick in — brief stabilization artifact.',
+      act_A_motion: '0.6-3.8s: subtle drift toward A (holder naturally tracks the speaker). 0.5-1° rotation over 3.2s. Jitter increases slightly as A gets animated.',
+      act_B_motion: '3.8-7.3s: micro-reframe toward B. Possible brief 0.1s autofocus hunt as phone re-acquires B\'s face. Slight pull-back (holder unconsciously leans back from B\'s intensity).',
+      release_motion: '7.3-8.0s: camera shakes 3-6px at 6-10Hz from laughter body tremor. Brief phone tilt (5-8°) as holder loses composure. Partial stabilization from OIS fights the shake.',
       stabilization_artifacts: 'Phone OIS/EIS creates slight "jello" wobble on fast movements. Rolling shutter visible on quick jerks (vertical lines lean 2-3°). These are MARKERS of real phone footage.',
       forbidden: 'No smooth dolly/crane/gimbal moves. No rack focus pulls. No cinematic camera work. No perfectly static tripod shots. No drone. This is a HAND holding a PHONE.',
     },
@@ -872,10 +872,10 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
     // ── 6. EYES & GAZE ──────────────────────────
     gaze: {
       directive: 'Eyes create the hypnotic connection. In selfie video, "looking at camera" = "looking into viewer\'s eyes". This is the most powerful retention tool.',
-      hook_gaze: '0.0-0.8s: A locks DIRECT EYE CONTACT with camera lens. Pupil-to-lens alignment. Challenging, urgent, pulling viewer in. This triggers primal "someone is staring at me" response. STRONGEST hook possible.',
-      act_A_gaze: '0.8-3.6s: A maintains 70% camera contact (speaking TO viewer), 30% quick glances at B (acknowledging opponent). Gaze breaks are FAST (0.2-0.4s) then back to camera. B: side-eye at A (60%), occasional slow blink, pupils tracking A\'s gestures.',
-      act_B_gaze: '3.6-7.1s: B locks camera (80% direct) for punchline delivery — "I\'m telling YOU this". On killer word: maximum eye intensity, slight squint. A: eyes progressively widen (shock), dart between B and camera at 2-3Hz (processing what B said).',
-      release_gaze: '7.1-8.0s: gaze releases — both look at each other (warm recognition), then one or both glance back at camera with laugh-crinkled eyes. This "shared moment caught on camera" feeling.',
+      hook_gaze: '0.0-0.6s: A locks DIRECT EYE CONTACT with camera lens. Pupil-to-lens alignment. Challenging, urgent, pulling viewer in. This triggers primal "someone is staring at me" response. STRONGEST hook possible.',
+      act_A_gaze: '0.6-3.8s: A maintains 70% camera contact (speaking TO viewer), 30% quick glances at B (acknowledging opponent). Gaze breaks are FAST (0.2-0.4s) then back to camera. B: side-eye at A (60%), occasional slow blink, pupils tracking A\'s gestures.',
+      act_B_gaze: '3.8-7.3s: B locks camera (80% direct) for punchline delivery — "I\'m telling YOU this". On killer word: maximum eye intensity, slight squint. A: eyes progressively widen (shock), dart between B and camera at 2-3Hz (processing what B said).',
+      release_gaze: '7.3-8.0s: gaze releases — both look at each other (warm recognition), then one or both glance back at camera with laugh-crinkled eyes. This "shared moment caught on camera" feeling.',
       pupil_detail: 'Pupils: 3-5mm diameter (adjusting to light). Visible catch-light from dominant light source (window = rectangular, bulb = round). Wet glint on sclera. Thin red vessels visible at 35cm. Iris texture visible.',
       micro_saccades: 'Tiny rapid eye movements every 0.5-1.5s — eyes NEVER perfectly still. These 0.5-1° micro-jumps are involuntary and are the single biggest "alive eyes" signal. Without them, eyes look like glass.',
       smartphone_eye_contact: 'Front camera is 2-5cm ABOVE the screen. True "camera eye contact" means looking slightly UP. Most people look at screen (their own face) → gaze is 2-3° below lens. Mix both: 60% at lens (contact), 40% at screen (natural).',
@@ -950,8 +950,8 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       directive: 'Single continuous take, no cuts. But internal rhythm follows storytelling beats. The viewer feels beginning-middle-end in 8 seconds without any visible editing.',
       start: 'COLD OPEN MID-SCENE: Video starts with argument ALREADY HAPPENING. Characters positioned, emotion at 70%+, voices possibly already raised. No "hello", no setup, no walking in. The viewer eavesdrops on a fight already in progress.',
       energy_curve: 'Energy graph: hook 80% → A speaks 85-90% → transition dip 60% (the pause) → B responds 90-95% → killer word 100% → release 70% warm. This curve creates MOMENTUM that pulls through the whole 8s.',
-      pre_punch_pause: 'At 3.4-3.6s (A→B transition): 0.15-0.25s of LOADED SILENCE. A finishes, brief beat where B\'s expression shifts (processing → ready to destroy). This pause makes the audience LEAN IN. The gap is filled by room tone + breathing, not dead silence.',
-      killer_delivery: 'B\'s killer word at ~7.0s: slight camera push (phone holder leans forward unconsciously). A\'s physical reaction is VISIBLE and SIMULTANEOUS: freeze mid-gesture, eyes widen, jaw slackens. The REACTION sells the punchline.',
+      pre_punch_pause: 'At 3.6-3.8s (A→B transition): 0.15-0.25s of LOADED SILENCE. A finishes, brief beat where B\'s expression shifts (processing → ready to destroy). This pause makes the audience LEAN IN. The gap is filled by room tone + breathing, not dead silence.',
+      killer_delivery: 'B\'s killer word at ~7.1s: slight camera push (phone holder leans forward unconsciously). A\'s physical reaction is VISIBLE and SIMULTANEOUS: freeze mid-gesture, eyes widen, jaw slackens. The REACTION sells the punchline.',
       end_on_reaction: 'Final 0.5-0.8s: end on the REACTION to the punchline, NOT the punchline itself. Shared laughter, A\'s defeated smile, mutual physical contact. This is what makes people REWATCH — they want to see that moment of surrender again.',
       rewatch_bait: 'In the final 0.3-0.5s: one character makes a micro-expression that rewards re-watching: a barely-visible eye-roll, a "I can\'t believe I\'m laughing" lip-bite, a subtle "you got me" head-shake. Something new to discover on rewatch #2-3.',
       loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (TikTok/Reels) feels semi-continuous. Not identical, but compatible mood — warmth transitioning back to tension.',
@@ -994,9 +994,9 @@ function buildRemakeInstruction(video_meta, charA, charB) {
   parts.push('');
   parts.push('⚠️ ВАЖНО:');
   parts.push('- Диалог ОБЯЗАТЕЛЬНО на русском языке');
-  parts.push('- Реплика A: 4-7 слов, окно 2.8 секунды');
-  parts.push('- Реплика B: 4-8 слов, окно 3.5 секунды');
-  parts.push('- Killer word — последнее ударное слово B, ближе к 7.0с');
+  parts.push('- Реплика A: 6-10 слов, окно 3.2 секунды');
+  parts.push('- Реплика B: 6-12 слов, окно 3.5 секунды');
+  parts.push('- Killer word — последнее ударное слово B, ближе к 7.1с');
   parts.push('- Если к сообщению приложено фото обложки оригинала — используй его как визуальный референс');
   parts.push('- Воспроизведи композицию кадра, позы, энергию из обложки');
 
@@ -1047,7 +1047,7 @@ function runQCGate(blueprint, cast) {
     { id: 'h2', name_ru: 'Реализм рта', name_en: 'mouth_realistic', pass: true, hard: true, group: 'лицо', desc_fix: 'Артикуляция синхронизирована с речью' },
     { id: 'h3', name_ru: 'Тишина B при речи A', name_en: 'silent_sealed', pass: true, hard: true, group: 'аудио', desc_fix: 'Рот B заблокирован на сегменте A' },
     { id: 'h4', name_ru: 'Нет наложений аудио', name_en: 'audio_no_overlap', pass: true, hard: true, group: 'аудио', desc_fix: 'Сегменты не пересекаются' },
-    { id: 'h5', name_ru: 'Хук читаем', name_en: 'hook_timing', pass: true, hard: false, group: 'тайминг', desc_fix: 'Хук ≤0.8с — внимание захвачено' },
+    { id: 'h5', name_ru: 'Хук читаем', name_en: 'hook_timing', pass: true, hard: false, group: 'тайминг', desc_fix: 'Хук ≤0.6с — внимание захвачено' },
     { id: 'h6', name_ru: 'Killer word на месте', name_en: 'killer_word_position', pass: true, hard: false, group: 'тайминг', desc_fix: 'Ударное слово в последней трети B' },
     { id: 'h7', name_ru: 'Release без слов', name_en: 'release_clean', pass: true, hard: false, group: 'тайминг', desc_fix: 'Финал — только смех, 0 слов' },
     { id: 'h8', name_ru: 'Фон без паттернов', name_en: 'background_solid', pass: true, hard: false, group: 'сцена', desc_fix: 'Фон натуральный, без артефактов' },
@@ -1386,7 +1386,7 @@ export function generate(input) {
       dynamic: `${charA.name_ru} (A, ${charA.vibe_archetype || 'провокатор'}) → ${charB.name_ru} (B, ${charB.vibe_archetype || 'база'})`,
       hook: hookObj.action_en,
       conflict: `Comedic tension about ${cat.en.toLowerCase()}${topicRu ? ': ' + topicRu : ''}, no personal insults, rage directed at situation only`,
-      punchline: `Killer word "${killerWord}" lands near 7.0s mark, followed by ${releaseObj.action_en}`,
+      punchline: `Killer word "${killerWord}" lands near 7.1s mark, followed by ${releaseObj.action_en}`,
       tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy — physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension — understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull — both characters committed, natural escalation to punchline'}`,
     },
     camera: cameraPreset,

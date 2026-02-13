@@ -65,8 +65,8 @@ export function validateTimingGrid(blueprint) {
 
   // v2: Hook must end by 0.85s (0.8 + tolerance)
   const hookScene = scenes.find(s => s.segment === 'hook' || s.id === 1);
-  if (hookScene && hookScene.end > 0.85) {
-    warnings.push(`Hook ends at ${hookScene.end}s, must be ≤0.8s`);
+  if (hookScene && hookScene.end > 0.65) {
+    warnings.push(`Hook ends at ${hookScene.end}s, must be ≤0.6s`);
   }
 
   // v2: Release must have zero dialogue
@@ -75,10 +75,10 @@ export function validateTimingGrid(blueprint) {
     warnings.push('Release segment must have ZERO words (shared laugh only)');
   }
 
-  // Killer word check near 6.85s
-  const killerScene = scenes.find(s => s.start <= 6.85 && s.end >= 6.85);
+  // Killer word check near 7.1s
+  const killerScene = scenes.find(s => s.start <= 7.1 && s.end >= 7.1);
   if (!killerScene) {
-    warnings.push('No scene covers killer word position (~6.85s)');
+    warnings.push('No scene covers killer word position (~7.1s)');
   }
 
   return { valid: warnings.length === 0, warnings, fixes };
