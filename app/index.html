@@ -424,25 +424,16 @@
             <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400/70 hover:text-cyan-300 transition-colors">написать в Telegram →</a></p>
           </div>
 
-          <!-- Сервер -->
-          <div class="glass-panel p-4 space-y-4">
-            <details>
-              <summary class="text-xs text-gray-400 font-medium cursor-pointer hover:text-gray-300 transition-colors">Сервер и кеш ▸</summary>
-              <div class="mt-3 space-y-3 border-t border-gray-800/50 pt-3">
-                <div>
-                  <label class="text-[10px] text-gray-500 font-medium block mb-1">URL сервера (обычно менять не нужно)</label>
-                  <input id="api-url" type="url" class="input-field text-xs" value="https://ferixdi-studio.onrender.com">
-                </div>
-                <div>
-                  <label class="text-[10px] text-gray-500 mb-1 block font-medium">Кеш истории</label>
-                  <div class="flex gap-2 items-center">
-                    <span id="cache-stats" class="text-[10px] text-gray-600">—</span>
-                    <button id="btn-clear-cache" class="btn-neon-pink text-[10px]">Очистить</button>
-                  </div>
-                </div>
-              </div>
-            </details>
+          <!-- Кеш -->
+          <div class="glass-panel p-4 space-y-3">
+            <div class="text-xs text-gray-400 font-medium">📦 Кеш истории</div>
+            <div class="flex gap-2 items-center">
+              <span id="cache-stats" class="text-[10px] text-gray-600">—</span>
+              <button id="btn-clear-cache" class="btn-neon-pink text-[10px]">Очистить</button>
+            </div>
           </div>
+          <!-- Server URL (hidden, internal) -->
+          <input id="api-url" type="hidden" value="https://ferixdi-studio.onrender.com">
 
           <!-- О проекте -->
           <div class="glass-panel p-4 relative overflow-hidden">
