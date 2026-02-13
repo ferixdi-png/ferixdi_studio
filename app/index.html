@@ -327,6 +327,24 @@
               <div class="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white text-xs font-bold">✓</div>
               <span class="text-sm font-semibold text-emerald-400">Готово! Скопируй нужное:</span>
             </div>
+
+            <!-- Context & Dialogue Summary -->
+            <div id="gen-context-block" class="glass-panel p-4 space-y-3 border-l-2 border-violet-500/40">
+              <div class="text-xs text-violet-400 font-semibold flex items-center gap-1.5">🎬 Контекст ролика</div>
+              <div id="gen-context-meta" class="grid grid-cols-2 gap-2 text-[11px]"></div>
+              <div class="space-y-2">
+                <div class="bg-black/30 rounded-lg p-3">
+                  <div class="text-[10px] text-cyan-400 font-medium mb-1">🅰️ Реплика A (провокация):</div>
+                  <div id="gen-dialogue-a" class="text-sm text-gray-200 font-medium leading-relaxed">—</div>
+                </div>
+                <div class="bg-black/30 rounded-lg p-3">
+                  <div class="text-[10px] text-purple-400 font-medium mb-1">🅱️ Реплика B (панчлайн):</div>
+                  <div id="gen-dialogue-b" class="text-sm text-gray-200 font-medium leading-relaxed">—</div>
+                  <div id="gen-killer-word" class="text-[10px] text-amber-400 mt-1"></div>
+                </div>
+              </div>
+            </div>
+
             <div class="h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
             <div class="flex gap-2 flex-wrap">
               <button class="mode-btn active" data-tab="photo">📸 Фото-промпт</button>
@@ -373,6 +391,13 @@
             </div>
             <!-- QC Gate -->
             <div id="gen-qc-gate" class="hidden glass-panel p-4 border-l-2 border-emerald-500/40 space-y-1"></div>
+
+            <!-- Regenerate with feedback -->
+            <div class="glass-panel p-4 space-y-3 border-l-2 border-cyan-400/30">
+              <div class="text-xs text-cyan-400 font-semibold flex items-center gap-1.5">🔄 Не то что нужно? Перегенерируй с уточнением</div>
+              <textarea id="regen-feedback" class="input-field h-16 resize-none text-xs" placeholder="Напиши что доработать: другой диалог, другую тему, больше агрессии, мягче мат, сменить локацию..."></textarea>
+              <button id="btn-regenerate" class="btn-neon w-full py-2.5 text-sm font-medium">🔄 Перегенерировать с учётом правок</button>
+            </div>
           </div>
         </section>
 

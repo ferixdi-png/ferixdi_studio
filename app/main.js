@@ -824,6 +824,10 @@ function displayResult(result) {
   document.querySelector('#tab-ru pre').textContent = result.ru_package;
   document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
   showGenStatus('', 'hidden');
+
+  // Populate context & dialogue block
+  populateContextBlock(result);
+
   document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // Warnings
@@ -847,6 +851,38 @@ function displayResult(result) {
   if (result.auto_fixes?.length > 0) {
     result.auto_fixes.forEach(f => log('INFO', 'ФИКС', f));
   }
+}
+
+function populateContextBlock(result) {
+  const metaEl = document.getElementById('gen-context-meta');
+  const dA = document.getElementById('gen-dialogue-a');
+  const dB = document.getElementById('gen-dialogue-b');
+  const kw = document.getElementById('gen-killer-word');
+  if (!metaEl) return;
+
+  // Extract dialogue from blueprint or _apiContext
+  const segs = result.blueprint_json?.dialogue_segments || [];
+  const lineA = segs.find(s => s.speaker === 'A');
+  const lineB = segs.find(s => s.speaker === 'B');
+  const ctx = result._apiContext || {};
+  const dialogueA = lineA?.text_ru || ctx.dialogueA || '—';
+  const dialogueB = lineB?.text_ru || ctx.dialogueB || '—';
+  const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || '';
+  const cat = result.log?.category || ctx.category || {};
+  const est = result.duration_estimate || {};
+  const engage = result.log?.engagement || {};
+
+  if (dA) dA.textContent = `«${dialogueA}»`;
+  if (dB) dB.textContent = `«${dialogueB}»`;
+  if (kw && killerWord) kw.textContent = `💥 Killer word: «${killerWord}»`;
+
+  // Meta grid
+  metaEl.innerHTML = `
+    <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Категория:</span> <span class="text-gray-200">${cat.ru || '—'}</span></div>
+    <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Тайминг:</span> <span class="text-gray-200">${est.total || '8.0'}с · ${est.risk || '—'}</span></div>
+    <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Хук:</span> <span class="text-gray-200">${ctx.hookAction?.action_ru?.slice(0, 35) || '—'}</span></div>
+    <div class="bg-black/20 rounded p-2"><span class="text-gray-500">Заголовок:</span> <span class="text-gray-200">${engage.viral_title?.slice(0, 45) || '—'}${engage.viral_title?.length > 45 ? '...' : ''}</span></div>
+  `;
 }
 
 function populateDialogueEditor(result) {
@@ -1036,6 +1072,22 @@ function initGenerate() {
         document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== tab);
       });
     });
+  });
+
+  // Regenerate with feedback
+  document.getElementById('btn-regenerate')?.addEventListener('click', () => {
+    const feedback = document.getElementById('regen-feedback')?.value.trim();
+    const ideaInput = document.getElementById('idea-input');
+    if (ideaInput) {
+      // Append feedback to the idea input so generator picks it up
+      const prev = ideaInput.value.trim();
+      const feedbackLine = feedback ? `[ДОРАБОТКА: ${feedback}]` : '';
+      ideaInput.value = prev ? `${prev}\n${feedbackLine}` : feedbackLine;
+    }
+    // Clear feedback field
+    if (document.getElementById('regen-feedback')) document.getElementById('regen-feedback').value = '';
+    // Trigger generation
+    document.getElementById('btn-generate')?.click();
   });
 }
 
