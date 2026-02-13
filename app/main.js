@@ -11,8 +11,10 @@ import { historyCache } from './engine/history_cache.js';
 // ─── STATE ───────────────────────────────────
 const state = {
   characters: [],
+  locations: [],
   selectedA: null,
   selectedB: null,
+  selectedLocation: null, // location id or null (auto)
   inputMode: 'idea',
   category: null,
   videoMeta: null,
@@ -116,6 +118,93 @@ function initApp() {
   if (isPromoValid()) {
     autoAuth();
   }
+}
+
+// ─── LOCATIONS ───────────────────────────────
+async function loadLocations() {
+  try {
+    const resp = await fetch(new URL('./data/locations.json', import.meta.url));
+    state.locations = await resp.json();
+    log('OK', 'ДАННЫЕ', `Загружено ${state.locations.length} локаций`);
+    populateLocationFilters();
+    renderLocations();
+  } catch (e) {
+    log('ERR', 'ДАННЫЕ', `Ошибка загрузки локаций: ${e.message}`);
+  }
+}
+
+function populateLocationFilters() {
+  const groups = [...new Set(state.locations.map(l => l.group))].sort();
+  const sel = document.getElementById('loc-group-filter');
+  if (!sel) return;
+  groups.forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g; opt.textContent = g;
+    sel.appendChild(opt);
+  });
+}
+
+function renderLocations(filterGroup = '') {
+  const grid = document.getElementById('loc-grid');
+  if (!grid) return;
+  let locs = [...state.locations];
+  if (filterGroup) locs = locs.filter(l => l.group === filterGroup);
+
+  grid.innerHTML = `
+    <div class="loc-card ${!state.selectedLocation ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
+      <div class="text-sm">🎲</div>
+      <div class="text-[11px] font-medium text-violet-300">Авто</div>
+      <div class="text-[10px] text-gray-500">AI подберёт</div>
+    </div>
+  ` + locs.map(l => {
+    const sel = state.selectedLocation === l.id;
+    const moodIcon = l.mood === 'nostalgic warmth' ? '🌟' : l.mood === 'sterile tension' ? '🩵' : l.mood === 'organic chaos' ? '🌿' : l.mood === 'dramatic intimacy' ? '🕯️' : '🎨';
+    return `
+    <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
+      <div class="text-sm">${moodIcon}</div>
+      <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
+      <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
+    </div>`;
+  }).join('');
+
+  updateLocationInfo();
+}
+
+function updateLocationInfo() {
+  const info = document.getElementById('loc-selected-info');
+  if (!info) return;
+  if (!state.selectedLocation) {
+    info.classList.add('hidden');
+    return;
+  }
+  const loc = state.locations.find(l => l.id === state.selectedLocation);
+  if (!loc) { info.classList.add('hidden'); return; }
+  info.classList.remove('hidden');
+  const tags = (loc.tags || []).map(t => `<span class="tag text-[10px]">${t}</span>`).join(' ');
+  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium">📍 ${loc.name_ru}</span>${tags}</div><div class="text-[10px] text-gray-500 mt-1">${loc.tagline_ru}</div>`;
+}
+
+function initLocationPicker() {
+  document.getElementById('loc-grid')?.addEventListener('click', (e) => {
+    const card = e.target.closest('.loc-card');
+    if (!card) return;
+    const id = card.dataset.locId;
+    state.selectedLocation = id || null;
+    renderLocations(document.getElementById('loc-group-filter')?.value || '');
+    log('INFO', 'ЛОКАЦИЯ', state.selectedLocation ? `Выбрана: ${state.locations.find(l => l.id === state.selectedLocation)?.name_ru}` : 'Авто-выбор');
+  });
+  document.getElementById('loc-group-filter')?.addEventListener('change', (e) => {
+    renderLocations(e.target.value);
+  });
+  document.getElementById('loc-random-btn')?.addEventListener('click', () => {
+    const filtered = document.getElementById('loc-group-filter')?.value;
+    let pool = filtered ? state.locations.filter(l => l.group === filtered) : state.locations;
+    if (pool.length === 0) pool = state.locations;
+    const rand = pool[Math.floor(Math.random() * pool.length)];
+    state.selectedLocation = rand.id;
+    renderLocations(filtered || '');
+    log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
+  });
 }
 
 // ─── CHARACTERS ──────────────────────────────
@@ -791,6 +880,8 @@ function initGenerate() {
       options: state.options,
       seed: Date.now().toString(),
       characters: state.characters,
+      locations: state.locations,
+      selected_location_id: state.selectedLocation,
     };
 
     // Step 1: Local generation (instant, structural template)
@@ -1284,4 +1375,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyButtons();
   initHeaderSettings();
   initLogPanel();
+  initLocationPicker();
+  loadLocations();
 });

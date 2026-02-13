@@ -17,22 +17,15 @@ const GRID_V2 = {
   release: { start: 7.1, end: 8.0 },
 };
 
-// ─── LOCATIONS ───────────────────────────────
-const LOCATIONS = [
+// ─── LOCATIONS (fallback — used when no external locations loaded) ──
+const FALLBACK_LOCATIONS = [
   'Weathered wooden barn interior, hay bales, single dusty lightbulb swinging, cracks of sunlight through planks',
   'Old bathhouse interior, fogged mirrors, wooden benches, copper ladle, steam wisps in backlight',
   'Root cellar with earthen walls, shelves of preserves in glass jars, bare bulb overhead, cool blue-tint air',
-  'Chicken coop doorway, feathers floating in golden backlight, wooden perch, scratching hens out of focus',
-  'Overgrown garden path, sunflowers towering overhead, rusty watering can, dappled light through foliage',
-  'Dusty attic with exposed rafters, cardboard boxes, moth-eaten curtains, slanted skylight beam',
   'Soviet-era kitchen, peeling wallpaper, humming Saratov fridge, net curtains filtering amber sunlight',
   'Concrete balcony with drying laundry, distant city haze, rusted railing with chipped turquoise paint',
-  'Dacha greenhouse with fogged glass panels, tomato vines, soil-stained wooden shelves',
   'Stairwell landing with beige tile, fluorescent tube buzzing overhead, mailboxes, elevator door ajar',
   'Open-air bazaar stall, pyramid of watermelons, striped awning, plastic bags rustling in breeze',
-  'Polyclinic corridor, mint-green walls, wooden bench, numbered doors, faded health poster',
-  'Marshrutka interior, vinyl seats, steamed windows, hanging air freshener, driver mirror reflection',
-  'Garage interior, oil-stained concrete, tool pegboard, half-disassembled Moskvitch, bare bulb',
   'Park bench near pond with pigeons, birch trees, distant accordion music, golden hour light',
 ];
 
@@ -70,20 +63,19 @@ const PROP_ANCHORS = [
   'folded newspaper with visible Cyrillic headline',
 ];
 
-// ─── CATEGORY → LOCATION PREFERENCES ────────
-// Maps category to preferred location indices (from LOCATIONS array)
-// Fallback: random from all locations
-const LOCATION_HINTS = {
-  'Бытовой абсурд': [6, 7, 2],       // Soviet kitchen, balcony, root cellar
-  'AI и технологии': [6, 9, 7],       // Soviet kitchen, stairwell, balcony
-  'Цены и инфляция': [10, 6, 9],      // bazaar, Soviet kitchen, stairwell
-  'Отношения': [6, 14, 7],            // kitchen, park bench, balcony
-  'Разрыв поколений': [6, 5, 7],      // kitchen, attic, balcony
-  'ЖКХ и коммуналка': [9, 7, 6],      // stairwell, balcony, kitchen
-  'Здоровье и поликлиника': [11, 9, 6], // polyclinic, stairwell, kitchen
-  'Соцсети и тренды': [7, 6, 14],     // balcony, kitchen, park
-  'Дача и огород': [8, 4, 0],         // greenhouse, garden, barn
-  'Транспорт и пробки': [12, 9, 14],  // marshrutka, stairwell, park
+// ─── CATEGORY → LOCATION ID PREFERENCES ─────
+// Maps category to preferred location IDs from locations.json
+const LOCATION_CATEGORY_MAP = {
+  'Бытовой абсурд': ['soviet_kitchen', 'balcony', 'cellar', 'communal_corridor', 'elevator'],
+  'AI и технологии': ['soviet_kitchen', 'stairwell', 'balcony', 'garage', 'school_corridor'],
+  'Цены и инфляция': ['bazaar', 'soviet_kitchen', 'stairwell', 'pharmacy', 'post_office'],
+  'Отношения': ['soviet_kitchen', 'park_bench', 'balcony', 'dacha_veranda', 'fishing_spot'],
+  'Разрыв поколений': ['soviet_kitchen', 'attic', 'balcony', 'playground', 'school_corridor', 'cemetery_bench'],
+  'ЖКХ и коммуналка': ['stairwell', 'balcony', 'soviet_kitchen', 'elevator', 'communal_corridor', 'laundry_room'],
+  'Здоровье и поликлиника': ['polyclinic', 'stairwell', 'soviet_kitchen', 'pharmacy', 'park_bench'],
+  'Соцсети и тренды': ['balcony', 'soviet_kitchen', 'park_bench', 'playground', 'marshrutka'],
+  'Дача и огород': ['greenhouse', 'garden', 'barn', 'dacha_veranda', 'dacha_kitchen', 'chicken_coop'],
+  'Транспорт и пробки': ['marshrutka', 'stairwell', 'park_bench', 'bus_stop', 'train_station'],
 };
 
 // ─── CATEGORY → PROP PREFERENCES ────────────
@@ -757,7 +749,9 @@ export function generate(input) {
     category, thread_memory, video_meta,
     product_info,
     options = {}, seed = Date.now().toString(),
-    characters = []
+    characters = [],
+    locations = [],
+    selected_location_id = null
   } = input;
 
   const rng = seededRandom(seed);
@@ -778,22 +772,37 @@ export function generate(input) {
   const topicEn = topicRu ? `The comedic argument is specifically about: "${topicRu}".` : '';
   const topicForScene = topicRu ? ` The argument topic: ${cat.en.toLowerCase()} — ${topicRu}.` : ` The argument topic: ${cat.en.toLowerCase()}.`;
 
-  // ── Location (category-aware + avoid repeats) ──
-  const locHints = LOCATION_HINTS[cat.ru] || [];
-  let location;
-  if (locHints.length > 0) {
-    // Pick from category-preferred locations, avoid repeats
-    const preferred = locHints.map(i => LOCATIONS[i]).filter(l => !historyCache.hasLocation(l));
+  // ── Location (from external catalog or fallback) ──
+  const locCatalog = locations.length > 0 ? locations : null;
+  let location, locationObj = null;
+
+  if (selected_location_id && locCatalog) {
+    // User explicitly selected a location
+    locationObj = locCatalog.find(l => l.id === selected_location_id);
+    location = locationObj?.scene_en || FALLBACK_LOCATIONS[0];
+  } else if (locCatalog) {
+    // Auto-pick from catalog: category-aware + avoid repeats
+    const catLocIds = LOCATION_CATEGORY_MAP[cat.ru] || [];
+    const catLocs = catLocIds.map(id => locCatalog.find(l => l.id === id)).filter(Boolean);
+    const preferred = catLocs.filter(l => !historyCache.hasLocation(l.scene_en));
     if (preferred.length > 0) {
-      location = preferred[Math.floor(rng() * preferred.length)];
+      locationObj = preferred[Math.floor(rng() * preferred.length)];
+    } else if (catLocs.length > 0) {
+      locationObj = catLocs[Math.floor(rng() * catLocs.length)];
     } else {
-      location = LOCATIONS[locHints[Math.floor(rng() * locHints.length)]];
+      // Fallback: random from entire catalog
+      const available = locCatalog.filter(l => !historyCache.hasLocation(l.scene_en));
+      locationObj = available.length > 0
+        ? available[Math.floor(rng() * available.length)]
+        : locCatalog[Math.floor(rng() * locCatalog.length)];
     }
+    location = locationObj?.scene_en || FALLBACK_LOCATIONS[0];
   } else {
-    const locIdx = Math.floor(rng() * LOCATIONS.length);
-    location = LOCATIONS[locIdx];
+    // No external catalog — use fallback
+    const locIdx = Math.floor(rng() * FALLBACK_LOCATIONS.length);
+    location = FALLBACK_LOCATIONS[locIdx];
     if (historyCache.hasLocation(location)) {
-      location = LOCATIONS[(locIdx + 1) % LOCATIONS.length];
+      location = FALLBACK_LOCATIONS[(locIdx + 1) % FALLBACK_LOCATIONS.length];
     }
   }
 

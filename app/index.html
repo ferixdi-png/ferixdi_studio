@@ -156,6 +156,21 @@
             <button id="gen-back-chars" class="text-xs text-gray-500 hover:text-violet-400 transition-colors">← Сменить персонажей</button>
           </div>
 
+          <!-- Location picker -->
+          <div class="glass-panel p-4 space-y-3" id="section-location">
+            <div class="flex items-center justify-between">
+              <div class="text-xs text-gray-400 font-medium">📍 Локация</div>
+              <div class="flex gap-2 items-center">
+                <select id="loc-group-filter" class="input-field text-[11px] py-1 px-2 max-w-[130px]">
+                  <option value="">Все</option>
+                </select>
+                <button id="loc-random-btn" class="text-[11px] text-gray-500 hover:text-violet-400 transition-colors">🎲 Случайная</button>
+              </div>
+            </div>
+            <div id="loc-grid" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1"></div>
+            <div id="loc-selected-info" class="hidden text-[11px] text-gray-400 border-t border-gray-800/50 pt-2"></div>
+          </div>
+
           <!-- Input — simple by default -->
           <div class="glass-panel p-4 space-y-3" id="section-remix">
             <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею, вставь ссылку на TikTok/Instagram — или оставь пустым, AI придумает сам..."></textarea>

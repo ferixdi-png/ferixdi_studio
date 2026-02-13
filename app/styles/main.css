@@ -292,6 +292,36 @@ textarea.input-field { line-height: 1.6; }
 }
 .char-card.selected::before { opacity: 1; }
 
+/* ── Location Cards ──────────────────────── */
+.loc-card {
+  background: linear-gradient(145deg, rgba(15,15,35,0.5), rgba(10,10,25,0.5));
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(120,119,198,0.08);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.loc-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139,92,246,0.2), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.loc-card:hover {
+  border-color: rgba(139,92,246,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25), 0 0 0 1px rgba(139,92,246,0.08);
+}
+.loc-card:hover::before { opacity: 1; }
+.loc-card.selected {
+  border-color: rgba(139,92,246,0.4);
+  box-shadow: 0 0 20px rgba(139,92,246,0.12), 0 0 0 1px rgba(139,92,246,0.12), inset 0 0 20px rgba(139,92,246,0.03);
+}
+.loc-card.selected::before { opacity: 1; }
+
 /* ── Toggle Switch ────────────────────────── */
 .toggle-track {
   position: relative; width: 2.75rem; height: 1.375rem; border-radius: 9999px;
