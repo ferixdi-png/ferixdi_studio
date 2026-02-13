@@ -70,6 +70,45 @@ const PROP_ANCHORS = [
   'folded newspaper with visible Cyrillic headline',
 ];
 
+// ─── CATEGORY → LOCATION PREFERENCES ────────
+// Maps category to preferred location indices (from LOCATIONS array)
+// Fallback: random from all locations
+const LOCATION_HINTS = {
+  'Бытовой абсурд': [6, 7, 2],       // Soviet kitchen, balcony, root cellar
+  'AI и технологии': [6, 9, 7],       // Soviet kitchen, stairwell, balcony
+  'Цены и инфляция': [10, 6, 9],      // bazaar, Soviet kitchen, stairwell
+  'Отношения': [6, 14, 7],            // kitchen, park bench, balcony
+  'Разрыв поколений': [6, 5, 7],      // kitchen, attic, balcony
+  'ЖКХ и коммуналка': [9, 7, 6],      // stairwell, balcony, kitchen
+  'Здоровье и поликлиника': [11, 9, 6], // polyclinic, stairwell, kitchen
+  'Соцсети и тренды': [7, 6, 14],     // balcony, kitchen, park
+  'Дача и огород': [8, 4, 0],         // greenhouse, garden, barn
+  'Транспорт и пробки': [12, 9, 14],  // marshrutka, stairwell, park
+};
+
+// ─── CATEGORY → PROP PREFERENCES ────────────
+const PROP_HINTS = {
+  'Бытовой абсурд': ['cracked enamel kettle with chipped blue-white pattern', 'ceramic sugar bowl with missing lid, spoon inside'],
+  'AI и технологии': ['vintage Rigonda radio with bakelite knobs', 'wall-mounted rotary phone with coiled cord'],
+  'Цены и инфляция': ['folded newspaper with visible Cyrillic headline', 'ceramic sugar bowl with missing lid, spoon inside'],
+  'Отношения': ['heavy glass ashtray with Soviet-era etching', 'wall-mounted rotary phone with coiled cord'],
+  'Разрыв поколений': ['vintage Rigonda radio with bakelite knobs', 'dog-eared wall calendar from previous year'],
+  'ЖКХ и коммуналка': ['cracked enamel kettle with chipped blue-white pattern', 'old brass samovar with tarnished patina and wooden handles'],
+  'Здоровье и поликлиника': ['dog-eared wall calendar from previous year', 'folded newspaper with visible Cyrillic headline'],
+  'Соцсети и тренды': ['heavy glass ashtray with Soviet-era etching', 'folded newspaper with visible Cyrillic headline'],
+  'Дача и огород': ['rusted tin watering can with bent spout', 'dented aluminum bucket with water condensation'],
+  'Транспорт и пробки': ['folded newspaper with visible Cyrillic headline', 'heavy glass ashtray with Soviet-era etching'],
+};
+
+// ─── LIGHTING VARIATIONS BY LOCATION TYPE ───
+const LIGHTING_MOODS = [
+  { style: 'warm amber backlight through dusty window, hard shadows, 3200K, golden dust motes in light beams', mood: 'nostalgic warmth' },
+  { style: 'cool fluorescent overhead with greenish tint, flat institutional light, subtle flicker', mood: 'sterile tension' },
+  { style: 'dappled natural light through foliage, shifting leaf shadows on faces, warm-cool contrast', mood: 'organic chaos' },
+  { style: 'single bare bulb overhead, harsh directional light from above, deep eye-socket shadows', mood: 'dramatic intimacy' },
+  { style: 'overcast diffused daylight from large window, soft shadowless fill, slight blue undertone', mood: 'calm before storm' },
+];
+
 const HUMOR_CATEGORIES = [
   { ru: 'Бытовой абсурд', en: 'Domestic absurdity' },
   { ru: 'AI и технологии', en: 'AI and technology' },
@@ -646,12 +685,34 @@ export function generate(input) {
   const { A: charA, B: charB } = resolveRoles(rawA, rawB);
   const cat = category || pickRandom(HUMOR_CATEGORIES, rng);
 
-  // ── Location (avoid repeats) ──
-  const locIdx = Math.floor(rng() * LOCATIONS.length);
-  let location = LOCATIONS[locIdx];
-  if (historyCache.hasLocation(location)) {
-    location = LOCATIONS[(locIdx + 1) % LOCATIONS.length];
+  // ── Topic context (from user input) ──
+  // This is the KEY missing piece — user's idea/context must influence ALL prompts
+  const topicRu = context_ru?.trim() || '';
+  const sceneHint = scene_hint_ru?.trim() || '';
+  const topicEn = topicRu ? `The comedic argument is specifically about: "${topicRu}".` : '';
+  const topicForScene = topicRu ? ` The argument topic: ${cat.en.toLowerCase()} — ${topicRu}.` : ` The argument topic: ${cat.en.toLowerCase()}.`;
+
+  // ── Location (category-aware + avoid repeats) ──
+  const locHints = LOCATION_HINTS[cat.ru] || [];
+  let location;
+  if (locHints.length > 0) {
+    // Pick from category-preferred locations, avoid repeats
+    const preferred = locHints.map(i => LOCATIONS[i]).filter(l => !historyCache.hasLocation(l));
+    if (preferred.length > 0) {
+      location = preferred[Math.floor(rng() * preferred.length)];
+    } else {
+      location = LOCATIONS[locHints[Math.floor(rng() * locHints.length)]];
+    }
+  } else {
+    const locIdx = Math.floor(rng() * LOCATIONS.length);
+    location = LOCATIONS[locIdx];
+    if (historyCache.hasLocation(location)) {
+      location = LOCATIONS[(locIdx + 1) % LOCATIONS.length];
+    }
   }
+
+  // ── Lighting (varies by location type) ──
+  const lightingMood = pickRandom(LIGHTING_MOODS, rng);
 
   // ── Wardrobe from character anchors (full description, not just a keyword) ──
   const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar';
@@ -661,11 +722,20 @@ export function generate(input) {
   const hookObj = pickRandom(HOOK_ACTIONS, rng);
   const releaseObj = pickRandom(RELEASE_ACTIONS, rng);
 
-  // ── Serial prop anchor (avoid repeats) ──
-  let propIdx = Math.floor(rng() * PROP_ANCHORS.length);
-  let propAnchor = PROP_ANCHORS[propIdx];
-  if (historyCache.hasProp(propAnchor)) {
-    propAnchor = PROP_ANCHORS[(propIdx + 1) % PROP_ANCHORS.length];
+  // ── Serial prop anchor (category-aware + avoid repeats) ──
+  const propHints = PROP_HINTS[cat.ru] || [];
+  let propAnchor;
+  if (propHints.length > 0) {
+    const preferred = propHints.filter(p => !historyCache.hasProp(p));
+    propAnchor = preferred.length > 0
+      ? preferred[Math.floor(rng() * preferred.length)]
+      : propHints[Math.floor(rng() * propHints.length)];
+  } else {
+    let propIdx = Math.floor(rng() * PROP_ANCHORS.length);
+    propAnchor = PROP_ANCHORS[propIdx];
+    if (historyCache.hasProp(propAnchor)) {
+      propAnchor = PROP_ANCHORS[(propIdx + 1) % PROP_ANCHORS.length];
+    }
   }
 
   // ── Dialogue based on mode ──
@@ -725,7 +795,8 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Hyper-realistic close-up still frame captured mid-argument. Two characters in heated comedic confrontation, faces 40-60cm from camera. ${location}. Natural backlight creating hard shadows and warm rim light on faces. Dust motes visible in light beams. ${aesthetic} aesthetic. Vertical 9:16 aspect ratio, 1080x1920px.`,
+    scene: `Hyper-realistic close-up still frame captured mid-argument. Two characters in heated comedic confrontation, faces 40-60cm from camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Vertical 9:16 aspect ratio, 1080x1920px.`,
+    ...(topicEn ? { topic_context: topicEn } : {}),
     characters: [
       {
         role: 'A — provocateur (speaking)',
@@ -756,10 +827,11 @@ export function generate(input) {
     ],
     environment: {
       location,
-      lighting: 'natural backlight with hard shadows, warm color temperature 3200K, dust motes ONLY in backlight beams, soft fill from environment bounce, realistic shadow under nose and cheekbones',
+      lighting: `${lightingMood.style}, soft fill from environment bounce, realistic shadow under nose and cheekbones`,
+      lighting_mood: lightingMood.mood,
       prop_anchor: `${propAnchor} visible in mid-ground, slightly out of focus`,
       props: ['worn textured surface beneath characters', propAnchor, 'ambient domestic detail in soft bokeh background', 'natural clutter appropriate to location'],
-      atmosphere: 'lived-in, authentic, slightly chaotic domestic environment',
+      atmosphere: `lived-in, authentic, slightly chaotic. Category vibe: ${cat.en.toLowerCase()}`,
     },
     camera: {
       angle: 'slightly below eye level (5-10°), selfie POV at arm\'s length, device INVISIBLE',
@@ -790,33 +862,40 @@ export function generate(input) {
       B: { silhouette: anchorB.face_silhouette, element: anchorB.signature_element, gesture: anchorB.micro_gesture, wardrobe: wardrobeB },
       serial: { aesthetic, prop_anchor: propAnchor },
     },
+    ...(topicEn ? { topic_context: topicEn } : {}),
+    ...(sceneHint ? { scene_reference: `Visual/structural reference from source video: "${sceneHint}". Adapt the energy and pacing but keep original characters and dialogue.` } : {}),
     dialogue: {
       line_A_ru: dialogueA,
       line_B_ru: dialogueB,
       killer_word: killerWord,
       language: 'Russian (spoken naturally with regional intonation)',
       lip_sync: 'CRITICAL: mouth movements must match Russian phonemes precisely. Each syllable produces visible jaw/lip movement. Consonants: visible tongue/teeth contact. Vowels: proportional mouth opening.',
+      delivery_A: `${charA.speech_pace} pace, ${charA.vibe_archetype || 'provocative'} energy, ${charA.swear_level > 1 ? 'occasional expressive profanity as accent' : 'controlled passionate delivery'}`,
+      delivery_B: `${charB.speech_pace} pace, ${charB.vibe_archetype || 'grounded'} energy, measured buildup to killer word, voice drops for contrast`,
     },
     spatial: {
       positioning: 'Both characters face camera at arm\'s length distance (selfie POV). A on left, B on right. They stand/sit shoulder-to-shoulder or slightly angled toward each other (30°). Close enough to touch but not touching.',
       camera_movement: 'Handheld micro-jitter throughout. Hook: slight camera push-in. Act_A: subtle drift toward A. Act_B: micro-pan to B. Release: camera shakes from laughter tremor.',
+      environment_interaction: `Characters naturally inhabit ${location.split(',')[0]}. Ambient environment detail reinforces ${cat.en.toLowerCase()} theme.`,
     },
     emotion_arc: {
-      hook: 'tension spike — sudden attention-grabbing action, both characters alert',
-      act_A: 'escalation — A builds righteous indignation, volume rises, gestures amplify. B simmers silently, micro-reactions in eyes only',
-      act_B: 'reversal — B delivers measured response, voice drops to contrast A. Killer word lands with weight. A freezes in disbelief',
-      release: 'catharsis — both break into genuine laughter, tension dissolves, warmth between characters revealed',
+      hook: `tension spike — ${hookObj.action_en}, ${charA.vibe_archetype || 'provocateur'} initiates with signature energy`,
+      act_A: `escalation — ${charA.name_ru} builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${charB.name_ru} simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
+      act_B: `reversal — ${charB.name_ru} delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${charA.name_ru}. ${charA.name_ru} freezes mid-gesture.`,
+      release: `catharsis — ${releaseObj.action_ru}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`,
     },
     vibe: {
       dynamic: `${charA.name_ru} (A, ${charA.vibe_archetype || 'провокатор'}) → ${charB.name_ru} (B, ${charB.vibe_archetype || 'база'})`,
       hook: hookObj.action_en,
-      conflict: `Comedic tension about ${cat.en.toLowerCase()}, no personal insults, rage directed at situation only`,
+      conflict: `Comedic tension about ${cat.en.toLowerCase()}${topicRu ? ': ' + topicRu : ''}, no personal insults, rage directed at situation only`,
       punchline: `Killer word "${killerWord}" lands near 7.0s mark, followed by ${releaseObj.action_en}`,
+      tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy — physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension — understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull — both characters committed, natural escalation to punchline'}`,
     },
     camera: cameraPreset,
     world: {
       location,
-      lighting: 'natural backlight, hard shadows, dust motes in beams when applicable, warm 3200K, no studio lighting',
+      lighting: `${lightingMood.style}, no studio lighting`,
+      lighting_mood: lightingMood.mood,
       wardrobe_A: wardrobeA,
       wardrobe_B: wardrobeB,
       prop_anchor: `${propAnchor} — visible in scene, may be interacted with during hook`,
@@ -857,8 +936,9 @@ export function generate(input) {
   const hashMem = thread_memory ? (typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(thread_memory))).slice(0, 8) : 'mem') : 'none';
   const ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
-📂 Категория: ${cat.ru}
+📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
 📍 Локация: ${location.split(',')[0]}
+💡 Освещение: ${lightingMood.mood}
 👗 A: ${wardrobeA.split(',')[0]}
 👔 B: ${wardrobeB.split(',')[0]}
 🪑 Реквизит: ${propAnchor}
@@ -914,6 +994,11 @@ ${engage.hashtags.join(' ')}
   // ── BLUEPRINT JSON ──
   const blueprint_json = {
     version: '2.0',
+    ...(topicRu ? { topic_ru: topicRu } : {}),
+    ...(topicEn ? { topic_en: topicEn } : {}),
+    ...(sceneHint ? { scene_reference: sceneHint } : {}),
+    category: cat,
+    lighting: lightingMood,
     scenes: [
       { id: 1, segment: 'hook', action: hookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${hookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
       { id: 2, segment: 'act_A', action: 'Pompous provocation delivery', speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-9 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed` },
