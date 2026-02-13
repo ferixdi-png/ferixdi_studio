@@ -427,53 +427,53 @@ const FIRST_COMMENTS = {
 
 const DEMO_DIALOGUES = {
   'Бытовой абсурд': {
-    A_lines: ['Ты видел что они с хлебом сделали?! | Квадратный! КВАДРАТНЫЙ!'],
-    B_lines: ['И чё? | Земля тоже не круглая | а ты на ней живёшь.'],
+    A_lines: ['Ты видел что они с хлебом сделали?! | Квадратный! КВАДРАТНЫЙ!', 'Пульт! | Опять пульт потеряла! | Третий раз за день!'],
+    B_lines: ['И чё? | Земля тоже не круглая | а ты на ней живёшь.', 'Может хватит | его в холодильник класть | ты ж не канал ищешь.'],
     killer_word: 'живёшь'
   },
   'AI и технологии': {
-    A_lines: ['Этот твой искусственный интеллект | мне БОРЩ сварит?!'],
-    B_lines: ['Он тебе уже внуков воспитывает | а ты не заметила.'],
+    A_lines: ['Этот твой искусственный интеллект | мне БОРЩ сварит?!', 'Она с телефоном разговаривает! | С ТЕЛЕФОНОМ! | Как с человеком!'],
+    B_lines: ['Он тебе уже внуков воспитывает | а ты не заметила.', 'А ты с телевизором | тридцать лет разговариваешь | и ничего.'],
     killer_word: 'заметила'
   },
   'Цены и инфляция': {
-    A_lines: ['За МОЛОКО! | Восемьсот рублей! За *молоко*!'],
-    B_lines: ['В девяносто третьем | за эти деньги | я машину купил.'],
+    A_lines: ['За МОЛОКО! | Восемьсот рублей! За *молоко*!', 'Яйца! | По триста рублей! | Десяток! ЯЙЦА!'],
+    B_lines: ['В девяносто третьем | за эти деньги | я машину купил.', 'Зато курица | теперь живёт | лучше пенсионера.'],
     killer_word: 'машину'
   },
   'Отношения': {
-    A_lines: ['Он мне пишет | «привет как дела» | Это что — УХАЖИВАНИЕ?!'],
-    B_lines: ['В наше время | мужик молча забор чинил | и это была любовь.'],
+    A_lines: ['Он мне пишет | «привет как дела» | Это что — УХАЖИВАНИЕ?!', 'Муж говорит | «ты права дорогая» | Пять лет! Одну и ту же фразу!'],
+    B_lines: ['В наше время | мужик молча забор чинил | и это была любовь.', 'Это значит | он давно сдался | и живёт спокойно.'],
     killer_word: 'любовь'
   },
   'Разрыв поколений': {
-    A_lines: ['Внучка говорит — я теперь | «контент-мейкер» | Чё это?!'],
-    B_lines: ['Это значит | она тоже нихрена не делает | но с телефоном.'],
+    A_lines: ['Внучка говорит — я теперь | «контент-мейкер» | Чё это?!', 'Внук мне говорит | «ок бумер» | Какой я тебе БУМЕР?!'],
+    B_lines: ['Это значит | она тоже нихрена не делает | но с телефоном.', 'Бумер это тот | кто построил дом | в котором ты вайфай ловишь.'],
     killer_word: 'телефоном'
   },
   'ЖКХ и коммуналка': {
-    A_lines: ['За отопление | шесть тыщ! | А батарея ХОЛОДНАЯ!'],
-    B_lines: ['Зато душу | они тебе давно | натопили.'],
+    A_lines: ['За отопление | шесть тыщ! | А батарея ХОЛОДНАЯ!', 'Лифт! | Опять не работает! | Шестой этаж ПЕШКОМ!'],
+    B_lines: ['Зато душу | они тебе давно | натопили.', 'Зато ноги | у тебя красивые будут | бесплатный фитнес.'],
     killer_word: 'натопили'
   },
   'Здоровье и поликлиника': {
-    A_lines: ['Врач говорит | «гуглите» | Серьёзно?! ГУГЛИТЕ?!'],
-    B_lines: ['Хорошо что не сказал | «спросите у нейросети» | та вообще похоронит.'],
+    A_lines: ['Врач говорит | «гуглите» | Серьёзно?! ГУГЛИТЕ?!', 'Записалась к врачу | через ТРИ недели! | Я уже выздоровею!'],
+    B_lines: ['Хорошо что не сказал | «спросите у нейросети» | та вообще похоронит.', 'Вот видишь | система работает | экономят на лекарствах.'],
     killer_word: 'похоронит'
   },
   'Соцсети и тренды': {
-    A_lines: ['У неё миллион подписчиков! | МИЛЛИОН! | А посуду не моет!'],
-    B_lines: ['Миллион людей | смотрят как она не моет | и лайкают.'],
+    A_lines: ['У неё миллион подписчиков! | МИЛЛИОН! | А посуду не моет!', 'Она еду фоткает! | Час фоткает! | Суп остыл ДАВНО!'],
+    B_lines: ['Миллион людей | смотрят как она не моет | и лайкают.', 'Зато миллион людей | знают что ты варишь | гордись.'],
     killer_word: 'лайкают'
   },
   'Дача и огород': {
-    A_lines: ['Помидоры! | Сожрали! | Все до единого! КТО?!'],
-    B_lines: ['Сосед Михалыч | он же теперь веган | ему положено.'],
+    A_lines: ['Помидоры! | Сожрали! | Все до единого! КТО?!', 'Сосед! | Забор передвинул! | На ДВАДЦАТЬ сантиметров!'],
+    B_lines: ['Сосед Михалыч | он же теперь веган | ему положено.', 'Двадцать сантиметров | это его совесть | растёт в нашу сторону.'],
     killer_word: 'положено'
   },
   'Транспорт и пробки': {
-    A_lines: ['Два часа! | ДВА ЧАСА стояла! | Самокат обогнал!'],
-    B_lines: ['Самокат | это транспорт будущего | а ты — прошлого.'],
+    A_lines: ['Два часа! | ДВА ЧАСА стояла! | Самокат обогнал!', 'Таксист! | Двести рублей | за ПЯТЬСОТ метров!'],
+    B_lines: ['Самокат | это транспорт будущего | а ты — прошлого.', 'Зато довёз | без пробки | за пятьсот метров пробок нет.'],
     killer_word: 'прошлого'
   },
 };
@@ -743,17 +743,20 @@ export function generate(input) {
   const demoKey = (cat.ru in DEMO_DIALOGUES) ? cat.ru : Object.keys(DEMO_DIALOGUES)[Math.floor(rng() * Object.keys(DEMO_DIALOGUES).length)];
   const demo = DEMO_DIALOGUES[demoKey];
 
+  // Pick random dialogue variant (now 2+ options per category)
+  const demoIdx = Math.floor(rng() * demo.A_lines.length);
+
   if (input_mode === 'script' && script_ru) {
-    dialogueA = script_ru.A || demo.A_lines[0];
-    dialogueB = script_ru.B || demo.B_lines[0];
+    dialogueA = script_ru.A || demo.A_lines[demoIdx];
+    dialogueB = script_ru.B || demo.B_lines[demoIdx];
     killerWord = dialogueB.split(/\s+/).pop()?.replace(/[^а-яёa-z]/gi, '') || 'панч';
   } else if (input_mode === 'video' && video_meta) {
-    dialogueA = demo.A_lines[0];
-    dialogueB = demo.B_lines[0];
+    dialogueA = demo.A_lines[demoIdx];
+    dialogueB = demo.B_lines[demoIdx];
     killerWord = demo.killer_word;
   } else {
-    dialogueA = demo.A_lines[0];
-    dialogueB = demo.B_lines[0];
+    dialogueA = demo.A_lines[demoIdx];
+    dialogueB = demo.B_lines[demoIdx];
     killerWord = demo.killer_word;
   }
 
@@ -806,8 +809,8 @@ export function generate(input) {
         skin_detail: cast.speaker_A.skin,
         eyes_detail: cast.speaker_A.eyes,
         mouth_detail: 'mouth open mid-word, realistic teeth/gums visible, lip moisture, micro saliva glint on lower lip',
-        expression: `mid-sentence animated, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, eyebrows raised in outrage, nostrils slightly flared`,
-        body: 'leaning forward aggressively, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised',
+        expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
+        body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
         wardrobe: wardrobeA,
         spatial: 'positioned left of frame, body angled 30° toward B',
       },
@@ -819,8 +822,8 @@ export function generate(input) {
         skin_detail: cast.speaker_B.skin,
         eyes_detail: cast.speaker_B.eyes,
         mouth_detail: 'mouth FIRMLY SEALED, jaw still, lips pressed together, slight contemptuous curl at corner',
-        expression: `stoic unimpressed, ${anchorB.micro_gesture || 'raised eyebrow'}, eyes tracking A with subtle skepticism, one eyebrow 2mm higher than the other`,
-        body: 'arms crossed or hands on hips, leaning back slightly, weight on back foot, chin slightly raised',
+        expression: `${charB.compatibility === 'calm' ? 'zen-like stillness, barely contained superiority' : charB.compatibility === 'chaotic' ? 'simmering barely-restrained energy, jaw tight, eyes burning' : charB.compatibility === 'conflict' ? 'cold calculating stare, measuring every word A says' : 'amused skepticism, one corner of mouth fighting a smirk'}, ${anchorB.micro_gesture || 'raised eyebrow'}, eyes tracking A with ${charB.speech_pace === 'slow' ? 'patient devastating certainty' : 'sharp analytical intensity'}, one eyebrow 2mm higher than the other`,
+        body: `${charB.compatibility === 'calm' ? 'perfectly still, arms loosely crossed, weight centered, radiating quiet authority' : charB.compatibility === 'chaotic' ? 'restless energy contained in stillness, fingers tapping on crossed arms, weight shifting' : 'arms crossed or hands on hips, leaning back slightly, weight on back foot, chin slightly raised'}`,
         wardrobe: wardrobeB,
         spatial: 'positioned right of frame, body angled 30° toward A',
       },
@@ -841,7 +844,15 @@ export function generate(input) {
       composition: 'loose rule-of-thirds, A occupies left third, B right third, slight headroom, intimate framing',
       realism: cameraPreset.realism_anchors.join(', '),
     },
-    color_mood: 'warm amber undertone, slightly desaturated shadows, natural skin tones (no orange/tan filter), subtle teal in shadows for cinematic contrast',
+    color_mood: lightingMood.mood === 'nostalgic warmth'
+      ? 'warm amber undertone, golden highlights, slightly desaturated shadows, natural skin tones, subtle teal in shadows for cinematic contrast'
+      : lightingMood.mood === 'sterile tension'
+      ? 'cool desaturated palette, greenish midtones from fluorescent, pale skin rendering, muted colors, clinical contrast'
+      : lightingMood.mood === 'organic chaos'
+      ? 'dappled warm-cool mix, green-gold foliage reflections on skin, natural vibrant saturation, earthy tones'
+      : lightingMood.mood === 'dramatic intimacy'
+      ? 'high-contrast chiaroscuro, deep amber in highlights, rich black shadows, warm skin tones with cool shadow edges'
+      : 'soft neutral palette, slight blue undertone, gentle contrast, natural skin tones with minimal color cast',
     hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
     style: 'photorealistic, cinematic grain (ISO 800-1600 feel), raw authentic feel, no filters, no beauty mode, skin imperfections VISIBLE and CELEBRATED',
     negative: 'no text, no watermark, no logo, no phone visible, no camera visible, no overlay, no cartoon, no anime, no plastic skin, no airbrushed look, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting',
@@ -871,7 +882,9 @@ export function generate(input) {
       language: 'Russian (spoken naturally with regional intonation)',
       lip_sync: 'CRITICAL: mouth movements must match Russian phonemes precisely. Each syllable produces visible jaw/lip movement. Consonants: visible tongue/teeth contact. Vowels: proportional mouth opening.',
       delivery_A: `${charA.speech_pace} pace, ${charA.vibe_archetype || 'provocative'} energy, ${charA.swear_level > 1 ? 'occasional expressive profanity as accent' : 'controlled passionate delivery'}`,
+      voice_timbre_A: `${charA.speech_pace === 'fast' ? 'high-energy, slightly shrill when agitated, voice cracks on emphasis words' : charA.speech_pace === 'slow' ? 'deep gravelly rasp, deliberate enunciation, resonant chest voice' : 'mid-range natural voice, rises in pitch with indignation'}. Age-appropriate ${cast.speaker_A.age} voice — ${charA.swear_level > 1 ? 'rough edges, lived-in vocal texture, hoarse undertone' : 'clear but weathered, slight tremor on emotional peaks'}`,
       delivery_B: `${charB.speech_pace} pace, ${charB.vibe_archetype || 'grounded'} energy, measured buildup to killer word, voice drops for contrast`,
+      voice_timbre_B: `${charB.speech_pace === 'slow' ? 'low deliberate rumble, pauses filled with audible nose-exhale, words land like stones' : charB.speech_pace === 'fast' ? 'sharp staccato delivery, clipped consonants, rapid-fire with sudden stops for effect' : 'steady measured mid-tone, controlled volume that drops to near-whisper on killer word for devastating contrast'}. Age-appropriate ${cast.speaker_B.age} voice — worn but commanding`,
     },
     spatial: {
       positioning: 'Both characters face camera at arm\'s length distance (selfie POV). A on left, B on right. They stand/sit shoulder-to-shoulder or slightly angled toward each other (30°). Close enough to touch but not touching.',
@@ -902,8 +915,26 @@ export function generate(input) {
     },
     timing: timingGrid,
     audio: {
-      room_tone: 'subtle ambient room sound appropriate to location (e.g., fridge hum, bird chirps, distant traffic)',
-      cloth_rustle: 'on every major body movement, fabric-appropriate sound',
+      room_tone: location.includes('kitchen') || location.includes('fridge')
+        ? 'humming Saratov fridge compressor cycle, wall clock tick, distant plumbing gurgle, occasional window draft whistle'
+        : location.includes('garden') || location.includes('greenhouse') || location.includes('sunflower')
+        ? 'bird song (sparrows, distant cuckoo), wind through foliage, buzzing insects, soil crunch underfoot'
+        : location.includes('balcony') || location.includes('laundry')
+        ? 'distant city hum, car horns at irregular intervals, pigeon cooing, clothesline wire creak in wind'
+        : location.includes('stairwell') || location.includes('mailbox')
+        ? 'fluorescent tube buzz, distant elevator machinery, muffled TV through walls, echo in concrete space'
+        : location.includes('bazaar') || location.includes('watermelon')
+        ? 'crowd murmur, vendor calls, plastic bag rustle, metal scale clank, distant radio music'
+        : location.includes('polyclinic') || location.includes('mint-green')
+        ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA, muffled coughing behind doors'
+        : location.includes('Marshrutka') || location.includes('vinyl')
+        ? 'diesel engine vibration, vinyl seat squeak, hanging air freshener sway, muffled traffic outside, door pneumatics hiss'
+        : location.includes('barn') || location.includes('hay')
+        ? 'creaking wood, wind through plank gaps, distant animal sounds, swinging lightbulb chain clink'
+        : location.includes('attic') || location.includes('rafter')
+        ? 'roof rain patter or wind howl, creaking rafters, moth flutter, dust settling whisper'
+        : 'subtle ambient room sound — quiet hum, occasional creak, authentic space acoustics matching location',
+      cloth_rustle: `on every major body movement: A wears ${wardrobeA.split(',')[0]} — ${wardrobeA.includes('silk') || wardrobeA.includes('chiffon') ? 'soft whisper swish' : wardrobeA.includes('leather') ? 'stiff leather creak' : wardrobeA.includes('knit') || wardrobeA.includes('mohair') || wardrobeA.includes('wool') ? 'soft fibrous drag' : 'medium fabric rustle'}; B wears ${wardrobeB.split(',')[0]} — ${wardrobeB.includes('telnyashka') || wardrobeB.includes('cotton') ? 'cotton stretch snap' : wardrobeB.includes('corduroy') ? 'corduroy ridge whisper' : wardrobeB.includes('quilted') || wardrobeB.includes('fufaika') ? 'padded fabric thump' : 'natural fabric rustle'}`,
       saliva_clicks: 'subtle mouth sounds on hard consonants (т, к, п, д)',
       breathing: 'audible inhale before each speaking turn, exhale on emphasis words',
       overlap_policy: 'STRICTLY FORBIDDEN. Gap 0.15-0.25s silence stitch between speakers. No simultaneous speech ever.',
@@ -934,32 +965,46 @@ export function generate(input) {
 
   // ── RU PACKAGE ──
   const hashMem = thread_memory ? (typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(thread_memory))).slice(0, 8) : 'mem') : 'none';
+  // ── Pair dynamic label ──
+  const pairDynamic = charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? '🔥 Взрывная пара: хаос vs спокойствие'
+    : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? '🌪 Хаотичная пара'
+    : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? '⚡ Конфликтная пара'
+    : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
+    : '⚖️ Сбалансированная пара';
+
   const ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
 📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
-📍 Локация: ${location.split(',')[0]}
+� Пара: ${charA.name_ru} (${cast.speaker_A.age}) × ${charB.name_ru} (${cast.speaker_B.age})
+🎭 Динамика: ${pairDynamic}
+�� Локация: ${location.split(',')[0]}
 💡 Освещение: ${lightingMood.mood}
-👗 A: ${wardrobeA.split(',')[0]}
-👔 B: ${wardrobeB.split(',')[0]}
+👗 A: ${wardrobeA}
+👔 B: ${wardrobeB}
 🪑 Реквизит: ${propAnchor}
 
 [0.00–0.80] 🎣 ХУК: ${hookObj.action_ru}
   🔊 Звук: ${hookObj.audio}
+  🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
 
 [0.80–3.60] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dialogueA}»
   💬 Темп: ${charA.speech_pace} | Слов: 6-9 | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индignация'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   👄 Рот B: губы сомкнуты, челюсть неподвижна, глаза следят за A
 
 [3.60–7.10] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
   «${dialogueB}»
   💬 Темп: ${charB.speech_pace} | Слов: 6-11 | паузы = сила
+  🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
   💥 KILLER WORD «${killerWord}» → ближе к 7.0s
   👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
 
 [7.10–8.00] 😂 RELEASE: ${releaseObj.action_ru}
   🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
+  🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
+  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
 
 ═══════════════════════════════════════════
 
@@ -1001,8 +1046,8 @@ ${engage.hashtags.join(' ')}
     lighting: lightingMood,
     scenes: [
       { id: 1, segment: 'hook', action: hookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${hookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
-      { id: 2, segment: 'act_A', action: 'Pompous provocation delivery', speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-9 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed` },
-      { id: 3, segment: 'act_B', action: 'Punchline response', speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-11 words, killer word "${killerWord}" near end, A frozen` },
+      { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-9 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
+      { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-11 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
       { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers?.laugh_style || 'natural laugh'}, shared laugh` },
     ],
     dialogue_segments: [
@@ -1021,6 +1066,11 @@ ${engage.hashtags.join(' ')}
     identity_anchors: {
       A: charA.identity_anchors || {},
       B: charB.identity_anchors || {},
+    },
+    cast_summary: {
+      A: { name: charA.name_ru, age: cast.speaker_A.age, vibe: charA.vibe_archetype, pace: charA.speech_pace, compatibility: charA.compatibility },
+      B: { name: charB.name_ru, age: cast.speaker_B.age, vibe: charB.vibe_archetype, pace: charB.speech_pace, compatibility: charB.compatibility },
+      pair_dynamic: pairDynamic,
     },
   };
 
