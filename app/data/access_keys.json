@@ -1,0 +1,10 @@
+{
+  "keys": [
+    {
+      "hash": "baff2cc59ac00fd7a61a050b23379aec42a0f743d14ce5e23b9190f294d5fc61",
+      "label": "demo",
+      "created": "2026-02-13"
+    }
+  ],
+  "note": "SHA-256 hashes only. Never store plaintext keys. Demo key: FERIXDI-DEMO-2026"
+}

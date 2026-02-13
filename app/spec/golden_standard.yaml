@@ -1,0 +1,148 @@
+golden_standard_2026:
+  version: "1.0.0"
+  updated: "2026-02-13"
+
+  cast:
+    age_range: "89-92"
+    skin:
+      microtexture: true
+      pores: true
+      age_spots: true
+      fine_wrinkles: true
+      moisture_sheen: "subtle"
+    eyes:
+      micro_saccades: true
+      wetness: true
+      crow_feet: "deep"
+      pupil_dilation: "natural"
+    mouth:
+      lip_moisture: true
+      lip_bite_trigger: "on emotional peak"
+      teeth: "natural imperfections"
+      saliva_detail: "micro-glints on speech"
+
+  psychology:
+    band: "бабка+дед = бэнд, не пара"
+    no_personal_insults: true
+    rage_target: "ситуация, не человек"
+    archetypes:
+      A: "успешный успех — энергия, вброс, провокация"
+      B: "база — приземлённость, рациональность, панчлайн"
+    mat_policy: "мат обязателен как эмоциональный акцент, НЕ как оскорбление"
+    rhyme_policy: "рифма строго запрещена"
+
+  camera:
+    pov: "front selfie"
+    device: "invisible — no phone/camera in frame ever"
+    angle: "slightly below eye level"
+    distance: "close-up to medium"
+    movement: "subtle natural hand micro-shake"
+
+  artifacts:
+    micro_jitter: true
+    exposure_breathing: "0.2-0.5 EV drift"
+    rolling_shutter: "subtle on fast head turns"
+    autofocus_hunt: "0.1s on scene start"
+    compression: "h264 social media grade"
+    noise: "low-light grain in shadows"
+
+  environment:
+    backlight: "natural window or strong practicals"
+    dust_motes: "visible in light beams"
+    hard_shadows: true
+    locations:
+      policy: "уникальные, без повторов"
+      banned_repeats: ["машина", "очки на лице в каждом видео"]
+      examples:
+        - "кухня с советским холодильником"
+        - "балкон с бельём"
+        - "дачная теплица"
+        - "подъезд с лифтом"
+        - "рынок"
+        - "поликлиника"
+        - "маршрутка"
+        - "гараж"
+        - "скамейка у подъезда"
+        - "дача, грядки"
+
+  wardrobe:
+    policy: "контраст между персонажами"
+    examples:
+      - "шёлк + шерсть"
+      - "леопард + фуфайка"
+      - "жемчуг + тельняшка"
+      - "пуховик Balenciaga + валенки"
+      - "норковая шапка + спортивки"
+    no_repeat: true
+
+  timing_grid_8s:
+    hook:
+      start: 0.0
+      end: 0.7
+      description: "мгновенный вброс, цепляющий кадр или фраза"
+    speaker_A:
+      start: 0.7
+      end: 3.5
+      description: "основной вброс/провокация от A"
+    speaker_B:
+      start: 3.5
+      end: 7.0
+      description: "ответ/панчлайн от B"
+    laugh_beat:
+      start: 7.0
+      end: 8.0
+      description: "реакция, смех, финальный бит"
+    killer_word:
+      timestamp: 6.85
+      description: "самое ударное слово в районе 6.85s"
+
+  audio:
+    room_tone: true
+    saliva_clicks: true
+    cloth_rustle: "on movement"
+    overlap: "ЗАПРЕЩЕНО — стык, а не пауза"
+    breath_sounds: true
+    mouth_closed_rule: "рот второго строго закрыт пока говорит первый"
+
+  safety:
+    banned_words:
+      - "sexy"
+      - "horny"
+      - "erotic"
+      - "nude"
+      - "naked"
+      - "porn"
+      - "nsfw"
+    replacements:
+      sexy: "magnetic"
+      horny: "restless"
+      erotic: "sensual tension"
+      nude: "bare-skinned"
+      naked: "unclothed"
+    device_invisible: true
+    no_text_overlays: true
+    no_logo: true
+    no_watermark: true
+
+  narrative:
+    mat_as_accent: true
+    themes:
+      - "бытовой абсурд"
+      - "AI и технологии"
+      - "цены и инфляция"
+      - "отношения"
+      - "разрыв поколений"
+      - "ЖКХ"
+      - "здоровье"
+      - "соцсети и тренды"
+      - "дача и огород"
+      - "транспорт"
+    rhyme: "ЗАПРЕЩЕНА"
+    personal_insults: "ЗАПРЕЩЕНЫ"
+
+  output_package:
+    - "JSON photo prompt EN"
+    - "JSON video prompt EN"
+    - "RU package: диалог с таймингами, подсказки речи, заголовок, закреп, хэштеги"
+    - "Blueprint JSON"
+    - "Log"

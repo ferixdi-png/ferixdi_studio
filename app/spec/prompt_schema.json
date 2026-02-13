@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FERIXDI Studio Output Package",
+  "type": "object",
+  "required": ["photo_prompt_en_json", "video_prompt_en_json", "ru_package", "blueprint_json", "log", "warnings", "auto_fixes", "duration_estimate"],
+  "properties": {
+    "photo_prompt_en_json": {
+      "type": "object",
+      "required": ["scene", "characters", "environment", "camera", "style", "negative"],
+      "properties": {
+        "scene": { "type": "string", "minLength": 50 },
+        "characters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "appearance", "expression", "wardrobe"],
+            "properties": {
+              "role": { "type": "string" },
+              "appearance": { "type": "string", "minLength": 30 },
+              "expression": { "type": "string" },
+              "wardrobe": { "type": "string" }
+            }
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "environment": {
+          "type": "object",
+          "required": ["location", "lighting", "props"],
+          "properties": {
+            "location": { "type": "string" },
+            "lighting": { "type": "string" },
+            "props": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "camera": {
+          "type": "object",
+          "required": ["angle", "distance", "lens"],
+          "properties": {
+            "angle": { "type": "string" },
+            "distance": { "type": "string" },
+            "lens": { "type": "string" }
+          }
+        },
+        "style": { "type": "string" },
+        "negative": { "type": "string" }
+      }
+    },
+    "video_prompt_en_json": {
+      "type": "object",
+      "required": ["cast", "vibe", "camera", "world", "timing", "audio", "safety", "output"],
+      "properties": {
+        "cast": {
+          "type": "object",
+          "required": ["speaker_A", "speaker_B"],
+          "properties": {
+            "speaker_A": {
+              "type": "object",
+              "required": ["character_en", "age", "skin", "eyes", "mouth"],
+              "properties": {
+                "character_en": { "type": "string", "minLength": 20 },
+                "age": { "type": "string" },
+                "skin": { "type": "string" },
+                "eyes": { "type": "string" },
+                "mouth": { "type": "string" }
+              }
+            },
+            "speaker_B": { "$ref": "#/properties/video_prompt_en_json/properties/cast/properties/speaker_A" }
+          }
+        },
+        "vibe": {
+          "type": "object",
+          "required": ["dynamic", "hook", "conflict", "punchline"],
+          "properties": {
+            "dynamic": { "type": "string" },
+            "hook": { "type": "string" },
+            "conflict": { "type": "string" },
+            "punchline": { "type": "string" }
+          }
+        },
+        "camera": {
+          "type": "object",
+          "required": ["pov", "artifacts"],
+          "properties": {
+            "pov": { "type": "string" },
+            "artifacts": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "world": {
+          "type": "object",
+          "required": ["location", "lighting", "wardrobe_A", "wardrobe_B"],
+          "properties": {
+            "location": { "type": "string" },
+            "lighting": { "type": "string" },
+            "wardrobe_A": { "type": "string" },
+            "wardrobe_B": { "type": "string" }
+          }
+        },
+        "timing": {
+          "type": "object",
+          "required": ["total_seconds", "grid"],
+          "properties": {
+            "total_seconds": { "type": "number", "maximum": 8.0 },
+            "grid": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["segment", "start", "end", "action"],
+                "properties": {
+                  "segment": { "type": "string" },
+                  "start": { "type": "number" },
+                  "end": { "type": "number" },
+                  "action": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "audio": {
+          "type": "object",
+          "required": ["room_tone", "overlap_policy", "mouth_rule"],
+          "properties": {
+            "room_tone": { "type": "boolean" },
+            "overlap_policy": { "type": "string" },
+            "mouth_rule": { "type": "string" }
+          }
+        },
+        "safety": {
+          "type": "object",
+          "required": ["banned_words_replaced", "device_invisible", "no_overlays"],
+          "properties": {
+            "banned_words_replaced": { "type": "boolean" },
+            "device_invisible": { "type": "boolean" },
+            "no_overlays": { "type": "boolean" }
+          }
+        },
+        "output": {
+          "type": "object",
+          "required": ["format", "resolution", "fps"],
+          "properties": {
+            "format": { "type": "string" },
+            "resolution": { "type": "string" },
+            "fps": { "type": "number" }
+          }
+        }
+      }
+    },
+    "ru_package": { "type": "string", "minLength": 100 },
+    "blueprint_json": {
+      "type": "object",
+      "required": ["scenes", "dialogue_segments", "timing_grid"],
+      "properties": {
+        "scenes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "action", "speaker", "start", "end"],
+            "properties": {
+              "id": { "type": "number" },
+              "action": { "type": "string" },
+              "speaker": { "type": "string" },
+              "start": { "type": "number" },
+              "end": { "type": "number" },
+              "dialogue_ru": { "type": "string" },
+              "speech_hints": { "type": "string" }
+            }
+          }
+        },
+        "dialogue_segments": { "type": "array" },
+        "timing_grid": { "type": "object" }
+      }
+    },
+    "log": {
+      "type": "object",
+      "required": ["seed", "characters", "duration_estimate"],
+      "properties": {
+        "seed": { "type": "string" },
+        "memory_hash": { "type": "string" },
+        "characters": { "type": "array" },
+        "category": { "type": "object" },
+        "warnings": { "type": "array" },
+        "auto_fixes": { "type": "array" },
+        "duration_estimate": { "type": "number" }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "auto_fixes": { "type": "array", "items": { "type": "string" } },
+    "duration_estimate": {
+      "type": "object",
+      "required": ["total", "perLine", "risk"],
+      "properties": {
+        "total": { "type": "number" },
+        "perLine": { "type": "array", "items": { "type": "object" } },
+        "risk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "notes": { "type": "array", "items": { "type": "string" } },
+        "trimming_suggestions": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FERIXDI Character",
+  "type": "object",
+  "required": ["id", "name_ru", "group", "appearance_ru", "speech_style_ru", "behavior_ru", "speech_pace", "swear_level", "role_default", "signature_words_ru", "prompt_tokens", "modifiers"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "name_ru": { "type": "string" },
+    "group": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "appearance_ru": { "type": "string", "minLength": 20 },
+    "speech_style_ru": { "type": "string", "minLength": 10 },
+    "behavior_ru": { "type": "string", "minLength": 10 },
+    "speech_pace": { "type": "string", "enum": ["slow", "normal", "fast"] },
+    "swear_level": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "role_default": { "type": "string", "enum": ["A", "B", "any"] },
+    "signature_words_ru": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "prompt_tokens": {
+      "type": "object",
+      "required": ["character_en"],
+      "properties": {
+        "character_en": { "type": "string", "minLength": 20 }
+      }
+    },
+    "modifiers": {
+      "type": "object",
+      "required": ["hook_style", "laugh_style"],
+      "properties": {
+        "hook_style": { "type": "string" },
+        "laugh_style": { "type": "string" }
+      }
+    },
+    "compatibility": {
+      "type": "string",
+      "enum": ["meme", "conflict", "calm", "chaotic", "balanced"]
+    }
+  }
+}

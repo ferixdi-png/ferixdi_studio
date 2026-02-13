@@ -1,0 +1,3511 @@
+[
+ {
+  "id": "babka_zina",
+  "name_ru": "Бабка Зина",
+  "group": "бабки",
+  "tags": [
+   "бабки",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Бабка Зина, типичный представитель группы «бабки», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки, темп fast, уровень экспрессии 3/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 3,
+  "role_default": "A",
+  "signature_words_ru": [
+   "зина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бабка Зина, бабки archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "babka_valya",
+  "name_ru": "Бабка Валя",
+  "group": "бабки",
+  "tags": [
+   "бабки",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Бабка Валя, типичный представитель группы «бабки», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "валя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бабка Валя, бабки archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "babka_klava",
+  "name_ru": "Бабка Клава",
+  "group": "бабки",
+  "tags": [
+   "бабки",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Бабка Клава, типичный представитель группы «бабки», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "клава",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бабка Клава, бабки archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "babka_lyuda",
+  "name_ru": "Бабка Люда",
+  "group": "бабки",
+  "tags": [
+   "бабки",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Бабка Люда, типичный представитель группы «бабки», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "люда",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бабка Люда, бабки archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "babka_tamara",
+  "name_ru": "Бабка Тамара",
+  "group": "бабки",
+  "tags": [
+   "бабки",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Бабка Тамара, типичный представитель группы «бабки», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "тамара",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бабка Тамара, бабки archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "babka_shura",
+  "name_ru": "Бабка Шура",
+  "group": "бабки",
+  "tags": [
+   "бабки",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Бабка Шура, типичный представитель группы «бабки», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "шура",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бабка Шура, бабки archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "ded_petya",
+  "name_ru": "Дед Петя",
+  "group": "деды",
+  "tags": [
+   "деды",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дед Петя, типичный представитель группы «деды», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "петя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дед Петя, деды archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "ded_kolya",
+  "name_ru": "Дед Коля",
+  "group": "деды",
+  "tags": [
+   "деды",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Дед Коля, типичный представитель группы «деды», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "коля",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дед Коля, деды archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "ded_ivan",
+  "name_ru": "Дед Иван",
+  "group": "деды",
+  "tags": [
+   "деды",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Дед Иван, типичный представитель группы «деды», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "иван",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дед Иван, деды archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "ded_vasya",
+  "name_ru": "Дед Вася",
+  "group": "деды",
+  "tags": [
+   "деды",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дед Вася, типичный представитель группы «деды», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "вася",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дед Вася, деды archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "ded_grisha",
+  "name_ru": "Дед Гриша",
+  "group": "деды",
+  "tags": [
+   "деды",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дед Гриша, типичный представитель группы «деды», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "гриша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дед Гриша, деды archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "ded_senya",
+  "name_ru": "Дед Сеня",
+  "group": "деды",
+  "tags": [
+   "деды",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дед Сеня, типичный представитель группы «деды», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "сеня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дед Сеня, деды archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "mama_lena",
+  "name_ru": "Мама Лена",
+  "group": "мамы",
+  "tags": [
+   "мамы",
+   "conflict",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Мама Лена, типичный представитель группы «мамы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для мамы, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "лена",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Мама Лена, мамы archetype, expressive face, detailed skin microtexture, fast speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "mama_natasha",
+  "name_ru": "Мама Наташа",
+  "group": "мамы",
+  "tags": [
+   "мамы",
+   "calm",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Мама Наташа, типичный представитель группы «мамы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для мамы, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "наташа",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Мама Наташа, мамы archetype, expressive face, detailed skin microtexture, fast speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "mama_oksana",
+  "name_ru": "Мама Оксана",
+  "group": "мамы",
+  "tags": [
+   "мамы",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Мама Оксана, типичный представитель группы «мамы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для мамы, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "оксана",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Мама Оксана, мамы archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "mama_sveta",
+  "name_ru": "Мама Света",
+  "group": "мамы",
+  "tags": [
+   "мамы",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Мама Света, типичный представитель группы «мамы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для мамы, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "света",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Мама Света, мамы archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "mama_ira",
+  "name_ru": "Мама Ира",
+  "group": "мамы",
+  "tags": [
+   "мамы",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Мама Ира, типичный представитель группы «мамы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для мамы, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "ира",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Мама Ира, мамы archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "mama_galya",
+  "name_ru": "Мама Галя",
+  "group": "мамы",
+  "tags": [
+   "мамы",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Мама Галя, типичный представитель группы «мамы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для мамы, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "галя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Мама Галя, мамы archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "papa_dima",
+  "name_ru": "Папа Дима",
+  "group": "папы",
+  "tags": [
+   "папы",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Папа Дима, типичный представитель группы «папы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для папы, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "дима",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Папа Дима, папы archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "papa_andrey",
+  "name_ru": "Папа Андрей",
+  "group": "папы",
+  "tags": [
+   "папы",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Папа Андрей, типичный представитель группы «папы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для папы, темп normal, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "андрей",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Папа Андрей, папы archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "papa_sasha",
+  "name_ru": "Папа Саша",
+  "group": "папы",
+  "tags": [
+   "папы",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Папа Саша, типичный представитель группы «папы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для папы, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "саша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Папа Саша, папы archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "papa_igor",
+  "name_ru": "Папа Игорь",
+  "group": "папы",
+  "tags": [
+   "папы",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Папа Игорь, типичный представитель группы «папы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для папы, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "игорь",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Папа Игорь, папы archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "papa_roma",
+  "name_ru": "Папа Рома",
+  "group": "папы",
+  "tags": [
+   "папы",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Папа Рома, типичный представитель группы «папы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для папы, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "рома",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Папа Рома, папы archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "papa_zhenya",
+  "name_ru": "Папа Женя",
+  "group": "папы",
+  "tags": [
+   "папы",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Папа Женя, типичный представитель группы «папы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для папы, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "женя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Папа Женя, папы archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "doch_masha",
+  "name_ru": "Дочка Маша",
+  "group": "дочери",
+  "tags": [
+   "дочери",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Дочка Маша, типичный представитель группы «дочери», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дочери, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "маша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дочка Маша, дочери archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "doch_katya",
+  "name_ru": "Дочка Катя",
+  "group": "дочери",
+  "tags": [
+   "дочери",
+   "conflict",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Дочка Катя, типичный представитель группы «дочери», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дочери, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "катя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дочка Катя, дочери archetype, expressive face, detailed skin microtexture, fast speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "doch_alina",
+  "name_ru": "Дочка Алина",
+  "group": "дочери",
+  "tags": [
+   "дочери",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Дочка Алина, типичный представитель группы «дочери», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дочери, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "алина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дочка Алина, дочери archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "doch_nastya",
+  "name_ru": "Дочка Настя",
+  "group": "дочери",
+  "tags": [
+   "дочери",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дочка Настя, типичный представитель группы «дочери», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дочери, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "настя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дочка Настя, дочери archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "doch_polina",
+  "name_ru": "Дочка Полина",
+  "group": "дочери",
+  "tags": [
+   "дочери",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Дочка Полина, типичный представитель группы «дочери», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дочери, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "полина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дочка Полина, дочери archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "doch_sonya",
+  "name_ru": "Дочка Соня",
+  "group": "дочери",
+  "tags": [
+   "дочери",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дочка Соня, типичный представитель группы «дочери», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дочери, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "соня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дочка Соня, дочери archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "syn_pasha",
+  "name_ru": "Сын Паша",
+  "group": "сыновья",
+  "tags": [
+   "сыновья",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Сын Паша, типичный представитель группы «сыновья», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для сыновья, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "паша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сын Паша, сыновья archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "syn_artyom",
+  "name_ru": "Сын Артём",
+  "group": "сыновья",
+  "tags": [
+   "сыновья",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Сын Артём, типичный представитель группы «сыновья», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для сыновья, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "артём",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сын Артём, сыновья archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "syn_danya",
+  "name_ru": "Сын Даня",
+  "group": "сыновья",
+  "tags": [
+   "сыновья",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Сын Даня, типичный представитель группы «сыновья», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для сыновья, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "даня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сын Даня, сыновья archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "syn_kirill",
+  "name_ru": "Сын Кирилл",
+  "group": "сыновья",
+  "tags": [
+   "сыновья",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Сын Кирилл, типичный представитель группы «сыновья», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для сыновья, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "кирилл",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сын Кирилл, сыновья archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "syn_maxim",
+  "name_ru": "Сын Максим",
+  "group": "сыновья",
+  "tags": [
+   "сыновья",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Сын Максим, типичный представитель группы «сыновья», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для сыновья, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "максим",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сын Максим, сыновья archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "syn_gleb",
+  "name_ru": "Сын Глеб",
+  "group": "сыновья",
+  "tags": [
+   "сыновья",
+   "calm",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Сын Глеб, типичный представитель группы «сыновья», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для сыновья, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "глеб",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сын Глеб, сыновья archetype, expressive face, detailed skin microtexture, normal speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "teshcha_galya",
+  "name_ru": "Тёща Галя",
+  "group": "тёщи",
+  "tags": [
+   "тёщи",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Тёща Галя, типичный представитель группы «тёщи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тёщи, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "галя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тёща Галя, тёщи archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "teshcha_vera",
+  "name_ru": "Тёща Вера",
+  "group": "тёщи",
+  "tags": [
+   "тёщи",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Тёща Вера, типичный представитель группы «тёщи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тёщи, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "вера",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тёща Вера, тёщи archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "teshcha_nina",
+  "name_ru": "Тёща Нина",
+  "group": "тёщи",
+  "tags": [
+   "тёщи",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Тёща Нина, типичный представитель группы «тёщи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тёщи, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "нина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тёща Нина, тёщи archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "teshcha_rosa",
+  "name_ru": "Тёща Роза",
+  "group": "тёщи",
+  "tags": [
+   "тёщи",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Тёща Роза, типичный представитель группы «тёщи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тёщи, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "роза",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тёща Роза, тёщи archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "svekrov_lyuba",
+  "name_ru": "Свекровь Люба",
+  "group": "свекрови",
+  "tags": [
+   "свекрови",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Свекровь Люба, типичный представитель группы «свекрови», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для свекрови, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "люба",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Свекровь Люба, свекрови archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "svekrov_rita",
+  "name_ru": "Свекровь Рита",
+  "group": "свекрови",
+  "tags": [
+   "свекрови",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Свекровь Рита, типичный представитель группы «свекрови», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для свекрови, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "рита",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Свекровь Рита, свекрови archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "svekrov_tamara",
+  "name_ru": "Свекровь Тамара",
+  "group": "свекрови",
+  "tags": [
+   "свекрови",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Свекровь Тамара, типичный представитель группы «свекрови», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для свекрови, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "тамара",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Свекровь Тамара, свекрови archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "svekrov_emma",
+  "name_ru": "Свекровь Эмма",
+  "group": "свекрови",
+  "tags": [
+   "свекрови",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Свекровь Эмма, типичный представитель группы «свекрови», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для свекрови, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "эмма",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Свекровь Эмма, свекрови archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "sosed_gena",
+  "name_ru": "Сосед Гена",
+  "group": "соседи",
+  "tags": [
+   "соседи",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Сосед Гена, типичный представитель группы «соседи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для соседи, темп fast, уровень экспрессии 3/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 3,
+  "role_default": "A",
+  "signature_words_ru": [
+   "гена",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сосед Гена, соседи archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "sosed_tolik",
+  "name_ru": "Сосед Толик",
+  "group": "соседи",
+  "tags": [
+   "соседи",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Сосед Толик, типичный представитель группы «соседи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для соседи, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "толик",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сосед Толик, соседи archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "sosed_marina",
+  "name_ru": "Соседка Марина",
+  "group": "соседи",
+  "tags": [
+   "соседи",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Соседка Марина, типичный представитель группы «соседи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для соседи, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "марина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Соседка Марина, соседи archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "sosed_borya",
+  "name_ru": "Сосед Боря",
+  "group": "соседи",
+  "tags": [
+   "соседи",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Сосед Боря, типичный представитель группы «соседи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для соседи, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "боря",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сосед Боря, соседи archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "sosed_lyosha",
+  "name_ru": "Сосед Лёша",
+  "group": "соседи",
+  "tags": [
+   "соседи",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Сосед Лёша, типичный представитель группы «соседи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для соседи, темп normal, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: balanced, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "лёша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Сосед Лёша, соседи archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "sosed_tanya",
+  "name_ru": "Соседка Таня",
+  "group": "соседи",
+  "tags": [
+   "соседи",
+   "calm",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Соседка Таня, типичный представитель группы «соседи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для соседи, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "таня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Соседка Таня, соседи archetype, expressive face, detailed skin microtexture, fast speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "prod_zoya",
+  "name_ru": "Продавщица Зоя",
+  "group": "продавцы",
+  "tags": [
+   "продавцы",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Продавщица Зоя, типичный представитель группы «продавцы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для продавцы, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "зоя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Продавщица Зоя, продавцы archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "prod_alla",
+  "name_ru": "Продавщица Алла",
+  "group": "продавцы",
+  "tags": [
+   "продавцы",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Продавщица Алла, типичный представитель группы «продавцы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для продавцы, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "алла",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Продавщица Алла, продавцы archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "prod_misha",
+  "name_ru": "Продавец Миша",
+  "group": "продавцы",
+  "tags": [
+   "продавцы",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Продавец Миша, типичный представитель группы «продавцы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для продавцы, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "миша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Продавец Миша, продавцы archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "prod_fatima",
+  "name_ru": "Продавщица Фатима",
+  "group": "продавцы",
+  "tags": [
+   "продавцы",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Продавщица Фатима, типичный представитель группы «продавцы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для продавцы, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "фатима",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Продавщица Фатима, продавцы archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "vrach_olga",
+  "name_ru": "Врач Ольга",
+  "group": "врачи",
+  "tags": [
+   "врачи",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Врач Ольга, типичный представитель группы «врачи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для врачи, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "ольга",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Врач Ольга, врачи archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "vrach_sergey",
+  "name_ru": "Врач Сергей",
+  "group": "врачи",
+  "tags": [
+   "врачи",
+   "balanced",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Врач Сергей, типичный представитель группы «врачи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для врачи, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: balanced, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "сергей",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Врач Сергей, врачи archetype, expressive face, detailed skin microtexture, fast speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "vrach_anna",
+  "name_ru": "Врач Анна",
+  "group": "врачи",
+  "tags": [
+   "врачи",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Врач Анна, типичный представитель группы «врачи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для врачи, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "анна",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Врач Анна, врачи archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "vrach_kostya",
+  "name_ru": "Врач Костя",
+  "group": "врачи",
+  "tags": [
+   "врачи",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Врач Костя, типичный представитель группы «врачи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для врачи, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "костя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Врач Костя, врачи archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "uchitel_viktor",
+  "name_ru": "Учитель Виктор",
+  "group": "учителя",
+  "tags": [
+   "учителя",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Учитель Виктор, типичный представитель группы «учителя», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для учителя, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "виктор",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Учитель Виктор, учителя archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "uchitel_anna",
+  "name_ru": "Учитель Анна",
+  "group": "учителя",
+  "tags": [
+   "учителя",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Учитель Анна, типичный представитель группы «учителя», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для учителя, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "анна",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Учитель Анна, учителя archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "uchitel_petr",
+  "name_ru": "Учитель Пётр",
+  "group": "учителя",
+  "tags": [
+   "учителя",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Учитель Пётр, типичный представитель группы «учителя», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для учителя, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "пётр",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Учитель Пётр, учителя archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "uchitel_olya",
+  "name_ru": "Учитель Оля",
+  "group": "учителя",
+  "tags": [
+   "учителя",
+   "balanced",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Учитель Оля, типичный представитель группы «учителя», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для учителя, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "оля",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Учитель Оля, учителя archetype, expressive face, detailed skin microtexture, fast speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "bloger_vika",
+  "name_ru": "Блогер Вика",
+  "group": "блогеры",
+  "tags": [
+   "блогеры",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Блогер Вика, типичный представитель группы «блогеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для блогеры, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "вика",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Блогер Вика, блогеры archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "bloger_zheka",
+  "name_ru": "Блогер Жека",
+  "group": "блогеры",
+  "tags": [
+   "блогеры",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Блогер Жека, типичный представитель группы «блогеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для блогеры, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "жека",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Блогер Жека, блогеры archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "bloger_liza",
+  "name_ru": "Блогер Лиза",
+  "group": "блогеры",
+  "tags": [
+   "блогеры",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Блогер Лиза, типичный представитель группы «блогеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для блогеры, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "лиза",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Блогер Лиза, блогеры archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "bloger_maks",
+  "name_ru": "Блогер Макс",
+  "group": "блогеры",
+  "tags": [
+   "блогеры",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Блогер Макс, типичный представитель группы «блогеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для блогеры, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "макс",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Блогер Макс, блогеры archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "bloger_dasha",
+  "name_ru": "Блогер Даша",
+  "group": "блогеры",
+  "tags": [
+   "блогеры",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Блогер Даша, типичный представитель группы «блогеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для блогеры, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "даша",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Блогер Даша, блогеры archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "taxist_ahmed",
+  "name_ru": "Таксист Ахмед",
+  "group": "таксисты",
+  "tags": [
+   "таксисты",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Таксист Ахмед, типичный представитель группы «таксисты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для таксисты, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "ахмед",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Таксист Ахмед, таксисты archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "raises eyebrow",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "taxist_sanya",
+  "name_ru": "Таксист Саня",
+  "group": "таксисты",
+  "tags": [
+   "таксисты",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Таксист Саня, типичный представитель группы «таксисты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для таксисты, темп fast, уровень экспрессии 3/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 3,
+  "role_default": "A",
+  "signature_words_ru": [
+   "саня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Таксист Саня, таксисты archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "taxist_kostya",
+  "name_ru": "Таксист Костя",
+  "group": "таксисты",
+  "tags": [
+   "таксисты",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Таксист Костя, типичный представитель группы «таксисты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для таксисты, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "костя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Таксист Костя, таксисты archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "taxist_ruslan",
+  "name_ru": "Таксист Руслан",
+  "group": "таксисты",
+  "tags": [
+   "таксисты",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Таксист Руслан, типичный представитель группы «таксисты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для таксисты, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "руслан",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Таксист Руслан, таксисты archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "biz_oleg",
+  "name_ru": "Бизнесмен Олег",
+  "group": "бизнесмены",
+  "tags": [
+   "бизнесмены",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Бизнесмен Олег, типичный представитель группы «бизнесмены», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бизнесмены, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "олег",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бизнесмен Олег, бизнесмены archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "biz_vlad",
+  "name_ru": "IT Влад",
+  "group": "бизнесмены",
+  "tags": [
+   "бизнесмены",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж IT Влад, типичный представитель группы «бизнесмены», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бизнесмены, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "влад",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character IT Влад, бизнесмены archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "biz_marina",
+  "name_ru": "Бизнес-леди Марина",
+  "group": "бизнесмены",
+  "tags": [
+   "бизнесмены",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Бизнес-леди Марина, типичный представитель группы «бизнесмены», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бизнесмены, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "марина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бизнес-леди Марина, бизнесмены archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "biz_artur",
+  "name_ru": "Бизнесмен Артур",
+  "group": "бизнесмены",
+  "tags": [
+   "бизнесмены",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Бизнесмен Артур, типичный представитель группы «бизнесмены», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бизнесмены, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "артур",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бизнесмен Артур, бизнесмены archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "biz_kseniya",
+  "name_ru": "Бизнес-леди Ксения",
+  "group": "бизнесмены",
+  "tags": [
+   "бизнесмены",
+   "conflict",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Бизнес-леди Ксения, типичный представитель группы «бизнесмены», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бизнесмены, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "ксения",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Бизнес-леди Ксения, бизнесмены archetype, expressive face, detailed skin microtexture, fast speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "stud_kolya",
+  "name_ru": "Студент Коля",
+  "group": "студенты",
+  "tags": [
+   "студенты",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Студент Коля, типичный представитель группы «студенты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для студенты, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "коля",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Студент Коля, студенты archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "raises eyebrow",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "stud_lera",
+  "name_ru": "Студентка Лера",
+  "group": "студенты",
+  "tags": [
+   "студенты",
+   "balanced",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Студентка Лера, типичный представитель группы «студенты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для студенты, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "лера",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Студентка Лера, студенты archetype, expressive face, detailed skin microtexture, fast speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "stud_danil",
+  "name_ru": "Студент Данил",
+  "group": "студенты",
+  "tags": [
+   "студенты",
+   "chaotic",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Студент Данил, типичный представитель группы «студенты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для студенты, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "данил",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Студент Данил, студенты archetype, expressive face, detailed skin microtexture, normal speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "stud_anya",
+  "name_ru": "Студентка Аня",
+  "group": "студенты",
+  "tags": [
+   "студенты",
+   "calm",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Студентка Аня, типичный представитель группы «студенты», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для студенты, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "аня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Студентка Аня, студенты archetype, expressive face, detailed skin microtexture, fast speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "pens_fedor",
+  "name_ru": "Пенсионер Фёдор",
+  "group": "пенсионеры",
+  "tags": [
+   "пенсионеры",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Пенсионер Фёдор, типичный представитель группы «пенсионеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для пенсионеры, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "фёдор",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Пенсионер Фёдор, пенсионеры archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "pens_lidiya",
+  "name_ru": "Пенсионерка Лидия",
+  "group": "пенсионеры",
+  "tags": [
+   "пенсионеры",
+   "calm",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Пенсионерка Лидия, типичный представитель группы «пенсионеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для пенсионеры, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "лидия",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Пенсионерка Лидия, пенсионеры archetype, expressive face, detailed skin microtexture, normal speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "pens_arkady",
+  "name_ru": "Пенсионер Аркадий",
+  "group": "пенсионеры",
+  "tags": [
+   "пенсионеры",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Пенсионер Аркадий, типичный представитель группы «пенсионеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для пенсионеры, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "аркадий",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Пенсионер Аркадий, пенсионеры archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "pens_zoya",
+  "name_ru": "Пенсионерка Зоя",
+  "group": "пенсионеры",
+  "tags": [
+   "пенсионеры",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Пенсионерка Зоя, типичный представитель группы «пенсионеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для пенсионеры, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "зоя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Пенсионерка Зоя, пенсионеры archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "chin_boris",
+  "name_ru": "Чиновник Борис",
+  "group": "чиновники",
+  "tags": [
+   "чиновники",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Чиновник Борис, типичный представитель группы «чиновники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для чиновники, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "борис",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Чиновник Борис, чиновники archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "chin_elena",
+  "name_ru": "Чиновница Елена",
+  "group": "чиновники",
+  "tags": [
+   "чиновники",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Чиновница Елена, типичный представитель группы «чиновники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для чиновники, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "елена",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Чиновница Елена, чиновники archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "chin_gennady",
+  "name_ru": "Чиновник Геннадий",
+  "group": "чиновники",
+  "tags": [
+   "чиновники",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Чиновник Геннадий, типичный представитель группы «чиновники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для чиновники, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "геннадий",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Чиновник Геннадий, чиновники archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "fit_mila",
+  "name_ru": "Фитнес Мила",
+  "group": "фитнес",
+  "tags": [
+   "фитнес",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Фитнес Мила, типичный представитель группы «фитнес», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для фитнес, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "мила",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Фитнес Мила, фитнес archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "fit_stas",
+  "name_ru": "Фитнес Стас",
+  "group": "фитнес",
+  "tags": [
+   "фитнес",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Фитнес Стас, типичный представитель группы «фитнес», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для фитнес, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "стас",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Фитнес Стас, фитнес archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "fit_yana",
+  "name_ru": "Фитнес Яна",
+  "group": "фитнес",
+  "tags": [
+   "фитнес",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Фитнес Яна, типичный представитель группы «фитнес», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для фитнес, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "яна",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Фитнес Яна, фитнес archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "kosh_marfa",
+  "name_ru": "Кошатница Марфа",
+  "group": "кошатницы",
+  "tags": [
+   "кошатницы",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Кошатница Марфа, типичный представитель группы «кошатницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для кошатницы, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "марфа",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Кошатница Марфа, кошатницы archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "raises eyebrow",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "kosh_vera",
+  "name_ru": "Кошатница Вера",
+  "group": "кошатницы",
+  "tags": [
+   "кошатницы",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Кошатница Вера, типичный представитель группы «кошатницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для кошатницы, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "вера",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Кошатница Вера, кошатницы archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "kosh_galya",
+  "name_ru": "Кошатница Галя",
+  "group": "кошатницы",
+  "tags": [
+   "кошатницы",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Кошатница Галя, типичный представитель группы «кошатницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для кошатницы, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "галя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Кошатница Галя, кошатницы archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "extr_dima",
+  "name_ru": "Экстремал Дима",
+  "group": "экстремалы",
+  "tags": [
+   "экстремалы",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Экстремал Дима, типичный представитель группы «экстремалы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для экстремалы, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "дима",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Экстремал Дима, экстремалы archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "extr_nika",
+  "name_ru": "Экстремалка Ника",
+  "group": "экстремалы",
+  "tags": [
+   "экстремалы",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Экстремалка Ника, типичный представитель группы «экстремалы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для экстремалы, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "ника",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Экстремалка Ника, экстремалы archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "gop_serega",
+  "name_ru": "Гопник Серёга",
+  "group": "гопники",
+  "tags": [
+   "гопники",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Гопник Серёга, типичный представитель группы «гопники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для гопники, темп fast, уровень экспрессии 3/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 3,
+  "role_default": "A",
+  "signature_words_ru": [
+   "серёга",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Гопник Серёга, гопники archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "gop_dimon",
+  "name_ru": "Гопник Димон",
+  "group": "гопники",
+  "tags": [
+   "гопники",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Гопник Димон, типичный представитель группы «гопники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для гопники, темп fast, уровень экспрессии 3/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 3,
+  "role_default": "A",
+  "signature_words_ru": [
+   "димон",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Гопник Димон, гопники archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "gop_lyoha",
+  "name_ru": "Гопник Лёха",
+  "group": "гопники",
+  "tags": [
+   "гопники",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Гопник Лёха, типичный представитель группы «гопники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для гопники, темп normal, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "лёха",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Гопник Лёха, гопники archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "mod_klara",
+  "name_ru": "Модница Клара",
+  "group": "бабушки-модницы",
+  "tags": [
+   "бабушки-модницы",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Модница Клара, типичный представитель группы «бабушки-модницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабушки-модницы, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "клара",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Модница Клара, бабушки-модницы archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "mod_eleonora",
+  "name_ru": "Модница Элеонора",
+  "group": "бабушки-модницы",
+  "tags": [
+   "бабушки-модницы",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Модница Элеонора, типичный представитель группы «бабушки-модницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабушки-модницы, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "элеонора",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Модница Элеонора, бабушки-модницы archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "mod_faina",
+  "name_ru": "Модница Фаина",
+  "group": "бабушки-модницы",
+  "tags": [
+   "бабушки-модницы",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Модница Фаина, типичный представитель группы «бабушки-модницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабушки-модницы, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "фаина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Модница Фаина, бабушки-модницы archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "tech_semyon",
+  "name_ru": "Техно-дед Семён",
+  "group": "деды-техники",
+  "tags": [
+   "деды-техники",
+   "meme",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Техно-дед Семён, типичный представитель группы «деды-техники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды-техники, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "семён",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Техно-дед Семён, деды-техники archetype, expressive face, detailed skin microtexture, normal speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "tech_arkady",
+  "name_ru": "Техно-дед Аркадий",
+  "group": "деды-техники",
+  "tags": [
+   "деды-техники",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Техно-дед Аркадий, типичный представитель группы «деды-техники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды-техники, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "аркадий",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Техно-дед Аркадий, деды-техники archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "tech_boris",
+  "name_ru": "Техно-дед Борис",
+  "group": "деды-техники",
+  "tags": [
+   "деды-техники",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Техно-дед Борис, типичный представитель группы «деды-техники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для деды-техники, темп slow, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "борис",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Техно-дед Борис, деды-техники archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "tik_arina",
+  "name_ru": "Тиктокер Арина",
+  "group": "тиктокеры",
+  "tags": [
+   "тиктокеры",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Тиктокер Арина, типичный представитель группы «тиктокеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тиктокеры, темп fast, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "арина",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тиктокер Арина, тиктокеры archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "tik_zhenya",
+  "name_ru": "Тиктокер Женя",
+  "group": "тиктокеры",
+  "tags": [
+   "тиктокеры",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Тиктокер Женя, типичный представитель группы «тиктокеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тиктокеры, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "женя",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тиктокер Женя, тиктокеры archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "aggressive finger point",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "tik_nikita",
+  "name_ru": "Тиктокер Никита",
+  "group": "тиктокеры",
+  "tags": [
+   "тиктокеры",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Тиктокер Никита, типичный представитель группы «тиктокеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для тиктокеры, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "никита",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Тиктокер Никита, тиктокеры archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "ohr_valery",
+  "name_ru": "Охранник Валерий",
+  "group": "охранники",
+  "tags": [
+   "охранники",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Охранник Валерий, типичный представитель группы «охранники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для охранники, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "валерий",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Охранник Валерий, охранники archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "ohr_roma",
+  "name_ru": "Охранник Рома",
+  "group": "охранники",
+  "tags": [
+   "охранники",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Охранник Рома, типичный представитель группы «охранники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для охранники, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "B",
+  "signature_words_ru": [
+   "рома",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Охранник Рома, охранники archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "dvor_jamshed",
+  "name_ru": "Дворник Джамшед",
+  "group": "дворники",
+  "tags": [
+   "дворники",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дворник Джамшед, типичный представитель группы «дворники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дворники, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "джамшед",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дворник Джамшед, дворники archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "dvor_petrovich",
+  "name_ru": "Дворник Петрович",
+  "group": "дворники",
+  "tags": [
+   "дворники",
+   "balanced",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Дворник Петрович, типичный представитель группы «дворники», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для дворники, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "петрович",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Дворник Петрович, дворники archetype, expressive face, detailed skin microtexture, slow speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "calm stare",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ },
+ {
+  "id": "cel_agafya",
+  "name_ru": "Целительница Агафья",
+  "group": "бабки-целительницы",
+  "tags": [
+   "бабки-целительницы",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Целительница Агафья, типичный представитель группы «бабки-целительницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки-целительницы, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "агафья",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Целительница Агафья, бабки-целительницы archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "cel_praskovya",
+  "name_ru": "Целительница Прасковья",
+  "group": "бабки-целительницы",
+  "tags": [
+   "бабки-целительницы",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Целительница Прасковья, типичный представитель группы «бабки-целительницы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для бабки-целительницы, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "прасковья",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Целительница Прасковья, бабки-целительницы archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "kur_timur",
+  "name_ru": "Курьер Тимур",
+  "group": "курьеры",
+  "tags": [
+   "курьеры",
+   "chaotic",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Курьер Тимур, типичный представитель группы «курьеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для курьеры, темп fast, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: chaotic, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "тимур",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Курьер Тимур, курьеры archetype, expressive face, detailed skin microtexture, fast speech pace, chaotic energy"
+  },
+  "modifiers": {
+   "hook_style": "slams table",
+   "laugh_style": "wheezing burst"
+  },
+  "compatibility": "chaotic"
+ },
+ {
+  "id": "kur_vanya",
+  "name_ru": "Курьер Ваня",
+  "group": "курьеры",
+  "tags": [
+   "курьеры",
+   "meme",
+   "fast"
+  ],
+  "appearance_ru": "Персонаж Курьер Ваня, типичный представитель группы «курьеры», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для курьеры, темп fast, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "fast",
+  "swear_level": 2,
+  "role_default": "A",
+  "signature_words_ru": [
+   "ваня",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Курьер Ваня, курьеры archetype, expressive face, detailed skin microtexture, fast speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "holds prop up",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "dom_stepanovna",
+  "name_ru": "Домоуправ Степановна",
+  "group": "домоуправы",
+  "tags": [
+   "домоуправы",
+   "conflict",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Домоуправ Степановна, типичный представитель группы «домоуправы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для домоуправы, темп normal, уровень экспрессии 1/3",
+  "behavior_ru": "Поведение: conflict, роль A в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 1,
+  "role_default": "A",
+  "signature_words_ru": [
+   "степановна",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Домоуправ Степановна, домоуправы archetype, expressive face, detailed skin microtexture, normal speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "waves hands",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "dom_palych",
+  "name_ru": "Домоуправ Палыч",
+  "group": "домоуправы",
+  "tags": [
+   "домоуправы",
+   "conflict",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Домоуправ Палыч, типичный представитель группы «домоуправы», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для домоуправы, темп slow, уровень экспрессии 2/3",
+  "behavior_ru": "Поведение: conflict, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 2,
+  "role_default": "B",
+  "signature_words_ru": [
+   "палыч",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Домоуправ Палыч, домоуправы archetype, expressive face, detailed skin microtexture, slow speech pace, conflict energy"
+  },
+  "modifiers": {
+   "hook_style": "adjusts glasses",
+   "laugh_style": "grudging smirk"
+  },
+  "compatibility": "conflict"
+ },
+ {
+  "id": "astr_zhanna",
+  "name_ru": "Астролог Жанна",
+  "group": "астрологи",
+  "tags": [
+   "астрологи",
+   "meme",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Астролог Жанна, типичный представитель группы «астрологи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для астрологи, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: meme, роль A в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "A",
+  "signature_words_ru": [
+   "жанна",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Астролог Жанна, астрологи archetype, expressive face, detailed skin microtexture, slow speech pace, meme energy"
+  },
+  "modifiers": {
+   "hook_style": "shows phone",
+   "laugh_style": "snort-laugh"
+  },
+  "compatibility": "meme"
+ },
+ {
+  "id": "astr_edgar",
+  "name_ru": "Астролог Эдгар",
+  "group": "астрологи",
+  "tags": [
+   "астрологи",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Астролог Эдгар, типичный представитель группы «астрологи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для астрологи, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "эдгар",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Астролог Эдгар, астрологи archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "slow head turn",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "psy_inna",
+  "name_ru": "Психолог Инна",
+  "group": "психологи",
+  "tags": [
+   "психологи",
+   "calm",
+   "slow"
+  ],
+  "appearance_ru": "Персонаж Психолог Инна, типичный представитель группы «психологи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для психологи, темп slow, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: calm, роль B в диалоге",
+  "speech_pace": "slow",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "инна",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Психолог Инна, психологи archetype, expressive face, detailed skin microtexture, slow speech pace, calm energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "quiet chuckle"
+  },
+  "compatibility": "calm"
+ },
+ {
+  "id": "psy_mark",
+  "name_ru": "Психолог Марк",
+  "group": "психологи",
+  "tags": [
+   "психологи",
+   "balanced",
+   "normal"
+  ],
+  "appearance_ru": "Персонаж Психолог Марк, типичный представитель группы «психологи», выразительная внешность, детализированная текстура кожи",
+  "speech_style_ru": "Характерная речь для психологи, темп normal, уровень экспрессии 0/3",
+  "behavior_ru": "Поведение: balanced, роль B в диалоге",
+  "speech_pace": "normal",
+  "swear_level": 0,
+  "role_default": "B",
+  "signature_words_ru": [
+   "марк",
+   "ну",
+   "да"
+  ],
+  "prompt_tokens": {
+   "character_en": "Russian character Психолог Марк, психологи archetype, expressive face, detailed skin microtexture, normal speech pace, balanced energy"
+  },
+  "modifiers": {
+   "hook_style": "crosses arms",
+   "laugh_style": "warm laugh"
+  },
+  "compatibility": "balanced"
+ }
+]
