@@ -385,30 +385,24 @@
             <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-violet-400/70 hover:text-violet-300 transition-colors">Написать в Telegram →</a></p>
           </div>
 
-          <!-- Режим -->
+          <!-- Сервер -->
           <div class="glass-panel p-4 space-y-4">
-            <div>
-              <label class="text-xs text-gray-400 mb-1 block font-medium">Режим генерации</label>
-              <div class="flex gap-2">
-                <button class="mode-btn active" data-setting="demo">Демо (локально)</button>
-                <button class="mode-btn" data-setting="api">API (сервер)</button>
+            <details>
+              <summary class="text-xs text-gray-400 font-medium cursor-pointer hover:text-gray-300 transition-colors">Сервер и кеш ▸</summary>
+              <div class="mt-3 space-y-3 border-t border-gray-800/50 pt-3">
+                <div>
+                  <label class="text-[10px] text-gray-500 font-medium block mb-1">URL сервера (обычно менять не нужно)</label>
+                  <input id="api-url" type="url" class="input-field text-xs" value="https://ferixdi-studio.onrender.com">
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-500 mb-1 block font-medium">Кеш истории</label>
+                  <div class="flex gap-2 items-center">
+                    <span id="cache-stats" class="text-[10px] text-gray-600">—</span>
+                    <button id="btn-clear-cache" class="btn-neon-pink text-[10px]">Очистить</button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div id="api-settings" class="hidden space-y-3">
-              <label class="text-xs text-gray-400 font-medium">URL сервера:</label>
-              <input id="api-url" type="url" class="input-field" placeholder="https://your-backend.onrender.com">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-400">Валидация через сервер</span>
-                <div class="toggle-track" data-opt="backendValidation"><div class="toggle-thumb"></div></div>
-              </div>
-            </div>
-            <div>
-              <label class="text-xs text-gray-400 mb-1 block font-medium">Кеш истории генераций</label>
-              <div class="flex gap-2 items-center">
-                <span id="cache-stats" class="text-xs text-gray-500">—</span>
-                <button id="btn-clear-cache" class="btn-neon-pink text-xs">Очистить</button>
-              </div>
-            </div>
+            </details>
           </div>
 
           <!-- О проекте -->

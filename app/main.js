@@ -19,7 +19,7 @@ const state = {
   productInfo: null, // { image_base64, mime_type, description_en }
   options: { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false },
   lastResult: null,
-  settingsMode: 'demo',
+  settingsMode: 'api',
 };
 
 // ─── LOG ─────────────────────────────────────
@@ -42,18 +42,11 @@ function log(level, module, msg) {
 }
 
 // ─── PROMO CODE ──────────────────────────────
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+const VALID_PROMO = 'FERIXDI-VIP-2026';
+const DEFAULT_API_URL = 'https://ferixdi-studio.onrender.com';
 
 function isPromoValid() {
-  const saved = localStorage.getItem('ferixdi_access');
-  if (!saved) return false;
-  try {
-    const data = JSON.parse(saved);
-    return !!data.accessGranted;
-  } catch { return false; }
+  return localStorage.getItem('ferixdi_promo') === VALID_PROMO;
 }
 
 function initPromoCode() {
@@ -64,42 +57,53 @@ function initPromoCode() {
 
   // Show saved state
   if (isPromoValid()) {
-    const saved = JSON.parse(localStorage.getItem('ferixdi_access'));
-    status.innerHTML = `<span class="neon-text-green">✓ Промо-код активен (${saved.label || 'user'})</span>`;
+    status.innerHTML = '<span class="neon-text-green">✓ Промо-код активен</span>';
     input.placeholder = '••••••••';
+    document.getElementById('header-mode')?.setAttribute('textContent', 'VIP');
     const modeEl = document.getElementById('header-mode');
-    if (modeEl) modeEl.textContent = (saved.label || 'ДЕМО').toUpperCase();
+    if (modeEl) modeEl.textContent = 'VIP';
   }
 
-  btn.addEventListener('click', async () => {
-    const key = input.value.trim();
+  btn.addEventListener('click', () => {
+    const key = input.value.trim().toUpperCase();
     if (!key) { status.innerHTML = '<span class="text-red-400">Введите промо-код</span>'; return; }
-    status.innerHTML = '<span class="text-gray-500">Проверяю...</span>';
 
-    try {
-      const hash = await sha256(key);
-      const resp = await fetch(new URL('./data/access_keys.json', import.meta.url));
-      const data = await resp.json();
-      const match = data.keys.find(k => k.hash === hash);
-      if (match) {
-        localStorage.setItem('ferixdi_access', JSON.stringify({ accessGranted: true, ts: Date.now(), keyHash: hash, label: match.label }));
-        status.innerHTML = `<span class="neon-text-green">✓ Промо-код активен! Привет, ${match.label}!</span>`;
-        input.value = '';
-        input.placeholder = '••••••••';
-        const modeEl = document.getElementById('header-mode');
-        if (modeEl) modeEl.textContent = match.label.toUpperCase();
-        log('OK', 'ПРОМО', `Промо-код принят (${match.label})`);
-      } else {
-        status.innerHTML = '<span class="text-red-400">✗ Неверный промо-код. Проверьте и попробуйте снова.</span>';
-        log('WARN', 'ПРОМО', 'Неверный промо-код');
-      }
-    } catch (e) {
-      status.innerHTML = '<span class="text-red-400">Ошибка проверки</span>';
-      log('ERR', 'ПРОМО', e.message);
+    if (key === VALID_PROMO) {
+      localStorage.setItem('ferixdi_promo', key);
+      status.innerHTML = '<span class="neon-text-green">✓ Промо-код активен! Добро пожаловать!</span>';
+      input.value = '';
+      input.placeholder = '••••••••';
+      const modeEl = document.getElementById('header-mode');
+      if (modeEl) modeEl.textContent = 'VIP';
+      log('OK', 'ПРОМО', 'Промо-код принят');
+
+      // Auto-authenticate with server
+      autoAuth();
+    } else {
+      status.innerHTML = '<span class="text-red-400">✗ Неверный промо-код</span>';
+      log('WARN', 'ПРОМО', 'Неверный промо-код');
     }
   });
 
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); });
+}
+
+async function autoAuth() {
+  const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+  try {
+    const resp = await fetch(`${url}/api/auth/validate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: VALID_PROMO }),
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.jwt) {
+        localStorage.setItem('ferixdi_jwt', data.jwt);
+        log('OK', 'API', 'Авторизовано на сервере');
+      }
+    }
+  } catch { /* server might not be up yet */ }
 }
 
 function initApp() {
@@ -107,6 +111,11 @@ function initApp() {
   loadCharacters();
   updateCacheStats();
   navigateTo('characters');
+
+  // Auto-authenticate if promo is already saved
+  if (isPromoValid()) {
+    autoAuth();
+  }
 }
 
 // ─── CHARACTERS ──────────────────────────────
@@ -720,8 +729,8 @@ function populateDialogueEditor(result) {
 
 async function callGeminiAPI(apiContext) {
   const token = localStorage.getItem('ferixdi_jwt');
-  const apiUrl = localStorage.getItem('ferixdi_api_url') || '';
-  if (!apiUrl || !token) return null;
+  const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+  if (!token) return null;
 
   // Build payload with optional multimodal attachments
   const payload = { context: apiContext };
@@ -841,8 +850,10 @@ function initGenerate() {
           log('OK', 'GEMINI', 'Творческий контент от Gemini объединён');
           displayResult(merged);
         } else {
-          showGenStatus('❌ API не настроен. Укажите Backend URL в настройках.', 'text-red-400');
-          log('ERR', 'GEMINI', 'API URL или токен не настроены');
+          // No JWT token — try to auto-auth and show local result for now
+          log('WARN', 'GEMINI', 'Нет токена — показываю локальный результат');
+          if (isPromoValid()) autoAuth();
+          displayResult(localResult);
         }
       } catch (apiErr) {
         log('ERR', 'GEMINI', `Ошибка API: ${apiErr.message}`);
@@ -999,61 +1010,24 @@ function initCopyButtons() {
 
 // ─── SETTINGS ────────────────────────────────
 function initSettings() {
-  // Restore saved API URL
-  const savedApiUrl = localStorage.getItem('ferixdi_api_url');
-  if (savedApiUrl) {
-    const urlInput = document.getElementById('api-url');
-    if (urlInput) urlInput.value = savedApiUrl;
+  // Set default API URL if not saved
+  if (!localStorage.getItem('ferixdi_api_url')) {
+    localStorage.setItem('ferixdi_api_url', DEFAULT_API_URL);
   }
+  const urlInput = document.getElementById('api-url');
+  if (urlInput) urlInput.value = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
 
-  document.querySelectorAll('#section-settings .mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#section-settings .mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      state.settingsMode = btn.dataset.setting;
-      document.getElementById('api-settings')?.classList.toggle('hidden', btn.dataset.setting !== 'api');
-      document.getElementById('header-mode').textContent = btn.dataset.setting === 'api' ? 'API' : 'ДЕМО';
-      log('INFO', 'НАСТРОЙКИ', `Режим: ${btn.dataset.setting}`);
-    });
-  });
+  // Always API mode — no demo/api switcher needed
+  state.settingsMode = 'api';
+  const modeEl = document.getElementById('header-mode');
+  if (modeEl && isPromoValid()) modeEl.textContent = 'VIP';
 
-  // Save API URL on change and auto-authenticate
-  document.getElementById('api-url')?.addEventListener('change', async (e) => {
-    const url = e.target.value.trim().replace(/\/+$/, '');
-    if (!url) {
-      localStorage.removeItem('ferixdi_api_url');
-      localStorage.removeItem('ferixdi_jwt');
-      return;
-    }
+  // Save API URL on change
+  document.getElementById('api-url')?.addEventListener('change', (e) => {
+    const url = e.target.value.trim().replace(/\/+$/, '') || DEFAULT_API_URL;
     localStorage.setItem('ferixdi_api_url', url);
-    log('INFO', 'API', `URL сервера сохранён: ${url}`);
-
-    // Auto-authenticate against server using the saved access key
-    const savedAccess = localStorage.getItem('ferixdi_access');
-    if (savedAccess) {
-      try {
-        const { keyHash } = JSON.parse(savedAccess);
-        if (keyHash) {
-          log('INFO', 'API', 'Авторизация на сервере...');
-          const resp = await fetch(`${url}/api/auth/validate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key: keyHash }),
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data.jwt) {
-              localStorage.setItem('ferixdi_jwt', data.jwt);
-              log('OK', 'API', `Авторизовано! Токен получен: ${data.label}`);
-            }
-          } else {
-            log('WARN', 'API', 'Ошибка авторизации — проверьте URL и ключ');
-          }
-        }
-      } catch (err) {
-        log('WARN', 'API', `Не удалось связаться с сервером: ${err.message}`);
-      }
-    }
+    log('INFO', 'API', `URL сервера: ${url}`);
+    if (isPromoValid()) autoAuth();
   });
 
   document.getElementById('btn-clear-cache')?.addEventListener('click', () => {
