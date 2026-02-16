@@ -2881,7 +2881,14 @@ async function fetchTrends() {
           </div>
         </div>
 
-        <div class="text-[11px] text-gray-400">${escapeHtml(t.why_trending)}</div>
+        <!-- Trend context: WHY this is trending now -->
+        ${(t.trend_context || t.why_trending) ? `<div class="text-[11px] text-gray-300 bg-black/20 rounded px-2.5 py-1.5 border-l-2 border-cyan-500/30"><span class="text-cyan-400/80 font-medium">📊 Почему сейчас:</span> ${escapeHtml(t.trend_context || t.why_trending)}</div>` : ''}
+
+        <!-- Comedy angle -->
+        ${t.comedy_angle ? `<div class="text-[11px] text-gray-400"><span class="text-amber-400/70">🎯</span> ${escapeHtml(t.comedy_angle)}</div>` : ''}
+
+        <!-- Theme tag -->
+        ${t.theme_tag ? `<span class="inline-block text-[9px] px-2 py-0.5 rounded-full bg-gray-800/80 text-gray-500 border border-gray-700/50">#${escapeHtml(t.theme_tag)}</span>` : ''}
 
         <!-- Ready dialogue -->
         <div class="bg-black/40 rounded-lg p-3 space-y-1.5">
@@ -2891,7 +2898,7 @@ async function fetchTrends() {
           ${t.killer_word ? `<div class="text-[10px] text-red-400/70 mt-1">💥 killer: «${escapeHtml(t.killer_word)}»</div>` : ''}
         </div>
 
-        ${t.share_hook ? `<div class="text-[10px] text-gray-500 italic">� ${escapeHtml(t.share_hook)}</div>` : ''}
+        ${t.share_hook ? `<div class="text-[10px] text-gray-500 italic">📤 ${escapeHtml(t.share_hook)}</div>` : ''}
 
         <!-- Action buttons -->
         <div class="flex gap-2 flex-wrap pt-1">
