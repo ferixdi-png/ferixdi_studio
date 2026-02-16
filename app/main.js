@@ -40,12 +40,18 @@ function log(level, module, msg) {
   while (el.children.length > 200) el.removeChild(el.firstChild);
 }
 
-// ─── PROMO CODE ──────────────────────────────
-const VALID_PROMO = 'FERIXDI-VIP-2026';
+// ─── PROMO CODE (hash-only, no plaintext) ────────
+const _PH = 'bc6f301ecc9d72e7f2958ba89cb1524cc560984ca0131c5bf43a476c1d98d184';
 const DEFAULT_API_URL = 'https://ferixdi-studio.onrender.com';
 
+async function _hashCode(code) {
+  const data = new TextEncoder().encode(code.trim().toUpperCase());
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 function isPromoValid() {
-  return localStorage.getItem('ferixdi_promo') === VALID_PROMO;
+  return localStorage.getItem('ferixdi_ph') === _PH;
 }
 
 function initPromoCode() {
@@ -63,12 +69,17 @@ function initPromoCode() {
     if (modeEl) modeEl.textContent = 'VIP';
   }
 
-  btn.addEventListener('click', () => {
-    const key = input.value.trim().toUpperCase();
+  btn.addEventListener('click', async () => {
+    const key = input.value.trim();
     if (!key) { status.innerHTML = '<span class="text-red-400">Введите промо-код</span>'; return; }
 
-    if (key === VALID_PROMO) {
-      localStorage.setItem('ferixdi_promo', key);
+    btn.disabled = true;
+    btn.textContent = '…';
+    const hash = await _hashCode(key);
+
+    if (hash === _PH) {
+      localStorage.setItem('ferixdi_ph', hash);
+      localStorage.removeItem('ferixdi_promo');
       status.innerHTML = '<span class="neon-text-green">✓ Промо-код активен! Добро пожаловать!</span>';
       input.value = '';
       input.placeholder = '••••••••';
@@ -76,25 +87,27 @@ function initPromoCode() {
       if (modeEl) modeEl.textContent = 'VIP';
       log('OK', 'ПРОМО', 'Промо-код принят');
       updateWelcomeBanner();
-
-      // Auto-authenticate with server
-      autoAuth();
+      autoAuth(hash);
     } else {
       status.innerHTML = '<span class="text-red-400">✗ Неверный промо-код</span>';
       log('WARN', 'ПРОМО', 'Неверный промо-код');
     }
+    btn.disabled = false;
+    btn.textContent = 'Активировать';
   });
 
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); });
 }
 
-async function autoAuth() {
+async function autoAuth(hash) {
   const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+  const h = hash || localStorage.getItem('ferixdi_ph');
+  if (!h) return;
   try {
     const resp = await fetch(`${url}/api/auth/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: VALID_PROMO }),
+      body: JSON.stringify({ key: h }),
     });
     if (resp.ok) {
       const data = await resp.json();
@@ -138,6 +151,16 @@ function initWelcomeBanner() {
 
 function initApp() {
   log('OK', 'СИСТЕМА', 'FERIXDI Studio v2.0 — добро пожаловать!');
+
+  // Migrate old plaintext promo → hash-based (one-time)
+  const oldPromo = localStorage.getItem('ferixdi_promo');
+  if (oldPromo && !localStorage.getItem('ferixdi_ph')) {
+    _hashCode(oldPromo).then(h => {
+      if (h === _PH) { localStorage.setItem('ferixdi_ph', h); }
+      localStorage.removeItem('ferixdi_promo');
+    });
+  }
+
   loadCharacters();
   updateCacheStats();
   navigateTo('characters');

@@ -14,7 +14,8 @@ import { dirname, join } from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'ferixdi-dev-secret-change-me';
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
+if (!process.env.JWT_SECRET) console.warn('⚠️  JWT_SECRET not set! Using random secret — tokens will invalidate on restart. Set JWT_SECRET env var in production.');
 
 // ─── Multi API Key Rotation ─────────────────
 function getGeminiKeys() {
@@ -35,30 +36,68 @@ function nextGeminiKey() {
   return key;
 }
 
-// ─── Rate Limiting (in-memory) ──────────────
-const _rateLimits = new Map();
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 10;
-function checkRateLimit(userId) {
+// ─── IP extraction (Render proxy) ────────────
+function getClientIP(req) {
+  const xff = req.headers['x-forwarded-for'];
+  if (xff) return xff.split(',')[0].trim();
+  return req.ip || req.connection?.remoteAddress || 'unknown';
+}
+
+// ─── Rate Limiting (in-memory, per-bucket) ───
+const _rateBuckets = new Map();
+function checkRateLimit(bucketKey, windowMs, maxCount) {
   const now = Date.now();
-  let entry = _rateLimits.get(userId);
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+  let entry = _rateBuckets.get(bucketKey);
+  if (!entry || now - entry.windowStart > windowMs) {
     entry = { windowStart: now, count: 0 };
-    _rateLimits.set(userId, entry);
+    _rateBuckets.set(bucketKey, entry);
   }
   entry.count++;
-  return entry.count <= RATE_LIMIT_MAX;
+  return entry.count <= maxCount;
 }
 // Cleanup stale entries every 5 min
 setInterval(() => {
   const now = Date.now();
-  for (const [k, v] of _rateLimits) {
-    if (now - v.windowStart > RATE_LIMIT_WINDOW_MS * 2) _rateLimits.delete(k);
+  for (const [k, v] of _rateBuckets) {
+    if (now - v.windowStart > 900_000) _rateBuckets.delete(k);
   }
 }, 300_000);
 
-app.use(cors());
-app.use(express.json({ limit: '75mb' }));
+// Rate limit constants per endpoint
+const RL_AUTH    = { window: 900_000, max: 5 };   // 5 per 15min (anti-brute-force)
+const RL_GEN     = { window: 60_000,  max: 6 };   // 6 per min
+const RL_TRENDS  = { window: 60_000,  max: 4 };   // 4 per min
+const RL_PRODUCT = { window: 60_000,  max: 8 };   // 8 per min
+
+// ─── Security Headers ────────────────────────
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.removeHeader('X-Powered-By');
+  next();
+});
+
+// ─── CORS (restrict to known origins) ────────
+const ALLOWED_ORIGINS = [
+  'https://ferixdi-studio.onrender.com',
+  'http://localhost:3001',
+  'http://localhost:5500',
+  'http://127.0.0.1:3001',
+  'http://127.0.0.1:5500',
+];
+app.use(cors({
+  origin: (origin, cb) => {
+    // Allow requests with no origin (mobile apps, curl, server-to-server)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    // Also allow *.onrender.com subdomains
+    if (origin.endsWith('.onrender.com')) return cb(null, true);
+    cb(null, false);
+  },
+  credentials: true,
+}));
+app.use(express.json({ limit: '50mb' }));
 
 // ─── Serve Frontend (app/) ──────────────────
 const appDir = join(__dirname, '..', 'app');
@@ -78,17 +117,31 @@ function authMiddleware(req, res, next) {
 
 // ─── POST /api/auth/validate ─────────────────
 app.post('/api/auth/validate', async (req, res) => {
-  const { key } = req.body;
-  if (!key) return res.status(400).json({ error: 'Key required' });
+  const ip = getClientIP(req);
 
-  // Support both plain-text key and pre-hashed key from frontend
+  // Anti-brute-force: 5 attempts per 15 min per IP
+  if (!checkRateLimit(`auth:${ip}`, RL_AUTH.window, RL_AUTH.max)) {
+    console.warn(`Auth rate limit hit: ${ip}`);
+    return res.status(429).json({ error: 'Слишком много попыток. Подождите 15 минут.' });
+  }
+
+  const { key } = req.body;
+  if (!key || typeof key !== 'string' || key.length > 128) {
+    return res.status(400).json({ error: 'Key required' });
+  }
+
+  // Only accept pre-hashed keys (SHA-256 hex) — no plaintext accepted
   const isHex64 = /^[a-f0-9]{64}$/.test(key);
   const hash = isHex64 ? key : crypto.createHash('sha256').update(key).digest('hex');
   try {
     const keysPath = join(__dirname, '..', 'app', 'data', 'access_keys.json');
     const keys = JSON.parse(readFileSync(keysPath, 'utf-8'));
     const match = keys.keys.find(k => k.hash === hash);
-    if (!match) return res.status(403).json({ error: 'Invalid key' });
+    if (!match) {
+      // Delay response to slow down brute-force
+      await new Promise(r => setTimeout(r, 800 + Math.random() * 400));
+      return res.status(403).json({ error: 'Invalid key' });
+    }
 
     const token = jwt.sign({ label: match.label, hash }, JWT_SECRET, { expiresIn: '24h' });
     res.json({ jwt: token, label: match.label });
@@ -603,9 +656,9 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(503).json({ error: 'AI-движок не настроен. Обратитесь к администратору.' });
   }
 
-  // Rate limiting
-  const userId = req.user?.hash || req.ip;
-  if (!checkRateLimit(userId)) {
+  // Rate limiting — 6 per min per user
+  const userId = req.user?.hash || getClientIP(req);
+  if (!checkRateLimit(`gen:${userId}`, RL_GEN.window, RL_GEN.max)) {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
@@ -821,6 +874,12 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
 // ─── POST /api/product/describe — Gemini Vision: описание товара по фото ──
 app.post('/api/product/describe', authMiddleware, async (req, res) => {
+  // Rate limiting — 8 per min per user
+  const uid = req.user?.hash || getClientIP(req);
+  if (!checkRateLimit(`prod:${uid}`, RL_PRODUCT.window, RL_PRODUCT.max)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+
   const { image_base64, mime_type } = req.body;
   if (!image_base64) return res.status(400).json({ error: 'image_base64 required' });
 
@@ -996,8 +1055,9 @@ app.post('/api/trends', authMiddleware, async (req, res) => {
   if (!GEMINI_KEY) {
     return res.status(503).json({ error: 'AI-движок не настроен.' });
   }
-  const userId = req.user?.hash || req.ip;
-  if (!checkRateLimit(userId)) {
+  // Rate limiting — 4 per min per user
+  const userId = req.user?.hash || getClientIP(req);
+  if (!checkRateLimit(`trends:${userId}`, RL_TRENDS.window, RL_TRENDS.max)) {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
