@@ -722,10 +722,10 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(400).json({ error: 'Video mode requires video_file' });
   }
   
-  if (context.input_mode === 'idea' && !context.context_ru) {
-    return res.status(400).json({ error: 'Idea mode requires context_ru (topic)' });
+  if (context.input_mode === 'idea' && !context.topic_ru) {
+    return res.status(400).json({ error: 'Idea mode requires topic (напишите идею в поле ввода)' });
   }
-  // suggested mode: context_ru is optional (AI can pick trending topic itself)
+  // suggested mode: topic_ru is optional (AI can pick trending topic itself)
 
   // Flag for prompt builder
   context.hasProductImage = !!product_image;
