@@ -779,7 +779,7 @@ async function handleProductFile(file) {
       // Show description
       document.getElementById('product-result').classList.remove('hidden');
       document.getElementById('product-description').textContent = data.description_en;
-      document.getElementById('product-tokens').textContent = data.tokens ? `${data.tokens} токенов · ${data.model}` : '';
+      document.getElementById('product-tokens').textContent = data.tokens ? `${data.tokens} токенов` : '';
       showProductStatus('', 'hidden');
 
     } catch (e) {
@@ -1154,7 +1154,7 @@ function populateDialogueEditor(result) {
   updateEditorEstimates();
 }
 
-async function callGeminiAPI(apiContext) {
+async function callAIEngine(apiContext) {
   const token = localStorage.getItem('ferixdi_jwt');
   const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
   if (!token) return null;
@@ -1162,13 +1162,13 @@ async function callGeminiAPI(apiContext) {
   // Build payload with optional multimodal attachments
   const payload = { context: apiContext };
 
-  // Attach product photo if available — Gemini will SEE the actual product
+  // Attach product photo if available — AI engine will SEE the actual product
   if (state.productInfo?.image_base64) {
     payload.product_image = state.productInfo.image_base64;
     payload.product_mime = state.productInfo.mime_type || 'image/jpeg';
   }
 
-  // Attach actual video file if available — Gemini will WATCH the original video
+  // Attach actual video file if available — AI engine will WATCH the original video
   if (state._videoFileBase64) {
     payload.video_file = state._videoFileBase64;
     payload.video_file_mime = state._videoFileMime || 'video/mp4';
@@ -1194,7 +1194,7 @@ async function callGeminiAPI(apiContext) {
   }
 
   const data = await resp.json();
-  return data.gemini;
+  return data.ai;
 }
 
 // ─── GENERATION HISTORY (localStorage) ──────
@@ -1315,7 +1315,7 @@ function initGenerate() {
     showGenStatus('📊 Параметры готовы, отправляю в AI...', 'text-cyan-400');
     renderPreflight(localResult);
 
-    // Step 2: If API mode — send context to Gemini for creative refinement
+    // Step 2: If API mode — send context to AI engine for creative refinement
     const isApiMode = state.settingsMode === 'api' && localStorage.getItem('ferixdi_api_url');
 
     if (isApiMode && localResult._apiContext) {
@@ -1324,9 +1324,9 @@ function initGenerate() {
       log('INFO', 'AI', 'Генерирую уникальный контент...');
 
       try {
-        const geminiData = await callGeminiAPI(localResult._apiContext);
-        if (geminiData) {
-          const merged = mergeGeminiResult(localResult, geminiData);
+        const aiData = await callAIEngine(localResult._apiContext);
+        if (aiData) {
+          const merged = mergeGeminiResult(localResult, aiData);
           log('OK', 'AI', 'Творческий контент сгенерирован');
           updatePreflightStatus('✅ Готово · FERIXDI AI сгенерировал уникальный контент', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
           saveGenerationHistory(merged);
@@ -1861,7 +1861,7 @@ async function fetchTrends() {
   btn.disabled = true;
   btn.innerHTML = '<span class="animate-pulse">⏳</span> AI ищет тренды через Google...';
   st.classList.remove('hidden');
-  st.innerHTML = '<span class="text-gray-400 animate-pulse">Gemini ищет что обсуждают в России прямо сейчас + анализирует новости...</span>';
+  st.innerHTML = '<span class="text-gray-400 animate-pulse">FERIXDI AI ищет что обсуждают в России прямо сейчас + анализирует новости...</span>';
   res.classList.add('hidden');
 
   try {

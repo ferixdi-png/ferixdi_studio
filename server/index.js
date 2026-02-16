@@ -168,8 +168,8 @@ app.post('/api/fun/category', authMiddleware, (req, res) => {
   res.json(cat);
 });
 
-// ─── Gemini Production Contract Builder ──────
-function buildGeminiPrompt(ctx) {
+// ─── AI Production Contract Builder ──────
+function buildAIPrompt(ctx) {
   const { charA, charB, category, topic_ru, scene_hint, input_mode, video_meta,
     product_info, location, wardrobeA, wardrobeB, propAnchor, lightingMood,
     hookAction, releaseAction, aesthetic, script_ru, cinematography,
@@ -649,7 +649,7 @@ ${product_info?.description_en || ctx.hasProductImage ? `• ТОВАР: опи�
 КРИТИЧНО: Отвечай ТОЛЬКО валидным JSON. Без markdown. Без блоков кода. Без пояснений. Только JSON.`;
 }
 
-// ─── POST /api/generate — Gemini multimodal generation ──────────
+// ─── POST /api/generate — AI multimodal generation ──────────
 app.post('/api/generate', authMiddleware, async (req, res) => {
   const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) {
@@ -673,12 +673,12 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   context.hasVideoCover = !!video_cover;
 
   try {
-    const promptText = buildGeminiPrompt(context);
+    const promptText = buildAIPrompt(context);
 
     // Build multimodal parts: text + optional images
     const parts = [{ text: promptText }];
 
-    // Attach product photo if provided — Gemini SEES the actual product
+    // Attach product photo if provided — AI engine SEES the actual product
     if (product_image) {
       parts.push({
         text: '\n\n[ПРИКРЕПЛЁННОЕ ФОТО ТОВАРА — рассмотри внимательно, товар в промпте должен быть ТОЧЬ-В-ТОЧЬ как на этом фото]'
@@ -688,7 +688,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       });
     }
 
-    // Attach actual video file if provided — Gemini WATCHES the original video
+    // Attach actual video file if provided — AI engine WATCHES the original video
     if (video_file) {
       parts.push({
         text: '\n\n[ПРИКРЕПЛЁННОЕ ОРИГИНАЛЬНОЕ ВИДЕО — ПОСМОТРИ ЕГО ПОЛНОСТЬЮ. Внимательно прослушай диалог, интонации, паузы, эмоции. Проанализируй: кто что говорит, какие слова используют, какой темп, какие жесты, какое настроение. Диалог в твоём ответе должен быть на 90% идентичен оригиналу — те же слова, тот же смысл, та же энергия, адаптированные под наших персонажей.]'
@@ -785,7 +785,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       }
       if (!geminiResult) {
         console.error('Gemini JSON parse error — all extraction methods failed:', text.slice(0, 500));
-        return res.status(422).json({ error: 'Gemini вернул невалидный JSON. Попробуйте ещё раз.' });
+        return res.status(422).json({ error: 'AI вернул невалидный JSON. Попробуйте ещё раз.' });
       }
     }
 
@@ -861,8 +861,8 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     }
 
     res.json({
-      gemini: geminiResult,
-      model: 'gemini-2.0-flash',
+      ai: geminiResult,
+      model: 'ferixdi-ai-v2',
       tokens: data.usageMetadata?.totalTokenCount || 0,
     });
 
@@ -872,7 +872,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   }
 });
 
-// ─── POST /api/product/describe — Gemini Vision: описание товара по фото ──
+// ─── POST /api/product/describe — AI Vision: описание товара по фото ──
 app.post('/api/product/describe', authMiddleware, async (req, res) => {
   // Rate limiting — 8 per min per user
   const uid = req.user?.hash || getClientIP(req);
@@ -943,7 +943,7 @@ Format your response as a single dense paragraph optimized for AI image generati
 
     res.json({
       description_en: text.trim(),
-      model: 'gemini-2.0-flash',
+      model: 'ferixdi-ai-v2',
       tokens: data.usageMetadata?.totalTokenCount || 0,
     });
 
@@ -1049,7 +1049,7 @@ app.post('/api/video/fetch', authMiddleware, async (req, res) => {
   }
 });
 
-// ─── POST /api/trends — Gemini with Google Search grounding ──────
+// ─── POST /api/trends — AI with Google Search grounding ──────
 app.post('/api/trends', authMiddleware, async (req, res) => {
   const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) {
@@ -1229,7 +1229,7 @@ ${calendarHints.length > 0 ? `• Привязка к: ${calendarHints.join(', '
       });
       data = await resp.json();
       if (!resp.ok) {
-        return res.status(resp.status).json({ error: data.error?.message || 'Gemini error' });
+        return res.status(resp.status).json({ error: data.error?.message || 'AI error' });
       }
     }
 
