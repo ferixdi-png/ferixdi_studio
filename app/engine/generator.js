@@ -1282,7 +1282,43 @@ export function generate(input) {
   }
 
   const { A: charA, B: charB } = resolveRoles(rawA, rawB);
-  const cat = category || pickRandom(HUMOR_CATEGORIES, rng);
+  // Auto-detect category from user topic if not manually selected
+  let cat = category;
+  if (!cat && topicRu) {
+    const topicLower = topicRu.toLowerCase();
+    if (topicLower.includes('жкх') || topicLower.includes('коммуналка') || topicLower.includes('отопление') || 
+        topicLower.includes('счёт') || topicLower.includes('счет') || topicLower.includes('квартира') || 
+        topicLower.includes('соседи') || topicLower.includes('батарея') || topicLower.includes('тариф')) {
+      cat = HUMOR_CATEGORIES['ЖКХ и коммуналка'];
+    } else if (topicLower.includes('цена') || topicLower.includes('дорого') || topicLower.includes('инфляция') || 
+               topicLower.includes('магазин') || topicLower.includes('продукт')) {
+      cat = HUMOR_CATEGORIES['Цены и инфляция'];
+    } else if (topicLower.includes('бабк') || topicLower.includes('дед') || topicLower.includes('внук') || 
+               topicLower.includes('поколен') || topicLower.includes('зумер') || topicLower.includes('бумер')) {
+      cat = HUMOR_CATEGORIES['Разрыв поколений'];
+    } else if (topicLower.includes('больниц') || topicLower.includes('врач') || topicLower.includes('медицин') || 
+               topicLower.includes('здоровье') || topicLower.includes('лекарств')) {
+      cat = HUMOR_CATEGORIES['Здоровье и поликлиника'];
+    } else if (topicLower.includes('дач') || topicLower.includes('огород') || topicLower.includes('помидор') || 
+               topicLower.includes('урожай') || topicLower.includes('сад')) {
+      cat = HUMOR_CATEGORIES['Дача и огород'];
+    } else if (topicLower.includes('машин') || topicLower.includes('пробк') || topicLower.includes('транспорт') || 
+               topicLower.includes('метро') || topicLower.includes('самокат')) {
+      cat = HUMOR_CATEGORIES['Транспорт и пробки'];
+    } else if (topicLower.includes('нейросет') || topicLower.includes('ai') || topicLower.includes('технолог') || 
+               topicLower.includes('робот')) {
+      cat = HUMOR_CATEGORIES['AI и технологии'];
+    } else if (topicLower.includes('тренд') || topicLower.includes('блогер') || topicLower.includes('тикток') || 
+               topicLower.includes('инстаграм')) {
+      cat = HUMOR_CATEGORIES['Соцсети и тренды'];
+    } else if (topicLower.includes('муж') || topicLower.includes('жен') || topicLower.includes('отношен') || 
+               topicLower.includes('любовь')) {
+      cat = HUMOR_CATEGORIES['Отношения'];
+    } else {
+      cat = pickRandom(HUMOR_CATEGORIES, rng);
+    }
+  }
+  if (!cat) cat = pickRandom(HUMOR_CATEGORIES, rng);
 
   // ── Topic context (from user input) ──
   // This is the KEY missing piece — user's idea/context must influence ALL prompts
