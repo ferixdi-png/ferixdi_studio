@@ -7,6 +7,7 @@ import { generate, getRandomCategory, mergeGeminiResult } from './engine/generat
 import { estimateDialogue, estimateLineDuration } from './engine/estimator.js';
 import { autoTrim } from './engine/auto_trim.js';
 import { historyCache } from './engine/history_cache.js';
+import { sfx } from './engine/sounds.js';
 
 // ─── STATE ───────────────────────────────────
 const state = {
@@ -530,6 +531,7 @@ function renderCharacters(filter = {}) {
 function selectChar(role, id) {
   const char = state.characters.find(c => c.id === id);
   if (!char) return;
+  sfx.select();
   if (role === 'A') { state.selectedA = char; } else { state.selectedB = char; }
   updateCharDisplay();
   renderCharacters(getCurrentFilters());
@@ -966,6 +968,7 @@ function initRandomPair() {
 
 // ─── NAVIGATION ──────────────────────────────
 function navigateTo(section) {
+  sfx.nav();
   // Gentle reminder if user skips mode selection (don't block)
   if (section === 'characters' && !state.generationMode) {
     showNotification('💡 Совет: сначала выберите режим генерации на шаге 1', 'warning');
@@ -1119,6 +1122,7 @@ function initGenerationMode() {
 }
 
 function selectGenerationMode(mode) {
+  sfx.select();
   state.generationMode = mode;
   state.inputMode = mode; // Keep compatibility with existing logic
   
@@ -1503,6 +1507,7 @@ function initModeSwitcher() {
 function initToggles() {
   document.querySelectorAll('.toggle-track').forEach(track => {
     track.addEventListener('click', () => {
+      sfx.toggle();
       track.classList.toggle('active');
       const opt = track.dataset.opt;
       if (opt && opt in state.options) {
@@ -2412,6 +2417,7 @@ function initGenerate() {
       return;
     }
 
+    sfx.generate();
     btn.disabled = true;
     btn.textContent = '⏳ Анализирую контекст...';
     showGenStatus('🔍 Анализирую тему и подбираю параметры...', 'text-cyan-400');
@@ -2796,6 +2802,7 @@ function initCopyButtons() {
       if (!pre) return;
       const text = pre.textContent || pre.innerText;
       navigator.clipboard.writeText(text).then(() => {
+        sfx.copy();
         const orig = btn.textContent;
         btn.textContent = '✓ Скопировано!';
         setTimeout(() => { btn.textContent = orig; }, 1500);
@@ -2834,6 +2841,18 @@ function initSettings() {
     updateCacheStats();
     log('OK', 'КЕШ', 'Кеш истории очищен');
   });
+
+  // Sound toggle
+  const soundToggle = document.getElementById('sound-toggle');
+  if (soundToggle) {
+    soundToggle.checked = sfx.isEnabled();
+    soundToggle.addEventListener('change', () => {
+      sfx.setEnabled(soundToggle.checked);
+      localStorage.setItem('ferixdi_sounds', soundToggle.checked ? 'on' : 'off');
+      if (soundToggle.checked) sfx.success();
+      log('INFO', 'ЗВУК', soundToggle.checked ? 'Звуки включены' : 'Звуки выключены');
+    });
+  }
 }
 
 function updateCacheStats() {
@@ -3516,6 +3535,9 @@ function loadSavedState() {
 
 // Show notification toast
 function showNotification(message, type = 'info') {
+  if (type === 'error' || type === 'warning') sfx.error();
+  else if (type === 'success') sfx.success();
+  else sfx.notify();
   const colors = {
     success: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     error: 'bg-red-500/20 text-red-400 border-red-500/30',
@@ -3830,6 +3852,7 @@ function copyLocationPrompt(locId) {
 function copyToClipboardWithFeedback(text, type, id) {
   navigator.clipboard.writeText(text)
     .then(() => {
+      sfx.copy();
       const char = type === 'ПЕРСОНАЖ' ? state.characters.find(c => c.id === id) : null;
       const loc = type === 'ЛОКАЦИЯ' ? state.locations.find(l => l.id === id) : null;
       const name = char?.name_ru || loc?.name_ru || id;
@@ -3888,4 +3911,23 @@ document.addEventListener('DOMContentLoaded', () => {
   initMatrixRain();
   // Initial readiness check after all components loaded
   setTimeout(() => updateReadiness(), 300);
+
+  // ─── GLOBAL SOUND: catch ALL buttons/interactive elements ───
+  // Plays soft click for any button/link that doesn't already have a specific sound
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('button, .btn-neon, .btn-primary, .mode-btn, .nav-item, .char-card, .loc-card, .generation-mode-card, select, .mode-sub-btn, a[href]');
+    if (!el) return;
+    // Skip elements that already trigger specific sounds (nav, select, toggle, generate)
+    if (el.closest('.nav-item')) return; // nav() already called in navigateTo
+    if (el.closest('.char-card') && (el.classList.contains('select-a') || el.classList.contains('select-b'))) return;
+    if (el.closest('.toggle-track')) return;
+    if (el.id === 'btn-generate') return;
+    if (el.closest('.generation-mode-card')) return;
+    // Play soft click for everything else
+    sfx.clickSoft();
+  }, true); // capture phase so it fires before specific handlers
+
+  // Sound toggle from localStorage
+  const soundPref = localStorage.getItem('ferixdi_sounds');
+  if (soundPref === 'off') sfx.setEnabled(false);
 });
