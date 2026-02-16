@@ -1451,7 +1451,15 @@ async function callAIEngine(apiContext) {
   if (!token) return null;
 
   // Build payload with optional multimodal attachments
-  const payload = { context: apiContext };
+  const payload = { 
+    context: apiContext,
+    // Ensure all critical data is transmitted
+    generation_mode: state.generationMode || state.inputMode,
+    selected_location_id: state.selectedLocation,
+    characters: state.characters,
+    locations: state.locations,
+    thread_memory: getThreadMemory()
+  };
 
   // Attach product photo if available — AI engine will SEE the actual product
   if (state.productInfo?.image_base64) {
@@ -1538,7 +1546,7 @@ function initGenerate() {
     }
 
     // Enhanced validation for all modes
-    if (state.input_mode === 'script') {
+    if (state.generationMode === 'script' || state.input_mode === 'script') {
       const scriptA = document.getElementById('script-a')?.value.trim();
       const scriptB = document.getElementById('script-b')?.value.trim();
       if (!scriptA && !scriptB) {
@@ -1558,8 +1566,8 @@ function initGenerate() {
       }
     }
     
-    if (state.input_mode === 'video' && !state.videoMeta) {
-      showGenStatus('⚠️ Сначала загрузи видео-файл в режиме «🎥 По видео»', 'text-orange-400');
+    if ((state.generationMode === 'video' || state.input_mode === 'video') && !state.videoMeta) {
+      showGenStatus('⚠️ Сначала загрузите видео-файл в режиме «🎥 По видео»', 'text-orange-400');
       return;
     }
     
@@ -1569,10 +1577,11 @@ function initGenerate() {
     }
     
     // Scene hint validation (already handled above)
-    if (state.input_mode === 'video') {
+    if ((state.generationMode === 'video' || state.input_mode === 'video')) {
       const sceneHint = document.getElementById('scene-hint')?.value.trim();
       if (sceneHint && sceneHint.length > 200) {
-        return; // Already handled above
+        showGenStatus('⚠️ Описание видео слишком длинное (максимум 200 символов). Сократите текст.', 'text-orange-400');
+        return;
       }
     }
 
@@ -1596,11 +1605,11 @@ function initGenerate() {
 
     const topicText = document.getElementById('idea-input')?.value || '';
     const input = {
-      input_mode: state.inputMode,
+      input_mode: state.generationMode || state.inputMode,
       character1_id: state.selectedA.id,
       character2_id: state.selectedB.id,
       context_ru: topicText,
-      script_ru: state.inputMode === 'script' ? {
+      script_ru: (state.generationMode === 'script' || state.inputMode === 'script') ? {
         A: document.getElementById('script-a')?.value || '',
         B: document.getElementById('script-b')?.value || ''
       } : null,
