@@ -1909,7 +1909,7 @@ function initGenerate() {
     renderPreflight(localResult);
 
     // Step 2: If API mode — send context to AI engine for creative refinement
-    const isApiMode = state.settingsMode === 'api' && localStorage.getItem('ferixdi_api_url');
+    const isApiMode = state.settingsMode === 'api' && (localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL);
 
     if (isApiMode && localResult._apiContext) {
       btn.textContent = '⏳ AI генерирует...';
@@ -2742,8 +2742,9 @@ document.addEventListener('keydown', (e) => {
     }
   }
   
-  // Number keys 1-5 for navigation
-  if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+  // Number keys 1-5 for navigation (only when NOT typing in input/textarea)
+  const activeTag = document.activeElement?.tagName?.toLowerCase();
+  if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && activeTag !== 'input' && activeTag !== 'textarea') {
     const sections = ['ideas', 'generation-mode', 'characters', 'locations', 'generate'];
     const keyNum = parseInt(e.key);
     if (keyNum >= 1 && keyNum <= 5) {
