@@ -47,9 +47,6 @@ function log(level, module, msg) {
 }
 
 // ─── PROMO CODE (hash-only, no plaintext) ────────
-// Valid promo code: FERIXDI-VIP-2026
-// To generate hash: open test_promo_hash.html in browser or run:
-// await _hashCode('FERIXDI-VIP-2026') in browser console
 const _PH = 'bc6f301ecc9d72e7f2958ba89cb1524cc560984ca0131c5bf43a476c1d98d184';
 const DEFAULT_API_URL = 'https://ferixdi-studio.onrender.com';
 
@@ -937,6 +934,19 @@ function getCurrentFilters() {
   };
 }
 
+function autoSelectRandomPair() {
+  const chars = state.characters;
+  if (!chars || chars.length < 2) return false;
+  const idxA = Math.floor(Math.random() * chars.length);
+  let idxB = Math.floor(Math.random() * (chars.length - 1));
+  if (idxB >= idxA) idxB++;
+  state.selectedA = chars[idxA];
+  state.selectedB = chars[idxB];
+  updateCharDisplay();
+  log('INFO', 'АВТОПОДБОР', `Случайная пара: ${chars[idxA].name_ru} × ${chars[idxB].name_ru}`);
+  return true;
+}
+
 // ─── RANDOM PAIR ─────────────────────────────
 function initRandomPair() {
   document.getElementById('btn-random-pair')?.addEventListener('click', () => {
@@ -1385,12 +1395,12 @@ function selectCharacter(charId) {
   
   // Определяем роль A или B в зависимости от того, кто уже выбран
   if (!state.selectedA) {
-    selectCharacter(char, 'A');
+    selectChar('A', charId);
   } else if (!state.selectedB) {
-    selectCharacter(char, 'B');
+    selectChar('B', charId);
   } else {
     // Если оба выбраны, заменяем первого
-    selectCharacter(char, 'A');
+    selectChar('A', charId);
   }
   
   // Убираем панель рекомендаций
