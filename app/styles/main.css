@@ -555,6 +555,38 @@ select.input-field option:disabled {
   box-shadow: 0 0 0 1px rgba(0,229,255,0.03);
 }
 
+/* ── Sub-mode Tabs ───────────────────────── */
+.mode-sub-btn {
+  padding: 0.375rem 0.75rem; border-radius: var(--r-sm);
+  font-size: 0.75rem; font-weight: 500;
+  transition: all var(--dur) var(--ease);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  position: relative;
+}
+.mode-sub-btn:hover {
+  color: var(--text-body);
+  border-color: rgba(255,255,255,0.10);
+  background: var(--bg-surface);
+}
+.mode-sub-btn.active {
+  color: var(--accent);
+  border-color: var(--border-accent);
+  background: var(--accent-glow);
+  box-shadow: 0 0 0 1px rgba(0,229,255,0.03);
+}
+
+/* ── Trending Ideas Grid ───────────────────── */
+.trending-idea-card {
+  transition: all var(--dur) var(--ease);
+}
+.trending-idea-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,229,255,0.15);
+}
+
 /* ── Copy Button ─────────────────────────── */
 .copy-btn {
   position: absolute; top: 0.625rem; right: 0.625rem;

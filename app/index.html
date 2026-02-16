@@ -150,7 +150,7 @@
           </div>
 
           <!-- Generation Mode Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Idea Mode -->
             <div class="glass-panel p-5 border-l-2 border-cyan-500/40 cursor-pointer hover:border-cyan-500/60 transition-all hover:bg-cyan-500/5 generation-mode-card" data-mode="idea">
               <div class="flex items-center gap-3 mb-3">
@@ -158,14 +158,31 @@
                   <span class="text-2xl">💡</span>
                 </div>
                 <div>
-                  <h3 class="text-base font-semibold text-cyan-400">💡 Идея</h3>
-                  <p class="text-xs text-gray-400">Самый простой способ</p>
+                  <h3 class="text-base font-semibold text-cyan-400">💡 Своя идея</h3>
+                  <p class="text-xs text-gray-400">Напишите свою тему</p>
                 </div>
               </div>
               <div class="text-sm text-gray-300 leading-relaxed">
-                Опишите идею простыми словами (например: "цены на бензин выросли") и AI создаст смешной диалог. Не нужно ничего сложного!
+                Опишите идею простыми словами (например: "цены на бензин выросли") и AI создаст смешной диалог. Полный контроль над темой!
               </div>
-              <div class="mt-3 text-xs text-cyan-300">✨ Лучше всего для первого раза</div>
+              <div class="mt-3 text-xs text-cyan-300">✨ Для уникального контента</div>
+            </div>
+
+            <!-- Suggested Ideas Mode -->
+            <div class="glass-panel p-5 border-l-2 border-emerald-500/40 cursor-pointer hover:border-emerald-500/60 transition-all hover:bg-emerald-500/5 generation-mode-card" data-mode="suggested">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                  <span class="text-2xl">📚</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-semibold text-emerald-400">📚 Готовые идеи</h3>
+                  <p class="text-xs text-gray-400">Выберите из трендов</p>
+                </div>
+              </div>
+              <div class="text-sm text-gray-300 leading-relaxed">
+                AI найдёт актуальные темы и готовые диалоги. Просто выберите понравившуюся идею и начните генерацию!
+              </div>
+              <div class="mt-3 text-xs text-emerald-300">🔥 Для быстрых результатов</div>
             </div>
 
             <!-- Script Mode -->
@@ -335,7 +352,7 @@
             </div>
           </div>
 
-          <!-- Input — simple by default -->
+          <!-- Input — dynamic based on sub-mode -->
           <div class="glass-panel p-4 space-y-3" id="section-remix">
             <div class="text-xs text-gray-400 font-medium mb-2">💡 Ваша идея</div>
             <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Например: цены на бензин выросли, сосед громко слушает музыку, дед не понимает смартфоны..."></textarea>
@@ -614,8 +631,30 @@
             </div>
           </div>
 
-          <!-- mode-idea: nothing extra needed -->
-          <div id="mode-idea" class="hidden"></div>
+          <!-- mode-idea: two sub-modes -->
+          <div id="mode-idea" class="hidden">
+            <!-- Sub-mode tabs -->
+            <div class="flex gap-2 mb-4">
+              <button class="mode-sub-btn active" data-sub-mode="custom">✍️ Написать свою</button>
+              <button class="mode-sub-btn" data-sub-mode="trending">🔥 Популярные темы</button>
+            </div>
+            
+            <!-- Custom idea sub-mode -->
+            <div id="sub-mode-custom" class="space-y-3">
+              <div class="text-xs text-gray-400 font-medium mb-2">✍️ Опишите свою идею</div>
+              <textarea id="idea-input-custom" class="input-field h-20 resize-none" placeholder="Например: цены на бензин выросли, сосед громко слушает музыку, дед не понимает смартфоны..."></textarea>
+              <div class="text-[10px] text-gray-600">✨ Чем конкретнее, тем смешнее будет результат</div>
+            </div>
+            
+            <!-- Trending ideas sub-mode -->
+            <div id="sub-mode-trending" class="hidden space-y-3">
+              <div class="text-xs text-gray-400 font-medium mb-2">🔥 Выберите популярную тему</div>
+              <div id="trending-ideas-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[200px] overflow-y-auto">
+                <!-- Ideas will be loaded dynamically -->
+              </div>
+              <div class="text-[10px] text-gray-600">💡 AI подобрал самые обсуждаемые темы</div>
+            </div>
+          </div>
 
           <!-- mode-script -->
           <div id="mode-script" class="hidden glass-panel p-4 space-y-3">

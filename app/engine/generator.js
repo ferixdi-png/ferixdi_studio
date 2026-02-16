@@ -1459,7 +1459,13 @@ export function generate(input) {
       dialogueB = demo.B_lines[demoIdx];
       killerWord = demo.killer_word;
     }
+  } else if (input_mode === 'suggested') {
+    // Suggested mode works like idea mode but with trending topics
+    dialogueA = demo.A_lines[demoIdx];
+    dialogueB = demo.B_lines[demoIdx];
+    killerWord = demo.killer_word;
   } else {
+    // Default idea mode
     dialogueA = demo.A_lines[demoIdx];
     dialogueB = demo.B_lines[demoIdx];
     killerWord = demo.killer_word;

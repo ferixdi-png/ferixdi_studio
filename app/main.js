@@ -566,13 +566,14 @@ function selectGenerationMode(mode) {
   
   // Update UI
   document.querySelectorAll('.generation-mode-card').forEach(card => {
-    card.classList.remove('ring-2', 'ring-cyan-500', 'ring-purple-500', 'ring-amber-500');
+    card.classList.remove('ring-2', 'ring-cyan-500', 'ring-purple-500', 'ring-amber-500', 'ring-emerald-500');
   });
   
   const selectedCard = document.querySelector(`.generation-mode-card[data-mode="${mode}"]`);
   if (selectedCard) {
     const colors = {
       idea: 'ring-cyan-500',
+      suggested: 'ring-emerald-500',
       script: 'ring-purple-500', 
       video: 'ring-amber-500'
     };
@@ -587,7 +588,8 @@ function selectGenerationMode(mode) {
   if (display && nameEl && continueBtn) {
     display.classList.remove('hidden');
     const modeNames = {
-      idea: '💡 Идея',
+      idea: '💡 Своя идея',
+      suggested: '📚 Готовые идеи',
       script: '📝 Свой диалог',
       video: '🎥 По видео'
     };
@@ -608,7 +610,15 @@ function updateModeSpecificUI(mode) {
 
   // Show relevant mode elements
   if (mode === 'idea') {
-    // Idea mode uses the main textarea in generate section
+    document.getElementById('mode-idea')?.classList.remove('hidden');
+    // Initialize sub-mode tabs
+    initIdeaSubModes();
+  } else if (mode === 'suggested') {
+    // Suggested mode uses the main idea input but with trending suggestions
+    document.getElementById('mode-idea')?.classList.remove('hidden');
+    initIdeaSubModes();
+    // Auto-select trending sub-mode
+    selectIdeaSubMode('trending');
   } else if (mode === 'script') {
     document.getElementById('mode-script')?.classList.remove('hidden');
   } else if (mode === 'video') {
@@ -616,6 +626,108 @@ function updateModeSpecificUI(mode) {
   }
 
   log('INFO', 'РЕЖИМ', `Выбран режим: ${mode}`);
+}
+
+// ─── IDEA SUB-MODES ─────────────────────
+function initIdeaSubModes() {
+  // Sub-mode tab switching
+  document.querySelectorAll('.mode-sub-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const subMode = btn.dataset.subMode;
+      selectIdeaSubMode(subMode);
+    });
+  });
+}
+
+function selectIdeaSubMode(subMode) {
+  // Update tab appearance
+  document.querySelectorAll('.mode-sub-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.querySelector(`.mode-sub-btn[data-sub-mode="${subMode}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+  
+  // Show/hide sub-mode content
+  document.getElementById('sub-mode-custom')?.classList.toggle('hidden', subMode !== 'custom');
+  document.getElementById('sub-mode-trending')?.classList.toggle('hidden', subMode !== 'trending');
+  
+  // Update main idea input visibility
+  const mainInput = document.getElementById('idea-input');
+  const customInput = document.getElementById('idea-input-custom');
+  
+  if (subMode === 'custom') {
+    // Copy custom input to main input
+    if (customInput && mainInput) {
+      mainInput.value = customInput.value;
+    }
+    mainInput.style.display = 'block';
+  } else if (subMode === 'trending') {
+    // Hide main input, show trending ideas
+    mainInput.style.display = 'none';
+    loadTrendingIdeas();
+  }
+  
+  // Update state
+  state.ideaSubMode = subMode;
+  log('INFO', 'ПОДРЕЖИМ ИДЕИ', `Выбран подрежим: ${subMode}`);
+}
+
+async function loadTrendingIdeas() {
+  const grid = document.getElementById('trending-ideas-grid');
+  if (!grid) return;
+  
+  // Show loading state
+  grid.innerHTML = '<div class="text-xs text-gray-500 text-center">🔍 Загружаем популярные темы...</div>';
+  
+  try {
+    const response = await fetch('/api/trending');
+    const data = await response.json();
+    
+    if (data.trends && data.trends.length > 0) {
+      grid.innerHTML = data.trends.map((trend, i) => `
+        <div class="glass-panel p-3 border-l-2 border-emerald-500/40 cursor-pointer hover:bg-emerald-500/5 transition-all trending-idea-card" data-trend="${trend.topic}">
+          <div class="text-xs text-emerald-400 font-medium mb-1">${trend.category}</div>
+          <div class="text-sm text-gray-200 leading-relaxed">${trend.topic}</div>
+          <div class="text-[10px] text-gray-500 mt-1">${trend.viral_score}% вирусности</div>
+        </div>
+      `).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.trending-idea-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const topic = card.dataset.trend;
+          selectTrendingIdea(topic);
+        });
+      });
+    } else {
+      grid.innerHTML = '<div class="text-xs text-gray-500 text-center">📝 Идеи временно недоступны</div>';
+    }
+  } catch (error) {
+    grid.innerHTML = '<div class="text-xs text-red-400 text-center">❌ Ошибка загрузки идей</div>';
+    console.error('Error loading trending ideas:', error);
+  }
+}
+
+function selectTrendingIdea(topic) {
+  const mainInput = document.getElementById('idea-input');
+  if (mainInput) {
+    mainInput.value = topic;
+    mainInput.style.display = 'block';
+  }
+  
+  // Switch back to custom sub-mode
+  selectIdeaSubMode('custom');
+  
+  // Show confirmation
+  const grid = document.getElementById('trending-ideas-grid');
+  if (grid) {
+    const notification = document.createElement('div');
+    notification.className = 'text-xs text-emerald-400 bg-emerald-500/8 border border-emerald-500/15 rounded-lg p-2 mt-2';
+    notification.textContent = `✅ Выбрана тема: ${topic}`;
+    grid.parentNode.insertBefore(notification, grid.nextSibling);
+    
+    setTimeout(() => notification.remove(), 3000);
+  }
+  
+  log('INFO', 'ТЕНДА', `Выбрана трендовая тема: ${topic}`);
 }
 
 // ─── CHARACTER CONTEXT RECOMMENDATIONS ─────────────────────
@@ -1566,6 +1678,15 @@ function initGenerate() {
       }
     }
     
+    // Validation for idea and suggested modes
+    if ((state.generationMode === 'idea' || state.generationMode === 'suggested') && !state.input_mode) {
+      const topicText = document.getElementById('idea-input')?.value.trim();
+      if (!topicText) {
+        showGenStatus('⚠️ Напишите идею или выберите из популярных тем', 'text-orange-400');
+        return;
+      }
+    }
+    
     if ((state.generationMode === 'video' || state.input_mode === 'video') && !state.videoMeta) {
       showGenStatus('⚠️ Сначала загрузите видео-файл в режиме «🎥 По видео»', 'text-orange-400');
       return;
@@ -1609,7 +1730,7 @@ function initGenerate() {
       character1_id: state.selectedA.id,
       character2_id: state.selectedB.id,
       context_ru: topicText,
-      script_ru: (state.generationMode === 'script' || state.inputMode === 'script') ? {
+      script_ru: (state.generationMode === 'script' || state.input_mode === 'script') ? {
         A: document.getElementById('script-a')?.value || '',
         B: document.getElementById('script-b')?.value || ''
       } : null,
