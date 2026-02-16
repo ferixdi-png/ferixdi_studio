@@ -656,7 +656,6 @@ function initNavigation() {
       sidebar.classList.remove('mobile-open');
     }
   });
-}
 
   // "Далее" button on characters → go to locations
   document.getElementById('btn-go-generate')?.addEventListener('click', () => {
@@ -1795,7 +1794,7 @@ function initGenerate() {
     }
 
     // Enhanced validation for all modes
-    if (state.generationMode === 'script' || state.input_mode === 'script') {
+    if (state.generationMode === 'script' || state.inputMode === 'script') {
       const scriptA = document.getElementById('script-a')?.value.trim();
       const scriptB = document.getElementById('script-b')?.value.trim();
       if (!scriptA && !scriptB) {
@@ -1815,16 +1814,16 @@ function initGenerate() {
       }
     }
     
-    // Validation for idea and suggested modes
-    if ((state.generationMode === 'idea' || state.generationMode === 'suggested') && !state.input_mode) {
-      const topicText = document.getElementById('idea-input')?.value.trim();
-      if (!topicText) {
-        showGenStatus('⚠️ Напишите идею или выберите из популярных тем', 'text-orange-400');
+    // Validation for idea and suggested modes — topic is optional for suggested
+    if (state.generationMode === 'idea') {
+      const topicVal = document.getElementById('idea-input')?.value.trim();
+      if (!topicVal) {
+        showGenStatus('⚠️ Напишите идею для генерации', 'text-orange-400');
         return;
       }
     }
     
-    if ((state.generationMode === 'video' || state.input_mode === 'video') && !state.videoMeta) {
+    if ((state.generationMode === 'video' || state.inputMode === 'video') && !state.videoMeta) {
       showGenStatus('⚠️ Сначала загрузите видео-файл в режиме «🎥 По видео»', 'text-orange-400');
       navigateTo('settings'); // Navigate to settings where video upload is
       return;
@@ -1836,13 +1835,8 @@ function initGenerate() {
       console.log('INFO: No location selected, will use auto-selection');
     }
     
-    // Validate topic length for all modes (already validated above)
-    if (topicText && topicText.length > 500) {
-      return; // Already handled above
-    }
-    
-    // Scene hint validation (already handled above)
-    if ((state.generationMode === 'video' || state.input_mode === 'video')) {
+    // Scene hint validation for video mode
+    if ((state.generationMode === 'video' || state.inputMode === 'video')) {
       const sceneHint = document.getElementById('scene-hint')?.value.trim();
       if (sceneHint && sceneHint.length > 200) {
         showGenStatus('⚠️ Описание видео слишком длинное (максимум 200 символов). Сократите текст.', 'text-orange-400');
@@ -1874,7 +1868,7 @@ function initGenerate() {
       character1_id: state.selectedA.id,
       character2_id: state.selectedB.id,
       context_ru: topicText,
-      script_ru: (state.generationMode === 'script' || state.input_mode === 'script') ? {
+      script_ru: (state.generationMode === 'script' || state.inputMode === 'script') ? {
         A: document.getElementById('script-a')?.value || '',
         B: document.getElementById('script-b')?.value || ''
       } : null,

@@ -1316,6 +1316,11 @@ export function generate(input) {
   }
 
   const { A: charA, B: charB } = resolveRoles(rawA, rawB);
+
+  // ── Topic context (from user input) ── must be before category detection
+  const topicRu = context_ru?.trim() || '';
+  const sceneHint = scene_hint_ru?.trim() || '';
+
   // Auto-detect category from user topic if not manually selected
   let cat = category;
   if (!cat && topicRu) {
@@ -1323,41 +1328,38 @@ export function generate(input) {
     if (topicLower.includes('жкх') || topicLower.includes('коммуналка') || topicLower.includes('отопление') || 
         topicLower.includes('счёт') || topicLower.includes('счет') || topicLower.includes('квартира') || 
         topicLower.includes('соседи') || topicLower.includes('батарея') || topicLower.includes('тариф')) {
-      cat = HUMOR_CATEGORIES['ЖКХ и коммуналка'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'ЖКХ и коммуналка');
     } else if (topicLower.includes('цена') || topicLower.includes('дорого') || topicLower.includes('инфляция') || 
                topicLower.includes('магазин') || topicLower.includes('продукт')) {
-      cat = HUMOR_CATEGORIES['Цены и инфляция'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Цены и инфляция');
     } else if (topicLower.includes('бабк') || topicLower.includes('дед') || topicLower.includes('внук') || 
                topicLower.includes('поколен') || topicLower.includes('зумер') || topicLower.includes('бумер')) {
-      cat = HUMOR_CATEGORIES['Разрыв поколений'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Разрыв поколений');
     } else if (topicLower.includes('больниц') || topicLower.includes('врач') || topicLower.includes('медицин') || 
                topicLower.includes('здоровье') || topicLower.includes('лекарств')) {
-      cat = HUMOR_CATEGORIES['Здоровье и поликлиника'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Здоровье и поликлиника');
     } else if (topicLower.includes('дач') || topicLower.includes('огород') || topicLower.includes('помидор') || 
                topicLower.includes('урожай') || topicLower.includes('сад')) {
-      cat = HUMOR_CATEGORIES['Дача и огород'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Дача и огород');
     } else if (topicLower.includes('машин') || topicLower.includes('пробк') || topicLower.includes('транспорт') || 
                topicLower.includes('метро') || topicLower.includes('самокат')) {
-      cat = HUMOR_CATEGORIES['Транспорт и пробки'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Транспорт и пробки');
     } else if (topicLower.includes('нейросет') || topicLower.includes('ai') || topicLower.includes('технолог') || 
                topicLower.includes('робот')) {
-      cat = HUMOR_CATEGORIES['AI и технологии'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'AI и технологии');
     } else if (topicLower.includes('тренд') || topicLower.includes('блогер') || topicLower.includes('тикток') || 
                topicLower.includes('инстаграм')) {
-      cat = HUMOR_CATEGORIES['Соцсети и тренды'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Соцсети и тренды');
     } else if (topicLower.includes('муж') || topicLower.includes('жен') || topicLower.includes('отношен') || 
                topicLower.includes('любовь')) {
-      cat = HUMOR_CATEGORIES['Отношения'];
+      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Отношения');
     } else {
       cat = pickRandom(HUMOR_CATEGORIES, rng);
     }
   }
   if (!cat) cat = pickRandom(HUMOR_CATEGORIES, rng);
 
-  // ── Topic context (from user input) ──
-  // This is the KEY missing piece — user's idea/context must influence ALL prompts
-  const topicRu = context_ru?.trim() || '';
-  const sceneHint = scene_hint_ru?.trim() || '';
+  // topicRu and sceneHint already declared above (before category detection)
   const topicEn = topicRu ? `The comedic argument is specifically about: "${topicRu}".` : '';
   const topicForScene = topicRu ? ` The argument topic: ${cat.en.toLowerCase()} — ${topicRu}.` : ` The argument topic: ${cat.en.toLowerCase()}.`;
 
