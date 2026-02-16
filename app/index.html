@@ -258,6 +258,18 @@
             </div>
           </div>
 
+          <!-- Hint: What are A and B roles -->
+          <div class="glass-panel p-3 border-l-2 border-cyan-500/30">
+            <div class="text-xs text-gray-300 flex items-start gap-2">
+              <span class="text-lg flex-shrink-0">💡</span>
+              <div class="space-y-1">
+                <div><span class="text-cyan-400 font-medium">A (провокатор):</span> Начинает спор, возмущается, задаёт вопрос. Говорит первым.</div>
+                <div><span class="text-violet-400 font-medium">B (панчлайн):</span> Отвечает неожиданным поворотом, добивает панчлайном. Говорит вторым.</div>
+                <div class="text-[11px] text-gray-500 mt-1">🧠 Лучшая динамика: когда стили контрастируют (хаотичный + спокойный = взрывная пара)</div>
+              </div>
+            </div>
+          </div>
+
           <!-- Search / Filter -->
           <div class="flex gap-3 flex-wrap items-center">
             <input id="char-search" type="text" class="input-field max-w-[220px]" placeholder="🔍 Поиск...">
@@ -338,6 +350,9 @@
               <p class="text-xs text-gray-400">Проверьте всё ли правильно и запустите генерацию контента</p>
             </div>
           </div>
+
+          <!-- Auto-selection notice (shown after quick generate) -->
+          <div id="auto-selection-notice" class="hidden"></div>
 
           <!-- Selected chars summary -->
           <div class="glass-panel p-4 flex gap-4 items-center">

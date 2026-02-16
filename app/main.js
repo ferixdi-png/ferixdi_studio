@@ -507,6 +507,80 @@ function selectChar(role, id) {
   log('INFO', 'ПЕРСОНАЖИ', `${role}: ${char.name_ru} (${char.compatibility})`);
 }
 
+// ─── AUTO-SELECT CHARACTERS FOR CATEGORY ───────────────
+// Умный автоподбор персонажей под категорию/тренд
+function autoSelectCharactersForCategory(categoryRu, topicRu = '') {
+  if (!state.characters || state.characters.length === 0) return false;
+
+  // Category → character group preferences
+  const categoryHints = {
+    'Бытовой абсурд': ['бабки', 'деды', 'соседи'],
+    'AI и технологии': ['бабки', 'деды', 'студенты', 'блогеры'],
+    'Цены и инфляция': ['бабки', 'деды', 'пенсионеры', 'продавцы'],
+    'Отношения': ['мамы', 'папы', 'тёщи', 'свекрови'],
+    'Разрыв поколений': ['бабки', 'деды', 'дочери', 'сыновья', 'студенты'],
+    'ЖКХ и коммуналка': ['бабки', 'деды', 'соседи', 'пенсионеры'],
+    'Здоровье и поликлиника': ['бабки', 'деды', 'врачи', 'пенсионеры'],
+    'Соцсети и тренды': ['бабки', 'блогеры', 'дочери', 'студенты'],
+    'Дача и огород': ['бабки', 'деды', 'соседи'],
+    'Транспорт и пробки': ['бабки', 'деды', 'таксисты', 'соседи'],
+  };
+
+  const preferredGroups = categoryHints[categoryRu] || ['бабки', 'деды'];
+  
+  // Filter characters by preferred groups
+  const candidates = state.characters.filter(c => preferredGroups.includes(c.group));
+  if (candidates.length < 2) {
+    // Fallback: use all characters
+    return autoSelectRandomPair();
+  }
+
+  // Find best pair: different compatibility types for contrast
+  // Priority: chaotic+calm > conflict+calm > chaotic+balanced > any mix
+  const chaotic = candidates.filter(c => c.compatibility === 'chaotic');
+  const calm = candidates.filter(c => c.compatibility === 'calm');
+  const conflict = candidates.filter(c => c.compatibility === 'conflict');
+  const balanced = candidates.filter(c => c.compatibility === 'balanced' || c.compatibility === 'meme');
+
+  let charA, charB;
+
+  // Try explosive pair: chaotic + calm
+  if (chaotic.length > 0 && calm.length > 0) {
+    charA = chaotic[Math.floor(Math.random() * chaotic.length)];
+    charB = calm.find(c => c.id !== charA.id) || calm[0];
+  }
+  // Try conflict + calm
+  else if (conflict.length > 0 && calm.length > 0) {
+    charA = conflict[Math.floor(Math.random() * conflict.length)];
+    charB = calm.find(c => c.id !== charA.id) || calm[0];
+  }
+  // Try chaotic + balanced
+  else if (chaotic.length > 0 && balanced.length > 0) {
+    charA = chaotic[Math.floor(Math.random() * chaotic.length)];
+    charB = balanced.find(c => c.id !== charA.id) || balanced[0];
+  }
+  // Random from candidates
+  else {
+    const shuffled = candidates.sort(() => Math.random() - 0.5);
+    charA = shuffled[0];
+    charB = shuffled[1] || shuffled[0];
+  }
+
+  if (!charA || !charB || charA.id === charB.id) return false;
+
+  // Prefer role_default if set
+  if (charA.role_default === 'B' && charB.role_default === 'A') {
+    [charA, charB] = [charB, charA];
+  }
+
+  state.selectedA = charA;
+  state.selectedB = charB;
+  updateCharDisplay();
+  
+  log('OK', 'АВТОПОДБОР', `Выбрано: ${charA.name_ru} × ${charB.name_ru} для категории "${categoryRu}"`);
+  return true;
+}
+
 function updateCharDisplay() {
   document.getElementById('char-a-name').textContent = state.selectedA ? `${state.selectedA.name_ru} • ${state.selectedA.group}` : 'Нажми на персонажа ↓';
   document.getElementById('char-b-name').textContent = state.selectedB ? `${state.selectedB.name_ru} • ${state.selectedB.group}` : 'Нажми на второго ↓';
@@ -2902,6 +2976,7 @@ async function fetchTrends() {
 
         <!-- Action buttons -->
         <div class="flex gap-2 flex-wrap pt-1">
+          <button class="text-[11px] px-4 py-2 rounded-md bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 hover:from-emerald-500/30 hover:to-cyan-500/30 transition-all font-semibold border border-emerald-500/30 quick-generate-trend" data-trend-index="${i}" data-category="${_escForAttr(t.category)}" data-topic="${_escForAttr(t.topic)}" data-dialogue-a="${_escForAttr(t.dialogue_A)}" data-dialogue-b="${_escForAttr(t.dialogue_B)}">🚀 Быстрая генерация <span class="text-[9px] opacity-70">авто-подбор</span></button>
           <button class="text-[10px] px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-medium" onclick="useTrendAsIdea('${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}');this.textContent='✓ Выбрано!'">💡 Как идею</button>
           <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="useTrendAsScript('${_escForAttr(t.dialogue_A)}','${_escForAttr(t.dialogue_B)}');this.textContent='✓ Выбрано!'">✏ Вставить диалог</button>
         </div>
@@ -2951,8 +3026,76 @@ function useTrendAsScript(dialogueA, dialogueB) {
   log('OK', 'ТРЕНД→СКРИПТ', `A: ${dialogueA.slice(0, 30)}…`);
 }
 
+// ─── QUICK GENERATE FROM TREND ─────────────────
+async function quickGenerateFromTrend(category, topic, dialogueA, dialogueB) {
+  // 1. Auto-select characters for this category
+  const success = autoSelectCharactersForCategory(category, topic);
+  if (!success) {
+    showNotification('❌ Не удалось автоматически подобрать персонажей. Выбери вручную.', 'error');
+    useTrendAsScript(dialogueA, dialogueB);
+    return;
+  }
+
+  // 2. Set mode and script
+  state.generationMode = 'script';
+  const a = document.getElementById('script-a');
+  const b = document.getElementById('script-b');
+  if (a) a.value = dialogueA;
+  if (b) b.value = dialogueB;
+
+  // 3. Show what was auto-selected
+  showNotification(`✅ Подобрано: ${state.selectedA.name_ru} × ${state.selectedB.name_ru}`, 'success');
+  log('OK', 'БЫСТРАЯ ГЕНЕРАЦИЯ', `${state.selectedA.name_ru} × ${state.selectedB.name_ru} для "${topic.slice(0, 40)}"`);
+
+  // 4. Navigate to generate section to show preview and allow tweaks
+  navigateTo('generate');
+
+  // 5. Scroll to top
+  document.getElementById('workspace')?.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 6. Show auto-selection notice
+  const notice = document.getElementById('auto-selection-notice');
+  if (notice) {
+    notice.classList.remove('hidden');
+    notice.innerHTML = `
+      <div class="glass-panel p-4 border-l-2 border-emerald-500/40 space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="text-sm font-semibold text-emerald-400">🤖 Автоматически подобрано</div>
+          <button onclick="navigateTo('characters')" class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">🔧 Изменить выбор</button>
+        </div>
+        <div class="text-xs text-gray-300">
+          <div class="mb-1">👥 <span class="text-violet-300 font-medium">${state.selectedA.name_ru}</span> × <span class="text-indigo-300 font-medium">${state.selectedB.name_ru}</span></div>
+          <div class="text-[11px] text-gray-500">AI выбрал эту пару как наиболее подходящую для категории "${category}" — ${state.selectedA.compatibility} + ${state.selectedB.compatibility} = контрастная динамика</div>
+        </div>
+      </div>
+    `;
+  }
+}
+
 function initTrends() {
   document.getElementById('btn-fetch-trends')?.addEventListener('click', fetchTrends);
+  
+  // Event delegation for quick generate buttons
+  document.getElementById('trends-results')?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.quick-generate-trend');
+    if (!btn) return;
+    
+    const category = btn.dataset.category || 'Бытовой абсурд';
+    const topic = btn.dataset.topic || '';
+    const dialogueA = btn.dataset.dialogueA || '';
+    const dialogueB = btn.dataset.dialogueB || '';
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="animate-pulse">⏳</span> Подбор персонажей...';
+    
+    await quickGenerateFromTrend(category, topic, dialogueA, dialogueB);
+    
+    btn.disabled = false;
+    btn.innerHTML = '✓ Готово!';
+    setTimeout(() => {
+      btn.innerHTML = '🚀 Быстрая генерация <span class="text-[9px] opacity-70">авто-подбор</span>';
+    }, 2000);
+  });
 }
 
 // ─── LOCATIONS BROWSE (standalone section) ───
