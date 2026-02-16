@@ -15,6 +15,7 @@ const state = {
   selectedA: null,
   selectedB: null,
   selectedLocation: null, // location id or null (auto)
+  generationMode: null, // New: selected generation mode
   inputMode: 'idea',
   category: null,
   videoMeta: null,
@@ -22,6 +23,7 @@ const state = {
   options: { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false },
   lastResult: null,
   settingsMode: 'api',
+  threadMemory: [],
 };
 
 // ─── LOG ─────────────────────────────────────
@@ -163,7 +165,7 @@ function initApp() {
 
   loadCharacters();
   updateCacheStats();
-  navigateTo('characters');
+  navigateTo('generation-mode'); // Start with generation mode selection
   initWelcomeBanner();
 
   // Auto-authenticate if promo is already saved
@@ -503,6 +505,13 @@ function navigateTo(section) {
   if (target) target.classList.remove('hidden');
   // Scroll workspace to top
   document.getElementById('workspace')?.scrollTo(0, 0);
+  
+  // Special handling for sections
+  if (section === 'characters' && !state.generationMode) {
+    // If user tries to go to characters without selecting mode, redirect
+    navigateTo('generation-mode');
+    return;
+  }
 }
 
 function initNavigation() {
@@ -512,15 +521,101 @@ function initNavigation() {
     });
   });
 
-  // "Далее" button on step 1 → go to step 2
+  // "Далее" button on characters → go to locations
   document.getElementById('btn-go-generate')?.addEventListener('click', () => {
-    navigateTo('generate');
+    navigateTo('locations');
   });
 
-  // "← Сменить персонажей" on step 2 → go back to step 1
+  // "← Сменить персонажей" on generate → go back to characters
   document.getElementById('gen-back-chars')?.addEventListener('click', () => {
     navigateTo('characters');
   });
+
+  // Add location continue button
+  document.getElementById('btn-go-generate-from-locations')?.addEventListener('click', () => {
+    navigateTo('generate');
+  });
+}
+
+// ─── GENERATION MODE SELECTION ─────────────────────
+function initGenerationMode() {
+  // Mode card selection
+  document.querySelectorAll('.generation-mode-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const mode = card.dataset.mode;
+      selectGenerationMode(mode);
+    });
+  });
+
+  // Continue button
+  document.getElementById('btn-continue-to-characters')?.addEventListener('click', () => {
+    if (state.generationMode) {
+      navigateTo('characters');
+    }
+  });
+
+  // Change mode button
+  document.getElementById('change-mode-btn')?.addEventListener('click', () => {
+    navigateTo('generation-mode');
+  });
+}
+
+function selectGenerationMode(mode) {
+  state.generationMode = mode;
+  state.inputMode = mode; // Keep compatibility with existing logic
+  
+  // Update UI
+  document.querySelectorAll('.generation-mode-card').forEach(card => {
+    card.classList.remove('ring-2', 'ring-cyan-500', 'ring-purple-500', 'ring-amber-500');
+  });
+  
+  const selectedCard = document.querySelector(`.generation-mode-card[data-mode="${mode}"]`);
+  if (selectedCard) {
+    const colors = {
+      idea: 'ring-cyan-500',
+      script: 'ring-purple-500', 
+      video: 'ring-amber-500'
+    };
+    selectedCard.classList.add('ring-2', colors[mode] || 'ring-cyan-500');
+  }
+
+  // Update selected mode display
+  const display = document.getElementById('selected-mode-display');
+  const nameEl = document.getElementById('selected-mode-name');
+  const continueBtn = document.getElementById('btn-continue-to-characters');
+  
+  if (display && nameEl && continueBtn) {
+    display.classList.remove('hidden');
+    const modeNames = {
+      idea: '💡 Идея',
+      script: '📝 Свой диалог',
+      video: '🎥 По видео'
+    };
+    nameEl.textContent = modeNames[mode] || mode;
+    continueBtn.disabled = false;
+    continueBtn.innerHTML = `<span>Перейти к персонажам</span><span>→</span>`;
+  }
+
+  // Update mode-specific UI
+  updateModeSpecificUI(mode);
+}
+
+function updateModeSpecificUI(mode) {
+  // Hide all mode-specific elements first
+  document.getElementById('mode-idea')?.classList.add('hidden');
+  document.getElementById('mode-script')?.classList.add('hidden');
+  document.getElementById('mode-video')?.classList.add('hidden');
+
+  // Show relevant mode elements
+  if (mode === 'idea') {
+    // Idea mode uses the main textarea in generate section
+  } else if (mode === 'script') {
+    document.getElementById('mode-script')?.classList.remove('hidden');
+  } else if (mode === 'video') {
+    document.getElementById('mode-video')?.classList.remove('hidden');
+  }
+
+  log('INFO', 'РЕЖИМ', `Выбран режим: ${mode}`);
 }
 
 // ─── CHARACTER CONTEXT RECOMMENDATIONS ─────────────────────
@@ -1429,8 +1524,16 @@ function getThreadMemory() {
 
 function initGenerate() {
   document.getElementById('btn-generate')?.addEventListener('click', async () => {
+    // Validate complete workflow
+    if (!state.generationMode) {
+      showGenStatus('⚠️ Сначала выберите режим генерации на шаге 1', 'text-orange-400');
+      navigateTo('generation-mode');
+      return;
+    }
+    
     if (!state.selectedA || !state.selectedB) {
-      showGenStatus('⚠️ Сначала выбери двух персонажей на шаге 1', 'text-orange-400');
+      showGenStatus('⚠️ Сначала выберите двух персонажей на шаге 2', 'text-orange-400');
+      navigateTo('characters');
       return;
     }
 
@@ -2304,6 +2407,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initApp();
   initPromoCode();
   initNavigation();
+  initGenerationMode(); // New: generation mode selection
   initModeSwitcher();
   initToggles();
   initVideoUpload();
