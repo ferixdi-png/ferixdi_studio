@@ -82,11 +82,65 @@
           <div class="nav-item" data-section="generate"><span>⚡</span><span>Генерация</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
         </div>
-        <!-- Selected characters mini-display -->
+        <!-- Progress Tracker -->
         <div class="px-4 mt-6 pt-4 border-t border-gray-800/50">
-          <div class="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-3">Выбранная пара</div>
-          <div id="sidebar-char-a" class="text-xs text-gray-400 mb-1.5 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400/50 inline-block"></span>A: —</div>
-          <div id="sidebar-char-b" class="text-xs text-gray-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400/50 inline-block"></span>B: —</div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium">Прогресс</div>
+            <button id="btn-reset-all" class="text-[10px] text-red-400/70 hover:text-red-400 transition-colors font-medium hidden" title="Очистить все выборы и начать заново">🔄 Сброс</button>
+          </div>
+          
+          <!-- Progress steps -->
+          <div class="space-y-2.5">
+            <!-- Step 1: Mode -->
+            <div id="progress-mode" class="flex items-start gap-2">
+              <div class="flex-shrink-0 w-4 h-4 rounded-full border-2 border-gray-700 flex items-center justify-center mt-0.5">
+                <div class="w-2 h-2 rounded-full bg-gray-700 hidden progress-check"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Режим</div>
+                <div class="text-xs text-gray-400 truncate progress-value">не выбран</div>
+              </div>
+            </div>
+            
+            <!-- Step 2: Idea/Script -->
+            <div id="progress-content" class="flex items-start gap-2">
+              <div class="flex-shrink-0 w-4 h-4 rounded-full border-2 border-gray-700 flex items-center justify-center mt-0.5">
+                <div class="w-2 h-2 rounded-full bg-gray-700 hidden progress-check"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Контент</div>
+                <div class="text-xs text-gray-400 truncate progress-value">не указан</div>
+              </div>
+            </div>
+            
+            <!-- Step 3: Characters -->
+            <div id="progress-characters" class="flex items-start gap-2">
+              <div class="flex-shrink-0 w-4 h-4 rounded-full border-2 border-gray-700 flex items-center justify-center mt-0.5">
+                <div class="w-2 h-2 rounded-full bg-gray-700 hidden progress-check"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Персонажи</div>
+                <div id="sidebar-char-a" class="text-[11px] text-gray-400 truncate flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-cyan-400/50 inline-block"></span>A: —</div>
+                <div id="sidebar-char-b" class="text-[11px] text-gray-400 truncate flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-purple-400/50 inline-block"></span>B: —</div>
+              </div>
+            </div>
+            
+            <!-- Step 4: Location -->
+            <div id="progress-location" class="flex items-start gap-2">
+              <div class="flex-shrink-0 w-4 h-4 rounded-full border-2 border-gray-700 flex items-center justify-center mt-0.5">
+                <div class="w-2 h-2 rounded-full bg-gray-700 hidden progress-check"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Локация</div>
+                <div class="text-xs text-gray-400 truncate progress-value">не выбрана</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Start New button -->
+          <button id="btn-start-new" class="w-full mt-4 px-3 py-2 rounded-lg bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 text-red-400 hover:from-red-500/20 hover:to-orange-500/20 hover:border-red-500/30 transition-all text-xs font-medium hidden">
+            ✨ Новая идея
+          </button>
         </div>
       </nav>
 

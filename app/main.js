@@ -282,6 +282,7 @@ function initLocationPicker() {
     renderLocations(document.getElementById('loc-group-filter')?.value || '');
     renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
     log('INFO', 'ЛОКАЦИЯ', state.selectedLocation ? `Выбрана: ${state.locations.find(l => l.id === state.selectedLocation)?.name_ru}` : 'Авто-выбор');
+    updateProgress();
   });
   document.getElementById('loc-group-filter')?.addEventListener('change', (e) => {
     renderLocations(e.target.value);
@@ -295,6 +296,14 @@ function initLocationPicker() {
     renderLocations(filtered || '');
     renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
     log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
+    updateProgress();
+  });
+  
+  // Update progress when inputs change
+  ['idea-input', 'idea-input-custom', 'script-a', 'script-b'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', () => {
+      setTimeout(updateProgress, 100); // Debounce
+    });
   });
 }
 
@@ -584,8 +593,8 @@ function autoSelectCharactersForCategory(categoryRu, topicRu = '') {
 function updateCharDisplay() {
   document.getElementById('char-a-name').textContent = state.selectedA ? `${state.selectedA.name_ru} • ${state.selectedA.group}` : 'Нажми на персонажа ↓';
   document.getElementById('char-b-name').textContent = state.selectedB ? `${state.selectedB.name_ru} • ${state.selectedB.group}` : 'Нажми на второго ↓';
-  document.getElementById('sidebar-char-a').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-violet-500/60 inline-block"></span>A: ${state.selectedA?.name_ru || '—'}`;
-  document.getElementById('sidebar-char-b').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500/60 inline-block"></span>B: ${state.selectedB?.name_ru || '—'}`;
+  document.getElementById('sidebar-char-a').innerHTML = `<span class="w-1 h-1 rounded-full bg-cyan-400/50 inline-block"></span>A: ${state.selectedA?.name_ru || '—'}`;
+  document.getElementById('sidebar-char-b').innerHTML = `<span class="w-1 h-1 rounded-full bg-purple-400/50 inline-block"></span>B: ${state.selectedB?.name_ru || '—'}`;
   document.getElementById('gen-char-a').textContent = state.selectedA?.name_ru || '—';
   document.getElementById('gen-char-b').textContent = state.selectedB?.name_ru || '—';
 
@@ -614,6 +623,9 @@ function updateCharDisplay() {
 
   // Run smart match analysis
   updateSmartMatch();
+  
+  // Update progress tracker
+  updateProgress();
 }
 
 // ─── SMART MATCH ANALYSIS ──────────────────────
@@ -1093,6 +1105,9 @@ function selectGenerationMode(mode) {
 
   // Update mode-specific UI
   updateModeSpecificUI(mode);
+  
+  // Update progress tracker
+  updateProgress();
 }
 
 function updateModeSpecificUI(mode) {
@@ -3325,12 +3340,184 @@ function showNotification(message, type = 'info') {
   }, 3000);
 }
 
+// ─── PROGRESS TRACKER ─────────────────────
+function updateProgress() {
+  // Step 1: Mode
+  const modeStep = document.getElementById('progress-mode');
+  const modeCheck = modeStep?.querySelector('.progress-check');
+  const modeValue = modeStep?.querySelector('.progress-value');
+  const modeBorder = modeStep?.querySelector('.w-4');
+  
+  if (state.generationMode) {
+    const modeNames = { idea: '💡 Своя идея', suggested: '📚 Готовые идеи', script: '📝 Свой диалог', video: '🎥 По видео' };
+    if (modeValue) modeValue.textContent = modeNames[state.generationMode] || state.generationMode;
+    if (modeCheck) { modeCheck.classList.remove('hidden', 'bg-gray-700'); modeCheck.classList.add('bg-emerald-500'); }
+    if (modeBorder) { modeBorder.classList.remove('border-gray-700'); modeBorder.classList.add('border-emerald-500'); }
+  }
+  
+  // Step 2: Content (idea/script/video)
+  const contentStep = document.getElementById('progress-content');
+  const contentCheck = contentStep?.querySelector('.progress-check');
+  const contentValue = contentStep?.querySelector('.progress-value');
+  const contentBorder = contentStep?.querySelector('.w-4');
+  
+  let hasContent = false;
+  let contentText = 'не указан';
+  
+  if (state.generationMode === 'idea' || state.generationMode === 'suggested') {
+    const ideaInput = document.getElementById('idea-input')?.value || document.getElementById('idea-input-custom')?.value;
+    if (ideaInput && ideaInput.trim()) {
+      hasContent = true;
+      contentText = ideaInput.slice(0, 25) + (ideaInput.length > 25 ? '...' : '');
+    }
+  } else if (state.generationMode === 'script') {
+    const scriptA = document.getElementById('script-a')?.value;
+    const scriptB = document.getElementById('script-b')?.value;
+    if (scriptA && scriptB) {
+      hasContent = true;
+      contentText = '✓ Диалог готов';
+    }
+  } else if (state.generationMode === 'video') {
+    if (state.videoMeta) {
+      hasContent = true;
+      contentText = '✓ Видео загружено';
+    }
+  }
+  
+  if (contentValue) contentValue.textContent = contentText;
+  if (hasContent) {
+    if (contentCheck) { contentCheck.classList.remove('hidden', 'bg-gray-700'); contentCheck.classList.add('bg-emerald-500'); }
+    if (contentBorder) { contentBorder.classList.remove('border-gray-700'); contentBorder.classList.add('border-emerald-500'); }
+  }
+  
+  // Step 3: Characters (already updated by selectCharacter function)
+  const charStep = document.getElementById('progress-characters');
+  const charCheck = charStep?.querySelector('.progress-check');
+  const charBorder = charStep?.querySelector('.w-4');
+  
+  if (state.selectedA && state.selectedB) {
+    if (charCheck) { charCheck.classList.remove('hidden', 'bg-gray-700'); charCheck.classList.add('bg-emerald-500'); }
+    if (charBorder) { charBorder.classList.remove('border-gray-700'); charBorder.classList.add('border-emerald-500'); }
+  }
+  
+  // Step 4: Location
+  const locStep = document.getElementById('progress-location');
+  const locCheck = locStep?.querySelector('.progress-check');
+  const locValue = locStep?.querySelector('.progress-value');
+  const locBorder = locStep?.querySelector('.w-4');
+  
+  if (state.selectedLocation) {
+    const loc = state.locations.find(l => l.id === state.selectedLocation);
+    if (locValue) locValue.textContent = loc ? loc.name_ru.slice(0, 25) : 'Выбрана';
+    if (locCheck) { locCheck.classList.remove('hidden', 'bg-gray-700'); locCheck.classList.add('bg-emerald-500'); }
+    if (locBorder) { locBorder.classList.remove('border-gray-700'); locBorder.classList.add('border-emerald-500'); }
+  } else {
+    if (locValue) locValue.textContent = 'Авто (AI подберёт)';
+  }
+  
+  // Show reset/new buttons if anything is selected
+  const hasAnySelection = state.generationMode || state.selectedA || state.selectedB || state.selectedLocation;
+  const resetBtn = document.getElementById('btn-reset-all');
+  const newBtn = document.getElementById('btn-start-new');
+  
+  if (hasAnySelection) {
+    if (resetBtn) resetBtn.classList.remove('hidden');
+    if (newBtn) newBtn.classList.remove('hidden');
+  } else {
+    if (resetBtn) resetBtn.classList.add('hidden');
+    if (newBtn) newBtn.classList.add('hidden');
+  }
+}
+
+function resetAll() {
+  if (!confirm('Очистить все выборы и начать заново?')) return;
+  
+  // Clear state
+  state.generationMode = null;
+  state.inputMode = 'idea';
+  state.selectedA = null;
+  state.selectedB = null;
+  state.selectedLocation = null;
+  state.videoMeta = null;
+  state.productInfo = null;
+  state.lastResult = null;
+  state.category = null;
+  
+  // Clear UI inputs
+  const inputs = ['idea-input', 'idea-input-custom', 'script-a', 'script-b', 'scene-hint', 'product-description'];
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  
+  // Clear video
+  const videoMeta = document.getElementById('video-meta');
+  if (videoMeta) { videoMeta.classList.add('hidden'); videoMeta.textContent = ''; }
+  
+  // Reset progress UI
+  document.querySelectorAll('.progress-check').forEach(el => {
+    el.classList.add('hidden', 'bg-gray-700');
+    el.classList.remove('bg-emerald-500');
+  });
+  document.querySelectorAll('#progress-mode .w-4, #progress-content .w-4, #progress-characters .w-4, #progress-location .w-4').forEach(el => {
+    el.classList.add('border-gray-700');
+    el.classList.remove('border-emerald-500');
+  });
+  document.querySelectorAll('.progress-value').forEach(el => {
+    if (el.closest('#progress-mode')) el.textContent = 'не выбран';
+    else if (el.closest('#progress-content')) el.textContent = 'не указан';
+    else if (el.closest('#progress-location')) el.textContent = 'не выбрана';
+  });
+  
+  // Reset character cards
+  document.querySelectorAll('.char-card').forEach(card => {
+    card.classList.remove('selected-a', 'selected-b', 'ring-2', 'ring-cyan-400', 'ring-purple-400');
+  });
+  
+  // Reset generation mode cards
+  document.querySelectorAll('.generation-mode-card').forEach(card => {
+    card.classList.remove('ring-2', 'ring-cyan-500', 'ring-purple-500', 'ring-amber-500', 'ring-emerald-500');
+  });
+  
+  // Hide selected mode display
+  const display = document.getElementById('selected-mode-display');
+  if (display) display.classList.add('hidden');
+  
+  // Navigate to generation mode selection
+  navigateTo('generation-mode');
+  
+  updateProgress();
+  showNotification('✨ Всё очищено! Начни с выбора режима генерации', 'info');
+  log('INFO', 'СБРОС', 'Все выборы очищены');
+}
+
+function startNewIdea() {
+  resetAll();
+}
+
+function initProgressTracker() {
+  const resetBtn = document.getElementById('btn-reset-all');
+  const newBtn = document.getElementById('btn-start-new');
+  
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetAll);
+  }
+  
+  if (newBtn) {
+    newBtn.addEventListener('click', startNewIdea);
+  }
+  
+  // Update progress initially
+  updateProgress();
+}
+
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedState(); // Load saved state first
   initApp();
   initPromoCode();
   initNavigation();
+  initProgressTracker(); // NEW: Progress tracker with reset
   initGenerationMode(); // New: generation mode selection
   initModeSwitcher();
   initToggles();
