@@ -695,6 +695,56 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       console.warn('Gemini response has weak hashtags:', geminiResult.hashtags?.length || 0);
     }
 
+    // ── HARD DIALOGUE SANITIZER — code-level enforcement ──
+    // Gemini ignores prompt rules, so we fix its output programmatically.
+    const sanitizeLine = (line) => {
+      if (!line || typeof line !== 'string') return line;
+      let s = line.trim();
+      // Strip dashes
+      s = s.replace(/\s*[—–]\s*/g, ' ').replace(/\s*-\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      // Enforce max 1 pipe: keep only the FIRST pipe, remove all others
+      const pipeIdx = s.indexOf('|');
+      if (pipeIdx !== -1) {
+        const before = s.slice(0, pipeIdx + 1);
+        const after = s.slice(pipeIdx + 1).replace(/\|/g, '');
+        s = (before + after).replace(/\s{2,}/g, ' ').trim();
+      }
+      return s;
+    };
+
+    if (geminiResult.dialogue_A_ru) {
+      const orig = geminiResult.dialogue_A_ru;
+      geminiResult.dialogue_A_ru = sanitizeLine(orig);
+      if (orig !== geminiResult.dialogue_A_ru) {
+        console.log('Sanitized dialogue_A_ru:', { before: orig.slice(0, 100), after: geminiResult.dialogue_A_ru.slice(0, 100) });
+      }
+    }
+
+    if (geminiResult.dialogue_B_ru) {
+      let bLine = sanitizeLine(geminiResult.dialogue_B_ru);
+      // Strip "Зато" from beginning
+      if (/^\s*[Зз]ато\s/i.test(bLine)) {
+        bLine = bLine.replace(/^\s*[Зз]ато\s+/i, '').trim();
+        // Capitalize first letter after stripping
+        if (bLine.length > 0) bLine = bLine[0].toUpperCase() + bLine.slice(1);
+        console.log('Stripped "Зато" from dialogue_B_ru');
+      }
+      if (geminiResult.dialogue_B_ru !== bLine) {
+        console.log('Sanitized dialogue_B_ru:', { before: geminiResult.dialogue_B_ru.slice(0, 100), after: bLine.slice(0, 100) });
+      }
+      geminiResult.dialogue_B_ru = bLine;
+
+      // Fix killer_word: must be the LAST word of B's dialogue
+      const bWords = bLine.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
+      if (bWords.length > 0) {
+        const actualLastWord = bWords[bWords.length - 1];
+        if (geminiResult.killer_word !== actualLastWord) {
+          console.log('Fixed killer_word:', { was: geminiResult.killer_word, now: actualLastWord });
+          geminiResult.killer_word = actualLastWord;
+        }
+      }
+    }
+
     res.json({
       gemini: geminiResult,
       model: 'gemini-2.0-flash',
