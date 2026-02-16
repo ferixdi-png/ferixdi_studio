@@ -241,11 +241,13 @@ function renderLocations(filterGroup = '') {
   let locs = [...state.locations];
   if (filterGroup) locs = locs.filter(l => l.group === filterGroup);
 
+  const autoSel = !state.selectedLocation;
   grid.innerHTML = `
-    <div class="loc-card ${!state.selectedLocation ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
+    <div class="loc-card ${autoSel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
       <div class="text-sm">🎲</div>
       <div class="text-[11px] font-medium text-violet-300">Авто</div>
-      <div class="text-[10px] text-gray-500">AI подберёт</div>
+      <div class="text-[10px] text-gray-500 mb-2">AI подберёт</div>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${autoSel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="">${autoSel ? '✓ Выбрано' : '📍 Выбрать'}</button>
     </div>
   ` + locs.map(l => {
     const sel = state.selectedLocation === l.id;
@@ -254,7 +256,8 @@ function renderLocations(filterGroup = '') {
     <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
       <div class="text-sm">${moodIcon}</div>
       <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
-      <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
+      <div class="text-[10px] text-gray-500 leading-snug mb-2">${l.tagline_ru}</div>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '✓ Выбрано' : '📍 Выбрать'}</button>
       <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
         <span>📋</span> Промпт
       </button>
@@ -490,10 +493,10 @@ function renderCharacters(filter = {}) {
         <span>${c.role_default === 'A' ? '🅰️' : '🅱️'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span>
       </div>
 
-      <!-- Select buttons -->
-      <div class="flex gap-1.5 mb-2">
-        <button class="select-a text-[11px] px-3 py-1 rounded-md font-medium transition-all ${isA ? 'bg-violet-600 text-white' : 'bg-violet-600/10 text-violet-300 hover:bg-violet-600/25'}" data-id="${c.id}">A · провокатор</button>
-        <button class="select-b text-[11px] px-3 py-1 rounded-md font-medium transition-all ${isB ? 'bg-indigo-600 text-white' : 'bg-indigo-600/10 text-indigo-300 hover:bg-indigo-600/25'}" data-id="${c.id}">B · панчлайн</button>
+      <!-- Select buttons — large & clear -->
+      <div class="flex gap-2 mb-2">
+        <button class="select-a flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isA ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-id="${c.id}">${isA ? '✓ Выбран A' : '🅰️ Выбрать A'}</button>
+        <button class="select-b flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isB ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/20' : 'bg-indigo-600/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-600/25 hover:border-indigo-500/40'}" data-id="${c.id}">${isB ? '✓ Выбран B' : '🅱️ Выбрать B'}</button>
       </div>
 
       <!-- Copy Prompt Button -->
@@ -3568,11 +3571,13 @@ function renderLocationsBrowse(filterGroup = '') {
   let locs = [...state.locations];
   if (filterGroup) locs = locs.filter(l => l.group === filterGroup);
 
+  const autoSelB = !state.selectedLocation;
   grid.innerHTML = `
-    <div class="loc-card ${!state.selectedLocation ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
+    <div class="loc-card ${autoSelB ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
       <div class="text-sm">🎲</div>
       <div class="text-[11px] font-medium text-violet-300">Авто</div>
-      <div class="text-[10px] text-gray-500">AI подберёт</div>
+      <div class="text-[10px] text-gray-500 mb-2">AI подберёт</div>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${autoSelB ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="">${autoSelB ? '✓ Выбрано' : '📍 Выбрать'}</button>
     </div>
   ` + locs.map(l => {
     const sel = state.selectedLocation === l.id;
@@ -3583,6 +3588,7 @@ function renderLocationsBrowse(filterGroup = '') {
       <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
       ${l.tags ? `<div class="flex gap-1 flex-wrap mt-1">${l.tags.slice(0, 3).map(t => `<span class="text-[8px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${t}</span>`).join('')}</div>` : ''}
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border mt-2 ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '✓ Выбрано' : '📍 Выбрать'}</button>
       <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
         <span>📋</span> Промпт
       </button>
