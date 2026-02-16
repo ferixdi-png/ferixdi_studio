@@ -1232,26 +1232,36 @@ function selectGenerationMode(mode) {
 }
 
 function updateModeSpecificUI(mode) {
-  // Hide all mode-specific elements first
+  // Hide all mode-specific elements in Advanced section
   document.getElementById('mode-idea')?.classList.add('hidden');
   document.getElementById('mode-script')?.classList.add('hidden');
   document.getElementById('mode-video')?.classList.add('hidden');
 
+  // Toggle remix panels on the main Generate page
+  document.getElementById('remix-idea')?.classList.add('hidden');
+  document.getElementById('remix-suggested')?.classList.add('hidden');
+  document.getElementById('remix-script')?.classList.add('hidden');
+  document.getElementById('remix-video')?.classList.add('hidden');
+
   // Show relevant mode elements
   if (mode === 'idea') {
     document.getElementById('mode-idea')?.classList.remove('hidden');
-    // Initialize sub-mode tabs
+    document.getElementById('remix-idea')?.classList.remove('hidden');
+    // Ensure idea-input is visible (may have been hidden by previous suggested mode)
+    const ideaInput = document.getElementById('idea-input');
+    if (ideaInput) ideaInput.style.display = '';
     initIdeaSubModes();
   } else if (mode === 'suggested') {
-    // Suggested mode uses the main idea input but with trending suggestions
     document.getElementById('mode-idea')?.classList.remove('hidden');
-    initIdeaSubModes();
-    // Auto-select trending sub-mode
-    selectIdeaSubMode('trending');
+    document.getElementById('remix-suggested')?.classList.remove('hidden');
+    loadTrendingIdeasMain();
   } else if (mode === 'script') {
     document.getElementById('mode-script')?.classList.remove('hidden');
+    document.getElementById('remix-script')?.classList.remove('hidden');
   } else if (mode === 'video') {
     document.getElementById('mode-video')?.classList.remove('hidden');
+    document.getElementById('remix-video')?.classList.remove('hidden');
+    initVideoDropzoneMain();
   }
 
   log('INFO', 'РЕЖИМ', `Выбран режим: ${mode}`);
@@ -1333,6 +1343,54 @@ async function loadTrendingIdeas() {
     grid.innerHTML = '<div class="text-xs text-red-400 text-center">❌ Ошибка загрузки идей</div>';
     console.error('Error loading trending ideas:', error);
   }
+}
+
+// Load trending ideas into the main Generate page (for suggested mode)
+async function loadTrendingIdeasMain() {
+  const grid = document.getElementById('trending-ideas-main');
+  if (!grid) return;
+
+  grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">🔍 Загружаем популярные темы...</div>';
+
+  try {
+    const response = await fetch('/api/trending');
+    const data = await response.json();
+
+    if (data.trends && data.trends.length > 0) {
+      grid.innerHTML = data.trends.map(trend => `
+        <div class="glass-panel p-2.5 border-l-2 border-emerald-500/40 cursor-pointer hover:bg-emerald-500/5 transition-all trending-idea-main-card" data-trend="${trend.topic}">
+          <div class="text-[10px] text-emerald-400 font-medium">${trend.category}</div>
+          <div class="text-xs text-gray-200 leading-relaxed mt-0.5">${trend.topic}</div>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('.trending-idea-main-card').forEach(card => {
+        card.addEventListener('click', () => selectTrendingIdeaMain(card.dataset.trend));
+      });
+    } else {
+      grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">📝 Идеи временно недоступны — напишите свою тему ниже</div>';
+    }
+  } catch (error) {
+    grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">📝 Идеи загрузятся позже — пока напишите свою тему ниже</div>';
+    console.error('Error loading trending ideas (main):', error);
+  }
+}
+
+function selectTrendingIdeaMain(topic) {
+  // Fill the suggested mode textarea
+  const suggestedInput = document.getElementById('idea-input-suggested');
+  if (suggestedInput) suggestedInput.value = topic;
+  // Also fill idea-input for payload compatibility
+  const mainInput = document.getElementById('idea-input');
+  if (mainInput) mainInput.value = topic;
+
+  // Highlight selected card
+  document.querySelectorAll('.trending-idea-main-card').forEach(c => c.classList.remove('ring-1', 'ring-emerald-500'));
+  const card = document.querySelector(`.trending-idea-main-card[data-trend="${CSS.escape(topic)}"]`);
+  if (card) card.classList.add('ring-1', 'ring-emerald-500');
+
+  updateReadiness();
+  log('INFO', 'ТРЕНД', `Выбрана тема: ${topic}`);
 }
 
 function selectTrendingIdea(topic) {
@@ -1517,6 +1575,12 @@ function initModeSwitcher() {
       document.getElementById('mode-idea').classList.toggle('hidden', mode !== 'idea');
       document.getElementById('mode-script').classList.toggle('hidden', mode !== 'script');
       document.getElementById('mode-video').classList.toggle('hidden', mode !== 'video');
+      // Also sync main page remix panels
+      document.getElementById('remix-idea')?.classList.toggle('hidden', mode !== 'idea');
+      document.getElementById('remix-suggested')?.classList.add('hidden');
+      document.getElementById('remix-script')?.classList.toggle('hidden', mode !== 'script');
+      document.getElementById('remix-video')?.classList.toggle('hidden', mode !== 'video');
+      if (mode === 'video') initVideoDropzoneMain();
       log('INFO', 'РЕЖИМ', `Ввод: ${mode === 'idea' ? 'идея' : mode === 'script' ? 'диалог' : 'видео'}`);
     });
   });
@@ -1528,7 +1592,7 @@ function initModeSwitcher() {
       const text = e.target.value.trim();
       if (text.includes('tiktok.com/') || text.includes('instagram.com/')) {
         log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключи в режим «🎥 По видео» и загрузи файл');
-        // Switch to video mode UI
+        // Switch to video mode UI (both advanced and main page)
         document.querySelectorAll('#section-advanced .mode-btn').forEach(b => b.classList.remove('active'));
         const videoBtn = document.querySelector('#section-advanced .mode-btn[data-mode="video"]');
         if (videoBtn) videoBtn.classList.add('active');
@@ -1536,8 +1600,13 @@ function initModeSwitcher() {
         document.getElementById('mode-idea')?.classList.add('hidden');
         document.getElementById('mode-script')?.classList.add('hidden');
         document.getElementById('mode-video')?.classList.remove('hidden');
-        // Keep URL in scene-hint for context
-        const sceneHint = document.getElementById('scene-hint');
+        document.getElementById('remix-idea')?.classList.add('hidden');
+        document.getElementById('remix-suggested')?.classList.add('hidden');
+        document.getElementById('remix-script')?.classList.add('hidden');
+        document.getElementById('remix-video')?.classList.remove('hidden');
+        initVideoDropzoneMain();
+        // Keep URL in scene-hint-main for context
+        const sceneHint = document.getElementById('scene-hint-main') || document.getElementById('scene-hint');
         if (sceneHint && !sceneHint.value) sceneHint.value = `Ремейк видео: ${text}`;
         e.target.value = '';
       }
@@ -1545,7 +1614,7 @@ function initModeSwitcher() {
   });
 
   // Real-time readiness update on content input
-  ['idea-input', 'script-a', 'script-b'].forEach(inputId => {
+  ['idea-input', 'idea-input-suggested', 'script-a', 'script-b', 'scene-hint-main'].forEach(inputId => {
     document.getElementById(inputId)?.addEventListener('input', () => updateReadiness());
   });
 
@@ -1627,18 +1696,18 @@ function handleVideoFile(file) {
       cover_base64: null,
     };
 
-    // Show meta
-    const meta = document.getElementById('video-meta');
-    if (meta) {
-      meta.classList.remove('hidden');
-      meta.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="text-emerald-400">✓</span>
-          <span>📁 ${escapeHtml(file.name)}</span>
-        </div>
-        <div>⏱ ${duration}s · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
-      `;
-    }
+    // Show meta (both advanced and main page)
+    const metaHtml = `
+      <div class="flex items-center gap-2">
+        <span class="text-emerald-400">✓</span>
+        <span>📁 ${escapeHtml(file.name)}</span>
+      </div>
+      <div>⏱ ${duration}s · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
+    `;
+    ['video-meta', 'video-meta-main'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('hidden'); el.innerHTML = metaHtml; }
+    });
 
     // Capture frame at 1s (or 25% of duration) as cover fallback
     const seekTime = Math.min(1, duration * 0.25);
@@ -1660,13 +1729,15 @@ function handleVideoFile(file) {
     }
     URL.revokeObjectURL(url);
 
-    // Show remake badge
+    // Show remake badge (both advanced and main page)
     document.getElementById('video-remake-badge')?.classList.remove('hidden');
+    document.getElementById('video-remake-badge-main')?.classList.remove('hidden');
 
     // Auto-switch to video mode
     state.inputMode = 'video';
 
     log('OK', 'ВИДЕО', `🎬 Загружено: ${file.name} (${state.videoMeta.duration}с) — готово к анализу`);
+    updateReadiness();
   };
 
   video.onerror = () => {
@@ -1675,6 +1746,23 @@ function handleVideoFile(file) {
   };
 
   video.src = url;
+}
+
+// ─── VIDEO DROPZONE (main generate page) ────
+function initVideoDropzoneMain() {
+  const dropzone = document.getElementById('video-dropzone-main');
+  const fileInput = document.getElementById('video-file-main');
+  if (!dropzone || !fileInput || dropzone._initialized) return;
+  dropzone._initialized = true;
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = '#00d4ff'; });
+  dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropzone.style.borderColor = '';
+    if (e.dataTransfer.files.length) handleVideoFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) handleVideoFile(fileInput.files[0]); });
 }
 
 // ─── VIDEO URL FETCH (removed — now using external download services) ───
@@ -1768,7 +1856,8 @@ function _hasContent() {
     return !!(document.getElementById('idea-input')?.value?.trim());
   }
   if (state.generationMode === 'suggested') {
-    return !!(document.getElementById('idea-input')?.value?.trim());
+    // Suggested mode always has content — AI picks trending ideas; user input is optional bonus
+    return true;
   }
   if (state.generationMode === 'script') {
     const a = document.getElementById('script-a')?.value?.trim();
@@ -1782,9 +1871,13 @@ function _hasContent() {
 }
 
 function _contentLabel() {
-  if (state.generationMode === 'idea' || state.generationMode === 'suggested') {
+  if (state.generationMode === 'idea') {
     const v = document.getElementById('idea-input')?.value?.trim() || '';
     return v ? `"${v.slice(0, 30)}${v.length > 30 ? '...' : ''}"` : '';
+  }
+  if (state.generationMode === 'suggested') {
+    const v = document.getElementById('idea-input-suggested')?.value?.trim() || document.getElementById('idea-input')?.value?.trim() || '';
+    return v ? `"${v.slice(0, 30)}${v.length > 30 ? '...' : ''}"` : 'AI подберёт тему';
   }
   if (state.generationMode === 'script') return 'Диалог готов';
   if (state.generationMode === 'video') return state.videoMeta ? `Видео: ${state.videoMeta.name}` : '';
@@ -2459,8 +2552,8 @@ function initGenerate() {
     }
     
     if ((state.generationMode === 'video' || state.inputMode === 'video') && !state.videoMeta) {
-      showGenStatus('⚠️ Сначала загрузите видео-файл в режиме «🎥 По видео»', 'text-orange-400');
-      navigateTo('settings'); // Navigate to settings where video upload is
+      showGenStatus('⚠️ Загрузите видео-файл выше ↑ в секции «🎥 Видео-референс»', 'text-orange-400');
+      document.getElementById('remix-video')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     
@@ -2472,7 +2565,7 @@ function initGenerate() {
     
     // Scene hint validation for video mode
     if ((state.generationMode === 'video' || state.inputMode === 'video')) {
-      const sceneHint = document.getElementById('scene-hint')?.value.trim();
+      const sceneHint = (document.getElementById('scene-hint-main')?.value || document.getElementById('scene-hint')?.value || '').trim();
       if (sceneHint && sceneHint.length > 200) {
         showGenStatus('⚠️ Описание видео слишком длинное (максимум 200 символов). Сократите текст.', 'text-orange-400');
         return;
@@ -2498,7 +2591,9 @@ function initGenerate() {
     const pfEl = document.getElementById('gen-preflight');
     if (pfEl) { pfEl.classList.add('hidden'); pfEl.innerHTML = ''; }
 
-    const topicText = document.getElementById('idea-input')?.value || '';
+    const topicText = (state.generationMode === 'suggested'
+      ? (document.getElementById('idea-input-suggested')?.value || document.getElementById('idea-input')?.value || '')
+      : (document.getElementById('idea-input')?.value || ''));
     const input = {
       input_mode: state.generationMode || state.inputMode,
       character1_id: state.selectedA.id,
@@ -2508,7 +2603,7 @@ function initGenerate() {
         A: document.getElementById('script-a')?.value || '',
         B: document.getElementById('script-b')?.value || ''
       } : null,
-      scene_hint_ru: document.getElementById('scene-hint')?.value || null,
+      scene_hint_ru: document.getElementById('scene-hint-main')?.value || document.getElementById('scene-hint')?.value || null,
       // Let generator.js handle category auto-detection (no manual override)
       thread_memory: getThreadMemory(),
       video_meta: state.videoMeta,

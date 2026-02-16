@@ -447,15 +447,65 @@
             </div>
           </div>
 
-          <!-- Input — dynamic based on sub-mode -->
-          <div class="glass-panel p-4 space-y-3" id="section-remix">
-            <div class="text-xs text-gray-400 font-medium mb-2">💡 Ваша идея</div>
-            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Например: цены на бензин выросли, сосед громко слушает музыку, дед не понимает смартфоны..."></textarea>
-            <div class="text-[10px] text-gray-600">✨ Чем конкретнее, тем смешнее будет результат</div>
+          <!-- Input — dynamic based on generation mode -->
+          <div id="section-remix" class="space-y-3">
+
+            <!-- MODE: idea -->
+            <div id="remix-idea" class="glass-panel p-4 space-y-3 hidden">
+              <div class="text-xs text-gray-400 font-medium mb-2">💡 Ваша идея</div>
+              <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Например: цены на бензин выросли, сосед громко слушает музыку, дед не понимает смартфоны..."></textarea>
+              <div class="text-[10px] text-gray-600">✨ Чем конкретнее, тем смешнее будет результат</div>
+            </div>
+
+            <!-- MODE: suggested -->
+            <div id="remix-suggested" class="glass-panel p-4 space-y-3 hidden">
+              <div class="text-xs text-gray-400 font-medium mb-2">📚 Готовые идеи — AI подберёт тему</div>
+              <div id="trending-ideas-main" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[180px] overflow-y-auto">
+                <div class="text-xs text-gray-500 text-center py-3">🔍 Загружаем популярные темы...</div>
+              </div>
+              <div class="border-t border-gray-800/50 pt-3 mt-1">
+                <div class="text-[10px] text-gray-500 mb-1.5">Или напишите свою тему (необязательно):</div>
+                <textarea id="idea-input-suggested" class="input-field h-12 resize-none text-sm" placeholder="Уточнить тему или оставить пустым — AI сам подберёт"></textarea>
+              </div>
+              <div class="text-[10px] text-gray-600">🔥 Выберите тему из трендов или оставьте пустым — AI найдёт актуальную тему сам</div>
+            </div>
+
+            <!-- MODE: script -->
+            <div id="remix-script" class="glass-panel p-4 space-y-3 hidden">
+              <div class="text-xs text-gray-400 font-medium mb-2">📝 Свой диалог</div>
+              <div>
+                <label class="text-xs text-cyan-400 font-medium mb-1 block">🅰️ Реплика A (провокация):</label>
+                <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
+              </div>
+              <div>
+                <label class="text-xs text-purple-400 font-medium mb-1 block">🅱️ Реплика B (ответ/панчлайн):</label>
+                <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
+              </div>
+              <div class="text-[10px] text-gray-600">✨ AI сохранит ваш текст, но добавит профессиональные детали и тайминги</div>
+            </div>
+
+            <!-- MODE: video -->
+            <div id="remix-video" class="glass-panel p-4 space-y-3 hidden">
+              <div class="text-xs text-gray-400 font-medium mb-2">🎥 Видео-референс</div>
+              <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone-main">
+                <div class="text-lg mb-1">📁</div>
+                <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
+                <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
+                <input type="file" id="video-file-main" accept="video/mp4,video/quicktime" class="hidden">
+              </div>
+              <div id="video-meta-main" class="hidden text-xs text-gray-500"></div>
+              <div id="video-remake-badge-main" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
+                🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 font-medium mb-1 block">🎬 Контекст видео (необязательно):</label>
+                <textarea id="scene-hint-main" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст"></textarea>
+              </div>
+            </div>
 
             <!-- Simple note about advanced parameters -->
             <div class="text-[10px] text-gray-500 mt-2">
-              💡 Расширенные параметры (режимы ввода, видео, товар) доступны во вкладке <span class="text-cyan-400">"🔧 Расширенные параметры"</span>
+              💡 Расширенные параметры (фото товара, опции) доступны во вкладке <span class="text-cyan-400">"🔧 Расширенные параметры"</span>
             </div>
           </div>
 
@@ -787,17 +837,10 @@
             </div>
           </div>
 
-          <!-- mode-script -->
+          <!-- mode-script (advanced — syncs with main page) -->
           <div id="mode-script" class="hidden glass-panel p-4 space-y-3">
             <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">📝 Свой диалог</div>
-            <div>
-              <label class="text-xs text-cyan-400 font-medium mb-1 block">Реплика A (провокация):</label>
-              <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
-            </div>
-            <div>
-              <label class="text-xs text-purple-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
-              <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
-            </div>
+            <div class="text-xs text-gray-400">Реплики редактируются на странице <span class="text-cyan-400">«⚡ Генерация»</span> — прокрутите до секции ввода.</div>
           </div>
 
           <!-- mode-video -->
