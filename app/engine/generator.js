@@ -1774,6 +1774,16 @@ export function mergeGeminiResult(localResult, geminiData) {
     if (r.blueprint_json.dialogue_segments[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
   }
 
+  // ── 5b. Blueprint: add добивка if present ──
+  const dA2 = g.dialogue_A2_ru || null;
+  if (dA2 && r.blueprint_json.dialogue_segments) {
+    // Add A2 segment if not already present
+    const hasA2 = r.blueprint_json.dialogue_segments.some(s => s.speaker === 'A2');
+    if (!hasA2) {
+      r.blueprint_json.dialogue_segments.push({ speaker: 'A2', text_ru: dA2, role: 'добивка' });
+    }
+  }
+
   // ── 6. Rebuild RU package with Gemini's creative content ──
   const dA = g.dialogue_A_ru || ctx.dialogueA || '—';
   const dB = g.dialogue_B_ru || ctx.dialogueB || '—';
@@ -1827,7 +1837,11 @@ export function mergeGeminiResult(localResult, geminiData) {
   🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
   💥 KILLER WORD «${kw}» → ближе к 7.1s
   👄 Рот A: замерла в позе, рот закрыт, лицо в шоке
-
+${dA2 ? `
+[~7.10–7.30] 🅰️ ДОБИВКА ${charA.name_ru}:
+  «${dA2}»
+  💬 1-4 слова, короткая финальная фраза
+` : ''}
 [7.30–8.00] 😂 RELEASE: ${ctx.releaseAction.action_ru}
   🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
   🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}

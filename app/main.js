@@ -992,16 +992,18 @@ function populateContextBlock(result) {
   const segs = result.blueprint_json?.dialogue_segments || [];
   const lineA = segs.find(s => s.speaker === 'A');
   const lineB = segs.find(s => s.speaker === 'B');
+  const lineA2 = segs.find(s => s.speaker === 'A2');
   const ctx = result._apiContext || {};
   const dialogueA = lineA?.text_ru || ctx.dialogueA || '—';
   const dialogueB = lineB?.text_ru || ctx.dialogueB || '—';
+  const dialogueA2 = lineA2?.text_ru || '';
   const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || '';
   const cat = result.log?.category || ctx.category || {};
   const est = result.duration_estimate || {};
   const engage = result.log?.engagement || {};
 
   if (dA) dA.textContent = `«${dialogueA}»`;
-  if (dB) dB.textContent = `«${dialogueB}»`;
+  if (dB) dB.textContent = `«${dialogueB}»${dialogueA2 ? ` → A: «${dialogueA2}»` : ''}`;
   if (kw && killerWord) kw.textContent = `💥 Killer word: «${killerWord}»`;
 
   // Meta grid
