@@ -70,8 +70,9 @@
         <div id="nav-items" class="space-y-1 px-2">
           <div class="nav-item active" data-section="characters"><span>👥</span><span>Персонажи</span></div>
           <div class="nav-item" data-section="locations"><span>📍</span><span>Локации</span></div>
-          <div class="nav-item" data-section="ideas"><span>💡</span><span>Поиск идей</span></div>
           <div class="nav-item" data-section="generate"><span>⚡</span><span>Генерация</span></div>
+          <div class="nav-item" data-section="advanced"><span>�</span><span>Расширенные параметры</span></div>
+          <div class="nav-item" data-section="ideas"><span>💡</span><span>Поиск идей</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
         </div>
         <!-- Selected characters mini-display -->
@@ -255,99 +256,10 @@
             <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею — или оставь пустым, AI придумает сам..."></textarea>
             <div class="text-[10px] text-gray-600">Категория юмора, диалог и тайминг подберутся автоматически</div>
 
-            <!-- Expandable: script / video / product -->
-            <details class="group" open>
-              <summary class="text-sm text-cyan-400 font-semibold cursor-pointer hover:text-cyan-300 transition-colors select-none flex items-center gap-2 py-1">
-                <span class="flex items-center justify-center w-5 h-5 rounded bg-cyan-500/15 text-[10px]">⚡</span>
-                Расширенные параметры
-                <span class="text-[10px] text-cyan-400/50 font-normal ml-1">▾</span>
-              </summary>
-              <div class="mt-3 space-y-4 border-t border-cyan-500/10 pt-3">
-
-                <!-- Mode tabs -->
-                <div>
-                  <div class="text-[10px] text-gray-500 mb-2">Режим ввода</div>
-                  <div class="flex gap-2">
-                    <button class="mode-btn active" data-mode="idea">💡 Идея</button>
-                    <button class="mode-btn" data-mode="script">📝 Свой диалог</button>
-                    <button class="mode-btn" data-mode="video">🎥 По видео</button>
-                  </div>
-                </div>
-
-                <!-- mode-idea: nothing extra needed, main textarea above is enough -->
-                <div id="mode-idea" class="hidden"></div>
-
-                <!-- mode-script -->
-                <div id="mode-script" class="hidden space-y-3">
-                  <div>
-                    <label class="text-xs text-cyan-400 font-medium mb-1 block">Реплика A (провокация):</label>
-                    <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
-                  </div>
-                  <div>
-                    <label class="text-xs text-purple-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
-                    <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
-                  </div>
-                </div>
-
-                <!-- mode-video -->
-                <div id="mode-video" class="hidden space-y-3">
-
-                  <!-- Upload video -->
-                  <div class="glass-panel p-4 space-y-3">
-                    <div class="text-xs text-gray-300 font-medium">Загрузи видео-референс</div>
-                    <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone">
-                      <div class="text-lg mb-1">📁</div>
-                      <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
-                      <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
-                      <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
-                    </div>
-                    <div id="video-meta" class="hidden text-xs text-gray-500"></div>
-                    <div id="video-remake-badge" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
-                      🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами: тот же стиль, энергия и похожий диалог на русском
-                    </div>
-                  </div>
-
-                  <!-- Step 3: Optional context -->
-                  <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст (необязательно)"></textarea>
-                </div>
-
-                <!-- Product photo -->
-                <div class="space-y-3" id="section-product">
-                  <div class="text-[10px] text-gray-500 mb-1">Фото товара (необязательно)</div>
-                  <div class="flex gap-3 items-start">
-                    <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-3 text-center cursor-pointer hover:border-cyan-400/30 transition-colors flex-1 min-h-[80px] flex flex-col items-center justify-center">
-                      <div id="product-preview-zone">
-                        <div class="text-xl mb-1">📦</div>
-                        <div class="text-[10px] text-gray-500">Перетащи фото или нажми</div>
-                      </div>
-                      <input type="file" id="product-file" accept="image/jpeg,image/png,image/webp" class="hidden">
-                    </div>
-                    <div id="product-preview" class="hidden">
-                      <img id="product-preview-img" class="w-24 h-24 rounded-lg object-cover border border-gray-700" alt="товар">
-                    </div>
-                  </div>
-                  <div id="product-status" class="hidden text-xs"></div>
-                  <div id="product-result" class="hidden space-y-2">
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs text-emerald-400 font-medium">✓ Товар описан</span>
-                      <button id="product-clear" class="text-[10px] text-gray-500 hover:text-red-400 transition-colors">✕ Убрать</button>
-                    </div>
-                    <div id="product-description" class="text-[10px] text-gray-300 leading-relaxed bg-black/30 rounded-lg p-2 max-h-[100px] overflow-y-auto"></div>
-                    <div id="product-tokens" class="text-[10px] text-gray-600"></div>
-                  </div>
-                </div>
-
-                <!-- Options -->
-                <div class="space-y-2">
-                  <div class="text-[10px] text-gray-500 mb-1">Опции генерации</div>
-                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Строго 8 секунд</span><div class="toggle-track active" data-opt="enforce8s"><div class="toggle-thumb"></div></div></div>
-                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Сохранить ритм</span><div class="toggle-track active" data-opt="preserveRhythm"><div class="toggle-thumb"></div></div></div>
-                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Точный липсинк</span><div class="toggle-track active" data-opt="strictLipSync"><div class="toggle-thumb"></div></div></div>
-                  <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Автообрезка</span><div class="toggle-track" data-opt="allowAutoTrim"><div class="toggle-thumb"></div></div></div>
-                </div>
-
-              </div>
-            </details>
+            <!-- Simple note about advanced parameters -->
+            <div class="text-[10px] text-gray-500 mt-2">
+              💡 Расширенные параметры (режимы ввода, видео, товар) доступны во вкладке <span class="text-cyan-400">"� Расширенные параметры"</span>
+            </div>
           </div>
 
           <!-- Step 3: Generate -->
@@ -586,6 +498,102 @@
             <a href="https://t.me/ferixdiii" target="_blank" class="btn-neon text-xs whitespace-nowrap flex items-center gap-1.5">
               <span>📍</span> Предложить локацию
             </a>
+          </div>
+        </section>
+
+        <!-- SECTION: Advanced Parameters -->
+        <section id="section-advanced" class="section-panel hidden space-y-5">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">🔧</div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">Расширенные параметры</h2>
+              <p class="text-xs text-gray-400">Режимы ввода, загрузка видео, фото товара и опции генерации</p>
+            </div>
+          </div>
+
+          <!-- Mode tabs -->
+          <div class="glass-panel p-4 space-y-4">
+            <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">🎯 Режим ввода</div>
+            <div class="flex gap-2">
+              <button class="mode-btn active" data-mode="idea">💡 Идея</button>
+              <button class="mode-btn" data-mode="script">📝 Свой диалог</button>
+              <button class="mode-btn" data-mode="video">🎥 По видео</button>
+            </div>
+          </div>
+
+          <!-- mode-idea: nothing extra needed -->
+          <div id="mode-idea" class="hidden"></div>
+
+          <!-- mode-script -->
+          <div id="mode-script" class="hidden glass-panel p-4 space-y-3">
+            <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">📝 Свой диалог</div>
+            <div>
+              <label class="text-xs text-cyan-400 font-medium mb-1 block">Реплика A (провокация):</label>
+              <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
+            </div>
+            <div>
+              <label class="text-xs text-purple-400 font-medium mb-1 block">Реплика B (ответ/панчлайн):</label>
+              <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
+            </div>
+          </div>
+
+          <!-- mode-video -->
+          <div id="mode-video" class="hidden space-y-4">
+            <!-- Upload video -->
+            <div class="glass-panel p-4 space-y-3">
+              <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">🎥 Видео-референс</div>
+              <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone">
+                <div class="text-lg mb-1">📁</div>
+                <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
+                <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
+                <input type="file" id="video-file" accept="video/mp4,video/quicktime" class="hidden">
+              </div>
+              <div id="video-meta" class="hidden text-xs text-gray-500"></div>
+              <div id="video-remake-badge" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
+                🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами: тот же стиль, энергия и похожий диалог на русском
+              </div>
+            </div>
+
+            <!-- Scene hint -->
+            <div class="glass-panel p-4 space-y-3">
+              <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">🎬 Контекст видео</div>
+              <textarea id="scene-hint" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст (необязательно)"></textarea>
+            </div>
+          </div>
+
+          <!-- Product photo -->
+          <div class="glass-panel p-4 space-y-3" id="section-product">
+            <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">📦 Фото товара</div>
+            <div class="flex gap-3 items-start">
+              <div id="product-dropzone" class="glass-panel border-dashed border-2 border-gray-700 rounded-lg p-3 text-center cursor-pointer hover:border-cyan-400/30 transition-colors flex-1 min-h-[80px] flex flex-col items-center justify-center">
+                <div id="product-preview-zone">
+                  <div class="text-xl mb-1">📦</div>
+                  <div class="text-[10px] text-gray-500">Перетащи фото или нажми</div>
+                </div>
+                <input type="file" id="product-file" accept="image/jpeg,image/png,image/webp" class="hidden">
+              </div>
+              <div id="product-preview" class="hidden">
+                <img id="product-preview-img" class="w-24 h-24 rounded-lg object-cover border border-gray-700" alt="товар">
+              </div>
+            </div>
+            <div id="product-status" class="hidden text-xs"></div>
+            <div id="product-result" class="hidden space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-emerald-400 font-medium">✓ Товар описан</span>
+                <button id="product-clear" class="text-[10px] text-gray-500 hover:text-red-400 transition-colors">✕ Убрать</button>
+              </div>
+              <div id="product-description" class="text-[10px] text-gray-300 leading-relaxed bg-black/30 rounded-lg p-2 max-h-[100px] overflow-y-auto"></div>
+              <div id="product-tokens" class="text-[10px] text-gray-600"></div>
+            </div>
+          </div>
+
+          <!-- Options -->
+          <div class="glass-panel p-4 space-y-2">
+            <div class="text-sm text-violet-400 font-semibold flex items-center gap-2">⚙️ Опции генерации</div>
+            <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Строго 8 секунд</span><div class="toggle-track active" data-opt="enforce8s"><div class="toggle-thumb"></div></div></div>
+            <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Сохранить ритм</span><div class="toggle-track active" data-opt="preserveRhythm"><div class="toggle-thumb"></div></div></div>
+            <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Точный липсинк</span><div class="toggle-track active" data-opt="strictLipSync"><div class="toggle-thumb"></div></div></div>
+            <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Автообрезка</span><div class="toggle-track" data-opt="allowAutoTrim"><div class="toggle-thumb"></div></div></div>
           </div>
         </section>
 

@@ -525,9 +525,9 @@ function initNavigation() {
 
 // ─── INPUT MODES ─────────────────────────────
 function initModeSwitcher() {
-  document.querySelectorAll('#section-remix .mode-btn').forEach(btn => {
+  document.querySelectorAll('#section-advanced .mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#section-remix .mode-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#section-advanced .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const mode = btn.dataset.mode;
       state.inputMode = mode;
@@ -546,8 +546,8 @@ function initModeSwitcher() {
       if (text.includes('tiktok.com/') || text.includes('instagram.com/')) {
         log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключи в режим «🎥 По видео» и загрузи файл');
         // Switch to video mode UI
-        document.querySelectorAll('#section-remix .mode-btn').forEach(b => b.classList.remove('active'));
-        const videoBtn = document.querySelector('#section-remix .mode-btn[data-mode="video"]');
+        document.querySelectorAll('#section-advanced .mode-btn').forEach(b => b.classList.remove('active'));
+        const videoBtn = document.querySelector('#section-advanced .mode-btn[data-mode="video"]');
         if (videoBtn) videoBtn.classList.add('active');
         state.inputMode = 'video';
         document.getElementById('mode-idea')?.classList.add('hidden');
