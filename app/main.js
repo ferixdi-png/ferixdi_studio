@@ -275,8 +275,18 @@ function updateLocationInfo() {
   if (!loc) { info.classList.add('hidden'); return; }
   info.classList.remove('hidden');
   const tags = (loc.tags || []).map(t => `<span class="tag text-[10px]">${t}</span>`).join(' ');
-  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium">📍 ${loc.name_ru}</span>${tags}</div><div class="text-[10px] text-gray-500 mt-1">${loc.tagline_ru}</div>`;
+  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium">📍 ${loc.name_ru}</span>${tags}<button onclick="deselectLocation()" class="text-[10px] text-red-400/60 hover:text-red-400 transition-colors ml-1" title="Сбросить локацию">✕ сбросить</button></div><div class="text-[10px] text-gray-500 mt-1">${loc.tagline_ru}</div>`;
 }
+
+function deselectLocation() {
+  state.selectedLocation = null;
+  sfx.clickSoft();
+  renderLocations(document.getElementById('loc-group-filter')?.value || '');
+  renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
+  log('INFO', 'ЛОКАЦИЯ', 'Сброшена → Авто-выбор');
+  updateProgress();
+}
+window.deselectLocation = deselectLocation;
 
 function initLocationPicker() {
   document.getElementById('loc-grid')?.addEventListener('click', (e) => {
@@ -531,6 +541,27 @@ function renderCharacters(filter = {}) {
 function selectChar(role, id) {
   const char = state.characters.find(c => c.id === id);
   if (!char) return;
+
+  // Toggle: if same character already in this role → deselect
+  if (role === 'A' && state.selectedA?.id === id) {
+    state.selectedA = null;
+    sfx.clickSoft();
+    updateCharDisplay();
+    renderCharacters(getCurrentFilters());
+    log('INFO', 'ПЕРСОНАЖИ', `A: сброшен`);
+    updateReadiness();
+    return;
+  }
+  if (role === 'B' && state.selectedB?.id === id) {
+    state.selectedB = null;
+    sfx.clickSoft();
+    updateCharDisplay();
+    renderCharacters(getCurrentFilters());
+    log('INFO', 'ПЕРСОНАЖИ', `B: сброшен`);
+    updateReadiness();
+    return;
+  }
+
   sfx.select();
   if (role === 'A') { state.selectedA = char; } else { state.selectedB = char; }
   updateCharDisplay();
@@ -538,6 +569,17 @@ function selectChar(role, id) {
   log('INFO', 'ПЕРСОНАЖИ', `${role}: ${char.name_ru} (${char.compatibility})`);
   updateReadiness();
 }
+
+function deselectChar(role) {
+  if (role === 'A') state.selectedA = null;
+  else state.selectedB = null;
+  sfx.clickSoft();
+  updateCharDisplay();
+  renderCharacters(getCurrentFilters());
+  log('INFO', 'ПЕРСОНАЖИ', `${role}: сброшен`);
+  updateReadiness();
+}
+window.deselectChar = deselectChar;
 
 // ─── AUTO-SELECT CHARACTERS FOR CATEGORY ───────────────
 // Умный автоподбор персонажей под категорию/тренд
@@ -614,24 +656,42 @@ function autoSelectCharactersForCategory(categoryRu, topicRu = '') {
 }
 
 function updateCharDisplay() {
-  document.getElementById('char-a-name').textContent = state.selectedA ? `${state.selectedA.name_ru} • ${state.selectedA.group}` : 'Нажми на персонажа ↓';
-  document.getElementById('char-b-name').textContent = state.selectedB ? `${state.selectedB.name_ru} • ${state.selectedB.group}` : 'Нажми на второго ↓';
+  // A slot
+  const charAName = document.getElementById('char-a-name');
+  if (charAName) {
+    if (state.selectedA) {
+      charAName.innerHTML = `<span class="text-white">${escapeHtml(state.selectedA.name_ru)} • ${escapeHtml(state.selectedA.group)}</span> <button onclick="deselectChar('A')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить A">✕</button>`;
+    } else {
+      charAName.innerHTML = '<span class="text-gray-400">Нажми на персонажа ↓</span>';
+    }
+  }
+  // B slot
+  const charBName = document.getElementById('char-b-name');
+  if (charBName) {
+    if (state.selectedB) {
+      charBName.innerHTML = `<span class="text-white">${escapeHtml(state.selectedB.name_ru)} • ${escapeHtml(state.selectedB.group)}</span> <button onclick="deselectChar('B')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить B">✕</button>`;
+    } else {
+      charBName.innerHTML = '<span class="text-gray-400">Нажми на второго ↓</span>';
+    }
+  }
+
   document.getElementById('sidebar-char-a').innerHTML = `<span class="w-1 h-1 rounded-full bg-cyan-400/50 inline-block"></span>A: ${state.selectedA?.name_ru || '—'}`;
   document.getElementById('sidebar-char-b').innerHTML = `<span class="w-1 h-1 rounded-full bg-purple-400/50 inline-block"></span>B: ${state.selectedB?.name_ru || '—'}`;
   document.getElementById('gen-char-a').textContent = state.selectedA?.name_ru || '—';
   document.getElementById('gen-char-b').textContent = state.selectedB?.name_ru || '—';
 
   // Compatibility badge
+  const badge = document.getElementById('char-compat-badge');
   if (state.selectedA && state.selectedB) {
-    const badge = document.getElementById('char-compat-badge');
     const combos = [state.selectedA.compatibility, state.selectedB.compatibility];
     let label = 'сбалансированная пара';
     if (combos.includes('chaotic') && combos.includes('calm')) label = '🔥 взрывная пара!';
     else if (combos.every(c => c === 'meme')) label = '😂 мем-пара';
     else if (combos.every(c => c === 'conflict')) label = '⚡ конфликт!';
     else if (combos.includes('chaotic')) label = '🌪 хаос!';
-    badge.classList.remove('hidden');
-    badge.querySelector('.tag').textContent = label;
+    if (badge) { badge.classList.remove('hidden'); badge.querySelector('.tag').textContent = label; }
+  } else {
+    if (badge) badge.classList.add('hidden');
   }
 
   // Show/hide "Далее" button
