@@ -1152,7 +1152,7 @@ export function generate(input) {
 
   // ── Lighting (location-coherent selection) ──
   // Indoor locations get indoor-compatible lighting; outdoor get outdoor-compatible
-  const isOutdoor = /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda/i.test(location);
+  const isOutdoor = /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(location);
   const indoorMoods = LIGHTING_MOODS.filter(m => !['organic chaos', 'golden confrontation', 'exposed clarity'].includes(m.mood));
   const outdoorMoods = LIGHTING_MOODS.filter(m => ['organic chaos', 'golden confrontation', 'exposed clarity', 'calm before storm'].includes(m.mood));
   const lightingPool = isOutdoor ? (outdoorMoods.length ? outdoorMoods : LIGHTING_MOODS) : (indoorMoods.length ? indoorMoods : LIGHTING_MOODS);
@@ -1166,19 +1166,27 @@ export function generate(input) {
   const hookObj = pickRandom(HOOK_ACTIONS, rng);
   const releaseObj = pickRandom(RELEASE_ACTIONS, rng);
 
-  // ── Serial prop anchor (category-aware + avoid repeats) ──
+  // ── Serial prop anchor (category-aware + location-compatible + avoid repeats) ──
+  // Indoor-only props that make no sense outdoors
+  const INDOOR_ONLY_PROPS = /wall.?mounted|samovar|stool|radio|calendar|sugar bowl|kettle|poker|ashtray/i;
+  const filterProps = (arr) => isOutdoor ? arr.filter(p => !INDOOR_ONLY_PROPS.test(p)) : arr;
+
   const propHints = PROP_HINTS[cat.ru] || [];
   let propAnchor;
   if (propHints.length > 0) {
-    const preferred = propHints.filter(p => !historyCache.hasProp(p));
+    const compatible = filterProps(propHints);
+    const pool = compatible.length > 0 ? compatible : propHints;
+    const preferred = pool.filter(p => !historyCache.hasProp(p));
     propAnchor = preferred.length > 0
       ? preferred[Math.floor(rng() * preferred.length)]
-      : propHints[Math.floor(rng() * propHints.length)];
+      : pool[Math.floor(rng() * pool.length)];
   } else {
-    let propIdx = Math.floor(rng() * PROP_ANCHORS.length);
-    propAnchor = PROP_ANCHORS[propIdx];
+    const compatible = filterProps([...PROP_ANCHORS]);
+    const pool = compatible.length > 0 ? compatible : PROP_ANCHORS;
+    let propIdx = Math.floor(rng() * pool.length);
+    propAnchor = pool[propIdx];
     if (historyCache.hasProp(propAnchor)) {
-      propAnchor = PROP_ANCHORS[(propIdx + 1) % PROP_ANCHORS.length];
+      propAnchor = pool[(propIdx + 1) % pool.length];
     }
   }
 
@@ -1650,7 +1658,14 @@ export function mergeGeminiResult(localResult, geminiData) {
   // ── 2. Video prompt: replace dialogue (Gemini generates fresh lines) ──
   if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
   if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
-  if (g.killer_word) r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
+  if (g.killer_word) {
+    r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
+    // Sync killer_word into vibe.punchline so it matches actual dialogue
+    if (r.video_prompt_en_json.vibe?.punchline) {
+      r.video_prompt_en_json.vibe.punchline = r.video_prompt_en_json.vibe.punchline
+        .replace(/Killer word "[^"]*"/, `Killer word "${g.killer_word}"`);
+    }
+  }
 
   // ── 3. Video prompt: replace emotion arc ──
   if (g.video_emotion_arc) {
