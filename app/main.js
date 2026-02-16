@@ -3089,9 +3089,49 @@ function initMatrixRain() {
   draw();
 }
 
-// ─── TRENDS (Ideas section) ─────────────
+// ─── TRENDS (Ideas section) — Enhanced v2 ─────────────
+let _trendsData = [];       // cached trend items
+let _trendsFilter = 'all';  // active category filter
+let _trendsSearch = '';      // search query
+let _trendsSaved = JSON.parse(localStorage.getItem('ferixdi_saved_trends') || '[]');
+
 function _escForAttr(str) {
   return escapeHtml(String(str || '')).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ').replace(/\r/g, '');
+}
+
+function _viralClass(v) {
+  if (v >= 9) return 'vb-max';
+  if (v >= 7) return 'vb-high';
+  if (v >= 5) return 'vb-mid';
+  return 'vb-low';
+}
+
+function _reachEstimate(v) {
+  if (v >= 9) return { text: '500K–1M+', color: 'bg-red-500/15 text-red-400' };
+  if (v >= 8) return { text: '200K–500K', color: 'bg-orange-500/15 text-orange-400' };
+  if (v >= 7) return { text: '100K–200K', color: 'bg-amber-500/15 text-amber-400' };
+  if (v >= 6) return { text: '50K–100K', color: 'bg-yellow-500/15 text-yellow-400' };
+  return { text: '10K–50K', color: 'bg-gray-500/15 text-gray-500' };
+}
+
+function _highlightKiller(text, killer) {
+  if (!killer || !text) return escapeHtml(text);
+  const escaped = escapeHtml(text);
+  const kw = escapeHtml(killer);
+  // Case-insensitive replace of the killer word in the text
+  const regex = new RegExp(`(${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return escaped.replace(regex, '<span class="killer-glow">$1</span>');
+}
+
+function _isTrendSaved(topic) {
+  return _trendsSaved.includes(topic);
+}
+
+function _toggleTrendSave(topic) {
+  const idx = _trendsSaved.indexOf(topic);
+  if (idx >= 0) _trendsSaved.splice(idx, 1);
+  else _trendsSaved.push(topic);
+  localStorage.setItem('ferixdi_saved_trends', JSON.stringify(_trendsSaved));
 }
 
 async function fetchTrends() {
@@ -3104,45 +3144,35 @@ async function fetchTrends() {
   const btn = document.getElementById('btn-fetch-trends');
   const st = document.getElementById('trends-status');
   const res = document.getElementById('trends-results');
+  const toolbar = document.getElementById('trends-toolbar');
   if (!btn || !st || !res) return;
 
-  // Get selected niche for display
   const nicheSelector = document.getElementById('niche-selector');
   const selectedNiche = nicheSelector ? nicheSelector.value : 'universal';
   const nicheNames = {
-    universal: 'универсальные',
-    business: 'бизнес',
-    health: 'здоровье и фитнес',
-    tech: 'tech и AI',
-    beauty: 'красота',
-    finance: 'финансы',
-    education: 'образование',
-    relationships: 'отношения',
-    travel: 'путешествия',
-    food: 'еда',
-    parenting: 'родительство',
-    realestate: 'недвижимость'
+    universal: 'универсальные', business: 'бизнес', health: 'здоровье и фитнес',
+    tech: 'tech и AI', beauty: 'красота', finance: 'финансы', education: 'образование',
+    relationships: 'отношения', travel: 'путешествия', food: 'еда',
+    parenting: 'родительство', realestate: 'недвижимость'
   };
   const nicheName = nicheNames[selectedNiche] || 'универсальные';
-  
+
   btn.disabled = true;
   btn.innerHTML = '<span class="animate-pulse">⏳</span> AI ищет тренды через Google...';
   st.classList.remove('hidden');
   st.innerHTML = `<span class="text-gray-400 animate-pulse">FERIXDI AI ищет <span class="text-cyan-400">${nicheName}</span> идеи через Google Search...</span>`;
   res.classList.add('hidden');
+  if (toolbar) toolbar.classList.add('hidden');
 
   try {
     const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
     const jwt = localStorage.getItem('ferixdi_jwt');
-    
-    // Get selected niche from UI
-    const nicheSelector = document.getElementById('niche-selector');
-    const selectedNiche = nicheSelector ? nicheSelector.value : 'universal';
-    
+    const niche = nicheSelector ? nicheSelector.value : 'universal';
+
     const resp = await fetch(`${url}/api/trends`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
-      body: JSON.stringify({ niche: selectedNiche }),
+      body: JSON.stringify({ niche }),
     });
     const data = await resp.json();
 
@@ -3153,88 +3183,33 @@ async function fetchTrends() {
       return;
     }
 
+    // Cache data
+    _trendsData = data.trends || [];
+    _trendsFilter = 'all';
+    _trendsSearch = '';
+    const searchInput = document.getElementById('trends-search');
+    if (searchInput) searchInput.value = '';
+
+    // Status badge
     const groundedBadge = data.grounded
       ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">🌐 Google Search</span>'
       : '<span class="text-[9px] bg-gray-500/15 text-gray-500 px-1.5 py-0.5 rounded ml-2">📚 AI-анализ</span>';
-    
-    const nicheBadge = selectedNiche !== 'universal' 
+    const nicheBadge = niche !== 'universal'
       ? `<span class="text-[9px] bg-cyan-500/15 text-cyan-400 px-1.5 py-0.5 rounded ml-2">🎯 ${nicheName}</span>`
       : '';
+    st.innerHTML = `<span class="text-emerald-400">✓ ${_trendsData.length} идей · ${escapeHtml(data.weekday || '')}, ${escapeHtml(data.date)}</span>${groundedBadge}${nicheBadge}`;
 
-    st.innerHTML = `<span class="text-emerald-400">✓ ${data.trends.length} идей · ${escapeHtml(data.weekday || '')}, ${escapeHtml(data.date)}</span>${groundedBadge}${nicheBadge}`;
+    // Show toolbar + results
+    if (toolbar) toolbar.classList.remove('hidden');
     res.classList.remove('hidden');
 
-    const catMeta = {
-      hot:    { icon: '🔥', label: 'Горячее сегодня', color: 'red',    border: 'border-red-500/30',    bg: 'bg-red-500/8',    badge: 'bg-red-500/20 text-red-400' },
-      pain:   { icon: '💢', label: 'Вечная боль',     color: 'amber',  border: 'border-amber-500/30',  bg: 'bg-amber-500/8',  badge: 'bg-amber-500/20 text-amber-400' },
-      format: { icon: '🎬', label: 'Вирусный формат', color: 'violet', border: 'border-violet-500/30', bg: 'bg-violet-500/8', badge: 'bg-violet-500/20 text-violet-400' },
-    };
-
-    // Group by category
-    let lastCat = '';
-    let html = '';
-    data.trends.forEach((t, i) => {
-      const cm = catMeta[t.category] || catMeta.pain;
-      // Category header
-      if (t.category !== lastCat) {
-        lastCat = t.category;
-        html += `<div class="flex items-center gap-2 mt-${i === 0 ? '0' : '4'} mb-2">
-          <span class="text-sm">${cm.icon}</span>
-          <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">${cm.label}</span>
-          <div class="flex-1 h-px bg-gray-800"></div>
-        </div>`;
-      }
-
-      const viralBars = '█'.repeat(Math.min(t.virality, 10));
-      const viralEmpty = '░'.repeat(Math.max(0, 10 - t.virality));
-      const viralColor = t.virality >= 8 ? 'text-red-400' : t.virality >= 6 ? 'text-amber-400' : 'text-gray-500';
-
-      html += `
-      <div class="rounded-lg p-4 space-y-2.5 border ${cm.border} hover:border-opacity-60 transition-colors ${cm.bg}">
-        <div class="flex items-start justify-between gap-3">
-          <div class="flex items-start gap-2 min-w-0">
-            <span class="flex items-center justify-center w-5 h-5 rounded text-[9px] font-bold flex-shrink-0 ${cm.badge}">${i + 1}</span>
-            <div class="min-w-0">
-              <div class="text-sm font-semibold text-white leading-tight">${escapeHtml(t.topic)}</div>
-              ${t.viral_format ? `<span class="text-[9px] text-violet-400/80 mt-0.5 inline-block">📐 ${escapeHtml(t.viral_format)}</span>` : ''}
-            </div>
-          </div>
-          <div class="text-right flex-shrink-0">
-            <div class="text-[9px] font-mono ${viralColor}">${viralBars}${viralEmpty}</div>
-            <div class="text-[9px] text-gray-500">${t.virality}/10</div>
-          </div>
-        </div>
-
-        <!-- Trend context: WHY this is trending now -->
-        ${(t.trend_context || t.why_trending) ? `<div class="text-[11px] text-gray-300 bg-black/20 rounded px-2.5 py-1.5 border-l-2 border-cyan-500/30"><span class="text-cyan-400/80 font-medium">📊 Почему сейчас:</span> ${escapeHtml(t.trend_context || t.why_trending)}</div>` : ''}
-
-        <!-- Comedy angle -->
-        ${t.comedy_angle ? `<div class="text-[11px] text-gray-400"><span class="text-amber-400/70">🎯</span> ${escapeHtml(t.comedy_angle)}</div>` : ''}
-
-        <!-- Theme tag -->
-        ${t.theme_tag ? `<span class="inline-block text-[9px] px-2 py-0.5 rounded-full bg-gray-800/80 text-gray-500 border border-gray-700/50">#${escapeHtml(t.theme_tag)}</span>` : ''}
-
-        <!-- Ready dialogue -->
-        <div class="bg-black/40 rounded-lg p-3 space-y-1.5">
-          <div class="text-[10px] text-gray-500 font-medium mb-1">💬 Готовый диалог:</div>
-          <div class="text-[11px]"><span class="text-cyan-400 font-medium">A:</span> <span class="text-gray-200">«${escapeHtml(t.dialogue_A)}»</span></div>
-          <div class="text-[11px]"><span class="text-violet-400 font-medium">B:</span> <span class="text-gray-200">«${escapeHtml(t.dialogue_B)}»</span></div>
-          ${t.killer_word ? `<div class="text-[10px] text-red-400/70 mt-1">💥 killer: «${escapeHtml(t.killer_word)}»</div>` : ''}
-        </div>
-
-        ${t.share_hook ? `<div class="text-[10px] text-gray-500 italic">📤 ${escapeHtml(t.share_hook)}</div>` : ''}
-
-        <!-- Action buttons -->
-        <div class="flex gap-2 flex-wrap pt-1">
-          <button class="text-[11px] px-4 py-2 rounded-md bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 hover:from-emerald-500/30 hover:to-cyan-500/30 transition-all font-semibold border border-emerald-500/30 quick-generate-trend" data-trend-index="${i}" data-category="${_escForAttr(t.category)}" data-topic="${_escForAttr(t.topic)}" data-dialogue-a="${_escForAttr(t.dialogue_A)}" data-dialogue-b="${_escForAttr(t.dialogue_B)}">🚀 Быстрая генерация <span class="text-[9px] opacity-70">авто-подбор</span></button>
-          <button class="text-[10px] px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-medium" onclick="useTrendAsIdea('${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}');this.textContent='✓ Выбрано!'">💡 Как идею</button>
-          <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="useTrendAsScript('${_escForAttr(t.dialogue_A)}','${_escForAttr(t.dialogue_B)}');this.textContent='✓ Выбрано!'">✏ Вставить диалог</button>
-        </div>
-      </div>`;
-    });
-
-    res.innerHTML = html;
-    log('OK', 'ТРЕНДЫ', `Загружено ${data.trends.length} идей${data.grounded ? ' (Google Search)' : ''}`);
+    // Render stats
+    _renderTrendStats();
+    // Reset filter tabs
+    document.querySelectorAll('.trend-filter-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === 'all'));
+    // Render
+    _renderTrends();
+    log('OK', 'ТРЕНДЫ', `Загружено ${_trendsData.length} идей${data.grounded ? ' (Google Search)' : ''}`);
   } catch (e) {
     st.innerHTML = `<span class="text-red-400">❌ Ошибка сети: ${escapeHtml(e.message)}</span>`;
     log('ERR', 'ТРЕНДЫ', e.message);
@@ -3244,33 +3219,165 @@ async function fetchTrends() {
   btn.innerHTML = '<span>🔄</span> Обновить тренды';
 }
 
+function _renderTrendStats() {
+  const el = document.getElementById('trends-stats');
+  if (!el || !_trendsData.length) return;
+  const cats = { hot: 0, pain: 0, format: 0 };
+  let avgViral = 0;
+  _trendsData.forEach(t => { cats[t.category] = (cats[t.category] || 0) + 1; avgViral += t.virality; });
+  avgViral = (avgViral / _trendsData.length).toFixed(1);
+  const maxViral = Math.max(..._trendsData.map(t => t.virality));
+  el.innerHTML = `
+    <div class="trend-stat"><span>📊</span> <span class="trend-stat-value">${_trendsData.length}</span> идей</div>
+    <div class="trend-stat"><span>⚡</span> Ø <span class="trend-stat-value">${avgViral}</span>/10</div>
+    <div class="trend-stat"><span>🏆</span> Max <span class="trend-stat-value">${maxViral}</span>/10</div>
+    <div class="trend-stat"><span>🔥</span> <span class="trend-stat-value">${cats.hot || 0}</span></div>
+    <div class="trend-stat"><span>💢</span> <span class="trend-stat-value">${cats.pain || 0}</span></div>
+    <div class="trend-stat"><span>🎬</span> <span class="trend-stat-value">${cats.format || 0}</span></div>
+    <div class="trend-stat"><span>⭐</span> <span class="trend-stat-value">${_trendsSaved.length}</span> сохр</div>
+  `;
+}
+
+function _renderTrends() {
+  const res = document.getElementById('trends-results');
+  if (!res) return;
+
+  const catMeta = {
+    hot:    { icon: '🔥', label: 'Горячее сегодня',  border: 'border-red-500/30',    bg: 'bg-red-500/5',    badge: 'bg-red-500/20 text-red-400',    glow: 'hover:border-red-500/50' },
+    pain:   { icon: '💢', label: 'Вечная боль',       border: 'border-amber-500/30',  bg: 'bg-amber-500/5',  badge: 'bg-amber-500/20 text-amber-400',glow: 'hover:border-amber-500/50' },
+    format: { icon: '🎬', label: 'Вирусный формат',   border: 'border-violet-500/30', bg: 'bg-violet-500/5', badge: 'bg-violet-500/20 text-violet-400', glow: 'hover:border-violet-500/50' },
+  };
+
+  // Filter
+  let items = [..._trendsData];
+  if (_trendsFilter !== 'all') items = items.filter(t => t.category === _trendsFilter);
+  if (_trendsSearch) {
+    const q = _trendsSearch.toLowerCase();
+    items = items.filter(t =>
+      (t.topic || '').toLowerCase().includes(q) ||
+      (t.comedy_angle || '').toLowerCase().includes(q) ||
+      (t.dialogue_A || '').toLowerCase().includes(q) ||
+      (t.dialogue_B || '').toLowerCase().includes(q) ||
+      (t.theme_tag || '').toLowerCase().includes(q)
+    );
+  }
+
+  if (!items.length) {
+    res.innerHTML = '<div class="text-center text-xs text-gray-500 py-8">Ничего не найдено по этим фильтрам</div>';
+    return;
+  }
+
+  let lastCat = '';
+  let html = '';
+  let globalIdx = 0;
+
+  items.forEach((t, i) => {
+    const cm = catMeta[t.category] || catMeta.pain;
+    const origIdx = _trendsData.indexOf(t);
+    const delay = i * 60; // staggered animation
+
+    // Category header
+    if (t.category !== lastCat) {
+      lastCat = t.category;
+      const catCount = items.filter(x => x.category === t.category).length;
+      html += `<div class="flex items-center gap-2 ${i === 0 ? 'mt-0' : 'mt-5'} mb-2" style="animation-delay:${delay}ms">
+        <span class="text-base">${cm.icon}</span>
+        <span class="text-xs font-bold text-gray-200 uppercase tracking-wider">${cm.label}</span>
+        <span class="text-[9px] text-gray-600 font-mono">(${catCount})</span>
+        <div class="flex-1 h-px bg-gradient-to-r from-gray-700 to-transparent"></div>
+      </div>`;
+    }
+
+    globalIdx++;
+    const isTop3 = origIdx < 3;
+    const saved = _isTrendSaved(t.topic);
+    const reach = _reachEstimate(t.virality);
+    const vbClass = _viralClass(t.virality);
+
+    // Highlight killer word in dialogue
+    const dialogA = _highlightKiller(t.dialogue_A, t.killer_word);
+    const dialogB = _highlightKiller(t.dialogue_B, t.killer_word);
+
+    html += `
+    <div class="trend-card rounded-xl p-4 space-y-3 border ${cm.border} ${cm.bg} ${cm.glow}" style="animation-delay:${delay}ms" data-idx="${origIdx}" data-cat="${t.category}">
+      <!-- Header: number + title + virality + bookmark -->
+      <div class="flex items-start gap-3">
+        <span class="flex items-center justify-center w-7 h-7 rounded-lg text-[11px] font-bold flex-shrink-0 ${cm.badge} ${isTop3 ? 'trend-badge-top' : ''}">${globalIdx}</span>
+        <div class="flex-1 min-w-0">
+          <div class="text-[13px] font-semibold text-white leading-snug">${escapeHtml(t.topic)}</div>
+          <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+            ${t.viral_format ? `<span class="text-[9px] text-violet-400/80 bg-violet-500/10 px-1.5 py-0.5 rounded">📐 ${escapeHtml(t.viral_format)}</span>` : ''}
+            ${t.theme_tag ? `<span class="text-[9px] px-2 py-0.5 rounded-full bg-gray-800/80 text-gray-500 border border-gray-700/50">#${escapeHtml(t.theme_tag)}</span>` : ''}
+            <span class="reach-badge ${reach.color}">👁 ${reach.text}</span>
+          </div>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="trend-bookmark ${saved ? 'saved' : ''}" data-topic="${_escForAttr(t.topic)}" title="Сохранить идею">⭐</span>
+          <div class="text-[11px] font-bold font-mono ${t.virality >= 9 ? 'text-red-400' : t.virality >= 7 ? 'text-amber-400' : 'text-gray-500'}">${t.virality}/10</div>
+        </div>
+      </div>
+
+      <!-- Virality gradient bar -->
+      <div class="virality-bar">
+        <div class="virality-bar-fill ${vbClass}" style="width:${t.virality * 10}%"></div>
+      </div>
+
+      <!-- Context: WHY trending -->
+      ${(t.trend_context || t.why_trending) ? `
+      <div class="text-[11px] text-gray-300 bg-black/30 rounded-lg px-3 py-2 border-l-2 border-cyan-500/30">
+        <span class="text-cyan-400/80 font-semibold">📊 Почему сейчас:</span> ${escapeHtml(t.trend_context || t.why_trending)}
+      </div>` : ''}
+
+      <!-- Comedy angle -->
+      ${t.comedy_angle ? `<div class="text-[11px] text-gray-400 leading-relaxed"><span class="text-amber-400">🎯</span> ${escapeHtml(t.comedy_angle)}</div>` : ''}
+
+      <!-- Dialogue block with per-line copy -->
+      <div class="trend-dialogue bg-black/40 rounded-xl p-3.5 space-y-2 border border-white/[0.03]">
+        <div class="flex items-center justify-between mb-0.5">
+          <div class="text-[10px] text-gray-500 font-semibold">💬 Готовый диалог:</div>
+          ${t.killer_word ? `<div class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">💥 killer: <span class="font-bold">${escapeHtml(t.killer_word)}</span></div>` : ''}
+        </div>
+        <div class="flex items-start gap-2 group">
+          <div class="flex-1 text-[11px]"><span class="text-cyan-400 font-bold">A:</span> <span class="text-gray-200">«${dialogA}»</span></div>
+          <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_A)}" title="Скопировать реплику A">📋</button>
+        </div>
+        <div class="flex items-start gap-2 group">
+          <div class="flex-1 text-[11px]"><span class="text-violet-400 font-bold">B:</span> <span class="text-gray-200">«${dialogB}»</span></div>
+          <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_B)}" title="Скопировать реплику B">📋</button>
+        </div>
+      </div>
+
+      ${t.share_hook ? `<div class="text-[10px] text-gray-500/80 italic leading-relaxed">📤 ${escapeHtml(t.share_hook)}</div>` : ''}
+
+      <!-- Action buttons -->
+      <div class="flex gap-2 flex-wrap pt-0.5">
+        <button class="text-[11px] px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500/15 to-cyan-500/15 text-emerald-300 hover:from-emerald-500/25 hover:to-cyan-500/25 transition-all font-bold border border-emerald-500/25 quick-generate-trend" data-trend-index="${origIdx}" data-category="${_escForAttr(t.category)}" data-topic="${_escForAttr(t.topic)}" data-dialogue-a="${_escForAttr(t.dialogue_A)}" data-dialogue-b="${_escForAttr(t.dialogue_B)}">🚀 Быстрая генерация <span class="text-[9px] opacity-60">авто-подбор</span></button>
+        <button class="text-[10px] px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-semibold border border-cyan-500/15 trend-use-idea" data-idea="${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}">💡 Как идею</button>
+        <button class="text-[10px] px-3 py-1.5 rounded-lg bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-semibold border border-violet-500/15 trend-use-script" data-a="${_escForAttr(t.dialogue_A)}" data-b="${_escForAttr(t.dialogue_B)}">✏ Вставить диалог</button>
+      </div>
+    </div>`;
+  });
+
+  res.innerHTML = html;
+}
+
 function useTrendAsIdea(topic) {
-  // 1. Set idea text
   const mainInput = document.getElementById('idea-input');
   if (mainInput) mainInput.value = topic;
   const customInput = document.getElementById('idea-input-custom');
   if (customInput) customInput.value = topic;
-
-  // 2. Set generation mode to 'idea'
   selectGenerationMode('idea');
-
-  // 3. Navigate to characters so user picks their pair
   navigateTo('characters');
   showNotification(`💡 Идея выбрана! Теперь выбери персонажей`, 'info');
   log('OK', 'ТРЕНД→ИДЕЯ', topic.slice(0, 60));
 }
 
 function useTrendAsScript(dialogueA, dialogueB) {
-  // 1. Fill script inputs
   const a = document.getElementById('script-a');
   const b = document.getElementById('script-b');
   if (a) a.value = dialogueA;
   if (b) b.value = dialogueB;
-
-  // 2. Set generation mode to 'script'
   selectGenerationMode('script');
-
-  // 3. Navigate to characters so user picks their pair
   navigateTo('characters');
   showNotification(`✏️ Диалог вставлен! Теперь выбери персонажей`, 'info');
   log('OK', 'ТРЕНД→СКРИПТ', `A: ${dialogueA.slice(0, 30)}…`);
@@ -3278,32 +3385,21 @@ function useTrendAsScript(dialogueA, dialogueB) {
 
 // ─── QUICK GENERATE FROM TREND ─────────────────
 async function quickGenerateFromTrend(category, topic, dialogueA, dialogueB) {
-  // 1. Auto-select characters for this category
   const success = autoSelectCharactersForCategory(category, topic);
   if (!success) {
     showNotification('❌ Не удалось автоматически подобрать персонажей. Выбери вручную.', 'error');
     useTrendAsScript(dialogueA, dialogueB);
     return;
   }
-
-  // 2. Set mode and script
   state.generationMode = 'script';
   const a = document.getElementById('script-a');
   const b = document.getElementById('script-b');
   if (a) a.value = dialogueA;
   if (b) b.value = dialogueB;
-
-  // 3. Show what was auto-selected
   showNotification(`✅ Подобрано: ${state.selectedA.name_ru} × ${state.selectedB.name_ru}`, 'success');
   log('OK', 'БЫСТРАЯ ГЕНЕРАЦИЯ', `${state.selectedA.name_ru} × ${state.selectedB.name_ru} для "${topic.slice(0, 40)}"`);
-
-  // 4. Navigate to generate section to show preview and allow tweaks
   navigateTo('generate');
-
-  // 5. Scroll to top
   document.getElementById('workspace')?.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // 6. Show auto-selection notice
   const notice = document.getElementById('auto-selection-notice');
   if (notice) {
     notice.classList.remove('hidden');
@@ -3324,27 +3420,84 @@ async function quickGenerateFromTrend(category, topic, dialogueA, dialogueB) {
 
 function initTrends() {
   document.getElementById('btn-fetch-trends')?.addEventListener('click', fetchTrends);
-  
-  // Event delegation for quick generate buttons
-  document.getElementById('trends-results')?.addEventListener('click', async (e) => {
-    const btn = e.target.closest('.quick-generate-trend');
-    if (!btn) return;
-    
-    const category = btn.dataset.category || 'Бытовой абсурд';
-    const topic = btn.dataset.topic || '';
-    const dialogueA = btn.dataset.dialogueA || '';
-    const dialogueB = btn.dataset.dialogueB || '';
-    
-    btn.disabled = true;
-    btn.innerHTML = '<span class="animate-pulse">⏳</span> Подбор персонажей...';
-    
-    await quickGenerateFromTrend(category, topic, dialogueA, dialogueB);
-    
-    btn.disabled = false;
-    btn.innerHTML = '✓ Готово!';
-    setTimeout(() => {
-      btn.innerHTML = '🚀 Быстрая генерация <span class="text-[9px] opacity-70">авто-подбор</span>';
-    }, 2000);
+
+  const resEl = document.getElementById('trends-results');
+  if (!resEl) return;
+
+  // ─ Event delegation for ALL trend buttons ─
+  resEl.addEventListener('click', async (e) => {
+    // Quick generate
+    const qgBtn = e.target.closest('.quick-generate-trend');
+    if (qgBtn) {
+      const { category, topic, dialogueA, dialogueB } = qgBtn.dataset;
+      qgBtn.disabled = true;
+      qgBtn.innerHTML = '<span class="animate-pulse">⏳</span> Подбор персонажей...';
+      await quickGenerateFromTrend(category || '', topic || '', dialogueA || '', dialogueB || '');
+      qgBtn.disabled = false;
+      qgBtn.innerHTML = '✓ Готово!';
+      setTimeout(() => { qgBtn.innerHTML = '🚀 Быстрая генерация <span class="text-[9px] opacity-60">авто-подбор</span>'; }, 2000);
+      return;
+    }
+
+    // Use as idea
+    const ideaBtn = e.target.closest('.trend-use-idea');
+    if (ideaBtn) {
+      useTrendAsIdea(ideaBtn.dataset.idea || '');
+      ideaBtn.textContent = '✓ Выбрано!';
+      return;
+    }
+
+    // Use as script
+    const scriptBtn = e.target.closest('.trend-use-script');
+    if (scriptBtn) {
+      useTrendAsScript(scriptBtn.dataset.a || '', scriptBtn.dataset.b || '');
+      scriptBtn.textContent = '✓ Выбрано!';
+      return;
+    }
+
+    // Copy individual line
+    const copyBtn = e.target.closest('.trend-copy-line');
+    if (copyBtn) {
+      const line = copyBtn.dataset.line || '';
+      navigator.clipboard.writeText(line).then(() => {
+        sfx.copy();
+        copyBtn.textContent = '✓';
+        setTimeout(() => { copyBtn.textContent = '📋'; }, 1200);
+      });
+      return;
+    }
+
+    // Bookmark
+    const bmk = e.target.closest('.trend-bookmark');
+    if (bmk) {
+      const topic = bmk.dataset.topic || '';
+      _toggleTrendSave(topic);
+      bmk.classList.toggle('saved');
+      sfx.toggle();
+      _renderTrendStats();
+      return;
+    }
+  });
+
+  // ─ Category filter tabs ─
+  document.querySelectorAll('.trend-filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      sfx.clickSoft();
+      _trendsFilter = tab.dataset.cat || 'all';
+      document.querySelectorAll('.trend-filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      _renderTrends();
+    });
+  });
+
+  // ─ Search ─
+  let searchTimer = null;
+  document.getElementById('trends-search')?.addEventListener('input', (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      _trendsSearch = e.target.value.trim();
+      _renderTrends();
+    }, 200);
   });
 }
 

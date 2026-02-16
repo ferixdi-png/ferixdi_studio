@@ -1175,3 +1175,168 @@ mark {
 .glass-panel:hover::after {
   left: 100%;
 }
+
+/* ═══════════════════════════════════════════════
+   TRENDS — Enhanced UI
+   ═══════════════════════════════════════════════ */
+
+/* Staggered card entrance */
+@keyframes trendCardIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.trend-card {
+  animation: trendCardIn 0.4s var(--ease) both;
+}
+
+/* Gradient virality bar */
+.virality-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+  position: relative;
+}
+.virality-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s var(--ease);
+  position: relative;
+}
+.virality-bar-fill::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 60%, rgba(255,255,255,0.25));
+  border-radius: 3px;
+}
+.virality-bar-fill.vb-low  { background: linear-gradient(90deg, #4b5563, #6b7280); }
+.virality-bar-fill.vb-mid  { background: linear-gradient(90deg, #f59e0b, #f97316); }
+.virality-bar-fill.vb-high { background: linear-gradient(90deg, #ef4444, #f97316, #fbbf24); }
+.virality-bar-fill.vb-max  { background: linear-gradient(90deg, #ef4444, #ec4899, #a855f7);
+  box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+/* Killer word glow */
+.killer-glow {
+  color: #fbbf24;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(251,191,36,0.5), 0 0 20px rgba(251,191,36,0.2);
+  padding: 0 2px;
+  border-radius: 2px;
+  background: rgba(251,191,36,0.08);
+}
+
+/* Category filter tabs */
+.trend-filter-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.trend-filter-tab:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-body);
+}
+.trend-filter-tab.active {
+  border-color: var(--accent-mid);
+  background: var(--accent-glow);
+  color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Trend card hover lift */
+.trend-card {
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.trend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* Dialogue copy buttons */
+.trend-copy-line {
+  opacity: 0;
+  transition: opacity 0.15s;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+}
+.trend-copy-line:hover {
+  background: rgba(0,229,255,0.12);
+  color: #67e8f9;
+}
+.trend-card .trend-dialogue:hover .trend-copy-line { opacity: 1; }
+
+/* Bookmark star */
+.trend-bookmark {
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  filter: grayscale(1) opacity(0.3);
+}
+.trend-bookmark:hover { filter: grayscale(0) opacity(0.7); }
+.trend-bookmark.saved { filter: grayscale(0) opacity(1); }
+
+/* Number badge pulse for top 3 */
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(239,68,68,0); }
+}
+.trend-badge-top { animation: badgePulse 2s ease-in-out infinite; }
+
+/* Stats bar */
+.trend-stats-bar {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+}
+.trend-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.trend-stat-value {
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Expand/collapse animation */
+.trend-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s var(--ease), opacity 0.2s;
+  opacity: 0;
+}
+.trend-details.open {
+  max-height: 600px;
+  opacity: 1;
+}
+
+/* Reach estimate */
+.reach-badge {
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Search highlight */
+.trend-highlight {
+  background: rgba(251,191,36,0.2);
+  border-radius: 2px;
+  padding: 0 1px;
+}
