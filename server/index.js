@@ -969,6 +969,106 @@ app.post('/api/video/fetch', authMiddleware, async (req, res) => {
   }
 });
 
+// ─── POST /api/trends — Gemini analyzes current Russia trends ──────
+app.post('/api/trends', authMiddleware, async (req, res) => {
+  const GEMINI_KEY = nextGeminiKey();
+  if (!GEMINI_KEY) {
+    return res.status(503).json({ error: 'AI-движок не настроен.' });
+  }
+  const userId = req.user?.hash || req.ip;
+  if (!checkRateLimit(userId)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+
+  const today = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const prompt = `Сегодня ${today}. Ты — аналитик трендов российского интернета.
+
+ЗАДАЧА: Составь список из 10 самых обсуждаемых и актуальных тем в России ПРЯМО СЕЙЧАС (последние 24-48 часов).
+
+ИСТОЧНИКИ для анализа (используй свои знания о текущих событиях):
+- Google Trends Россия (trends.google.com/trending?geo=RU)
+- Яндекс.Новости, РИА, ТАСС
+- Telegram-каналы, Twitter/X русскоязычный сегмент
+- TikTok и Instagram тренды в РФ
+
+ПРАВИЛА ФИЛЬТРАЦИИ — ИСКЛЮЧИ:
+- Спортивные матчи и результаты (футбол, хоккей, баскетбол и т.д.)
+- Просто фамилии без контекста (если непонятно почему человек в тренде — не включай)
+- Погоду и прогнозы
+- Рутинные новости без вирусного потенциала
+- Политические скандалы без комедийного потенциала
+
+ПРАВИЛА ВКЛЮЧЕНИЯ — бери только то, что:
+- Люди ОБСУЖДАЮТ и спорят (есть две стороны мнений)
+- Можно обыграть в КОМЕДИЙНОМ 8-секундном видео с двумя персонажами
+- Вызывает ЭМОЦИИ: удивление, возмущение, ностальгию, смех
+- Актуально для широкой аудитории 25-55 лет в РФ
+
+Для КАЖДОЙ темы укажи:
+1. topic — короткое название темы (3-6 слов)
+2. why_trending — почему это сейчас обсуждают (1 предложение)
+3. comedy_angle — как обыграть в комедийном видео с двумя персонажами (бабки/деды/мамы/папы спорят на эту тему)
+4. example_idea — конкретная идея для 8-секундного видео: кто A, кто B, о чём спор, какой панчлайн
+5. virality — оценка вирусности от 1 до 10
+
+ФОРМАТ — строго JSON массив:
+[
+  {
+    "topic": "тема",
+    "why_trending": "почему обсуждают",
+    "comedy_angle": "как обыграть",
+    "example_idea": "A (бабка): '...' → B (дед): '...'",
+    "virality": 8
+  }
+]
+
+Отвечай ТОЛЬКО JSON массивом. Без markdown. Без пояснений. Только JSON.`;
+
+  try {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.9,
+          maxOutputTokens: 4096,
+          responseMimeType: 'application/json',
+        },
+      }),
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) {
+      return res.status(resp.status).json({ error: data.error?.message || 'Gemini error' });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      return res.status(422).json({ error: 'AI не вернул контент' });
+    }
+
+    let trends;
+    try {
+      trends = JSON.parse(text);
+    } catch {
+      const m = text.match(/\[[\s\S]*\]/);
+      if (m) trends = JSON.parse(m[0]);
+    }
+
+    if (!Array.isArray(trends)) {
+      return res.status(422).json({ error: 'AI вернул невалидный формат' });
+    }
+
+    res.json({ trends, date: today });
+  } catch (e) {
+    console.error('Trends API error:', e.message);
+    res.status(500).json({ error: 'Ошибка при запросе трендов' });
+  }
+});
+
 // ─── Health ──────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok', mode: 'api' }));
 

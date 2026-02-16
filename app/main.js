@@ -1771,6 +1771,151 @@ function initMatrixRain() {
   draw();
 }
 
+// ─── TRENDS (Ideas section) ─────────────
+async function fetchTrends() {
+  if (!isPromoValid()) {
+    const st = document.getElementById('trends-status');
+    if (st) { st.classList.remove('hidden'); st.innerHTML = '<span class="text-red-400">⚠️ Для доступа к трендам нужен промо-код. Перейди в «Настройки» → введи код.</span>'; }
+    return;
+  }
+
+  const btn = document.getElementById('btn-fetch-trends');
+  const st = document.getElementById('trends-status');
+  const res = document.getElementById('trends-results');
+  if (!btn || !st || !res) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="animate-pulse">⏳</span> AI анализирует тренды...';
+  st.classList.remove('hidden');
+  st.innerHTML = '<span class="text-gray-400 animate-pulse">Gemini изучает что обсуждают в России прямо сейчас...</span>';
+  res.classList.add('hidden');
+
+  try {
+    const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const jwt = localStorage.getItem('ferixdi_jwt');
+    const resp = await fetch(`${url}/api/trends`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
+    });
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      st.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(data.error || 'Ошибка')}</span>`;
+      btn.disabled = false;
+      btn.innerHTML = '<span>🔍</span> Попробовать ещё раз';
+      return;
+    }
+
+    st.innerHTML = `<span class="text-emerald-400">✓ Найдено ${data.trends.length} актуальных тем · ${escapeHtml(data.date)}</span>`;
+    res.classList.remove('hidden');
+    res.innerHTML = data.trends.map((t, i) => {
+      const viralBars = '🔥'.repeat(Math.min(Math.round(t.virality / 2), 5));
+      return `
+      <div class="bg-black/40 rounded-lg p-4 space-y-2 border border-gray-800/50 hover:border-amber-500/30 transition-colors">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold flex-shrink-0">${i + 1}</span>
+            <span class="text-sm font-semibold text-white">${escapeHtml(t.topic)}</span>
+          </div>
+          <span class="text-[10px] text-amber-400 whitespace-nowrap">${viralBars} ${t.virality}/10</span>
+        </div>
+        <div class="text-[11px] text-gray-400">${escapeHtml(t.why_trending)}</div>
+        <div class="text-[11px] text-cyan-300/80"><span class="text-gray-500">🎬 Угол:</span> ${escapeHtml(t.comedy_angle)}</div>
+        <div class="text-[11px] text-violet-300/80 bg-violet-500/8 rounded p-2"><span class="text-gray-500">💡 Идея:</span> ${escapeHtml(t.example_idea)}</div>
+        <button class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors mt-1" onclick="document.getElementById('idea-input').value='${escapeHtml(t.topic).replace(/'/g, "\\'")}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено в идею!'">📋 Использовать как идею для видео →</button>
+      </div>`;
+    }).join('');
+
+    log('OK', 'ТРЕНДЫ', `Загружено ${data.trends.length} актуальных тем`);
+  } catch (e) {
+    st.innerHTML = `<span class="text-red-400">❌ Ошибка сети: ${escapeHtml(e.message)}</span>`;
+    log('ERR', 'ТРЕНДЫ', e.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>🔄</span> Обновить тренды';
+}
+
+function initTrends() {
+  document.getElementById('btn-fetch-trends')?.addEventListener('click', fetchTrends);
+}
+
+// ─── LOCATIONS BROWSE (standalone section) ───
+function renderLocationsBrowse(filterGroup = '') {
+  const grid = document.getElementById('loc-browse-grid');
+  if (!grid) return;
+  let locs = [...state.locations];
+  if (filterGroup) locs = locs.filter(l => l.group === filterGroup);
+
+  grid.innerHTML = `
+    <div class="loc-card ${!state.selectedLocation ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
+      <div class="text-sm">🎲</div>
+      <div class="text-[11px] font-medium text-violet-300">Авто</div>
+      <div class="text-[10px] text-gray-500">AI подберёт</div>
+    </div>
+  ` + locs.map(l => {
+    const sel = state.selectedLocation === l.id;
+    const moodIcon = l.mood === 'nostalgic warmth' ? '🌟' : l.mood === 'sterile tension' ? '🩵' : l.mood === 'organic chaos' ? '🌿' : l.mood === 'dramatic intimacy' ? '🕯️' : '🎨';
+    return `
+    <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
+      <div class="text-sm">${moodIcon}</div>
+      <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
+      <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
+      ${l.tags ? `<div class="flex gap-1 flex-wrap mt-1">${l.tags.slice(0, 3).map(t => `<span class="text-[8px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${t}</span>`).join('')}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  updateLocationBrowseInfo();
+}
+
+function updateLocationBrowseInfo() {
+  const info = document.getElementById('loc-browse-selected-info');
+  if (!info) return;
+  if (!state.selectedLocation) { info.classList.add('hidden'); return; }
+  const loc = state.locations.find(l => l.id === state.selectedLocation);
+  if (!loc) { info.classList.add('hidden'); return; }
+  info.classList.remove('hidden');
+  const tags = (loc.tags || []).map(t => `<span class="tag text-[10px]">${t}</span>`).join(' ');
+  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium text-sm">📍 ${loc.name_ru}</span>${tags}</div><div class="text-xs text-gray-400 mt-1">${loc.tagline_ru}</div>${loc.audio_hints ? `<div class="text-[10px] text-gray-500 mt-1">🔊 ${loc.audio_hints}</div>` : ''}`;
+}
+
+function initLocationsBrowse() {
+  // Populate filter
+  const sel = document.getElementById('loc-browse-group-filter');
+  if (sel) {
+    const groups = [...new Set(state.locations.map(l => l.group))].sort();
+    groups.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g; opt.textContent = g;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', (e) => renderLocationsBrowse(e.target.value));
+  }
+
+  // Grid click
+  document.getElementById('loc-browse-grid')?.addEventListener('click', (e) => {
+    const card = e.target.closest('.loc-card');
+    if (!card) return;
+    const id = card.dataset.locId;
+    state.selectedLocation = id || null;
+    renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
+    renderLocations(document.getElementById('loc-group-filter')?.value || '');
+    log('INFO', 'ЛОКАЦИЯ', state.selectedLocation ? `Выбрана: ${state.locations.find(l => l.id === state.selectedLocation)?.name_ru}` : 'Авто-выбор');
+  });
+
+  // Random
+  document.getElementById('loc-browse-random-btn')?.addEventListener('click', () => {
+    const filtered = document.getElementById('loc-browse-group-filter')?.value;
+    let pool = filtered ? state.locations.filter(l => l.group === filtered) : state.locations;
+    if (pool.length === 0) pool = state.locations;
+    const rand = pool[Math.floor(Math.random() * pool.length)];
+    state.selectedLocation = rand.id;
+    renderLocationsBrowse(filtered || '');
+    renderLocations(document.getElementById('loc-group-filter')?.value || '');
+    log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
+  });
+}
+
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -1790,6 +1935,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeaderSettings();
   initLogPanel();
   initLocationPicker();
-  loadLocations();
+  initTrends();
+  loadLocations().then(() => {
+    renderLocationsBrowse();
+    initLocationsBrowse();
+  });
   initMatrixRain();
 });
