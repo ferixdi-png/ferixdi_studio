@@ -3189,6 +3189,9 @@ function initDialogueEditor() {
       }
       log('OK', 'РЕДАКТОР', `Авто-сокращение: ${result.auto_fixes.length} исправлений`);
     } else {
+      const fixesEl = document.getElementById('editor-fixes');
+      if (fixesEl) { fixesEl.classList.add('hidden'); fixesEl.innerHTML = ''; }
+      showNotification('✅ Диалог уже оптимален — сокращать нечего', 'success');
       log('INFO', 'РЕДАКТОР', 'Нечего сокращать — всё в норме');
     }
   });

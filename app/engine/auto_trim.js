@@ -16,6 +16,7 @@ const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[
 
 // Speaker windows (must match estimator.js)
 const SPEAKER_WINDOW = { A: 3.2, B: 3.5 };
+const WINDOW_TOLERANCE = 1.0; // must match estimator.js
 const WORD_LIMITS = { A: 15, B: 18 };
 
 // ─── STEP 0: Remove excess pause markers ────
@@ -69,20 +70,21 @@ function shortenLongWords(text) {
 
 // ─── STEP 3: Truncate words to fit window ───
 function truncateToFit(text, speaker, pace) {
-  const window = SPEAKER_WINDOW[speaker] || 3.0;
+  const speakerWindow = SPEAKER_WINDOW[speaker] || 3.0;
+  const windowWithTolerance = speakerWindow + WINDOW_TOLERANCE; // 4.2 for A, 4.5 for B
   const maxWords = WORD_LIMITS[speaker] || 8;
   const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0);
   
   if (words.length <= maxWords) return { text, changed: false, fix: null };
   
-  // Keep first word (hook) and last 2 words (punchline), trim middle
+  // Keep first 2 words (hook) and last N words (punchline), trim middle
   const keep = maxWords;
   const trimmed = [...words.slice(0, 2), ...words.slice(-(keep - 2))];
   const result = trimmed.join(' ');
   
-  // Verify it fits
+  // Verify it fits (use window WITH tolerance — not strict window)
   const est = estimateLineDuration(result, pace);
-  if (est.duration <= window) {
+  if (est.duration <= windowWithTolerance) {
     return { text: result, changed: true, fix: `Обрезано с ${words.length} до ${trimmed.length} слов` };
   }
   
