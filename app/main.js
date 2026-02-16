@@ -523,6 +523,153 @@ function initNavigation() {
   });
 }
 
+// ─── CHARACTER CONTEXT RECOMMENDATIONS ─────────────────────
+function getCharacterRecommendations(topicText) {
+  if (!topicText) return [];
+  
+  const topicLower = topicText.toLowerCase();
+  const recommendations = [];
+  
+  // ЖКХ и коммуналка
+  if (topicLower.includes('жкх') || topicLower.includes('коммуналка') || topicLower.includes('отопление') || 
+      topicLower.includes('счёт') || topicLower.includes('счет') || topicLower.includes('тариф')) {
+    recommendations.push(
+      { id: 'babka_zina', reason: 'Бывший бухгалтер — идеально для тем про счета и тарифы' },
+      { id: 'babka_valya', reason: 'Бывшая доярка — жизненный опыт с коммуналкой' },
+      { id: 'ded_boris', reason: 'Добрый гигант — спокойные объяснения по ЖКХ' },
+      { id: 'ded_stepan', reason: 'Кузнец — практичный подход к бытовым проблемам' }
+    );
+  }
+  
+  // Цены и инфляция
+  else if (topicLower.includes('цена') || topicLower.includes('дорого') || topicLower.includes('инфляция') || 
+             topicLower.includes('магазин')) {
+    recommendations.push(
+      { id: 'babka_zina', reason: 'Бухгалтер — эксперт по ценам и расходам' },
+      { id: 'mama_regina', reason: 'CEO домашнего хаоса — контроль бюджета' },
+      { id: 'ded_matvey', reason: 'Щёголь — элегантно рассуждает о деньгах' },
+      { id: 'papa_slava', reason: 'Ретроград — помнит цены из прошлого' }
+    );
+  }
+  
+  // Разрыв поколений
+  else if (topicLower.includes('бабк') || topicLower.includes('дед') || topicLower.includes('внук') || 
+             topicLower.includes('поколен') || topicLower.includes('зумер') || topicLower.includes('бумер')) {
+    recommendations.push(
+      { id: 'babka_zina', reason: 'Классическая бабка — конфликт поколений' },
+      { id: 'ded_fyodor', reason: 'Молчаливый дед — контраст с внуками' },
+      { id: 'doch_yana', reason: 'Неон-панк — типичный зумер' },
+      { id: 'papa_artyom', reason: 'Хипстер с бородой — современный папа' }
+    );
+  }
+  
+  // Здоровье и поликлиника
+  else if (topicLower.includes('больниц') || topicLower.includes('врач') || topicLower.includes('медицин') || 
+             topicLower.includes('здоровье')) {
+    recommendations.push(
+      { id: 'mama_lyuba', reason: 'Травница — народная медицина' },
+      { id: 'mama_alyona', reason: 'Ледяная блондинка — строгий подход к здоровью' },
+      { id: 'papa_oleg', reason: 'Профессор — научный подход к медицине' },
+      { id: 'ded_zakhar', reason: 'Морской волк — байки про здоровье' }
+    );
+  }
+  
+  // Дача и огород
+  else if (topicLower.includes('дач') || topicLower.includes('огород') || topicLower.includes('помидор') || 
+             topicLower.includes('урожай')) {
+    recommendations.push(
+      { id: 'babka_valya', reason: 'Бывшая доярка — эксперт по огороду' },
+      { id: 'ded_stepan', reason: 'Кузнец — практичность в даче' },
+      { id: 'mama_lyuba', reason: 'Травница — знаток растений' },
+      { id: 'papa_kostya', reason: 'Силач — физическая работа на даче' }
+    );
+  }
+  
+  // AI и технологии
+  else if (topicLower.includes('нейросет') || topicLower.includes('ai') || topicLower.includes('технолог') || 
+             topicLower.includes('робот')) {
+    recommendations.push(
+      { id: 'papa_oleg', reason: 'Профессор — эксперт по технологиям' },
+      { id: 'papa_artyom', reason: 'Хипстер — современный техно-блогер' },
+      { id: 'doch_yana', reason: 'Неон-панк — гик-культура' },
+      { id: 'mama_regina', reason: 'CEO — управляет технологиями' }
+    );
+  }
+  
+  return recommendations.slice(0, 4); // Максимум 4 рекомендации
+}
+
+function showCharacterRecommendations() {
+  const topicText = document.getElementById('idea-input')?.value || '';
+  const recommendations = getCharacterRecommendations(topicText);
+  
+  if (recommendations.length === 0) return;
+  
+  const chars = state.characters;
+  const recommendedChars = recommendations.map(rec => {
+    const char = chars.find(c => c.id === rec.id);
+    return char ? { ...char, reason: rec.reason } : null;
+  }).filter(Boolean);
+  
+  if (recommendedChars.length === 0) return;
+  
+  // Создаем панель рекомендаций
+  const panel = document.createElement('div');
+  panel.className = 'glass-panel p-4 space-y-3 border-l-2 border-amber-500/40';
+  panel.innerHTML = `
+    <div class="text-sm font-semibold text-amber-400 flex items-center gap-2">
+      <span>💡</span> Подходящие персонажи под вашу тему
+    </div>
+    <div class="space-y-2">
+      ${recommendedChars.map(char => `
+        <div class="flex items-center justify-between p-2 rounded-lg bg-black/30 hover:bg-black/40 transition-colors cursor-pointer" onclick="selectCharacter('${char.id}')">
+          <div class="flex items-center gap-3">
+            <div class="text-sm text-gray-200">${char.name_ru}</div>
+            <div class="text-[10px] text-gray-500">${char.group}</div>
+          </div>
+          <div class="text-[10px] text-amber-300 max-w-[200px] text-right">${char.reason}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="text-[10px] text-gray-500">Кликните для выбора персонажа</div>
+  `;
+  
+  // Вставляем после поля ввода
+  const ideaInput = document.getElementById('section-remix');
+  if (ideaInput && !ideaInput.querySelector('.character-recommendations')) {
+    panel.className += ' character-recommendations';
+    ideaInput.parentNode.insertBefore(panel, ideaInput.nextSibling);
+  }
+}
+
+function selectCharacter(charId) {
+  const char = state.characters.find(c => c.id === charId);
+  if (!char) return;
+  
+  // Определяем роль A или B в зависимости от того, кто уже выбран
+  if (!state.selectedA) {
+    selectCharacter(char, 'A');
+  } else if (!state.selectedB) {
+    selectCharacter(char, 'B');
+  } else {
+    // Если оба выбраны, заменяем первого
+    selectCharacter(char, 'A');
+  }
+  
+  // Убираем панель рекомендаций
+  const panel = document.querySelector('.character-recommendations');
+  if (panel) panel.remove();
+  
+  // Переходим к генерации если оба персонажа выбраны
+  if (state.selectedA && state.selectedB) {
+    navigateTo('generate');
+  }
+}
+
+// Make functions globally available for HTML onclick handlers
+window.selectCharacter = selectCharacter;
+window.showCharacterRecommendations = showCharacterRecommendations;
+
 // ─── INPUT MODES ─────────────────────────────
 function initModeSwitcher() {
   document.querySelectorAll('#section-advanced .mode-btn').forEach(btn => {
@@ -558,7 +705,23 @@ function initModeSwitcher() {
         if (sceneHint && !sceneHint.value) sceneHint.value = `Ремейк видео: ${text}`;
         e.target.value = '';
       }
-    }, 50);
+    }, 100);
+  });
+
+  // Character recommendations on input change
+  let recommendationTimeout;
+  document.getElementById('idea-input')?.addEventListener('input', (e) => {
+    clearTimeout(recommendationTimeout);
+    recommendationTimeout = setTimeout(() => {
+      // Remove old recommendations
+      const oldPanel = document.querySelector('.character-recommendations');
+      if (oldPanel) oldPanel.remove();
+      
+      // Show new recommendations if text is meaningful
+      if (e.target.value.trim().length > 5) {
+        showCharacterRecommendations();
+      }
+    }, 500); // Debounce 500ms
   });
 }
 
@@ -822,20 +985,20 @@ function renderPreflight(localResult) {
   // Translate risk
   const riskRu = { high: 'высокий', medium: 'средний', low: 'низкий' };
 
-  // Build pillar summaries (short) — all in Russian
+  // Build pillar summaries (short) — user-friendly terms
   const pillars = [
-    { icon: '💡', name: 'Свет', val: `${lm.mood} · ${lm.sources || '1 источник'}`, detail: lm.style?.slice(0, 60) + '...' },
-    { icon: '📷', name: 'Оптика', val: cin.optics?.focal_length || '24-28мм', detail: `${cin.optics?.aperture || 'f/1.9-2.2'} · сенсор телефона` },
-    { icon: '📱', name: 'Камера', val: 'Ручное селфи', detail: 'микро-дрожание 0.8-2пкс' },
-    { icon: '🫁', name: 'Микродвижения', val: `Моргание 3-5с · Дыхание 3-4с`, detail: 'Л/П независимые' },
-    { icon: '👄', name: 'Стабильность лица', val: 'Рот 100% виден', detail: `Поворот ≤25° · Автофокус на лицо` },
-    { icon: '👁', name: 'Взгляд', val: '4 сегмента по таймингу', detail: `Хук: прямо в камеру · Саккады: 0.5-1°` },
-    { icon: '🖼', name: 'Чистота кадра', val: `макс. ${cin.frame_cleanliness?.detail_budget || '7'} элементов`, detail: `60-70% персонажи · 9:16` },
-    { icon: '🧶', name: 'Текстуры', val: 'шерсть > джинса > кожа', detail: 'поры, морщины, текстура кожи' },
-    { icon: '🎨', name: 'Цвет/кожа', val: 'БЕЗ оранжевого, БЕЗ серого', detail: `ББ: зафиксирован · 5 зон кожи` },
-    { icon: '�', name: 'Звук', val: 'Микрофон телефона 35-60см', detail: `Фон помещения -20/-30дБ · звуки рта` },
-    { icon: '🎣', name: 'Хук', val: 'ЭКСТРЕМАЛЬНАЯ эмоция кадр 0', detail: `Энергия: ≥80% пик · взгляд в камеру` },
-    { icon: '🎬', name: 'Монтаж', val: 'Холодный старт с середины', detail: `80→90→60→95→100→70% · Луп: авто` },
+    { icon: '💡', name: 'Освещение', val: `${lm.mood} · ${lm.sources || '1 источник'}`, detail: lm.style?.slice(0, 60) + '...' },
+    { icon: '📷', name: 'Камера', val: 'Селфи-режим', detail: `Объектив: ${cin.optics?.focal_length || '24-28мм'} · Диафрагма: ${cin.optics?.aperture || 'f/1.9-2.2'}` },
+    { icon: '📱', name: 'Съёмка', val: 'Ручная съёмка', detail: 'Естественное микро-дрожание телефона' },
+    { icon: '🫁', name: 'Анимация', val: 'Жесты и дыхание', detail: 'Моргание 3-5с · Дыхание 3-4с · Независимые движения' },
+    { icon: '👄', name: 'Лицо', val: 'Чёткие губы', detail: `Поворот ≤25° · Автофокус на лицо` },
+    { icon: '👁', name: 'Взгляд', val: '4 фазы взгляда', detail: `Хук: прямо в камеру · Естественные движения глаз` },
+    { icon: '🖼', name: 'Композиция', val: `макс. ${cin.frame_cleanliness?.detail_budget || '7'} деталей`, detail: `60-70% персонажи · Формат 9:16` },
+    { icon: '🧶', name: 'Детализация', val: 'Реалистичные текстуры', detail: 'Поры, морщины, текстура кожи, ткани' },
+    { icon: '🎨', name: 'Цвет', val: 'Естественные тона', detail: `Без оранжевого и серого · 5 зон кожи` },
+    { icon: '🔊', name: 'Звук', val: 'Запись с телефона', detail: `Микрофон 35-60см · Фон -20/-30дБ` },
+    { icon: '🎣', name: 'Начало', val: 'Яркий хук', detail: `Энергия: ≥80% · Взгляд в камеру` },
+    { icon: '🎬', name: 'Монтаж', val: 'Динамика', detail: `80→90→60→95→100→70% · Авто-усиление` },
   ];
 
   el.classList.remove('hidden');
@@ -848,8 +1011,8 @@ function renderPreflight(localResult) {
             <span class="text-xs">⚙️</span>
           </div>
           <div>
-            <div class="text-xs font-semibold text-cyan-400 tracking-wide">КОНТРАКТ ПРОИЗВОДСТВА</div>
-            <div class="text-[10px] text-gray-500">Параметры системы перед генерацией</div>
+            <div class="text-xs font-semibold text-cyan-400 tracking-wide">ПАРАМЕТРЫ ГЕНЕРАЦИИ</div>
+            <div class="text-[10px] text-gray-500">FERIXDI AI готовит контент по вашим настройкам</div>
           </div>
         </div>
         <div class="text-[10px] text-gray-600 font-mono">v2.0</div>
@@ -888,7 +1051,7 @@ function renderPreflight(localResult) {
       <!-- 12 Pillars compact -->
       <div>
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[9px] text-gray-500 uppercase tracking-wider">12 пилларов производства · Смартфон-реализм</div>
+          <div class="text-[9px] text-gray-500 uppercase tracking-wider">12 параметров качества · Реалистичность смартфона</div>
           <button id="preflight-toggle-pillars" class="text-[10px] text-cyan-400/60 hover:text-cyan-400 transition-colors cursor-pointer">развернуть ▸</button>
         </div>
         <div class="grid grid-cols-3 md:grid-cols-4 gap-1.5" id="preflight-pillars-compact">
@@ -1262,25 +1425,61 @@ function initGenerate() {
     }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Строю промпт...';
-    showGenStatus('⚙️ Строю Production Contract...', 'text-cyan-400');
+    btn.textContent = '⏳ Анализирую контекст...';
+    showGenStatus('🔍 Анализирую тему и подбираю параметры...', 'text-cyan-400');
 
     // Reset previous results and preflight status
     document.getElementById('gen-results')?.classList.add('hidden');
     const pfEl = document.getElementById('gen-preflight');
     if (pfEl) { pfEl.classList.add('hidden'); pfEl.innerHTML = ''; }
 
+    // Auto-detect category from user topic
+    const topicText = document.getElementById('idea-input')?.value || '';
+    let detectedCategory = null;
+    if (topicText) {
+      const topicLower = topicText.toLowerCase();
+      if (topicLower.includes('жкх') || topicLower.includes('коммуналка') || topicLower.includes('отопление') || 
+          topicLower.includes('счёт') || topicLower.includes('счет') || topicLower.includes('квартира') || 
+          topicLower.includes('соседи') || topicLower.includes('батарея') || topicLower.includes('тариф')) {
+        detectedCategory = { ru: 'ЖКХ и коммуналка', en: 'housing utilities drama' };
+      } else if (topicLower.includes('цена') || topicLower.includes('дорого') || topicLower.includes('инфляция') || 
+                 topicLower.includes('магазин') || topicLower.includes('продукт')) {
+        detectedCategory = { ru: 'Цены и инфляция', en: 'prices and inflation' };
+      } else if (topicLower.includes('бабк') || topicLower.includes('дед') || topicLower.includes('внук') || 
+                 topicLower.includes('поколен') || topicLower.includes('зумер') || topicLower.includes('бумер')) {
+        detectedCategory = { ru: 'Разрыв поколений', en: 'generation gap' };
+      } else if (topicLower.includes('больниц') || topicLower.includes('врач') || topicLower.includes('медицин') || 
+                 topicLower.includes('здоровье') || topicLower.includes('лекарств')) {
+        detectedCategory = { ru: 'Здоровье и поликлиника', en: 'health and polyclinic' };
+      } else if (topicLower.includes('дач') || topicLower.includes('огород') || topicLower.includes('помидор') || 
+                 topicLower.includes('урожай') || topicLower.includes('сад')) {
+        detectedCategory = { ru: 'Дача и огород', en: 'dacha and garden' };
+      } else if (topicLower.includes('машин') || topicLower.includes('пробк') || topicLower.includes('транспорт') || 
+                 topicLower.includes('метро') || topicLower.includes('самокат')) {
+        detectedCategory = { ru: 'Транспорт и пробки', en: 'transport and traffic' };
+      } else if (topicLower.includes('нейросет') || topicLower.includes('ai') || topicLower.includes('технолог') || 
+                 topicLower.includes('робот')) {
+        detectedCategory = { ru: 'AI и технологии', en: 'AI and technology' };
+      } else if (topicLower.includes('тренд') || topicLower.includes('блогер') || topicLower.includes('тикток') || 
+                 topicLower.includes('инстаграм')) {
+        detectedCategory = { ru: 'Соцсети и тренды', en: 'social media and trends' };
+      } else if (topicLower.includes('муж') || topicLower.includes('жен') || topicLower.includes('отношен') || 
+                 topicLower.includes('любовь')) {
+        detectedCategory = { ru: 'Отношения', en: 'relationships' };
+      }
+    }
+
     const input = {
       input_mode: state.inputMode,
       character1_id: state.selectedA.id,
       character2_id: state.selectedB.id,
-      context_ru: document.getElementById('idea-input')?.value || '',
+      context_ru: topicText,
       script_ru: state.inputMode === 'script' ? {
         A: document.getElementById('script-a')?.value || '',
         B: document.getElementById('script-b')?.value || ''
       } : null,
       scene_hint_ru: document.getElementById('scene-hint')?.value || null,
-      category: state.category || getRandomCategory(Date.now().toString()),
+      category: detectedCategory || getRandomCategory(Date.now().toString()),
       thread_memory: getThreadMemory(),
       video_meta: state.videoMeta,
       product_info: state.productInfo,
@@ -1311,8 +1510,8 @@ function initGenerate() {
     }
 
     // Step 1.5: Show pre-flight parameter breakdown
-    btn.textContent = '⏳ Подготовка...';
-    showGenStatus('📊 Параметры готовы, отправляю в AI...', 'text-cyan-400');
+    btn.textContent = '⏳ Подготавливаю промпты...';
+    showGenStatus('📋 Структура готова, создаю промпты для AI...', 'text-cyan-400');
     renderPreflight(localResult);
 
     // Step 2: If API mode — send context to AI engine for creative refinement

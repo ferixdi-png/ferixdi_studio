@@ -203,15 +203,15 @@
           </div>
         </section>
 
-        <!-- SECTION: Generate (Step 2 + 3) -->
+        <!-- SECTION: Generate (Step 2) -->
         <section id="section-generate" class="section-panel hidden space-y-5">
 
           <!-- Step 2: Configure -->
-          <div class="flex items-center gap-3 mb-1">
+          <div class="flex items-center gap-3 mb-4">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">2</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Опиши идею или просто жми «Сгенерировать»</h2>
-              <p class="text-xs text-gray-400">AI сам подберёт категорию, диалог и тайминг. Или опиши тему — и он отталкивается от неё.</p>
+              <h2 class="text-lg font-semibold text-white">Настройте генерацию</h2>
+              <p class="text-xs text-gray-400">Выберите локацию, опишите идею или настройте расширенные параметры</p>
             </div>
           </div>
 
@@ -253,25 +253,26 @@
 
           <!-- Input — simple by default -->
           <div class="glass-panel p-4 space-y-3" id="section-remix">
+            <div class="text-xs text-gray-400 font-medium mb-2">💡 Ваша идея</div>
             <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Опиши идею — или оставь пустым, AI придумает сам..."></textarea>
             <div class="text-[10px] text-gray-600">Категория юмора, диалог и тайминг подберутся автоматически</div>
 
             <!-- Simple note about advanced parameters -->
             <div class="text-[10px] text-gray-500 mt-2">
-              💡 Расширенные параметры (режимы ввода, видео, товар) доступны во вкладке <span class="text-cyan-400">"� Расширенные параметры"</span>
+              💡 Расширенные параметры (режимы ввода, видео, товар) доступны во вкладке <span class="text-cyan-400">"🔧 Расширенные параметры"</span>
             </div>
           </div>
 
           <!-- Step 3: Generate -->
-          <div class="flex items-center gap-3 mt-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">3</div>
+          <div class="flex items-center gap-3 mt-6">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white text-sm font-bold">3</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Получи готовый пакет</h2>
-              <p class="text-xs text-gray-400">Нажми кнопку — получишь промпт для Veo 3.1 (Google Flow), фото, видео, текст поста и хештеги.</p>
+              <h2 class="text-lg font-semibold text-white">Запустите генерацию</h2>
+              <p class="text-xs text-gray-400">Нажмите кнопку — FERIXDI AI создаст уникальный контент для ваших персонажей</p>
             </div>
           </div>
 
-          <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide">Сгенерировать</button>
+          <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide">🚀 Сгенерировать</button>
 
           <!-- Pre-flight: system parameters breakdown (shown during generation) -->
           <div id="gen-preflight" class="hidden space-y-3"></div>
