@@ -564,35 +564,11 @@ function initRandomPair() {
 
 // ─── NAVIGATION ──────────────────────────────
 function navigateTo(section) {
-  // Enhanced workflow validation
-  const workflow = {
-    'ideas': { required: [], next: 'generation-mode' },
-    'generation-mode': { required: [], next: 'characters' },
-    'characters': { required: ['generationMode'], next: 'locations' },
-    'locations': { required: ['generationMode', 'selectedA', 'selectedB'], next: 'generate' },
-    'generate': { required: ['generationMode', 'selectedA', 'selectedB'], next: null },
-    'settings': { required: [], next: null }
-  };
-  
-  const requirements = workflow[section];
-  if (requirements) {
-    for (const req of requirements.required) {
-      if (req === 'generationMode' && !state.generationMode) {
-        showGenStatus('⚠️ Сначала выберите режим генерации на шаге 1', 'text-orange-400');
-        section = 'generation-mode';
-        break;
-      }
-      if (req === 'selectedA' && !state.selectedA) {
-        showGenStatus('⚠️ Сначала выберите персонажа A на шаге 2', 'text-orange-400');
-        section = 'characters';
-        break;
-      }
-      if (req === 'selectedB' && !state.selectedB) {
-        showGenStatus('⚠️ Сначала выберите персонажа B на шаге 2', 'text-orange-400');
-        section = 'characters';
-        break;
-      }
-    }
+  // Special handling for sections
+  if (section === 'characters' && !state.generationMode) {
+    // If user tries to go to characters without selecting mode, redirect
+    showGenStatus('⚠️ Сначала выберите режим генерации на шаге 1', 'text-orange-400');
+    section = 'generation-mode';
   }
   
   // Update navigation UI
