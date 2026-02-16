@@ -2612,8 +2612,8 @@ async function fetchTrends() {
 
         <!-- Action buttons -->
         <div class="flex gap-2 flex-wrap pt-1">
-          <button class="text-[10px] px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-medium" onclick="document.getElementById('idea-input').value='${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено!'">💡 Как идею</button>
-          <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="var a=document.getElementById('script-a'),b=document.getElementById('script-b');if(a)a.value='${_escForAttr(t.dialogue_A)}';if(b)b.value='${_escForAttr(t.dialogue_B)}';document.querySelectorAll('#section-remix .mode-btn').forEach(b=>b.classList.remove('active'));var mb=document.querySelector('#section-remix .mode-btn[data-mode=script]');if(mb)mb.classList.add('active');document.getElementById('mode-idea')?.classList.add('hidden');document.getElementById('mode-script')?.classList.remove('hidden');document.getElementById('mode-video')?.classList.add('hidden');document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено!'">� Вставить диалог</button>
+          <button class="text-[10px] px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-medium" onclick="useTrendAsIdea('${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}');this.textContent='✓ Выбрано!'">💡 Как идею</button>
+          <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="useTrendAsScript('${_escForAttr(t.dialogue_A)}','${_escForAttr(t.dialogue_B)}');this.textContent='✓ Выбрано!'">✏ Вставить диалог</button>
         </div>
       </div>`;
     });
@@ -2627,6 +2627,38 @@ async function fetchTrends() {
 
   btn.disabled = false;
   btn.innerHTML = '<span>🔄</span> Обновить тренды';
+}
+
+function useTrendAsIdea(topic) {
+  // 1. Set idea text
+  const mainInput = document.getElementById('idea-input');
+  if (mainInput) mainInput.value = topic;
+  const customInput = document.getElementById('idea-input-custom');
+  if (customInput) customInput.value = topic;
+
+  // 2. Set generation mode to 'idea'
+  selectGenerationMode('idea');
+
+  // 3. Navigate to characters so user picks their pair
+  navigateTo('characters');
+  showNotification(`💡 Идея выбрана! Теперь выбери персонажей`, 'info');
+  log('OK', 'ТРЕНД→ИДЕЯ', topic.slice(0, 60));
+}
+
+function useTrendAsScript(dialogueA, dialogueB) {
+  // 1. Fill script inputs
+  const a = document.getElementById('script-a');
+  const b = document.getElementById('script-b');
+  if (a) a.value = dialogueA;
+  if (b) b.value = dialogueB;
+
+  // 2. Set generation mode to 'script'
+  selectGenerationMode('script');
+
+  // 3. Navigate to characters so user picks their pair
+  navigateTo('characters');
+  showNotification(`✏️ Диалог вставлен! Теперь выбери персонажей`, 'info');
+  log('OK', 'ТРЕНД→СКРИПТ', `A: ${dialogueA.slice(0, 30)}…`);
 }
 
 function initTrends() {
