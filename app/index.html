@@ -293,8 +293,24 @@
             <span class="tag text-xs"></span>
           </div>
 
+          <!-- Smart Match Analysis Panel -->
+          <div id="smart-match-panel" class="hidden glass-panel p-4 space-y-3 border-l-2 border-cyan-500/40">
+            <div class="flex items-center justify-between">
+              <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">🧠 AI-анализ подбора</div>
+              <div id="match-score-badge" class="text-xs font-bold px-2.5 py-1 rounded-full"></div>
+            </div>
+            <div id="match-progress-bar" class="w-full h-2 rounded-full bg-gray-800 overflow-hidden">
+              <div id="match-progress-fill" class="h-full rounded-full transition-all duration-500" style="width:0%"></div>
+            </div>
+            <div id="match-details" class="space-y-2 text-[11px]"></div>
+            <div id="match-tips" class="hidden border-t border-gray-800/50 pt-2 mt-2">
+              <div class="text-[10px] font-medium text-amber-400 mb-1">💡 Советы по улучшению:</div>
+              <div id="match-tips-list" class="space-y-1 text-[10px] text-gray-400"></div>
+            </div>
+          </div>
+
           <!-- CTA: go to step 2 -->
-          <button id="btn-go-generate" class="btn-primary w-full py-3 hidden">Далее → Настроить и сгенерировать</button>
+          <button id="btn-go-generate" class="btn-primary w-full py-3 hidden">Далее → Выбрать локацию</button>
 
           <!-- Grid -->
           <div id="char-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[480px] overflow-y-auto pr-2"></div>

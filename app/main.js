@@ -537,6 +537,288 @@ function updateCharDisplay() {
       goBtn.classList.add('hidden');
     }
   }
+
+  // Run smart match analysis
+  updateSmartMatch();
+}
+
+// ─── SMART MATCH ANALYSIS ──────────────────────
+function updateSmartMatch() {
+  const panel = document.getElementById('smart-match-panel');
+  if (!panel) return;
+
+  // Need at least one character selected
+  if (!state.selectedA && !state.selectedB) {
+    panel.classList.add('hidden');
+    return;
+  }
+
+  panel.classList.remove('hidden');
+
+  const topic = document.getElementById('idea-input')?.value?.trim() || '';
+  const loc = state.locations?.find(l => l.id === state.selectedLocation);
+  const charA = state.selectedA;
+  const charB = state.selectedB;
+
+  // ── Calculate scores ──
+  let scores = [];
+  let tips = [];
+  let details = [];
+
+  // 1. Pair chemistry (if both selected)
+  if (charA && charB) {
+    const chemScore = calcPairChemistry(charA, charB);
+    scores.push(chemScore.score);
+    details.push({ label: '🎭 Химия пары', value: chemScore.score, text: chemScore.text });
+    if (chemScore.tip) tips.push(chemScore.tip);
+  }
+
+  // 2. Topic relevance (if topic entered)
+  if (topic && (charA || charB)) {
+    const topicScore = calcTopicRelevance(topic, charA, charB);
+    scores.push(topicScore.score);
+    details.push({ label: '🎯 Тема + персонажи', value: topicScore.score, text: topicScore.text });
+    if (topicScore.tip) tips.push(topicScore.tip);
+  }
+
+  // 3. Location match (if location selected)
+  if (loc && (charA || charB)) {
+    const locScore = calcLocationMatch(loc, charA, charB);
+    scores.push(locScore.score);
+    details.push({ label: '📍 Локация + персонажи', value: locScore.score, text: locScore.text });
+    if (locScore.tip) tips.push(locScore.tip);
+  }
+
+  // 4. Role balance
+  if (charA && charB) {
+    const roleScore = calcRoleBalance(charA, charB);
+    scores.push(roleScore.score);
+    details.push({ label: '⚖️ Баланс ролей', value: roleScore.score, text: roleScore.text });
+    if (roleScore.tip) tips.push(roleScore.tip);
+  }
+
+  // Overall score
+  const overall = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+
+  // ── Render ──
+  const fill = document.getElementById('match-progress-fill');
+  const badge = document.getElementById('match-score-badge');
+  const detailsEl = document.getElementById('match-details');
+  const tipsEl = document.getElementById('match-tips');
+  const tipsListEl = document.getElementById('match-tips-list');
+
+  // Progress bar + badge
+  fill.style.width = `${overall}%`;
+  if (overall >= 80) {
+    fill.className = 'h-full rounded-full transition-all duration-500 bg-emerald-500';
+    badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400';
+    badge.textContent = `${overall}% отлично`;
+  } else if (overall >= 55) {
+    fill.className = 'h-full rounded-full transition-all duration-500 bg-amber-500';
+    badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400';
+    badge.textContent = `${overall}% нормально`;
+  } else {
+    fill.className = 'h-full rounded-full transition-all duration-500 bg-red-400';
+    badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-red-500/20 text-red-400';
+    badge.textContent = `${overall}% слабо`;
+  }
+
+  // Details
+  detailsEl.innerHTML = details.map(d => {
+    const color = d.value >= 80 ? 'text-emerald-400' : d.value >= 55 ? 'text-amber-400' : 'text-red-400';
+    const bar = Math.round(d.value / 10);
+    const full = '█'.repeat(bar);
+    const empty = '░'.repeat(10 - bar);
+    return `<div class="flex items-center justify-between gap-2">
+      <span class="text-gray-400">${d.label}</span>
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-[10px] ${color}">${full}${empty}</span>
+        <span class="${color} font-bold w-8 text-right">${d.value}%</span>
+      </div>
+    </div>
+    <div class="text-[10px] text-gray-500 -mt-1 ml-4">${d.text}</div>`;
+  }).join('');
+
+  // Tips
+  if (tips.length > 0) {
+    tipsEl.classList.remove('hidden');
+    tipsListEl.innerHTML = tips.map(t => `<div class="flex items-start gap-1.5"><span class="text-amber-400 flex-shrink-0">→</span><span>${t}</span></div>`).join('');
+  } else {
+    tipsEl.classList.add('hidden');
+  }
+}
+
+function calcPairChemistry(a, b) {
+  let score = 50; // base
+  let text = '';
+  let tip = '';
+
+  // Great combos
+  const c = [a.compatibility, b.compatibility].sort().join('+');
+  const greatCombos = { 'calm+chaotic': 30, 'chaotic+meme': 20, 'conflict+meme': 20, 'calm+conflict': 25, 'balanced+chaotic': 15, 'balanced+meme': 15 };
+  const okCombos = { 'balanced+balanced': 10, 'balanced+calm': 5, 'balanced+conflict': 10, 'calm+meme': 10 };
+  const weakCombos = { 'calm+calm': -10, 'conflict+conflict': 5 };
+
+  if (greatCombos[c] !== undefined) { score += greatCombos[c]; text = 'Контраст стилей создаёт энергию'; }
+  else if (okCombos[c] !== undefined) { score += okCombos[c]; text = 'Нормальное сочетание, работает'; }
+  else if (weakCombos[c] !== undefined) { score += weakCombos[c]; text = 'Одинаковые стили — мало конфликта'; tip = 'Попробуй пару с контрастными стилями (хаос+спокойный, мем+конфликт)'; }
+  else { score += 10; text = 'Стандартное сочетание'; }
+
+  // Speech pace contrast bonus
+  if (a.speech_pace !== b.speech_pace) { score += 10; text += ', темп речи контрастный'; }
+  else if (a.speech_pace === 'slow' && b.speech_pace === 'slow') { score -= 5; }
+
+  // Different groups = more interesting
+  if (a.group !== b.group) { score += 10; }
+  else { tip = tip || 'Персонажи из разных групп обычно создают более интересные конфликты'; }
+
+  return { score: Math.min(100, Math.max(10, score)), text, tip };
+}
+
+function calcTopicRelevance(topic, charA, charB) {
+  const t = topic.toLowerCase();
+  let score = 60; // base — most topics work with most chars
+  let text = '';
+  let tip = '';
+
+  // Topic keywords → character group affinity
+  const groupAffinities = {
+    'бабки': ['рецепт', 'дач', 'огород', 'варен', 'внук', 'пенси', 'поликлиник', 'здоровь', 'цен', 'магазин', 'подъезд', 'сплетн', 'сосед', 'церк'],
+    'деды': ['рыбалк', 'гараж', 'мастерск', 'инструмент', 'ремонт', 'совет', 'армия', 'война', 'спорт', 'футбол', 'политик', 'философ'],
+    'мамы': ['школ', 'ребён', 'дет', 'родител', 'учител', 'оцен', 'готов', 'кухн', 'уборк', 'порядок', 'инстаграм', 'блог', 'фитнес'],
+    'папы': ['машин', 'гараж', 'ремонт', 'работ', 'началь', 'зарплат', 'отпуск', 'рыбалк', 'шашлык', 'футбол', 'пив', 'дач'],
+    'дочери': ['тикток', 'инстаграм', 'мод', 'одежд', 'универ', 'учёб', 'парн', 'свидан', 'кофе', 'вега', 'экологи', 'справедлив'],
+    'сыновья': ['игр', 'комп', 'телефон', 'спорт', 'качалк', 'музык', 'рэп', 'скейт', 'доставк', 'курьер'],
+    'соседи': ['подъезд', 'шум', 'ремонт', 'парков', 'мусор', 'собак', 'музык', 'жкх', 'сосед'],
+    'профессионалы': ['работ', 'врач', 'учител', 'охран', 'офис', 'начальн', 'клиент', 'пациент'],
+    'блогеры': ['контент', 'лайк', 'подписчик', 'сториз', 'тикток', 'инстаграм', 'камер', 'блог'],
+    'повара': ['еда', 'готов', 'рецепт', 'кухн', 'борщ', 'пирож', 'ресторан', 'вкус'],
+    'чиновники': ['документ', 'справк', 'очеред', 'бюрократ', 'закон', 'штраф', 'паспорт', 'мфц'],
+    'тёщи': ['зят', 'невестк', 'свадьб', 'семь', 'праздник', 'родител'],
+    'продавцы': ['рынок', 'цен', 'торг', 'товар', 'покупат', 'скидк', 'магазин'],
+    'спортсмены': ['спорт', 'трениров', 'зал', 'бег', 'качалк', 'фитнес', 'диет', 'протеин'],
+    'айтишники': ['код', 'программ', 'комп', 'баг', 'сайт', 'приложен', 'AI', 'робот'],
+  };
+
+  const chars = [charA, charB].filter(Boolean);
+  let matched = 0;
+  let total = 0;
+
+  chars.forEach(ch => {
+    total++;
+    const group = ch.group;
+    const keywords = groupAffinities[group] || [];
+    const hasMatch = keywords.some(kw => t.includes(kw));
+
+    // Also check character-specific keywords
+    const charKeywords = (ch.signature_words_ru || []).concat(ch.tags || []);
+    const charMatch = charKeywords.some(kw => t.includes(kw.toLowerCase()));
+
+    if (hasMatch || charMatch) matched++;
+  });
+
+  if (total === 0) return { score: 60, text: 'Не выбраны персонажи', tip: '' };
+
+  if (matched === total) {
+    score = 85 + Math.floor(Math.random() * 10);
+    text = 'Персонажи идеально подходят к теме';
+  } else if (matched > 0) {
+    score = 65 + Math.floor(Math.random() * 10);
+    text = 'Один из персонажей хорошо подходит к теме';
+    const weak = chars.find(ch => {
+      const kw = groupAffinities[ch.group] || [];
+      return !kw.some(k => t.includes(k));
+    });
+    if (weak) tip = `${weak.name_ru} (${weak.group}) не очень связан с темой «${topic.slice(0, 30)}...» — но AI может обыграть контраст`;
+  } else {
+    score = 35 + Math.floor(Math.random() * 15);
+    text = 'Персонажи не типичны для этой темы';
+    const groups = Object.entries(groupAffinities).filter(([_, kws]) => kws.some(kw => t.includes(kw))).map(([g]) => g);
+    if (groups.length > 0) {
+      tip = `Для темы «${topic.slice(0, 25)}...» лучше подойдут: ${groups.slice(0, 3).join(', ')}`;
+    } else {
+      tip = 'Тема универсальная — любые персонажи подойдут, но контраст стилей важнее';
+      score = 60;
+      text = 'Универсальная тема — подойдут любые персонажи';
+    }
+  }
+
+  return { score: Math.min(100, Math.max(10, score)), text, tip };
+}
+
+function calcLocationMatch(loc, charA, charB) {
+  let score = 60;
+  let text = '';
+  let tip = '';
+
+  const chars = [charA, charB].filter(Boolean);
+  if (chars.length === 0) return { score: 60, text: 'Не выбраны персонажи', tip: '' };
+
+  // Location group → character group affinity map
+  const locCharAffinity = {
+    'деревня': ['бабки', 'деды', 'повара'],
+    'город': ['мамы', 'папы', 'соседи', 'профессионалы', 'блогеры', 'чиновники', 'айтишники'],
+    'пляж': ['мамы', 'папы', 'дочери', 'сыновья'],
+    'спорт': ['сыновья', 'дочери', 'спортсмены', 'папы'],
+    'кафе': ['мамы', 'дочери', 'блогеры', 'папы'],
+    'офис': ['профессионалы', 'айтишники', 'мамы', 'папы'],
+    'учреждения': ['бабки', 'деды', 'чиновники', 'мамы'],
+    'красота': ['мамы', 'дочери', 'блогеры', 'бабки'],
+    'отдых': ['папы', 'деды', 'сыновья', 'мамы'],
+    'развлечения': ['дочери', 'сыновья', 'мамы', 'папы'],
+    'промышленность': ['деды', 'папы', 'профессионалы'],
+  };
+
+  const affinity = locCharAffinity[loc.group] || [];
+  let matched = 0;
+  chars.forEach(ch => { if (affinity.includes(ch.group)) matched++; });
+
+  if (matched === chars.length) {
+    score = 80 + Math.floor(Math.random() * 15);
+    text = `${loc.name_ru} — естественная среда для этих персонажей`;
+  } else if (matched > 0) {
+    score = 60 + Math.floor(Math.random() * 15);
+    text = `Один персонаж органичен в ${loc.name_ru}, другой создаст контраст`;
+  } else {
+    score = 35 + Math.floor(Math.random() * 15);
+    text = `Персонажи нетипичны для ${loc.name_ru}`;
+    tip = `${loc.name_ru} больше подходит для: ${affinity.slice(0, 3).join(', ')} — но контраст «персонаж не на своём месте» тоже смешно!`;
+  }
+
+  // World aesthetic bonus
+  chars.forEach(ch => {
+    if (ch.world_aesthetic && loc.tags?.some(t => ch.world_aesthetic.toLowerCase().includes(t))) {
+      score += 10;
+    }
+  });
+
+  return { score: Math.min(100, Math.max(10, score)), text, tip };
+}
+
+function calcRoleBalance(a, b) {
+  let score = 70;
+  let text = '';
+  let tip = '';
+
+  // Check if one is A-type and other is B-type
+  if (a.role_default === 'A' && b.role_default === 'B') {
+    score = 90;
+    text = 'A-провокатор + B-панчлайн — идеальный баланс';
+  } else if (a.role_default === 'B' && b.role_default === 'A') {
+    score = 75;
+    text = 'Роли перевёрнуты — AI подстроит, но лучше поменять местами (⇄)';
+    tip = 'Нажми ⇄ чтобы поменять местами — A должен провоцировать, B отвечать';
+  } else if (a.role_default === 'A' && b.role_default === 'A') {
+    score = 55;
+    text = 'Оба провокаторы — будет хаос, но не всегда структурно';
+    tip = 'Два провокатора могут перебивать друг друга — попробуй одного заменить на B-типа';
+  } else {
+    score = 50;
+    text = 'Оба панчлайнеры — кто будет провоцировать?';
+    tip = 'Нужен хотя бы один провокатор (A) — посмотри персонажей с 🅰️';
+  }
+
+  return { score, text, tip };
 }
 
 function getCurrentFilters() {
@@ -564,11 +846,9 @@ function initRandomPair() {
 
 // ─── NAVIGATION ──────────────────────────────
 function navigateTo(section) {
-  // Special handling for sections
+  // Gentle reminder if user skips mode selection (don't block)
   if (section === 'characters' && !state.generationMode) {
-    // If user tries to go to characters without selecting mode, redirect
-    showGenStatus('⚠️ Сначала выберите режим генерации на шаге 1', 'text-orange-400');
-    section = 'generation-mode';
+    showNotification('💡 Совет: сначала выберите режим генерации на шаге 1', 'warning');
   }
   
   // Update navigation UI
@@ -584,6 +864,9 @@ function navigateTo(section) {
   
   // Update progress indicators
   updateProgressIndicators(section);
+
+  // Refresh smart match when navigating to characters
+  if (section === 'characters') updateSmartMatch();
   
   // Log navigation for debugging
   log('INFO', 'НАВИГАЦИЯ', `Переход к разделу: ${section}`);
