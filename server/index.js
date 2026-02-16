@@ -672,8 +672,41 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   }
 
   const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime } = req.body;
-  if (!context || !context.charA || !context.charB) {
-    return res.status(400).json({ error: 'Context with charA, charB required' });
+  
+  // Enhanced validation
+  if (!context) {
+    return res.status(400).json({ error: 'Context is required' });
+  }
+  
+  if (!context.charA || !context.charA.id || !context.charA.name_ru) {
+    return res.status(400).json({ error: 'Character A with id and name_ru is required' });
+  }
+  
+  if (!context.charB || !context.charB.id || !context.charB.name_ru) {
+    return res.status(400).json({ error: 'Character B with id and name_ru is required' });
+  }
+  
+  if (!context.input_mode) {
+    return res.status(400).json({ error: 'Input mode is required (idea, script, video, suggested)' });
+  }
+  
+  // Validate input_mode
+  const validModes = ['idea', 'script', 'video', 'suggested'];
+  if (!validModes.includes(context.input_mode)) {
+    return res.status(400).json({ error: `Invalid input_mode. Must be one of: ${validModes.join(', ')}` });
+  }
+  
+  // Validate mode-specific requirements
+  if (context.input_mode === 'script' && !context.script_ru) {
+    return res.status(400).json({ error: 'Script mode requires script_ru with A and B fields' });
+  }
+  
+  if (context.input_mode === 'video' && !video_file) {
+    return res.status(400).json({ error: 'Video mode requires video_file' });
+  }
+  
+  if ((context.input_mode === 'idea' || context.input_mode === 'suggested') && !context.context_ru) {
+    return res.status(400).json({ error: 'Idea mode requires context_ru (topic)' });
   }
 
   // Flag for prompt builder

@@ -564,21 +564,84 @@ function initRandomPair() {
 
 // ─── NAVIGATION ──────────────────────────────
 function navigateTo(section) {
+  // Enhanced workflow validation
+  const workflow = {
+    'ideas': { required: [], next: 'generation-mode' },
+    'generation-mode': { required: [], next: 'characters' },
+    'characters': { required: ['generationMode'], next: 'locations' },
+    'locations': { required: ['generationMode', 'selectedA', 'selectedB'], next: 'generate' },
+    'generate': { required: ['generationMode', 'selectedA', 'selectedB'], next: null },
+    'settings': { required: [], next: null }
+  };
+  
+  const requirements = workflow[section];
+  if (requirements) {
+    for (const req of requirements.required) {
+      if (req === 'generationMode' && !state.generationMode) {
+        showGenStatus('⚠️ Сначала выберите режим генерации на шаге 1', 'text-orange-400');
+        section = 'generation-mode';
+        break;
+      }
+      if (req === 'selectedA' && !state.selectedA) {
+        showGenStatus('⚠️ Сначала выберите персонажа A на шаге 2', 'text-orange-400');
+        section = 'characters';
+        break;
+      }
+      if (req === 'selectedB' && !state.selectedB) {
+        showGenStatus('⚠️ Сначала выберите персонажа B на шаге 2', 'text-orange-400');
+        section = 'characters';
+        break;
+      }
+    }
+  }
+  
+  // Update navigation UI
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const navItem = document.querySelector(`.nav-item[data-section="${section}"]`);
   if (navItem) navItem.classList.add('active');
   document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
   const target = document.getElementById(`section-${section}`);
   if (target) target.classList.remove('hidden');
+  
   // Scroll workspace to top
   document.getElementById('workspace')?.scrollTo(0, 0);
   
-  // Special handling for sections
-  if (section === 'characters' && !state.generationMode) {
-    // If user tries to go to characters without selecting mode, redirect
-    navigateTo('generation-mode');
-    return;
-  }
+  // Update progress indicators
+  updateProgressIndicators(section);
+  
+  // Log navigation for debugging
+  log('INFO', 'НАВИГАЦИЯ', `Переход к разделу: ${section}`);
+}
+
+function updateProgressIndicators(currentSection) {
+  const sections = ['ideas', 'generation-mode', 'characters', 'locations', 'generate'];
+  const currentIndex = sections.indexOf(currentSection);
+  
+  sections.forEach((section, index) => {
+    const indicator = document.querySelector(`#section-${section} .rounded-full`);
+    if (indicator) {
+      if (index < currentIndex) {
+        // Completed sections
+        indicator.className = 'flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white text-sm font-bold';
+        indicator.textContent = '✓';
+      } else if (index === currentIndex) {
+        // Current section
+        const colors = {
+          'ideas': 'bg-amber-600',
+          'generation-mode': 'bg-violet-600', 
+          'characters': 'bg-cyan-600',
+          'locations': 'bg-violet-600',
+          'generate': 'bg-gradient-to-r from-emerald-600 to-cyan-600'
+        };
+        indicator.className = `flex items-center justify-center w-8 h-8 rounded-full ${colors[section] || 'bg-gray-600'} text-white text-sm font-bold`;
+        indicator.textContent = (index + 1).toString();
+      } else {
+        // Future sections
+        indicator.className = 'flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-gray-400 text-sm font-bold';
+        indicator.textContent = (index + 1).toString();
+      }
+    }
+  });
 }
 
 function initNavigation() {
@@ -1787,7 +1850,14 @@ function initGenerate() {
     
     if ((state.generationMode === 'video' || state.input_mode === 'video') && !state.videoMeta) {
       showGenStatus('⚠️ Сначала загрузите видео-файл в режиме «🎥 По видео»', 'text-orange-400');
+      navigateTo('settings'); // Navigate to settings where video upload is
       return;
+    }
+    
+    // Validate location selection (optional but recommended)
+    if (!state.selectedLocation) {
+      // Location is optional, but we should inform user
+      console.log('INFO: No location selected, will use auto-selection');
     }
     
     // Validate topic length for all modes (already validated above)
