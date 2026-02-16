@@ -21,7 +21,7 @@ const GRID_V2 = {
 };
 
 // v2 word count limits (tightened to fit timing windows)
-const WORD_LIMITS = { A: { min: 4, max: 10 }, B: { min: 4, max: 12 } };
+const WORD_LIMITS = { A: { min: 4, max: 15 }, B: { min: 4, max: 18 } };
 
 export function scanBannedWords(text) {
   const warnings = [];

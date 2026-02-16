@@ -2172,8 +2172,8 @@ ${firstComment}
     if (words > maxWords) return `${label}: ${words} слов (макс ${maxWords}). Сократите для точного тайминга.`;
     return null;
   };
-  const dAwords = validateWordCount(dA, 10, 'Реплика A');
-  const dBwords = validateWordCount(dB, 12, 'Реплика B');
+  const dAwords = validateWordCount(dA, 15, 'Реплика A');
+  const dBwords = validateWordCount(dB, 18, 'Реплика B');
   if (dAwords) r.warnings = [...(r.warnings || []), dAwords];
   if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
 

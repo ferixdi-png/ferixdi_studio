@@ -4,16 +4,16 @@
  * Per-speaker window limits: A=2.8s, B=3.5s
  */
 
-const PACE_WPS = { slow: 2.3, normal: 3.0, fast: 3.5 };
+const PACE_WPS = { slow: 2.8, normal: 3.5, fast: 4.2 };
 const LONG_WORD_THRESHOLD = 8;
-const LONG_WORD_PENALTY = 0.15;
+const LONG_WORD_PENALTY = 0.08;
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
-const FILLER_PENALTY = 0.12;
+const FILLER_PENALTY = 0.06;
 const SHORT_PUNCH_BONUS = -0.1;
 const PAUSE_MARKER_DURATION = 0.2;
 // v2 speaker window limits (seconds of speech available)
 const SPEAKER_WINDOW = { A: 3.2, B: 3.5 };
-const WINDOW_TOLERANCE = 0.4; // windows flex — if A finishes early, B gets extra time
+const WINDOW_TOLERANCE = 1.0; // windows flex — if A finishes early, B gets extra time. Real speech fits more than estimates.
 const TOTAL_SPEECH_BUDGET = SPEAKER_WINDOW.A + SPEAKER_WINDOW.B; // 6.7s total
 
 export function estimateLineDuration(text, pace = 'normal') {
@@ -117,11 +117,11 @@ export function estimateDialogue(lines, options = {}) {
       if (longW.length > 0) {
         trimmingSuggestions.push(`Заменить длинные слова «${longW.join(', ')}» у ${entry.speaker} на короткие`);
       }
-      if (entry.speaker === 'A' && words.length > 9) {
-        trimmingSuggestions.push(`Сократить A до 6-9 слов (сейчас ${words.length})`);
+      if (entry.speaker === 'A' && words.length > 14) {
+        trimmingSuggestions.push(`Сократить A до 8-14 слов (сейчас ${words.length})`);
       }
-      if (entry.speaker === 'B' && words.length > 11) {
-        trimmingSuggestions.push(`Сократить B до 6-11 слов (сейчас ${words.length})`);
+      if (entry.speaker === 'B' && words.length > 17) {
+        trimmingSuggestions.push(`Сократить B до 8-17 слов (сейчас ${words.length})`);
       }
     }
     if (trimmingSuggestions.length === 0) {

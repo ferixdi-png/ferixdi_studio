@@ -16,7 +16,7 @@ const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[
 
 // Speaker windows (must match estimator.js)
 const SPEAKER_WINDOW = { A: 3.2, B: 3.5 };
-const WORD_LIMITS = { A: 10, B: 12 };
+const WORD_LIMITS = { A: 15, B: 18 };
 
 // ─── STEP 0: Remove excess pause markers ────
 function removePauses(text) {
