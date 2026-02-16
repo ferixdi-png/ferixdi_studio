@@ -1482,7 +1482,11 @@ export function generate(input) {
   let estimate = estimateDialogue(lines, { enforce8s: options.enforce8s !== false });
   let autoFixes = [];
 
-  if (options.allowAutoTrim && estimate.risk === 'high') {
+  // VIDEO/SCRIPT mode: NEVER auto-trim — dialogue must be preserved verbatim from original
+  // Only warn if it's too long, but don't modify
+  const isPreserveMode = (input_mode === 'video' || input_mode === 'script');
+
+  if (!isPreserveMode && options.allowAutoTrim && estimate.risk === 'high') {
     const trimResult = autoTrim(lines, {});
     if (trimResult.trimmed) {
       dialogueA = trimResult.lines[0]?.text || dialogueA;
@@ -1492,29 +1496,39 @@ export function generate(input) {
     }
   }
 
-  // ── Safety: scan banned words (apply replacements) ──
-  const safeA = scanBannedWords(dialogueA);
-  const safeB = scanBannedWords(dialogueB);
-  dialogueA = safeA.text;
-  dialogueB = safeB.text;
-  if (safeA.fixes.length) autoFixes.push(...safeA.fixes);
-  if (safeB.fixes.length) autoFixes.push(...safeB.fixes);
+  // Warn user if dialogue is long in video/script mode (but DON'T modify it)
+  if (isPreserveMode && estimate.risk === 'high') {
+    warnings.push('⚠️ Диалог длиннее обычного — может не влезть в 8 секунд. Попробуйте сократить реплики в редакторе после генерации.');
+  }
+
+  // ── Safety: scan banned words — SKIP for video mode (preserve original verbatim) ──
+  if (!isPreserveMode) {
+    const safeA = scanBannedWords(dialogueA);
+    const safeB = scanBannedWords(dialogueB);
+    dialogueA = safeA.text;
+    dialogueB = safeB.text;
+    if (safeA.fixes.length) autoFixes.push(...safeA.fixes);
+    if (safeB.fixes.length) autoFixes.push(...safeB.fixes);
+  }
 
   // ── STRICT: Strip dashes/hyphens from speech ──
   // Dashes (—, –, -) are unpronounceable and cause TTS/Veo artifacts.
   // Only pipe | is allowed as pause marker.
-  const stripDashes = (text) => {
-    let cleaned = text
-      .replace(/\s*[—–]\s*/g, ' ')   // em-dash, en-dash → space
-      .replace(/\s+-\s+/g, ' ')       // standalone hyphens (with spaces) → space
-      .replace(/\s{2,}/g, ' ')        // collapse double spaces
-      .trim();
-    return cleaned;
-  };
-  const cleanA = stripDashes(dialogueA);
-  const cleanB = stripDashes(dialogueB);
-  if (cleanA !== dialogueA) { autoFixes.push('Убраны тире из реплики A (непроизносимые символы)'); dialogueA = cleanA; }
-  if (cleanB !== dialogueB) { autoFixes.push('Убраны тире из реплики B (непроизносимые символы)'); dialogueB = cleanB; }
+  // SKIP for video mode — preserve original dialogue formatting
+  if (!isPreserveMode) {
+    const stripDashes = (text) => {
+      let cleaned = text
+        .replace(/\s*[—–]\s*/g, ' ')   // em-dash, en-dash → space
+        .replace(/\s+-\s+/g, ' ')       // standalone hyphens (with spaces) → space
+        .replace(/\s{2,}/g, ' ')        // collapse double spaces
+        .trim();
+      return cleaned;
+    };
+    const cleanA = stripDashes(dialogueA);
+    const cleanB = stripDashes(dialogueB);
+    if (cleanA !== dialogueA) { autoFixes.push('Убраны тире из реплики A (непроизносимые символы)'); dialogueA = cleanA; }
+    if (cleanB !== dialogueB) { autoFixes.push('Убраны тире из реплики B (непроизносимые символы)'); dialogueB = cleanB; }
+  }
 
   // ── Build all blocks ──
   const cast = buildCastContract(charA, charB);
@@ -2166,14 +2180,18 @@ ${firstComment}
 
   // ── 7. Post-merge dialogue validation ──
   // Warn if Gemini's dialogue is too long for timing windows
+  // VIDEO/SCRIPT mode: higher threshold (warn only, never block — dialogue is verbatim from original)
+  const isRemake = ctx.remake_mode || ctx.input_mode === 'video' || ctx.input_mode === 'script';
+  const maxA = isRemake ? 25 : 15;
+  const maxB = isRemake ? 30 : 18;
   const validateWordCount = (text, maxWords, label) => {
     if (!text || text === '—') return null;
     const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(Boolean).length;
-    if (words > maxWords) return `${label}: ${words} слов (макс ${maxWords}). Сократите для точного тайминга.`;
+    if (words > maxWords) return `${label}: ${words} слов (макс ${maxWords}). ${isRemake ? 'Оригинальный диалог длинный — можно сократить в редакторе.' : 'Сократите для точного тайминга.'}`;
     return null;
   };
-  const dAwords = validateWordCount(dA, 15, 'Реплика A');
-  const dBwords = validateWordCount(dB, 18, 'Реплика B');
+  const dAwords = validateWordCount(dA, maxA, 'Реплика A');
+  const dBwords = validateWordCount(dB, maxB, 'Реплика B');
   if (dAwords) r.warnings = [...(r.warnings || []), dAwords];
   if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
 
