@@ -1054,8 +1054,10 @@ app.post('/api/trends', authMiddleware, async (req, res) => {
     try {
       trends = JSON.parse(text);
     } catch {
-      const m = text.match(/\[[\s\S]*\]/);
-      if (m) trends = JSON.parse(m[0]);
+      try {
+        const m = text.match(/\[[\s\S]*\]/);
+        if (m) trends = JSON.parse(m[0]);
+      } catch { /* fallback parse also failed */ }
     }
 
     if (!Array.isArray(trends)) {

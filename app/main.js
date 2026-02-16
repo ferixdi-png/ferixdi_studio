@@ -131,7 +131,7 @@ function updateWelcomeBanner() {
 function initWelcomeBanner() {
   updateWelcomeBanner();
   const btn = document.getElementById('welcome-go-settings');
-  if (btn) {
+  if (btn && !isPromoValid()) {
     btn.addEventListener('click', () => navigateTo('settings'));
   }
 }
@@ -220,6 +220,7 @@ function initLocationPicker() {
     const id = card.dataset.locId;
     state.selectedLocation = id || null;
     renderLocations(document.getElementById('loc-group-filter')?.value || '');
+    renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
     log('INFO', 'ЛОКАЦИЯ', state.selectedLocation ? `Выбрана: ${state.locations.find(l => l.id === state.selectedLocation)?.name_ru}` : 'Авто-выбор');
   });
   document.getElementById('loc-group-filter')?.addEventListener('change', (e) => {
@@ -232,6 +233,7 @@ function initLocationPicker() {
     const rand = pool[Math.floor(Math.random() * pool.length)];
     state.selectedLocation = rand.id;
     renderLocations(filtered || '');
+    renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
     log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
   });
 }
@@ -514,19 +516,24 @@ function initModeSwitcher() {
   });
 
   // Smart URL detection: if user pastes a TikTok/Instagram link into the main idea field,
-  // auto-switch to video mode and trigger fetch
+  // notify user to use video mode instead (no auto-fetch since video URL input is removed)
   document.getElementById('idea-input')?.addEventListener('paste', (e) => {
     setTimeout(() => {
       const text = e.target.value.trim();
       if (text.includes('tiktok.com/') || text.includes('instagram.com/')) {
-        log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключаю в режим ремейка');
-        // Copy URL to video input
-        const videoInput = document.getElementById('video-url-input');
-        if (videoInput) videoInput.value = text;
-        // Clear idea input — it will be auto-filled after fetch
+        log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключи в режим «🎥 По видео» и загрузи файл');
+        // Switch to video mode UI
+        document.querySelectorAll('#section-remix .mode-btn').forEach(b => b.classList.remove('active'));
+        const videoBtn = document.querySelector('#section-remix .mode-btn[data-mode="video"]');
+        if (videoBtn) videoBtn.classList.add('active');
+        state.inputMode = 'video';
+        document.getElementById('mode-idea')?.classList.add('hidden');
+        document.getElementById('mode-script')?.classList.add('hidden');
+        document.getElementById('mode-video')?.classList.remove('hidden');
+        // Keep URL in scene-hint for context
+        const sceneHint = document.getElementById('scene-hint');
+        if (sceneHint && !sceneHint.value) sceneHint.value = `Ремейк видео: ${text}`;
         e.target.value = '';
-        // Auto-click fetch button
-        document.getElementById('video-url-fetch')?.click();
       }
     }, 50);
   });
@@ -723,10 +730,13 @@ async function handleProductFile(file) {
     showProductStatus('⏳ AI анализирует товар...', 'text-gray-400');
 
     try {
-      const apiBase = window.location.origin;
+      const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+      const token = localStorage.getItem('ferixdi_jwt');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const resp = await fetch(`${apiBase}/api/product/describe`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ image_base64: base64, mime_type: mimeType }),
       });
       const data = await resp.json();
@@ -1822,7 +1832,7 @@ async function fetchTrends() {
         <div class="text-[11px] text-gray-400">${escapeHtml(t.why_trending)}</div>
         <div class="text-[11px] text-cyan-300/80"><span class="text-gray-500">🎬 Угол:</span> ${escapeHtml(t.comedy_angle)}</div>
         <div class="text-[11px] text-violet-300/80 bg-violet-500/8 rounded p-2"><span class="text-gray-500">💡 Идея:</span> ${escapeHtml(t.example_idea)}</div>
-        <button class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors mt-1" onclick="document.getElementById('idea-input').value='${escapeHtml(t.topic).replace(/'/g, "\\'")}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено в идею!'">📋 Использовать как идею для видео →</button>
+        <button class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors mt-1" onclick="document.getElementById('idea-input').value='${escapeHtml(t.topic).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено в идею!'">📋 Использовать как идею для видео →</button>
       </div>`;
     }).join('');
 
