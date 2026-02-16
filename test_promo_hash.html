@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Promo Hash Calculator</title>
+<style>
+body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #0ff; }
+h1 { color: #0f0; }
+pre { background: #000; padding: 15px; border: 1px solid #0ff; margin: 10px 0; }
+input { background: #000; color: #0ff; border: 1px solid #0ff; padding: 10px; font-family: monospace; font-size: 14px; width: 300px; }
+button { background: #0f0; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin: 10px 0; }
+.success { color: #0f0; }
+.error { color: #f00; }
+</style>
+</head>
+<body>
+<h1>🔐 FERIXDI Promo Hash Calculator</h1>
+<p>Введите промокод для вычисления SHA-256 хеша:</p>
+<input type="text" id="promoInput" value="FERIXDI-VIP-2026" />
+<button onclick="calculateHash()">Вычислить хеш</button>
+<pre id="result">Нажмите кнопку для вычисления...</pre>
+
+<h2>Текущий хеш в коде:</h2>
+<pre id="currentHash">Loading...</pre>
+
+<script>
+async function calculateHash() {
+  const code = document.getElementById('promoInput').value;
+  const normalized = code.trim().toUpperCase();
+  const data = new TextEncoder().encode(normalized);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  
+  document.getElementById('result').innerHTML = 
+    '<span class="success">✅ Промокод:</span> ' + code + '\n' +
+    '<span class="success">Нормализован:</span> ' + normalized + '\n' +
+    '<span class="success">SHA-256 Hash:</span>\n' + hash + '\n\n' +
+    '<span style="color: #ff0">💾 Скопируйте этот хеш в main.js → const _PH</span>';
+}
+
+// Load current hash from main.js
+fetch('./app/main.js')
+  .then(r => r.text())
+  .then(code => {
+    const match = code.match(/const _PH = '([a-f0-9]+)'/);
+    if (match) {
+      document.getElementById('currentHash').textContent = match[1];
+    }
+  })
+  .catch(() => {
+    document.getElementById('currentHash').innerHTML = '<span class="error">❌ Не удалось загрузить main.js</span>';
+  });
+
+// Auto-calculate on load
+calculateHash();
+</script>
+</body>
+</html>

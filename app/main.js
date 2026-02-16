@@ -47,6 +47,9 @@ function log(level, module, msg) {
 }
 
 // ─── PROMO CODE (hash-only, no plaintext) ────────
+// Valid promo code: FERIXDI-VIP-2026
+// To generate hash: open test_promo_hash.html in browser or run:
+// await _hashCode('FERIXDI-VIP-2026') in browser console
 const _PH = 'bc6f301ecc9d72e7f2958ba89cb1524cc560984ca0131c5bf43a476c1d98d184';
 const DEFAULT_API_URL = 'https://ferixdi-studio.onrender.com';
 
@@ -253,6 +256,9 @@ function renderLocations(filterGroup = '') {
       <div class="text-sm">${moodIcon}</div>
       <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
+      <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
+        <span>📋</span> Промпт
+      </button>
     </div>`;
   }).join('');
 
@@ -275,6 +281,14 @@ function updateLocationInfo() {
 
 function initLocationPicker() {
   document.getElementById('loc-grid')?.addEventListener('click', (e) => {
+    // Handle copy button clicks
+    const copyBtn = e.target.closest('.copy-loc-prompt');
+    if (copyBtn) {
+      e.stopPropagation();
+      copyLocationPrompt(copyBtn.dataset.id);
+      return;
+    }
+    
     const card = e.target.closest('.loc-card');
     if (!card) return;
     const id = card.dataset.locId;
@@ -473,6 +487,11 @@ function renderCharacters(filter = {}) {
         <button class="select-b text-[11px] px-3 py-1 rounded-md font-medium transition-all ${isB ? 'bg-indigo-600 text-white' : 'bg-indigo-600/10 text-indigo-300 hover:bg-indigo-600/25'}" data-id="${c.id}">B · панчлайн</button>
       </div>
 
+      <!-- Copy Prompt Button -->
+      <button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}" title="Скопировать детализированный промпт для Veo">
+        <span>📋</span> Копировать промпт
+      </button>
+
       <!-- Expandable detail -->
       <details class="group">
         <summary class="text-[11px] text-gray-500 cursor-pointer hover:text-gray-300 transition-colors select-none">Подробнее ▸</summary>
@@ -504,6 +523,9 @@ function renderCharacters(filter = {}) {
   });
   grid.querySelectorAll('.select-b').forEach(btn => {
     btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('B', btn.dataset.id); });
+  });
+  grid.querySelectorAll('.copy-char-prompt').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); copyCharacterPrompt(btn.dataset.id); });
   });
 }
 
@@ -1599,6 +1621,13 @@ function initProductUpload() {
 }
 
 async function handleProductFile(file) {
+  // Проверка промо-кода перед анализом товара
+  if (!isPromoValid()) {
+    showProductStatus('🔑 Для анализа товара нужен промо-код. Введите его в разделе «Настройки».', 'text-amber-400');
+    log('WARN', 'ТОВАР', 'Промо-код не введён — анализ товара заблокирован');
+    return;
+  }
+
   if (!file.type.startsWith('image/')) {
     showProductStatus('Нужно фото (JPG, PNG, WebP)', 'text-red-400');
     return;
@@ -3164,6 +3193,9 @@ function renderLocationsBrowse(filterGroup = '') {
       <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
       ${l.tags ? `<div class="flex gap-1 flex-wrap mt-1">${l.tags.slice(0, 3).map(t => `<span class="text-[8px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${t}</span>`).join('')}</div>` : ''}
+      <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
+        <span>📋</span> Промпт
+      </button>
     </div>`;
   }).join('');
 
@@ -3196,6 +3228,14 @@ function initLocationsBrowse() {
 
   // Grid click
   document.getElementById('loc-browse-grid')?.addEventListener('click', (e) => {
+    // Handle copy button clicks
+    const copyBtn = e.target.closest('.copy-loc-prompt');
+    if (copyBtn) {
+      e.stopPropagation();
+      copyLocationPrompt(copyBtn.dataset.id);
+      return;
+    }
+    
     const card = e.target.closest('.loc-card');
     if (!card) return;
     const id = card.dataset.locId;
@@ -3509,6 +3549,151 @@ function initProgressTracker() {
   
   // Update progress initially
   updateProgress();
+}
+
+// ─── COPY CHARACTER PROMPT ───────────────────
+function generateCharacterPrompt(charId) {
+  const char = state.characters.find(c => c.id === charId);
+  if (!char) return '';
+  
+  const anchors = char.identity_anchors || {};
+  const modifiers = char.modifiers || {};
+  const tokens = char.prompt_tokens || {};
+  
+  // Build detailed character prompt for Veo
+  const prompt = `CHARACTER PROMPT FOR VEO 3.1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 БАЗОВАЯ ИНФОРМАЦИЯ
+Имя: ${char.name_ru} (${char.name_en || char.id})
+Группа: ${char.group}
+Архетип: ${char.vibe_archetype || 'не указан'}
+Роль по умолчанию: ${char.role_default === 'A' ? '🅰️ Провокатор' : '🅱️ Панчлайнер'}
+Совместимость: ${char.compatibility}
+
+🎭 ВИЗУАЛЬНОЕ ОПИСАНИЕ
+${tokens.character_en || char.appearance_ru || 'не указано'}
+
+✨ КЛЮЧЕВЫЕ ЭЛЕМЕНТЫ ИДЕНТИФИКАЦИИ
+Силуэт лица: ${anchors.face_silhouette || 'не указан'}
+Фирменный элемент: ${anchors.signature_element || 'не указан'}
+Микро-жест: ${anchors.micro_gesture || 'не указан'}
+Гардероб-якорь: ${anchors.wardrobe_anchor || 'не указан'}
+
+🗣 РЕЧЬ И ПОВЕДЕНИЕ
+Стиль речи: ${char.speech_style_ru || 'не указан'}
+Темп речи: ${char.speech_pace || 'normal'} (${char.speech_pace === 'fast' ? '~3.5 слов/сек' : char.speech_pace === 'slow' ? '~2.0 слов/сек' : '~2.5-3.0 слов/сек'})
+Уровень мата: ${char.swear_level || 0}/3
+Поведение: ${char.behavior_ru || 'не указано'}
+Фирменные слова: ${(char.signature_words_ru || []).join(', ') || 'не указаны'}
+
+🎬 МОДИФИКАТОРЫ ДЛЯ ВИДЕО
+Хук-стиль: ${modifiers.hook_style || 'не указан'}
+Стиль смеха: ${modifiers.laugh_style || 'не указан'}
+
+🎨 ЭСТЕТИКА МИРА
+${char.world_aesthetic || 'универсальная'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 PROMPT ДЛЯ VEO (Английский):
+${tokens.character_en || 'Character description not available'}
+
+Format: 9:16 vertical, 1080p, hyperrealistic smartphone capture, natural skin pores and imperfections, cinematic lighting, shallow depth of field.`;
+  
+  return prompt;
+}
+
+function copyCharacterPrompt(charId) {
+  const prompt = generateCharacterPrompt(charId);
+  if (!prompt) {
+    showNotification('❌ Ошибка генерации промпта', 'error');
+    return;
+  }
+  
+  copyToClipboardWithFeedback(prompt, 'ПЕРСОНАЖ', charId);
+}
+
+// ─── COPY LOCATION PROMPT ───────────────────
+function generateLocationPrompt(locId) {
+  const loc = state.locations.find(l => l.id === locId);
+  if (!loc) return '';
+  
+  const prompt = `LOCATION PROMPT FOR VEO 3.1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 БАЗОВАЯ ИНФОРМАЦИЯ
+Название: ${loc.name_ru} (${loc.name_en || loc.id})
+Группа: ${loc.group}
+Теги: ${(loc.tags || []).join(', ')}
+Описание: ${loc.tagline_ru || 'не указано'}
+
+🎬 ДЕТАЛЬНОЕ ОПИСАНИЕ СЦЕНЫ (English)
+${loc.scene_en || 'Scene description not available'}
+
+💡 ОСВЕЩЕНИЕ
+${loc.lighting || 'не указано'}
+
+🎨 НАСТРОЕНИЕ
+${loc.mood || 'не указано'}
+
+🔊 ЗВУКОВЫЕ ПОДСКАЗКИ
+${loc.audio_hints || 'не указаны'}
+
+📷 РЕКОМЕНДУЕМЫЕ КАТЕГОРИИ
+${(loc.category_hints || []).join(', ') || 'универсальная'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 PROMPT ДЛЯ VEO (Английский):
+${loc.scene_en || 'Location description not available'}
+
+Lighting: ${loc.lighting || 'natural'}
+Mood: ${loc.mood || 'neutral'}
+Audio ambience: ${loc.audio_hints || 'quiet'}
+Format: 9:16 vertical, 1080p, cinematic framing, shallow depth of field, natural color grading.`;
+  
+  return prompt;
+}
+
+function copyLocationPrompt(locId) {
+  const prompt = generateLocationPrompt(locId);
+  if (!prompt) {
+    showNotification('❌ Ошибка генерации промпта', 'error');
+    return;
+  }
+  
+  copyToClipboardWithFeedback(prompt, 'ЛОКАЦИЯ', locId);
+}
+
+// ─── COPY TO CLIPBOARD WITH FEEDBACK ───────
+function copyToClipboardWithFeedback(text, type, id) {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      const char = type === 'ПЕРСОНАЖ' ? state.characters.find(c => c.id === id) : null;
+      const loc = type === 'ЛОКАЦИЯ' ? state.locations.find(l => l.id === id) : null;
+      const name = char?.name_ru || loc?.name_ru || id;
+      
+      showNotification(`✓ Промпт скопирован: ${name}`, 'success');
+      log('OK', 'КОПИЯ', `${type} "${name}" скопирован в буфер (${text.length} символов)`);
+      
+      // Visual feedback on button
+      const btn = document.querySelector(`[data-id="${id}"] .copy-char-prompt, [data-id="${id}"].copy-char-prompt, [data-id="${id}"] .copy-loc-prompt, [data-id="${id}"].copy-loc-prompt`);
+      if (btn) {
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span>✓</span> Скопировано!';
+        btn.classList.add('bg-emerald-500/20', 'border-emerald-500/50');
+        btn.classList.remove('bg-gold/10', 'border-gold/30');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('bg-emerald-500/20', 'border-emerald-500/50');
+          btn.classList.add('bg-gold/10', 'border-gold/30');
+        }, 2000);
+      }
+    })
+    .catch(err => {
+      showNotification('❌ Не удалось скопировать в буфер обмена', 'error');
+      log('ERR', 'КОПИЯ', `Ошибка копирования: ${err.message}`);
+    });
 }
 
 // ─── INIT ────────────────────────────────
