@@ -608,6 +608,136 @@ select.input-field option:disabled {
   transform: translateY(-1px);
 }
 
+/* ── Mobile Responsive Design ───────────────────── */
+@media (max-width: 768px) {
+  /* Hide sidebar on mobile */
+  #sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  #sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  
+  /* Mobile menu toggle */
+  .mobile-menu-toggle {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1000;
+    padding: 0.5rem;
+    background: var(--bg-panel-solid);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--text-body);
+    cursor: pointer;
+  }
+  
+  /* Adjust workspace */
+  #workspace {
+    margin-left: 0;
+  }
+  
+  /* Responsive grids */
+  .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Mobile character cards */
+  .char-card {
+    padding: 0.75rem;
+  }
+  
+  .char-card .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  /* Mobile generation mode cards */
+  .generation-mode-card {
+    padding: 1rem;
+  }
+  
+  .generation-mode-card .text-base {
+    font-size: 0.875rem;
+  }
+  
+  /* Mobile buttons */
+  .btn-primary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Mobile inputs */
+  .input-field {
+    font-size: 0.875rem;
+    padding: 0.75rem;
+  }
+  
+  /* Mobile panels */
+  .glass-panel {
+    padding: 1rem;
+  }
+  
+  /* Mobile results */
+  #gen-results .tab-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small mobile */
+  .generation-mode-card .text-sm {
+    font-size: 0.8rem;
+  }
+  
+  .char-card .text-xs {
+    font-size: 0.7rem;
+  }
+  
+  .btn-primary {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.8rem;
+  }
+  
+  .glass-panel {
+    padding: 0.75rem;
+  }
+}
+
+/* ── Touch Optimizations ─────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .char-card:hover,
+  .generation-mode-card:hover,
+  .loc-card:hover,
+  .trending-idea-card:hover {
+    transform: none;
+  }
+  
+  .char-card:active,
+  .generation-mode-card:active,
+  .loc-card:active,
+  .trending-idea-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* ── High Performance Mode ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ── Pulse Dot ───────────────────────────── */
 .pulse-dot {
   width: 0.5rem; height: 0.5rem; border-radius: 9999px;

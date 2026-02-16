@@ -69,13 +69,22 @@ const RL_GEN     = { window: 60_000,  max: 6 };   // 6 per min
 const RL_TRENDS  = { window: 60_000,  max: 4 };   // 4 per min
 const RL_PRODUCT = { window: 60_000,  max: 8 };   // 8 per min
 
-// ─── Security Headers ────────────────────────
+// ─── Enhanced Security Headers ────────────────────────
 app.use((req, res, next) => {
+  // Security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   res.removeHeader('X-Powered-By');
+  
+  // Rate limiting headers
+  res.setHeader('X-RateLimit-Limit', '6');
+  res.setHeader('X-RateLimit-Remaining', '6');
+  res.setHeader('X-RateLimit-Reset', new Date(Date.now() + 60000).toISOString());
+  
   next();
 });
 
@@ -867,8 +876,33 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     });
 
   } catch (e) {
-    console.error('Generate error:', e.message);
-    res.status(500).json({ error: `Ошибка генерации: ${e.message}` });
+    const errorId = crypto.randomUUID().slice(0, 8);
+    const timestamp = new Date().toISOString();
+    const userId = req.user?.hash || getClientIP(req);
+    
+    // Enhanced error logging
+    console.error(`[${timestamp}] Generate error [${errorId}] [${userId}]:`, {
+      message: e.message,
+      stack: e.stack,
+      generationMode: context?.input_mode,
+      hasVideo: !!video_file,
+      hasProduct: !!product_image,
+      tokenCount: data?.usageMetadata?.totalTokenCount
+    });
+    
+    // User-friendly error response
+    const isRetryable = e.message?.includes('timeout') || e.message?.includes('429') || e.message?.includes('network');
+    const statusCode = isRetryable ? 503 : 500;
+    const userMessage = isRetryable 
+      ? 'Сервис временно недоступен. Попробуйте снова через несколько минут.'
+      : 'Произошла ошибка при генерации. Попробуйте изменить параметры и повторить.';
+    
+    res.status(statusCode).json({ 
+      error: userMessage,
+      errorId,
+      timestamp,
+      retryable: isRetryable
+    });
   }
 });
 
@@ -1280,14 +1314,35 @@ ${calendarHints.length > 0 ? `• Привязка к: ${calendarHints.join(', '
   }
 });
 
-// ─── Health ──────────────────────────────────
-app.get('/health', (req, res) => res.json({ status: 'ok', mode: 'api' }));
-
-// ─── SPA Fallback ───────────────────────────
-app.get('*', (req, res) => {
-  res.sendFile(join(appDir, 'index.html'));
+// ─── Health Check Endpoint ───────────────────────
+app.get('/health', (req, res) => {
+  const health = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    geminiKeys: getGeminiKeys().length,
+    rateBuckets: _rateBuckets.size,
+    version: '2.0.0'
+  };
+  res.json(health);
 });
 
+// ─── Graceful Shutdown ─────────────────────────────
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  process.exit(0);
+});
+
+// ─── START SERVER ───────────────────────────────
 app.listen(PORT, () => {
-  console.log(`FERIXDI Studio API running on port ${PORT}`);
+  console.log(`🚀 FERIXDI Studio API running on port ${PORT}`);
+  console.log(`🔐 JWT_SECRET: ${JWT_SECRET ? 'SET' : 'RANDOM (set in production!)'}`);
+  console.log(`🔑 Gemini keys: ${getGeminiKeys().length} available`);
+  console.log(`📊 Health check: http://localhost:${PORT}/health`);
 });

@@ -24,6 +24,10 @@ const state = {
   lastResult: null,
   settingsMode: 'api',
   threadMemory: [],
+  // Performance optimization flags
+  _isLoading: false,
+  _lastActivity: Date.now(),
+  _cachedResults: new Map(),
 };
 
 // ─── LOG ─────────────────────────────────────
@@ -154,6 +158,9 @@ function initWelcomeBanner() {
 function initApp() {
   log('OK', 'СИСТЕМА', 'FERIXDI Studio v2.0 — добро пожаловать!');
 
+  // Performance optimization: start loading immediately
+  const startTime = performance.now();
+  
   // Migrate old plaintext promo → hash-based (one-time)
   const oldPromo = localStorage.getItem('ferixdi_promo');
   if (oldPromo && !localStorage.getItem('ferixdi_ph')) {
@@ -163,15 +170,43 @@ function initApp() {
     });
   }
 
-  loadCharacters();
-  updateCacheStats();
+  // Initialize mobile menu
+  initMobileMenu();
+  
+  // Load data in parallel
+  const loadPromises = [
+    loadCharacters(),
+    updateCacheStats(),
+    initWelcomeBanner()
+  ];
+  
+  Promise.all(loadPromises).then(() => {
+    const loadTime = performance.now() - startTime;
+    log('OK', 'ПРОИЗВОДИТЕЛЬНОСТЬ', `Initial load completed in ${loadTime.toFixed(2)}ms`);
+  });
+  
   navigateTo('generation-mode'); // Start with generation mode selection
-  initWelcomeBanner();
 
   // Auto-authenticate if promo is already saved
   if (isPromoValid()) {
     autoAuth();
   }
+}
+
+function initMobileMenu() {
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  if (window.innerWidth <= 768 && mobileToggle) {
+    mobileToggle.classList.remove('hidden');
+  }
+  
+  // Show/hide based on screen size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768) {
+      mobileToggle?.classList.remove('hidden');
+    } else {
+      mobileToggle?.classList.add('hidden');
+    }
+  });
 }
 
 // ─── LOCATIONS ───────────────────────────────
@@ -334,9 +369,41 @@ function translateEnRu(text) {
 
 // ─── CHARACTERS ──────────────────────────────
 async function loadCharacters() {
+  // Check cache first
+  const cacheKey = 'characters_v1';
+  const cached = localStorage.getItem(cacheKey);
+  const cacheTime = localStorage.getItem(`${cacheKey}_time`);
+  const now = Date.now();
+  
+  // Use cache if less than 1 hour old
+  if (cached && cacheTime && (now - parseInt(cacheTime)) < 3600000) {
+    try {
+      state.characters = JSON.parse(cached);
+      log('OK', 'ДАННЫЕ', `Загружено ${state.characters.length} персонажей из кэша`);
+      populateFilters();
+      renderCharacters();
+      // Background refresh
+      setTimeout(() => refreshCharacters(), 2000);
+      return;
+    } catch (e) {
+      console.warn('Cache parse error, fetching fresh data');
+    }
+  }
+  
+  // Fetch fresh data
+  await refreshCharacters();
+}
+
+async function refreshCharacters() {
   try {
     const resp = await fetch(new URL('./data/characters.json', import.meta.url));
     state.characters = await resp.json();
+    
+    // Update cache
+    const cacheKey = 'characters_v1';
+    localStorage.setItem(cacheKey, JSON.stringify(state.characters));
+    localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+    
     log('OK', 'ДАННЫЕ', `Загружено ${state.characters.length} персонажей`);
     populateFilters();
     renderCharacters();
@@ -518,8 +585,39 @@ function initNavigation() {
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
       navigateTo(item.dataset.section);
+      // Close mobile menu after navigation
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar')?.classList.remove('mobile-open');
+      }
     });
   });
+  
+  // Mobile menu toggle
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 && 
+          !sidebar.contains(e.target) && 
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('mobile-open');
+      }
+    });
+  }
+  
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      sidebar.classList.remove('mobile-open');
+    }
+  });
+}
 
   // "Далее" button on characters → go to locations
   document.getElementById('btn-go-generate')?.addEventListener('click', () => {
