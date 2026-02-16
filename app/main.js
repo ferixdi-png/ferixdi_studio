@@ -1571,7 +1571,9 @@ function initModeSwitcher() {
       document.querySelectorAll('#section-advanced .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const mode = btn.dataset.mode;
+      // Sync BOTH state vars so payload and readiness use the same mode
       state.inputMode = mode;
+      state.generationMode = mode;
       document.getElementById('mode-idea').classList.toggle('hidden', mode !== 'idea');
       document.getElementById('mode-script').classList.toggle('hidden', mode !== 'script');
       document.getElementById('mode-video').classList.toggle('hidden', mode !== 'video');
@@ -1581,6 +1583,8 @@ function initModeSwitcher() {
       document.getElementById('remix-script')?.classList.toggle('hidden', mode !== 'script');
       document.getElementById('remix-video')?.classList.toggle('hidden', mode !== 'video');
       if (mode === 'video') initVideoDropzoneMain();
+      // Update readiness checklist to reflect new mode
+      updateReadiness();
       log('INFO', 'РЕЖИМ', `Ввод: ${mode === 'idea' ? 'идея' : mode === 'script' ? 'диалог' : 'видео'}`);
     });
   });
@@ -1597,6 +1601,7 @@ function initModeSwitcher() {
         const videoBtn = document.querySelector('#section-advanced .mode-btn[data-mode="video"]');
         if (videoBtn) videoBtn.classList.add('active');
         state.inputMode = 'video';
+        state.generationMode = 'video';
         document.getElementById('mode-idea')?.classList.add('hidden');
         document.getElementById('mode-script')?.classList.add('hidden');
         document.getElementById('mode-video')?.classList.remove('hidden');
@@ -2522,7 +2527,7 @@ function initGenerate() {
     }
 
     // Enhanced validation for all modes
-    if (state.generationMode === 'script' || state.inputMode === 'script') {
+    if (state.generationMode === 'script') {
       const scriptA = document.getElementById('script-a')?.value.trim();
       const scriptB = document.getElementById('script-b')?.value.trim();
       if (!scriptA && !scriptB) {
@@ -2551,7 +2556,7 @@ function initGenerate() {
       }
     }
     
-    if ((state.generationMode === 'video' || state.inputMode === 'video') && !state.videoMeta) {
+    if (state.generationMode === 'video' && !state.videoMeta) {
       showGenStatus('⚠️ Загрузите видео-файл выше ↑ в секции «🎥 Видео-референс»', 'text-orange-400');
       document.getElementById('remix-video')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -2564,7 +2569,7 @@ function initGenerate() {
     }
     
     // Scene hint validation for video mode
-    if ((state.generationMode === 'video' || state.inputMode === 'video')) {
+    if (state.generationMode === 'video') {
       const sceneHint = (document.getElementById('scene-hint-main')?.value || document.getElementById('scene-hint')?.value || '').trim();
       if (sceneHint && sceneHint.length > 200) {
         showGenStatus('⚠️ Описание видео слишком длинное (максимум 200 символов). Сократите текст.', 'text-orange-400');
@@ -2591,15 +2596,20 @@ function initGenerate() {
     const pfEl = document.getElementById('gen-preflight');
     if (pfEl) { pfEl.classList.add('hidden'); pfEl.innerHTML = ''; }
 
-    const topicText = (state.generationMode === 'suggested'
-      ? (document.getElementById('idea-input-suggested')?.value || document.getElementById('idea-input')?.value || '')
-      : (document.getElementById('idea-input')?.value || ''));
+    // Read topic text based on current mode — prevent stale idea-input leaking into script/video
+    let topicText = '';
+    if (state.generationMode === 'idea') {
+      topicText = document.getElementById('idea-input')?.value || '';
+    } else if (state.generationMode === 'suggested') {
+      topicText = document.getElementById('idea-input-suggested')?.value || document.getElementById('idea-input')?.value || '';
+    }
+    // script and video modes: topicText stays empty — their content comes from script_ru / video_meta
     const input = {
       input_mode: state.generationMode || state.inputMode,
       character1_id: state.selectedA.id,
       character2_id: state.selectedB.id,
       context_ru: topicText,
-      script_ru: (state.generationMode === 'script' || state.inputMode === 'script') ? {
+      script_ru: state.generationMode === 'script' ? {
         A: document.getElementById('script-a')?.value || '',
         B: document.getElementById('script-b')?.value || ''
       } : null,
