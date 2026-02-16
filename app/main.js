@@ -1743,6 +1743,14 @@ function updateReadiness() {
     checks.chars ? '' : '← выберите на шаге 2',
     checks.chars ? null : () => navigateTo('characters'));
 
+  // Location is always "ready" (auto if not selected), but show which one
+  const locSelected = !!state.selectedLocation;
+  const locName = locSelected ? (state.locations.find(l => l.id === state.selectedLocation)?.name_ru || 'Выбрана') : 'Авто (AI подберёт)';
+  _updateCheckItem('readiness-location', true,
+    locSelected ? `📍 ${locName}` : 'Локация',
+    locSelected ? '' : 'Авто (AI подберёт)',
+    null);
+
   const contentLabel = _contentLabel();
   _updateCheckItem('readiness-content', checks.content,
     checks.content ? contentLabel : 'Идея / диалог / видео',
