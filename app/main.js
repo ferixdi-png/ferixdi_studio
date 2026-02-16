@@ -1897,39 +1897,78 @@ function initGenerate() {
         showGenStatus('', '');
         document.getElementById('gen-results').classList.remove('hidden');
 
-        // Better error handling with specific error types
+        // Enhanced error handling with specific error types and actionable buttons
         let errorTitle = 'Сервис временно недоступен';
         let errorDesc = escapeHtml(apiErr.message);
         let errorAction = 'Попробуйте снова через несколько минут';
+        let errorIcon = '⚠️';
+        let errorButtons = '';
 
         if (apiErr.message?.includes('429') || apiErr.message?.includes('rate limit')) {
           errorTitle = 'Слишком много запросов';
           errorDesc = 'Превышен лимит запросов. Подождите немного перед следующей генерацией.';
           errorAction = 'Лимит сбросится через 1 минуту';
+          errorIcon = '⏱️';
+          errorButtons = `
+            <button onclick="location.reload()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
+              🔄 Обновить через минуту
+            </button>
+          `;
         } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized')) {
           errorTitle = 'Ошибка авторизации';
           errorDesc = 'Промо-код истёк или недействителен. Проверьте настройки.';
           errorAction = 'Введите новый промо-код в разделе "Настройки"';
+          errorIcon = '🔑';
+          errorButtons = `
+            <button onclick="navigateTo('settings')" class="px-4 py-2 bg-violet-500/20 text-violet-400 rounded-lg hover:bg-violet-500/30 transition-colors text-sm">
+              🔑 Перейти к настройкам
+            </button>
+          `;
         } else if (apiErr.message?.includes('timeout') || apiErr.message?.includes('network')) {
           errorTitle = 'Проблемы с соединением';
           errorDesc = 'Не удалось подключиться к AI. Проверьте интернет-соединение.';
           errorAction = 'Попробуйте снова или проверьте подключение';
+          errorIcon = '🌐';
+          errorButtons = `
+            <button onclick="location.reload()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
+              🔄 Обновить страницу
+            </button>
+            <button onclick="navigateTo('settings')" class="px-4 py-2 bg-gray-500/20 text-gray-400 rounded-lg hover:bg-gray-500/30 transition-colors text-sm ml-2">
+              ⚙️ Проверить настройки
+            </button>
+          `;
+        } else if (apiErr.message?.includes('quota') || apiErr.message?.includes('exceeded')) {
+          errorTitle = 'Лимит генераций исчерпан';
+          errorDesc = 'Достигнут лимит генераций для вашего промо-кода.';
+          errorAction = 'Попробуйте другой промо-код или обновите тариф';
+          errorIcon = '📊';
+          errorButtons = `
+            <button onclick="navigateTo('settings')" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
+              📊 Обновить тариф
+            </button>
+          `;
+        } else {
+          errorTitle = 'Неизвестная ошибка';
+          errorDesc = 'Произошла непредвиденная ошибка. Мы уже работаем над её исправлением.';
+          errorAction = 'Попробуйте снова через несколько минут';
+          errorIcon = '❌';
+          errorButtons = `
+            <button onclick="location.reload()" class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
+              🔄 Обновить страницу
+            </button>
+            <button onclick="window.open('https://t.me/ferixdiii', '_blank')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm ml-2">
+              💬 Поддержка
+            </button>
+          `;
         }
 
         document.getElementById('gen-results').innerHTML = `
           <div class="glass-panel p-6 text-center space-y-4">
-            <div class="text-4xl">⚠️</div>
+            <div class="text-4xl">${errorIcon}</div>
             <div class="text-lg text-red-400 font-semibold">${errorTitle}</div>
             <div class="text-sm text-gray-400 max-w-md">${errorDesc}</div>
             <div class="text-xs text-gray-500 mt-2">${errorAction}</div>
-            <div class="flex gap-3 justify-center mt-4">
-              <button onclick="location.reload()" class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
-                🔄 Обновить страницу
-              </button>
-              <button onclick="navigateTo('settings')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
-                ⚙️ Настройки
-              </button>
-            </div>
+            ${errorButtons ? `<div class="flex gap-3 justify-center mt-4">${errorButtons}</div>` : ''}
           </div>
         `;
       }
@@ -2630,8 +2669,130 @@ function initLocationsBrowse() {
   });
 }
 
+// ─── KEYBOARD SHORTCUTS ───────────────────────
+document.addEventListener('keydown', (e) => {
+  // Ctrl/Cmd + Enter to generate
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    const btn = document.getElementById('btn-generate');
+    if (btn && !btn.disabled) {
+      e.preventDefault();
+      btn.click();
+    }
+  }
+  
+  // Escape to close mobile menu
+  if (e.key === 'Escape') {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && sidebar.classList.contains('mobile-open')) {
+      sidebar.classList.remove('mobile-open');
+    }
+  }
+  
+  // Ctrl/Cmd + S to save current state
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveCurrentState();
+  }
+  
+  // Ctrl/Cmd + R to reset to default
+  if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+    e.preventDefault();
+    if (confirm('Сбросить все настройки и начать заново?')) {
+      resetToDefaults();
+    }
+  }
+  
+  // Number keys 1-5 for navigation
+  if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+    const sections = ['ideas', 'generation-mode', 'characters', 'locations', 'generate'];
+    const keyNum = parseInt(e.key);
+    if (keyNum >= 1 && keyNum <= 5) {
+      const section = sections[keyNum - 1];
+      if (section && document.getElementById(`section-${section}`)) {
+        e.preventDefault();
+        navigateTo(section);
+      }
+    }
+  }
+});
+
+// Save current state to localStorage
+function saveCurrentState() {
+  const stateToSave = {
+    selectedA: state.selectedA,
+    selectedB: state.selectedB,
+    selectedLocation: state.selectedLocation,
+    generationMode: state.generationMode,
+    inputMode: state.inputMode,
+    options: state.options,
+    timestamp: Date.now()
+  };
+  localStorage.setItem('ferixdi_saved_state', JSON.stringify(stateToSave));
+  showNotification('💾 Состояние сохранено', 'success');
+}
+
+// Reset to defaults
+function resetToDefaults() {
+  state.selectedA = null;
+  state.selectedB = null;
+  state.selectedLocation = null;
+  state.generationMode = null;
+  state.inputMode = 'idea';
+  state.options = { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false };
+  localStorage.removeItem('ferixdi_saved_state');
+  navigateTo('generation-mode');
+  showNotification('🔄 Сброс выполнен', 'info');
+}
+
+// Load saved state on startup
+function loadSavedState() {
+  try {
+    const saved = localStorage.getItem('ferixdi_saved_state');
+    if (saved) {
+      const stateData = JSON.parse(saved);
+      const age = Date.now() - stateData.timestamp;
+      
+      // Only restore if less than 24 hours old
+      if (age < 24 * 60 * 60 * 1000) {
+        Object.assign(state, stateData);
+        log('OK', 'СОСТОЯНИЕ', 'Загружено сохранённое состояние');
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to load saved state:', e);
+  }
+}
+
+// Show notification toast
+function showNotification(message, type = 'info') {
+  const colors = {
+    success: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    error: 'bg-red-500/20 text-red-400 border-red-500/30',
+    info: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+    warning: 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+  };
+  
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg border ${colors[type]} backdrop-blur-sm z-50 transition-all transform translate-x-full`;
+  notification.textContent = message;
+  
+  document.body.appendChild(notification);
+  
+  // Animate in
+  setTimeout(() => {
+    notification.classList.remove('translate-x-full');
+  }, 10);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.classList.add('translate-x-full');
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  loadSavedState(); // Load saved state first
   initApp();
   initPromoCode();
   initNavigation();
