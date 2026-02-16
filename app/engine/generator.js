@@ -1273,12 +1273,46 @@ export function generate(input) {
     selected_location_id = null
   } = input;
 
+  // ── VALIDATION ──
+  const warnings = [];
   const rng = seededRandom(seed);
+  
+  // Validate characters
   const rawA = characters.find(c => c.id === character1_id) || characters[0];
   const rawB = characters.find(c => c.id === character2_id) || characters[1] || characters[0];
 
   if (!rawA || !rawB) {
     return { error: 'Characters not found', warnings: ['Выберите двух персонажей'] };
+  }
+
+  // Validate input mode consistency
+  if (input_mode === 'script' && (!script_ru || (!script_ru.A && !script_ru.B))) {
+    warnings.push('Режим "Свой диалог" выбран, но диалог не указан — будет использован случайный');
+  }
+  
+  if (input_mode === 'video' && (!video_meta || !video_meta.url && !video_meta.cover_base64)) {
+    warnings.push('Режим "По видео" выбран, но видео не загружено — будет использован случайный диалог');
+  }
+  
+  // Validate script content
+  if (input_mode === 'script' && script_ru) {
+    const maxWords = 15;
+    if (script_ru.A && script_ru.A.split(/\s+/).length > maxWords) {
+      warnings.push(`Реплика A слишком длинная (${script_ru.A.split(/\s+/).length} слов) — может быть обрезана`);
+    }
+    if (script_ru.B && script_ru.B.split(/\s+/).length > maxWords) {
+      warnings.push(`Реплика B слишком длинная (${script_ru.B.split(/\s+/).length} слов) — может быть обрезана`);
+    }
+  }
+  
+  // Validate context length
+  if (context_ru && context_ru.length > 500) {
+    warnings.push('Тема слишком длинная — может быть обрезана до 500 символов');
+  }
+  
+  // Validate scene hint
+  if (scene_hint_ru && scene_hint_ru.length > 200) {
+    warnings.push('Описание видео слишком длинное — может быть обрезано до 200 символов');
   }
 
   const { A: charA, B: charB } = resolveRoles(rawA, rawB);
@@ -1414,9 +1448,17 @@ export function generate(input) {
     dialogueB = script_ru.B || demo.B_lines[demoIdx];
     killerWord = dialogueB.split(/\s+/).pop()?.replace(/[^а-яёa-z]/gi, '') || 'панч';
   } else if (input_mode === 'video' && video_meta) {
-    dialogueA = demo.A_lines[demoIdx];
-    dialogueB = demo.B_lines[demoIdx];
-    killerWord = demo.killer_word;
+    // For video mode: try to extract dialogue from video metadata if available
+    if (video_meta.extracted_dialogue) {
+      dialogueA = video_meta.extracted_dialogue.A || demo.A_lines[demoIdx];
+      dialogueB = video_meta.extracted_dialogue.B || demo.B_lines[demoIdx];
+      killerWord = video_meta.extracted_dialogue.killer_word || demo.killer_word;
+    } else {
+      // Fallback to demo but with video context hint
+      dialogueA = demo.A_lines[demoIdx];
+      dialogueB = demo.B_lines[demoIdx];
+      killerWord = demo.killer_word;
+    }
   } else {
     dialogueA = demo.A_lines[demoIdx];
     dialogueB = demo.B_lines[demoIdx];
@@ -1825,7 +1867,7 @@ ${engage.hashtags.join(' ')}
       hashtags: engage.hashtags,
     },
     qc_gate: { passed: qc.passed, total: qc.total, ok: qc.ok, hard_fails: qc.hard_fails },
-    warnings: validation.warnings,
+    warnings: [...warnings, ...validation.warnings],
     auto_fixes: autoFixes,
     duration_estimate: estimate.total,
     input_mode,

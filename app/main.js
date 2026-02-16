@@ -1167,10 +1167,43 @@ function displayResult(result) {
 
   document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // Warnings
+  // Warnings with categorization
   if (result.warnings?.length > 0) {
     document.getElementById('gen-warnings').classList.remove('hidden');
-    document.getElementById('gen-warnings-list').innerHTML = result.warnings.map(w => `<div class="text-xs">⚠️ ${escapeHtml(w)}</div>`).join('');
+    
+    // Categorize warnings by type
+    const infoWarnings = result.warnings.filter(w => w.includes('Для генерации') || w.includes('введите') || w.includes('проверьте'));
+    const actionWarnings = result.warnings.filter(w => w.includes('слишком длинная') || w.includes('обрезана'));
+    const systemWarnings = result.warnings.filter(w => w.includes('выбран') || w.includes('не указан'));
+    const otherWarnings = result.warnings.filter(w => !infoWarnings.includes(w) && !actionWarnings.includes(w) && !systemWarnings.includes(w));
+    
+    let warningsHtml = '';
+    
+    if (infoWarnings.length > 0) {
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-cyan-400 mb-1">ℹ️ Информация:</div>';
+      warningsHtml += infoWarnings.map(w => `<div class="text-xs text-cyan-300">ℹ️ ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '</div>';
+    }
+    
+    if (actionWarnings.length > 0) {
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-amber-400 mb-1">⚠️ Предупреждения:</div>';
+      warningsHtml += actionWarnings.map(w => `<div class="text-xs text-amber-300">⚠️ ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '</div>';
+    }
+    
+    if (systemWarnings.length > 0) {
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-orange-400 mb-1">🔧 Система:</div>';
+      warningsHtml += systemWarnings.map(w => `<div class="text-xs text-orange-300">🔧 ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '</div>';
+    }
+    
+    if (otherWarnings.length > 0) {
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-gray-400 mb-1">📝 Другое:</div>';
+      warningsHtml += otherWarnings.map(w => `<div class="text-xs text-gray-300">📝 ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '</div>';
+    }
+    
+    document.getElementById('gen-warnings-list').innerHTML = warningsHtml;
   } else {
     document.getElementById('gen-warnings')?.classList.add('hidden');
   }
@@ -1401,18 +1434,43 @@ function initGenerate() {
       return;
     }
 
-    // No validation for idea mode — empty is fine, AI picks everything
-    if (state.inputMode === 'script') {
+    // Enhanced validation for all modes
+    if (state.input_mode === 'script') {
       const scriptA = document.getElementById('script-a')?.value.trim();
       const scriptB = document.getElementById('script-b')?.value.trim();
       if (!scriptA && !scriptB) {
         showGenStatus('⚠️ Напиши хотя бы одну реплику (A или B)', 'text-orange-400');
         return;
       }
+      
+      // Additional validation for script mode
+      const maxWords = 15;
+      if (scriptA && scriptA.split(/\s+/).length > maxWords) {
+        showGenStatus(`⚠️ Реплика A слишком длинная (${scriptA.split(/\s+/).length} слов). Максимум: ${maxWords} слов`, 'text-orange-400');
+        return;
+      }
+      if (scriptB && scriptB.split(/\s+/).length > maxWords) {
+        showGenStatus(`⚠️ Реплика B слишком длинная (${scriptB.split(/\s+/).length} слов). Максимум: ${maxWords} слов`, 'text-orange-400');
+        return;
+      }
     }
-    if (state.inputMode === 'video' && !state.videoMeta) {
+    
+    if (state.input_mode === 'video' && !state.videoMeta) {
       showGenStatus('⚠️ Сначала загрузи видео-файл в режиме «🎥 По видео»', 'text-orange-400');
       return;
+    }
+    
+    // Validate topic length for all modes (already validated above)
+    if (topicText && topicText.length > 500) {
+      return; // Already handled above
+    }
+    
+    // Scene hint validation (already handled above)
+    if (state.input_mode === 'video') {
+      const sceneHint = document.getElementById('scene-hint')?.value.trim();
+      if (sceneHint && sceneHint.length > 200) {
+        return; // Already handled above
+      }
     }
 
     const btn = document.getElementById('btn-generate');
@@ -1433,42 +1491,7 @@ function initGenerate() {
     const pfEl = document.getElementById('gen-preflight');
     if (pfEl) { pfEl.classList.add('hidden'); pfEl.innerHTML = ''; }
 
-    // Auto-detect category from user topic
     const topicText = document.getElementById('idea-input')?.value || '';
-    let detectedCategory = null;
-    if (topicText) {
-      const topicLower = topicText.toLowerCase();
-      if (topicLower.includes('жкх') || topicLower.includes('коммуналка') || topicLower.includes('отопление') || 
-          topicLower.includes('счёт') || topicLower.includes('счет') || topicLower.includes('квартира') || 
-          topicLower.includes('соседи') || topicLower.includes('батарея') || topicLower.includes('тариф')) {
-        detectedCategory = { ru: 'ЖКХ и коммуналка', en: 'housing utilities drama' };
-      } else if (topicLower.includes('цена') || topicLower.includes('дорого') || topicLower.includes('инфляция') || 
-                 topicLower.includes('магазин') || topicLower.includes('продукт')) {
-        detectedCategory = { ru: 'Цены и инфляция', en: 'prices and inflation' };
-      } else if (topicLower.includes('бабк') || topicLower.includes('дед') || topicLower.includes('внук') || 
-                 topicLower.includes('поколен') || topicLower.includes('зумер') || topicLower.includes('бумер')) {
-        detectedCategory = { ru: 'Разрыв поколений', en: 'generation gap' };
-      } else if (topicLower.includes('больниц') || topicLower.includes('врач') || topicLower.includes('медицин') || 
-                 topicLower.includes('здоровье') || topicLower.includes('лекарств')) {
-        detectedCategory = { ru: 'Здоровье и поликлиника', en: 'health and polyclinic' };
-      } else if (topicLower.includes('дач') || topicLower.includes('огород') || topicLower.includes('помидор') || 
-                 topicLower.includes('урожай') || topicLower.includes('сад')) {
-        detectedCategory = { ru: 'Дача и огород', en: 'dacha and garden' };
-      } else if (topicLower.includes('машин') || topicLower.includes('пробк') || topicLower.includes('транспорт') || 
-                 topicLower.includes('метро') || topicLower.includes('самокат')) {
-        detectedCategory = { ru: 'Транспорт и пробки', en: 'transport and traffic' };
-      } else if (topicLower.includes('нейросет') || topicLower.includes('ai') || topicLower.includes('технолог') || 
-                 topicLower.includes('робот')) {
-        detectedCategory = { ru: 'AI и технологии', en: 'AI and technology' };
-      } else if (topicLower.includes('тренд') || topicLower.includes('блогер') || topicLower.includes('тикток') || 
-                 topicLower.includes('инстаграм')) {
-        detectedCategory = { ru: 'Соцсети и тренды', en: 'social media and trends' };
-      } else if (topicLower.includes('муж') || topicLower.includes('жен') || topicLower.includes('отношен') || 
-                 topicLower.includes('любовь')) {
-        detectedCategory = { ru: 'Отношения', en: 'relationships' };
-      }
-    }
-
     const input = {
       input_mode: state.inputMode,
       character1_id: state.selectedA.id,
@@ -1479,7 +1502,7 @@ function initGenerate() {
         B: document.getElementById('script-b')?.value || ''
       } : null,
       scene_hint_ru: document.getElementById('scene-hint')?.value || null,
-      category: detectedCategory || getRandomCategory(Date.now().toString()),
+      // Let generator.js handle category auto-detection (no manual override)
       thread_memory: getThreadMemory(),
       video_meta: state.videoMeta,
       product_info: state.productInfo,
@@ -1542,19 +1565,57 @@ function initGenerate() {
         updatePreflightStatus(`❌ Ошибка генерации: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
         showGenStatus('', '');
         document.getElementById('gen-results').classList.remove('hidden');
+
+        // Better error handling with specific error types
+        let errorTitle = 'Сервис временно недоступен';
+        let errorDesc = escapeHtml(apiErr.message);
+        let errorAction = 'Попробуйте снова через несколько минут';
+
+        if (apiErr.message?.includes('429') || apiErr.message?.includes('rate limit')) {
+          errorTitle = 'Слишком много запросов';
+          errorDesc = 'Превышен лимит запросов. Подождите немного перед следующей генерацией.';
+          errorAction = 'Лимит сбросится через 1 минуту';
+        } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized')) {
+          errorTitle = 'Ошибка авторизации';
+          errorDesc = 'Промо-код истёк или недействителен. Проверьте настройки.';
+          errorAction = 'Введите новый промо-код в разделе "Настройки"';
+        } else if (apiErr.message?.includes('timeout') || apiErr.message?.includes('network')) {
+          errorTitle = 'Проблемы с соединением';
+          errorDesc = 'Не удалось подключиться к AI. Проверьте интернет-соединение.';
+          errorAction = 'Попробуйте снова или проверьте подключение';
+        }
+
         document.getElementById('gen-results').innerHTML = `
           <div class="glass-panel p-6 text-center space-y-4">
             <div class="text-4xl">⚠️</div>
-            <div class="text-lg text-red-400 font-semibold">Сервис временно недоступен</div>
-            <div class="text-sm text-gray-400">${escapeHtml(apiErr.message)}</div>
-            <div class="text-sm text-gray-300 mt-4">Повторите попытку позже или свяжитесь с поддержкой:</div>
-            <a href="https://t.me/ferixdiii" target="_blank" class="btn-primary inline-block px-6 py-2 text-sm">💬 Написать в Telegram</a>
+            <div class="text-lg text-red-400 font-semibold">${errorTitle}</div>
+            <div class="text-sm text-gray-400 max-w-md">${errorDesc}</div>
+            <div class="text-xs text-gray-500 mt-2">${errorAction}</div>
+            <div class="flex gap-3 justify-center mt-4">
+              <button onclick="location.reload()" class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
+                🔄 Обновить страницу
+              </button>
+              <button onclick="navigateTo('settings')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
+                ⚙️ Настройки
+              </button>
+            </div>
           </div>
         `;
       }
     } else {
-      // Demo mode or API without _apiContext — show local result
-      updatePreflightStatus('📋 Демо-режим · Для полной генерации введи промо-код в настройках', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
+      // Demo mode or API without _apiContext — show local result with better UX
+      const hasPromo = isPromoValid();
+      updatePreflightStatus(hasPromo ? '📋 Локальная генерация · AI-движок недоступен' : '📋 Демо-режим · Введите промо-код для полной генерации', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
+      
+      // Add helpful info about local vs AI generation
+      if (!hasPromo) {
+        localResult.warnings = localResult.warnings || [];
+        localResult.warnings.push('Для генерации уникального контента с FERIXDI AI введите промо-код в разделе "Настройки"');
+      } else {
+        localResult.warnings = localResult.warnings || [];
+        localResult.warnings.push('AI-движок временно недоступен — показан локальный шаблон');
+      }
+      
       displayResult(localResult);
     }
 
