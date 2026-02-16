@@ -2885,18 +2885,43 @@ async function fetchTrends() {
   const res = document.getElementById('trends-results');
   if (!btn || !st || !res) return;
 
+  // Get selected niche for display
+  const nicheSelector = document.getElementById('niche-selector');
+  const selectedNiche = nicheSelector ? nicheSelector.value : 'universal';
+  const nicheNames = {
+    universal: 'универсальные',
+    business: 'бизнес',
+    health: 'здоровье и фитнес',
+    tech: 'tech и AI',
+    beauty: 'красота',
+    finance: 'финансы',
+    education: 'образование',
+    relationships: 'отношения',
+    travel: 'путешествия',
+    food: 'еда',
+    parenting: 'родительство',
+    realestate: 'недвижимость'
+  };
+  const nicheName = nicheNames[selectedNiche] || 'универсальные';
+  
   btn.disabled = true;
   btn.innerHTML = '<span class="animate-pulse">⏳</span> AI ищет тренды через Google...';
   st.classList.remove('hidden');
-  st.innerHTML = '<span class="text-gray-400 animate-pulse">FERIXDI AI ищет что обсуждают в России прямо сейчас + анализирует новости...</span>';
+  st.innerHTML = `<span class="text-gray-400 animate-pulse">FERIXDI AI ищет <span class="text-cyan-400">${nicheName}</span> идеи через Google Search...</span>`;
   res.classList.add('hidden');
 
   try {
     const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
     const jwt = localStorage.getItem('ferixdi_jwt');
+    
+    // Get selected niche from UI
+    const nicheSelector = document.getElementById('niche-selector');
+    const selectedNiche = nicheSelector ? nicheSelector.value : 'universal';
+    
     const resp = await fetch(`${url}/api/trends`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
+      body: JSON.stringify({ niche: selectedNiche }),
     });
     const data = await resp.json();
 
@@ -2910,8 +2935,12 @@ async function fetchTrends() {
     const groundedBadge = data.grounded
       ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">🌐 Google Search</span>'
       : '<span class="text-[9px] bg-gray-500/15 text-gray-500 px-1.5 py-0.5 rounded ml-2">📚 AI-анализ</span>';
+    
+    const nicheBadge = selectedNiche !== 'universal' 
+      ? `<span class="text-[9px] bg-cyan-500/15 text-cyan-400 px-1.5 py-0.5 rounded ml-2">🎯 ${nicheName}</span>`
+      : '';
 
-    st.innerHTML = `<span class="text-emerald-400">✓ ${data.trends.length} идей · ${escapeHtml(data.weekday || '')}, ${escapeHtml(data.date)}</span>${groundedBadge}`;
+    st.innerHTML = `<span class="text-emerald-400">✓ ${data.trends.length} идей · ${escapeHtml(data.weekday || '')}, ${escapeHtml(data.date)}</span>${groundedBadge}${nicheBadge}`;
     res.classList.remove('hidden');
 
     const catMeta = {
