@@ -10,9 +10,11 @@ const LONG_WORD_PENALTY = 0.15;
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
 const FILLER_PENALTY = 0.12;
 const SHORT_PUNCH_BONUS = -0.1;
-const PAUSE_MARKER_DURATION = 0.3;
+const PAUSE_MARKER_DURATION = 0.2;
 // v2 speaker window limits (seconds of speech available)
 const SPEAKER_WINDOW = { A: 3.2, B: 3.5 };
+const WINDOW_TOLERANCE = 0.4; // windows flex — if A finishes early, B gets extra time
+const TOTAL_SPEECH_BUDGET = SPEAKER_WINDOW.A + SPEAKER_WINDOW.B; // 6.7s total
 
 export function estimateLineDuration(text, pace = 'normal') {
   if (!text || !text.trim()) return { duration: 0, wordCount: 0, details: [] };
@@ -69,7 +71,7 @@ export function estimateDialogue(lines, options = {}) {
     const est = estimateLineDuration(line.text, line.pace || 'normal');
     const speaker = line.speaker || '?';
     const window = SPEAKER_WINDOW[speaker] || 3.0;
-    const overWindow = est.duration > window;
+    const overWindow = est.duration > window + WINDOW_TOLERANCE;
     const entry = {
       speaker,
       text: line.text,
@@ -85,11 +87,11 @@ export function estimateDialogue(lines, options = {}) {
 
   total = Math.round(total * 100) / 100;
 
-  // v2 risk: check both total AND per-speaker windows
+  // v2 risk: check total speech budget AND per-speaker windows with tolerance
   let risk = 'low';
   const anyOverWindow = perLine.some(l => l.overWindow);
-  if (total > TARGET || anyOverWindow) risk = 'high';
-  else if (total > TARGET - 1.0) risk = 'medium';
+  if (total > TOTAL_SPEECH_BUDGET || anyOverWindow) risk = 'high';
+  else if (total > TOTAL_SPEECH_BUDGET - 0.5) risk = 'medium';
 
   const notes = [];
   const trimmingSuggestions = [];
@@ -97,7 +99,9 @@ export function estimateDialogue(lines, options = {}) {
   // Per-speaker window warnings
   for (const entry of perLine) {
     if (entry.overWindow) {
-      notes.push(`${entry.speaker}: ${entry.duration}s > окно ${entry.window}s — НЕ ВЛЕЗЕТ`);
+      notes.push(`${entry.speaker}: ${entry.duration}s > окно ${entry.window}s (+${WINDOW_TOLERANCE}s запас) — НЕ ВЛЕЗЕТ`);
+    } else if (entry.duration > entry.window) {
+      notes.push(`${entry.speaker}: ${entry.duration}s > окно ${entry.window}s — на грани, но влезет (запас ${WINDOW_TOLERANCE}s)`);
     }
   }
 
