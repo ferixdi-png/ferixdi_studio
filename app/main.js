@@ -1784,6 +1784,10 @@ function initMatrixRain() {
 }
 
 // ─── TRENDS (Ideas section) ─────────────
+function _escForAttr(str) {
+  return escapeHtml(String(str || '')).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ').replace(/\r/g, '');
+}
+
 async function fetchTrends() {
   if (!isPromoValid()) {
     const st = document.getElementById('trends-status');
@@ -1797,9 +1801,9 @@ async function fetchTrends() {
   if (!btn || !st || !res) return;
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="animate-pulse">⏳</span> AI анализирует тренды...';
+  btn.innerHTML = '<span class="animate-pulse">⏳</span> AI ищет тренды через Google...';
   st.classList.remove('hidden');
-  st.innerHTML = '<span class="text-gray-400 animate-pulse">Gemini изучает что обсуждают в России прямо сейчас...</span>';
+  st.innerHTML = '<span class="text-gray-400 animate-pulse">Gemini ищет что обсуждают в России прямо сейчас + анализирует новости...</span>';
   res.classList.add('hidden');
 
   try {
@@ -1818,27 +1822,76 @@ async function fetchTrends() {
       return;
     }
 
-    st.innerHTML = `<span class="text-emerald-400">✓ Найдено ${data.trends.length} актуальных тем · ${escapeHtml(data.date)}</span>`;
-    res.classList.remove('hidden');
-    res.innerHTML = data.trends.map((t, i) => {
-      const viralBars = '🔥'.repeat(Math.min(Math.round(t.virality / 2), 5));
-      return `
-      <div class="bg-black/40 rounded-lg p-4 space-y-2 border border-gray-800/50 hover:border-amber-500/30 transition-colors">
-        <div class="flex items-start justify-between gap-3">
-          <div class="flex items-center gap-2">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold flex-shrink-0">${i + 1}</span>
-            <span class="text-sm font-semibold text-white">${escapeHtml(t.topic)}</span>
-          </div>
-          <span class="text-[10px] text-amber-400 whitespace-nowrap">${viralBars} ${t.virality}/10</span>
-        </div>
-        <div class="text-[11px] text-gray-400">${escapeHtml(t.why_trending)}</div>
-        <div class="text-[11px] text-cyan-300/80"><span class="text-gray-500">🎬 Угол:</span> ${escapeHtml(t.comedy_angle)}</div>
-        <div class="text-[11px] text-violet-300/80 bg-violet-500/8 rounded p-2"><span class="text-gray-500">💡 Идея:</span> ${escapeHtml(t.example_idea)}</div>
-        <button class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors mt-1" onclick="document.getElementById('idea-input').value='${escapeHtml(t.topic + ': ' + (t.comedy_angle || '')).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ').replace(/\r/g, '')}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено в идею!'">📋 Использовать как идею для видео →</button>
-      </div>`;
-    }).join('');
+    const groundedBadge = data.grounded
+      ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">🌐 Google Search</span>'
+      : '<span class="text-[9px] bg-gray-500/15 text-gray-500 px-1.5 py-0.5 rounded ml-2">📚 AI-анализ</span>';
 
-    log('OK', 'ТРЕНДЫ', `Загружено ${data.trends.length} актуальных тем`);
+    st.innerHTML = `<span class="text-emerald-400">✓ ${data.trends.length} идей · ${escapeHtml(data.weekday || '')}, ${escapeHtml(data.date)}</span>${groundedBadge}`;
+    res.classList.remove('hidden');
+
+    const catMeta = {
+      hot:    { icon: '🔥', label: 'Горячее сегодня', color: 'red',    border: 'border-red-500/30',    bg: 'bg-red-500/8',    badge: 'bg-red-500/20 text-red-400' },
+      pain:   { icon: '💢', label: 'Вечная боль',     color: 'amber',  border: 'border-amber-500/30',  bg: 'bg-amber-500/8',  badge: 'bg-amber-500/20 text-amber-400' },
+      format: { icon: '🎬', label: 'Вирусный формат', color: 'violet', border: 'border-violet-500/30', bg: 'bg-violet-500/8', badge: 'bg-violet-500/20 text-violet-400' },
+    };
+
+    // Group by category
+    let lastCat = '';
+    let html = '';
+    data.trends.forEach((t, i) => {
+      const cm = catMeta[t.category] || catMeta.pain;
+      // Category header
+      if (t.category !== lastCat) {
+        lastCat = t.category;
+        html += `<div class="flex items-center gap-2 mt-${i === 0 ? '0' : '4'} mb-2">
+          <span class="text-sm">${cm.icon}</span>
+          <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">${cm.label}</span>
+          <div class="flex-1 h-px bg-gray-800"></div>
+        </div>`;
+      }
+
+      const viralBars = '█'.repeat(Math.min(t.virality, 10));
+      const viralEmpty = '░'.repeat(Math.max(0, 10 - t.virality));
+      const viralColor = t.virality >= 8 ? 'text-red-400' : t.virality >= 6 ? 'text-amber-400' : 'text-gray-500';
+
+      html += `
+      <div class="rounded-lg p-4 space-y-2.5 border ${cm.border} hover:border-opacity-60 transition-colors ${cm.bg}">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-start gap-2 min-w-0">
+            <span class="flex items-center justify-center w-5 h-5 rounded text-[9px] font-bold flex-shrink-0 ${cm.badge}">${i + 1}</span>
+            <div class="min-w-0">
+              <div class="text-sm font-semibold text-white leading-tight">${escapeHtml(t.topic)}</div>
+              ${t.viral_format ? `<span class="text-[9px] text-violet-400/80 mt-0.5 inline-block">📐 ${escapeHtml(t.viral_format)}</span>` : ''}
+            </div>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="text-[9px] font-mono ${viralColor}">${viralBars}${viralEmpty}</div>
+            <div class="text-[9px] text-gray-500">${t.virality}/10</div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-gray-400">${escapeHtml(t.why_trending)}</div>
+
+        <!-- Ready dialogue -->
+        <div class="bg-black/40 rounded-lg p-3 space-y-1.5">
+          <div class="text-[10px] text-gray-500 font-medium mb-1">💬 Готовый диалог:</div>
+          <div class="text-[11px]"><span class="text-cyan-400 font-medium">A:</span> <span class="text-gray-200">«${escapeHtml(t.dialogue_A)}»</span></div>
+          <div class="text-[11px]"><span class="text-violet-400 font-medium">B:</span> <span class="text-gray-200">«${escapeHtml(t.dialogue_B)}»</span></div>
+          ${t.killer_word ? `<div class="text-[10px] text-red-400/70 mt-1">💥 killer: «${escapeHtml(t.killer_word)}»</div>` : ''}
+        </div>
+
+        ${t.share_hook ? `<div class="text-[10px] text-gray-500 italic">� ${escapeHtml(t.share_hook)}</div>` : ''}
+
+        <!-- Action buttons -->
+        <div class="flex gap-2 flex-wrap pt-1">
+          <button class="text-[10px] px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-medium" onclick="document.getElementById('idea-input').value='${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено!'">💡 Как идею</button>
+          <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="var a=document.getElementById('script-a'),b=document.getElementById('script-b');if(a)a.value='${_escForAttr(t.dialogue_A)}';if(b)b.value='${_escForAttr(t.dialogue_B)}';document.querySelectorAll('#section-remix .mode-btn').forEach(b=>b.classList.remove('active'));var mb=document.querySelector('#section-remix .mode-btn[data-mode=script]');if(mb)mb.classList.add('active');document.getElementById('mode-idea')?.classList.add('hidden');document.getElementById('mode-script')?.classList.remove('hidden');document.getElementById('mode-video')?.classList.add('hidden');document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено!'">� Вставить диалог</button>
+        </div>
+      </div>`;
+    });
+
+    res.innerHTML = html;
+    log('OK', 'ТРЕНДЫ', `Загружено ${data.trends.length} идей${data.grounded ? ' (Google Search)' : ''}`);
   } catch (e) {
     st.innerHTML = `<span class="text-red-400">❌ Ошибка сети: ${escapeHtml(e.message)}</span>`;
     log('ERR', 'ТРЕНДЫ', e.message);
