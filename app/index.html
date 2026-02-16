@@ -468,12 +468,38 @@
             </div>
           </div>
 
-          <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide" title="Ctrl+Enter для быстрой генерации">
+          <!-- Readiness checklist (live) -->
+          <div id="gen-readiness" class="glass-panel p-4 space-y-2 border-l-2 border-gray-700/50 mb-3">
+            <div class="text-xs text-gray-400 font-semibold mb-1">📋 Чеклист перед генерацией:</div>
+            <div id="readiness-mode" class="flex items-center gap-2 text-xs">
+              <span class="readiness-icon text-red-400">✗</span>
+              <span class="text-gray-400">Режим генерации</span>
+              <span class="readiness-hint text-[10px] text-red-400/70 ml-auto">← выберите на шаге 1</span>
+            </div>
+            <div id="readiness-chars" class="flex items-center gap-2 text-xs">
+              <span class="readiness-icon text-red-400">✗</span>
+              <span class="text-gray-400">Персонажи A и B</span>
+              <span class="readiness-hint text-[10px] text-red-400/70 ml-auto">← выберите на шаге 2</span>
+            </div>
+            <div id="readiness-content" class="flex items-center gap-2 text-xs">
+              <span class="readiness-icon text-red-400">✗</span>
+              <span class="text-gray-400">Идея / диалог / видео</span>
+              <span class="readiness-hint text-[10px] text-red-400/70 ml-auto">← введите контент</span>
+            </div>
+            <div id="readiness-promo" class="flex items-center gap-2 text-xs">
+              <span class="readiness-icon text-red-400">✗</span>
+              <span class="text-gray-400">Промо-код</span>
+              <span class="readiness-hint text-[10px] text-red-400/70 ml-auto">← введите в «Настройки»</span>
+            </div>
+          </div>
+
+          <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide opacity-50 cursor-not-allowed" title="Ctrl+Enter для быстрой генерации" disabled>
             <span class="flex items-center justify-center gap-2">
               🚀 Создать контент
               <span class="text-xs opacity-60">Ctrl+Enter</span>
             </span>
           </button>
+          <div id="gen-status"></div>
 
           <!-- Pre-flight: system parameters breakdown (shown during generation) -->
           <div id="gen-preflight" class="hidden space-y-3"></div>

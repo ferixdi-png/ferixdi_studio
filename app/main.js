@@ -94,6 +94,7 @@ function initPromoCode() {
       log('OK', 'ПРОМО', 'Промо-код принят');
       updateWelcomeBanner();
       autoAuth(hash);
+      updateReadiness();
     } else {
       status.innerHTML = '<span class="text-red-400">✗ Неверный промо-код</span>';
       log('WARN', 'ПРОМО', 'Неверный промо-код');
@@ -533,6 +534,7 @@ function selectChar(role, id) {
   updateCharDisplay();
   renderCharacters(getCurrentFilters());
   log('INFO', 'ПЕРСОНАЖИ', `${role}: ${char.name_ru} (${char.compatibility})`);
+  updateReadiness();
 }
 
 // ─── AUTO-SELECT CHARACTERS FOR CATEGORY ───────────────
@@ -983,6 +985,9 @@ function navigateTo(section) {
   // Update progress indicators
   updateProgressIndicators(section);
 
+  // Update readiness checklist when entering generate section
+  if (section === 'generate') updateReadiness();
+
   // Refresh smart match when navigating to characters
   if (section === 'characters') updateSmartMatch();
   
@@ -1060,6 +1065,10 @@ function initNavigation() {
 
   // "Далее" button on characters → go to locations
   document.getElementById('btn-go-generate')?.addEventListener('click', () => {
+    if (!state.selectedA || !state.selectedB) {
+      showNotification('⚠️ Сначала выберите двух персонажей (A и B)', 'warning');
+      return;
+    }
     navigateTo('locations');
   });
 
@@ -1070,6 +1079,16 @@ function initNavigation() {
 
   // Add location continue button
   document.getElementById('btn-go-generate-from-locations')?.addEventListener('click', () => {
+    if (!state.generationMode) {
+      showNotification('⚠️ Сначала выберите режим генерации', 'warning');
+      navigateTo('generation-mode');
+      return;
+    }
+    if (!state.selectedA || !state.selectedB) {
+      showNotification('⚠️ Сначала выберите двух персонажей', 'warning');
+      navigateTo('characters');
+      return;
+    }
     navigateTo('generate');
   });
 }
@@ -1088,6 +1107,8 @@ function initGenerationMode() {
   document.getElementById('btn-continue-to-characters')?.addEventListener('click', () => {
     if (state.generationMode) {
       navigateTo('characters');
+    } else {
+      showNotification('⚠️ Сначала выберите режим генерации из списка выше', 'warning');
     }
   });
 
@@ -1140,6 +1161,7 @@ function selectGenerationMode(mode) {
   
   // Update progress tracker
   updateProgress();
+  updateReadiness();
 }
 
 function updateModeSpecificUI(mode) {
@@ -1455,6 +1477,11 @@ function initModeSwitcher() {
     }, 100);
   });
 
+  // Real-time readiness update on content input
+  ['idea-input', 'script-a', 'script-b'].forEach(inputId => {
+    document.getElementById(inputId)?.addEventListener('input', () => updateReadiness());
+  });
+
   // Character recommendations on input change
   let recommendationTimeout;
   document.getElementById('idea-input')?.addEventListener('input', (e) => {
@@ -1594,10 +1621,131 @@ function showGenStatus(text, cls) {
     el = document.createElement('div');
     el.id = 'gen-status';
     const btn = document.getElementById('btn-generate');
-    if (btn) btn.parentNode.insertBefore(el, btn);
+    if (btn) btn.parentNode.insertBefore(el, btn.nextSibling);
   }
   el.className = `text-sm text-center py-2 ${cls}`;
   el.textContent = text;
+}
+
+// ─── READINESS CHECKLIST (live update) ───────
+function updateReadiness() {
+  const btn = document.getElementById('btn-generate');
+  if (!btn) return;
+
+  const checks = {
+    mode: !!state.generationMode,
+    chars: !!(state.selectedA && state.selectedB),
+    content: _hasContent(),
+    promo: isPromoValid(),
+  };
+
+  const allReady = checks.mode && checks.chars && checks.content && checks.promo;
+
+  // Update button state
+  if (allReady) {
+    btn.disabled = false;
+    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    btn.innerHTML = '<span class="flex items-center justify-center gap-2">🚀 Создать контент<span class="text-xs opacity-60">Ctrl+Enter</span></span>';
+  } else {
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+    const missing = [];
+    if (!checks.mode) missing.push('режим');
+    if (!checks.chars) missing.push('персонажи');
+    if (!checks.content) missing.push('контент');
+    if (!checks.promo) missing.push('промо-код');
+    btn.innerHTML = `<span class="flex items-center justify-center gap-2">🔒 Не хватает: ${missing.join(', ')}</span>`;
+  }
+
+  // Update checklist panel
+  const panel = document.getElementById('gen-readiness');
+  if (!panel) return;
+
+  // Border color
+  panel.classList.remove('border-gray-700/50', 'border-emerald-500/40', 'border-amber-500/40');
+  panel.classList.add(allReady ? 'border-emerald-500/40' : (checks.mode && checks.chars ? 'border-amber-500/40' : 'border-gray-700/50'));
+
+  _updateCheckItem('readiness-mode', checks.mode,
+    state.generationMode ? _modeLabel(state.generationMode) : 'Режим генерации',
+    checks.mode ? '' : '← выберите на шаге 1',
+    checks.mode ? null : () => navigateTo('generation-mode'));
+
+  _updateCheckItem('readiness-chars', checks.chars,
+    checks.chars ? `${state.selectedA.name_ru} × ${state.selectedB.name_ru}` : 'Персонажи A и B',
+    checks.chars ? '' : '← выберите на шаге 2',
+    checks.chars ? null : () => navigateTo('characters'));
+
+  const contentLabel = _contentLabel();
+  _updateCheckItem('readiness-content', checks.content,
+    checks.content ? contentLabel : 'Идея / диалог / видео',
+    checks.content ? '' : '← введите контент',
+    null);
+
+  _updateCheckItem('readiness-promo', checks.promo,
+    checks.promo ? 'VIP активен' : 'Промо-код',
+    checks.promo ? '' : '← введите в «Настройки»',
+    checks.promo ? null : () => navigateTo('settings'));
+}
+
+function _hasContent() {
+  if (state.generationMode === 'idea') {
+    return !!(document.getElementById('idea-input')?.value?.trim());
+  }
+  if (state.generationMode === 'suggested') {
+    return !!(document.getElementById('idea-input')?.value?.trim());
+  }
+  if (state.generationMode === 'script') {
+    const a = document.getElementById('script-a')?.value?.trim();
+    const b = document.getElementById('script-b')?.value?.trim();
+    return !!(a || b);
+  }
+  if (state.generationMode === 'video') {
+    return !!state.videoMeta;
+  }
+  return false;
+}
+
+function _contentLabel() {
+  if (state.generationMode === 'idea' || state.generationMode === 'suggested') {
+    const v = document.getElementById('idea-input')?.value?.trim() || '';
+    return v ? `"${v.slice(0, 30)}${v.length > 30 ? '...' : ''}"` : '';
+  }
+  if (state.generationMode === 'script') return 'Диалог готов';
+  if (state.generationMode === 'video') return state.videoMeta ? `Видео: ${state.videoMeta.name}` : '';
+  return '';
+}
+
+function _modeLabel(m) {
+  return { idea: '💡 Своя идея', suggested: '📚 Готовые идеи', script: '📝 Свой диалог', video: '🎥 По видео' }[m] || m;
+}
+
+function _updateCheckItem(elId, ok, label, hint, onClick) {
+  const row = document.getElementById(elId);
+  if (!row) return;
+
+  const icon = row.querySelector('.readiness-icon');
+  const labelEl = row.children[1];
+  const hintEl = row.querySelector('.readiness-hint');
+
+  if (icon) {
+    icon.textContent = ok ? '✓' : '✗';
+    icon.className = `readiness-icon ${ok ? 'text-emerald-400' : 'text-red-400'}`;
+  }
+  if (labelEl) {
+    labelEl.textContent = label;
+    labelEl.className = ok ? 'text-emerald-300' : 'text-gray-400';
+  }
+  if (hintEl) {
+    hintEl.textContent = hint;
+    hintEl.className = `readiness-hint text-[10px] ml-auto ${ok ? 'text-emerald-500/60' : 'text-red-400/70 cursor-pointer hover:text-red-300 underline decoration-dotted'}`;
+    if (!ok && onClick) {
+      hintEl.onclick = onClick;
+      hintEl.style.cursor = 'pointer';
+    } else {
+      hintEl.onclick = null;
+      hintEl.style.cursor = '';
+    }
+  }
 }
 
 // ─── PRODUCT PHOTO UPLOAD ───────────────────
@@ -3272,10 +3420,13 @@ function initLocationsBrowse() {
 document.addEventListener('keydown', (e) => {
   // Ctrl/Cmd + Enter to generate
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
     const btn = document.getElementById('btn-generate');
     if (btn && !btn.disabled) {
-      e.preventDefault();
       btn.click();
+    } else if (btn && btn.disabled) {
+      showNotification('🔒 Заполните все обязательные поля перед генерацией (см. чеклист)', 'warning');
+      navigateTo('generate');
     }
   }
   
@@ -3537,6 +3688,7 @@ function resetAll() {
   navigateTo('generation-mode');
   
   updateProgress();
+  updateReadiness();
   showNotification('✨ Всё очищено! Начни с выбора режима генерации', 'info');
   log('INFO', 'СБРОС', 'Все выборы очищены');
 }
@@ -3734,4 +3886,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initLocationsBrowse();
   });
   initMatrixRain();
+  // Initial readiness check after all components loaded
+  setTimeout(() => updateReadiness(), 300);
 });
