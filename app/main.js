@@ -951,6 +951,28 @@ function displayResult(result) {
   document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
   showGenStatus('', 'hidden');
 
+  // Product badge in Veo tab
+  const veoProdBadge = document.getElementById('veo-product-badge');
+  if (veoProdBadge) {
+    const pi = result._apiContext?.product_info || state.productInfo;
+    if (pi?.description_en) {
+      veoProdBadge.classList.remove('hidden');
+      const prodImg = pi.image_base64 ? `<img src="data:${pi.mime_type || 'image/jpeg'};base64,${pi.image_base64}" class="w-10 h-10 rounded object-cover border border-emerald-500/30 flex-shrink-0" alt="товар">` : '';
+      const prodDesc = pi.description_en.length > 120 ? pi.description_en.slice(0, 120) + '...' : pi.description_en;
+      veoProdBadge.innerHTML = `
+        <div class="flex items-start gap-2">
+          ${prodImg}
+          <div class="min-w-0">
+            <div class="text-[10px] font-bold text-emerald-400">📦 Товар в промпте ✓</div>
+            <div class="text-[9px] text-gray-400 leading-tight mt-0.5">${escapeHtml(prodDesc)}</div>
+            <div class="text-[9px] text-emerald-500/60 mt-0.5">Строго как на исходном фото — цвета, форма, бренд</div>
+          </div>
+        </div>`;
+    } else {
+      veoProdBadge.classList.add('hidden');
+    }
+  }
+
   // Populate context & dialogue block
   populateContextBlock(result);
 

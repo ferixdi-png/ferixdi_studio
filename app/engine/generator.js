@@ -1165,7 +1165,10 @@ function buildVeoPrompt(opts) {
     charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
     hookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2,
+    productInfo,
   } = opts;
+
+  const hasProduct = !!(productInfo?.description_en);
 
   // Convert pipe pauses to natural ellipsis for Veo
   const veoPause = (text) => (text || '').replace(/\s*\|\s*/g, '... ').trim();
@@ -1202,7 +1205,7 @@ function buildVeoPrompt(opts) {
   lines.push('');
   lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
   lines.push('');
-  lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchors}. Expressive, animated, direct eye contact with camera.`);
+  lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchors}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
   lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchors}. Calm, composed, arms crossed, slight smirk.`);
   lines.push('');
 
@@ -1241,6 +1244,12 @@ function buildVeoPrompt(opts) {
   if (topicRu) {
     lines.push('');
     lines.push(`The argument topic: ${cat.en} — ${topicRu}.`);
+  }
+
+  // Product placement
+  if (hasProduct) {
+    lines.push('');
+    lines.push(`PRODUCT IN FRAME (must match the reference photo EXACTLY): ${productInfo.description_en}. Character A holds this product while arguing — it is clearly visible throughout the video, rendered with photorealistic accuracy. The product's colors, shape, branding, and materials must be identical to the original reference photo. The product is a natural part of the argument — A gestures with it, shows it to camera, uses it as a prop.`);
   }
 
   return lines.join('\n');
@@ -1437,7 +1446,7 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Smartphone selfie photo taken mid-argument — raw, unposed, real. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. The photo looks like someone paused a selfie video on the most intense frame.`,
+    scene: `Smartphone selfie photo taken mid-argument — raw, unposed, real. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. The photo looks like someone paused a selfie video on the most intense frame.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
     characters: [
       {
@@ -1510,9 +1519,10 @@ export function generate(input) {
     negative: 'no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no graphic overlays, no title cards, no speech bubbles, no name tags, no phone/camera visible in frame, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
     ...(product_info?.description_en ? {
       product_placement: {
-        instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as described — same shape, colors, branding, materials. It is the focal point of their argument.',
+        instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as on the ORIGINAL REFERENCE PHOTO — same shape, colors, branding, materials, proportions, textures, reflections. This is a REAL product that exists — render it with photorealistic fidelity. If the reference photo shows a red bottle with gold cap, the AI output must show the EXACT same red bottle with gold cap. Zero creative liberties with the product appearance.',
         product_description: product_info.description_en,
-        placement: 'Character A holds the product while arguing, product clearly visible in frame, photorealistic rendering matching original reference photo',
+        placement: 'Character A holds the product in their hand while arguing. Product clearly visible in frame center-left, sharp focus. Product occupies 10-15% of frame area. Photorealistic rendering — every label, color, texture must match the uploaded reference photo exactly.',
+        lighting_on_product: 'Same environmental lighting as scene. Natural specular highlights on product surface consistent with the light source direction described above. No studio product lighting.',
       }
     } : {}),
   };
@@ -1613,9 +1623,10 @@ export function generate(input) {
     output: { format: 'mp4 h264', resolution: '1080x1920 vertical 9:16', fps: 30, duration: '8.0s ±0.2s', color: 'rec709, natural grade, no LUT' },
     ...(product_info?.description_en ? {
       product_placement: {
-        instruction: 'CRITICAL: The product described below MUST appear in the video. Character A holds/shows it during their line. The product must be rendered with photorealistic accuracy matching the original reference photo exactly — same colors, shape, branding, materials, proportions.',
+        instruction: 'CRITICAL: The product described below MUST appear in the video EXACTLY as on the ORIGINAL REFERENCE PHOTO. Same shape, colors, branding, materials, proportions, textures. Zero creative liberties with product appearance — it is a REAL product.',
         product_description: product_info.description_en,
-        integration: 'Product is naturally woven into the comedic argument. A uses it as a prop during provocation. Product stays visible throughout acts A and B.',
+        integration: 'Product is naturally woven into the comedic argument. Character A holds the product throughout their line — gestures with it, shows it to camera, uses it as a prop. Product remains visible during both acts A and B.',
+        rendering: 'Photorealistic fidelity — every label, color gradient, texture, material must match the uploaded reference photo. Environmental lighting on product consistent with scene. No studio product lighting.',
       }
     } : {}),
   };
@@ -1625,6 +1636,7 @@ export function generate(input) {
     charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
     hookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2: null,
+    productInfo: product_info,
   });
 
   // ── ENGAGEMENT (smart hashtags + viral bait) ──
@@ -1987,6 +1999,7 @@ ${hashtags.join(' ')}
     killerWord: kw, cat: ctx.category, topicRu: ctx.topic_ru,
     aesthetic: ctx.aesthetic, cinematography: ctx.cinematography,
     isOutdoor: isOutdoorMerge, dialogueA2: dA2,
+    productInfo: ctx.product_info,
   });
 
   // ── 7. Post-merge dialogue validation ──
