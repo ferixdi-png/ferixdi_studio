@@ -1013,6 +1013,7 @@ function populateInstaTab(result) {
   const charB = ctx.charB || state.selectedB || {};
 
   const viralTitle = engage.viral_title || '—';
+  const shareBait = engage.share_bait || '—';
   const pinComment = engage.pin_comment || '—';
   const firstComment = engage.first_comment || '—';
   const hashtags = engage.hashtags || [];
@@ -1028,6 +1029,14 @@ function populateInstaTab(result) {
       <div class="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">🔥 Вирусный заголовок</div>
       <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(viralTitle)}</div>
       <div class="text-[9px] text-gray-600 mt-2">Вставь как заголовок Reels — цепляет в ленте</div>
+    </div>
+
+    <!-- Share Bait (video description for forwarding) -->
+    <div class="glass-panel p-4 relative border-l-2 border-orange-400/40">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
+      <div class="text-[10px] text-orange-400 font-semibold uppercase tracking-wider mb-2">📝 Описание видео · для пересылки</div>
+      <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(shareBait)}</div>
+      <div class="text-[9px] text-gray-600 mt-2">Скинь другу с этой фразой — байт на пересылку в контексте видео</div>
     </div>
 
     <!-- Hashtags -->
