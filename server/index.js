@@ -662,7 +662,7 @@ app.post('/api/product/describe', authMiddleware, async (req, res) => {
   const { image_base64, mime_type } = req.body;
   if (!image_base64) return res.status(400).json({ error: 'image_base64 required' });
 
-  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+  const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) {
     return res.status(503).json({ error: 'AI-движок не настроен. Обратитесь к администратору.' });
   }

@@ -248,7 +248,7 @@ const HASHTAGS_BY_CATEGORY = {
 // Evergreen теги — подмешиваются всегда (2-3 шт)
 const EVERGREEN_TAGS = [
   '#рекомендации', '#попалвреки', '#залетевреки',
-  '#shorts', '#reels', '#рилсы',
+  '#рилсы', '#короткоевидео', '#вирусноевидео',
   '#смешноевидео', '#приколы2026', '#юмор',
 ];
 
@@ -606,7 +606,7 @@ const DEMO_DIALOGUES = {
       'Хорошо не сказал спроси нейросеть | похоронит.',
       'Естественный отбор | кто дожил тот здоров.',
       'Болезнь бесплатная | а ты жалуешься.',
-      'Правильно | чего зря лечить | само пройдёт.',
+      'Правильно чего зря лечить | пройдёт.',
     ],
     killer_word: 'похоронит'
   },
@@ -620,7 +620,7 @@ const DEMO_DIALOGUES = {
     B_lines: [
       'Миллион смотрят как не моет | и лайкают.',
       'Суп твой теперь звезда | а ты нет.',
-      'Двести попыток | и всё равно не то | талант.',
+      'Двести попыток и всё равно не то | талант.',
       'Без фильтра никто не узнаёт | прогресс.',
     ],
     killer_word: 'лайкают'
@@ -651,7 +651,7 @@ const DEMO_DIALOGUES = {
       'Самокат транспорт будущего | ты прошлого.',
       'Пешком бесплатно | а ты принципиальная.',
       'Нос у тебя длинный | вот и перед.',
-      'Селёдка молчит | а ты нет | разница.',
+      'Селёдка молчит а ты нет | разница.',
     ],
     killer_word: 'прошлого'
   },
@@ -942,7 +942,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       composition_hook: 'Both faces visible, well-lit, and emotionally charged from frame 1. No fade-in, no black frame, no title card, no text, no logo. The SCENE is already happening when we arrive.',
       object_hook: `${propAnchor} or character\'s signature element visible from frame 1 — gives instant visual context. The viewer\'s eye goes: FACE → EMOTION → OBJECT → "oh, a story" in 0.3s.`,
       energy_level: 'Frame 1 energy ≥ 80% of peak energy. We do NOT build up to the conflict — we drop INTO it. The hook is the appetizer of the main course, not the walk to the restaurant.',
-      forbidden: 'No text hook (text overlay, title card, "wait for it"). No slow buildup. No fade-in. No empty/dark frame. No back-of-head. No neutral expressions. No walking into frame. FACE + EMOTION + EYES + ACTION from literal pixel 0.',
+      forbidden: 'No text hook (text overlay, title card, "wait for it"). No text on screen, no subtitles, no captions, no REC badge, no timestamp, no frames, no borders, no watermarks, no UI elements, no graphic overlays. No slow buildup. No fade-in. No empty/dark frame. No back-of-head. No neutral expressions. No walking into frame. FACE + EMOTION + EYES + ACTION from literal pixel 0.',
     },
 
     // ── 12. EDIT LOGIC (single-take feel) ────────
@@ -955,7 +955,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       end_on_reaction: 'Final 0.5-0.8s: end on the REACTION to the punchline, NOT the punchline itself. Shared laughter, A\'s defeated smile, mutual physical contact. This is what makes people REWATCH — they want to see that moment of surrender again.',
       rewatch_bait: 'In the final 0.3-0.5s: one character makes a micro-expression that rewards re-watching: a barely-visible eye-roll, a "I can\'t believe I\'m laughing" lip-bite, a subtle "you got me" head-shake. Something new to discover on rewatch #2-3.',
       loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (TikTok/Reels) feels semi-continuous. Not identical, but compatible mood — warmth transitioning back to tension.',
-      forbidden: 'No clean endings (fade out, wave, "that\'s all folks"). No setup before the action. No dead air at start or end. No beat longer than 0.3s without visual/audio content. Every single frame of 240 frames (30fps×8s) earns its place.',
+      forbidden: 'No clean endings (fade out, wave, "that\'s all folks"). No text overlays, no subtitles, no frames/borders, no REC badge, no timestamp on screen, no graphic overlays of any kind. No setup before the action. No dead air at start or end. No beat longer than 0.3s without visual/audio content. Every single frame of 240 frames (30fps×8s) earns its place.',
     },
   };
 }
@@ -1334,7 +1334,7 @@ export function generate(input) {
       : 'soft neutral palette, slight blue undertone, gentle contrast, natural skin tones with minimal color cast',
     hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
     style: 'Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, wrinkles, age marks, oily sheen VISIBLE and CELEBRATED. This looks like someone pulled out a phone and took a photo mid-argument.',
-    negative: 'no text, no watermark, no logo, no phone/camera visible in frame, no overlay, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
+    negative: 'no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no graphic overlays, no title cards, no speech bubbles, no name tags, no phone/camera visible in frame, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
     ...(product_info?.description_en ? {
       product_placement: {
         instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as described — same shape, colors, branding, materials. It is the focal point of their argument.',
