@@ -944,6 +944,7 @@ function displayResult(result) {
 
   // Show results
   document.getElementById('gen-results').classList.remove('hidden');
+  document.getElementById('veo-prompt-text').textContent = result.veo_prompt || '(Промпт не сгенерирован)';
   document.querySelector('#tab-photo pre').textContent = JSON.stringify(result.photo_prompt_en_json, null, 2);
   document.querySelector('#tab-video pre').textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
   document.querySelector('#tab-ru pre').textContent = result.ru_package;
@@ -1323,7 +1324,7 @@ function initGenerate() {
       document.querySelectorAll('#gen-results .mode-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const tab = btn.dataset.tab;
-      ['photo', 'video', 'insta', 'ru', 'blueprint'].forEach(t => {
+      ['veo', 'photo', 'video', 'insta', 'ru', 'blueprint'].forEach(t => {
         document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== tab);
       });
     });
@@ -1617,6 +1618,18 @@ function applyDialogueUpdate(newA, newB) {
   // Re-render tabs
   document.querySelector('#tab-video pre').textContent = JSON.stringify(state.lastResult.video_prompt_en_json, null, 2);
   document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(state.lastResult.blueprint_json, null, 2);
+
+  // Re-render Veo prompt if dialogue changed (replace old dialogue lines)
+  if (state.lastResult.veo_prompt) {
+    let veo = state.lastResult.veo_prompt;
+    // Replace A speaks line
+    veo = veo.replace(/(A speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
+    // Replace B responds line
+    veo = veo.replace(/(B responds in Russian: ")[^"]*(")/, `$1${newB.replace(/\s*\|\s*/g, '... ')}$2`);
+    state.lastResult.veo_prompt = veo;
+    const veoEl = document.getElementById('veo-prompt-text');
+    if (veoEl) veoEl.textContent = veo;
+  }
 
   // Sync dialogue editor fields
   const edA = document.getElementById('editor-line-a');

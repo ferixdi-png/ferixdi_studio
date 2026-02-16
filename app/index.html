@@ -355,7 +355,7 @@
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">3</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Получи готовый пакет</h2>
-              <p class="text-xs text-gray-400">Нажми кнопку — через секунду получишь промпт для фото, видео, текст для поста и хештеги.</p>
+              <p class="text-xs text-gray-400">Нажми кнопку — получишь промпт для Veo 3.1 (Google Flow), фото, видео, текст поста и хештеги.</p>
             </div>
           </div>
 
@@ -390,13 +390,32 @@
 
             <div class="h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
             <div class="flex gap-2 flex-wrap">
-              <button class="mode-btn active" data-tab="photo">📸 Фото-промпт</button>
-              <button class="mode-btn" data-tab="video">🎬 Видео-промпт</button>
-              <button class="mode-btn" data-tab="insta">📱 Инста-пакет</button>
-              <button class="mode-btn" data-tab="ru">🇷🇺 Текст поста</button>
-              <button class="mode-btn" data-tab="blueprint">📋 Полный план</button>
+              <button class="mode-btn active" data-tab="veo">🎬 Veo 3.1</button>
+              <button class="mode-btn" data-tab="photo">📸 Фото</button>
+              <button class="mode-btn" data-tab="video">📋 Видео JSON</button>
+              <button class="mode-btn" data-tab="insta">📱 Инста</button>
+              <button class="mode-btn" data-tab="ru">🇷🇺 Пост</button>
+              <button class="mode-btn" data-tab="blueprint">⚙️ План</button>
             </div>
-            <div id="tab-photo" class="glass-panel p-4 max-h-[400px] overflow-y-auto relative"><button class="copy-btn" data-tab="photo">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
+            <div id="tab-veo" class="glass-panel p-4 max-h-[500px] overflow-y-auto relative space-y-3 border-l-2 border-emerald-500/40">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-emerald-400">🎬 Промпт для Veo 3.1</span>
+                  <span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded">Google Flow</span>
+                </div>
+                <button class="copy-btn" data-tab="veo">Копировать</button>
+              </div>
+              <pre id="veo-prompt-text" class="text-xs text-gray-300 whitespace-pre-wrap leading-relaxed"></pre>
+              <div class="flex gap-2 pt-2 border-t border-gray-800">
+                <a href="https://labs.google/fx/tools/flow" target="_blank" class="text-[10px] px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors font-medium flex items-center gap-1">🚀 Открыть Flow</a>
+                <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="navigator.clipboard.writeText(document.getElementById('veo-prompt-text').textContent);this.textContent='✓ Скопировано!';setTimeout(()=>this.textContent='📋 Копировать всё',1500)">📋 Копировать всё</button>
+              </div>
+              <div class="text-[9px] text-gray-600 leading-relaxed">
+                💡 Скопируй промпт → вставь в <a href="https://labs.google/fx/tools/flow" target="_blank" class="text-emerald-400 underline">Google Flow</a> → нажми Generate.
+                Промпт оптимизирован для Veo 3.1: естественный язык, диалоги на русском, реалистичный стиль смартфона.
+              </div>
+            </div>
+            <div id="tab-photo" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="photo">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
             <div id="tab-video" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="video">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
             <div id="tab-insta" class="hidden space-y-3"></div>
             <div id="tab-ru" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="ru">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>

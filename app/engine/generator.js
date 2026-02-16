@@ -1157,6 +1157,95 @@ function runQCGate(blueprint, cast) {
   };
 }
 
+// ─── VEO 3.1 PROMPT BUILDER ─────────────────
+// Generates a single copy-paste text prompt optimized for Google Flow (labs.google/fx/tools/flow)
+// Veo 3.1 expects: natural language, scene + characters + dialogue + camera + sound in one block
+function buildVeoPrompt(opts) {
+  const {
+    charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
+    hookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
+    cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2,
+  } = opts;
+
+  // Convert pipe pauses to natural ellipsis for Veo
+  const veoPause = (text) => (text || '').replace(/\s*\|\s*/g, '... ').trim();
+  const dA = veoPause(dialogueA);
+  const dB = veoPause(dialogueB);
+  const dA2 = dialogueA2 ? veoPause(dialogueA2) : '';
+
+  // Character descriptions — concise but vivid for Veo
+  const charDescA = charA.prompt_tokens?.character_en || cast.speaker_A?.character_en || 'elderly woman, hyper-realistic';
+  const charDescB = charB.prompt_tokens?.character_en || cast.speaker_B?.character_en || 'elderly man, hyper-realistic';
+
+  // Skin/face realism anchors (brief)
+  const skinAnchors = 'visible pores, deep wrinkles, age spots, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
+
+  // Camera style
+  const camStyle = 'Smartphone front camera selfie video, 9:16 vertical portrait, handheld with natural micro-jitter and breathing oscillation. Slight computational portrait-mode bokeh on background. Phone sensor noise in shadows.';
+
+  // Location brief
+  const locBrief = location.split(',').slice(0, 2).join(',').trim();
+
+  // Lighting brief
+  const lightBrief = lightingMood.style.split(',').slice(0, 2).join(',').trim();
+
+  // Hook action brief
+  const hookBrief = hookObj.action_en.split(',').slice(0, 2).join(',').trim();
+
+  // Release brief
+  const releaseBrief = releaseObj.action_en.split(',').slice(0, 2).join(',').trim();
+
+  // Build the single prompt
+  const lines = [];
+
+  lines.push(`A hyper-realistic smartphone selfie video of two elderly characters in a heated comedic argument. ${camStyle}`);
+  lines.push('');
+  lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
+  lines.push('');
+  lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchors}. Expressive, animated, direct eye contact with camera.`);
+  lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchors}. Calm, composed, arms crossed, slight smirk.`);
+  lines.push('');
+
+  // Scene flow
+  lines.push(`The video begins mid-argument — no setup, no intro. A ${hookBrief}, staring directly into the camera with intense emotion.`);
+  lines.push('');
+  lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}. B listens silently with sealed lips, only eyes reacting.`);
+  lines.push('');
+
+  if (dA2) {
+    lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+    lines.push('');
+    lines.push(`A fires back a short follow-up in Russian: "${dA2}" — quick 1-4 word reaction.`);
+  } else {
+    lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+  }
+  lines.push('');
+  lines.push(`Both burst into genuine laughter — ${releaseBrief}. Camera shakes from their body tremor. Warm shared moment.`);
+  lines.push('');
+
+  // Sound design
+  const roomTone = isOutdoor
+    ? 'birds chirping, wind through foliage, distant ambient sounds'
+    : location.includes('kitchen') ? 'humming fridge, wall clock tick, distant plumbing'
+    : location.includes('stairwell') ? 'fluorescent buzz, distant elevator, echo in concrete space'
+    : 'subtle room ambiance, quiet hum, occasional creak';
+  lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Fabric rustle on every movement. Audible breathing between speaking turns. Saliva clicks on hard consonants. Laughter 20-30% louder than dialogue. No music.`);
+  lines.push('');
+
+  // Style/negative
+  lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, wrinkles, age marks. Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality — authentic raw phone video.`);
+  lines.push('');
+  lines.push(`Absolutely no text overlays, no subtitles, no captions, no watermarks, no logos, no UI elements, no borders, no filters. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
+
+  // Topic context
+  if (topicRu) {
+    lines.push('');
+    lines.push(`The argument topic: ${cat.en} — ${topicRu}.`);
+  }
+
+  return lines.join('\n');
+}
+
 export function getRandomCategory(seed) {
   const rng = seededRandom(seed || Date.now().toString());
   return pickRandom(HUMOR_CATEGORIES, rng);
@@ -1322,8 +1411,7 @@ export function generate(input) {
   const stripDashes = (text) => {
     let cleaned = text
       .replace(/\s*[—–]\s*/g, ' ')   // em-dash, en-dash → space
-      .replace(/(\S)-(\S)/g, '$1 $2') // hyphenated-words → separate words
-      .replace(/\s*-\s*/g, ' ')       // standalone hyphens → space
+      .replace(/\s+-\s+/g, ' ')       // standalone hyphens (with spaces) → space
       .replace(/\s{2,}/g, ' ')        // collapse double spaces
       .trim();
     return cleaned;
@@ -1532,6 +1620,13 @@ export function generate(input) {
     } : {}),
   };
 
+  // ── VEO 3.1 PROMPT (single text for Google Flow) ──
+  const veo_prompt = buildVeoPrompt({
+    charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
+    hookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
+    cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2: null,
+  });
+
   // ── ENGAGEMENT (smart hashtags + viral bait) ──
   const engage = buildEngagement(cat.ru, charA, charB, rng);
 
@@ -1692,6 +1787,7 @@ ${engage.hashtags.join(' ')}
   return {
     photo_prompt_en_json,
     video_prompt_en_json,
+    veo_prompt,
     ru_package,
     blueprint_json,
     log,
@@ -1879,6 +1975,19 @@ ${hashtags.join(' ')}
 • Персонаж A держит/показывает товар во время своей реплики
 • Товар остаётся видимым на протяжении всего ролика
 • Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
+
+  // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
+  const isOutdoorMerge = /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(ctx.location || '');
+  r.veo_prompt = buildVeoPrompt({
+    charA, charB, cast: r.video_prompt_en_json.cast || {},
+    location: ctx.location, lightingMood: ctx.lightingMood,
+    wardrobeA: ctx.wardrobeA, wardrobeB: ctx.wardrobeB,
+    hookObj: ctx.hookAction, releaseObj: ctx.releaseAction,
+    propAnchor: ctx.propAnchor, dialogueA: dA, dialogueB: dB,
+    killerWord: kw, cat: ctx.category, topicRu: ctx.topic_ru,
+    aesthetic: ctx.aesthetic, cinematography: ctx.cinematography,
+    isOutdoor: isOutdoorMerge, dialogueA2: dA2,
+  });
 
   // ── 7. Post-merge dialogue validation ──
   // Warn if Gemini's dialogue is too long for timing windows
