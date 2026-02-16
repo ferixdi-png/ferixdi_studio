@@ -1221,6 +1221,24 @@ function selectGenerationMode(mode) {
     nameEl.textContent = modeNames[mode] || mode;
     continueBtn.disabled = false;
     continueBtn.innerHTML = `<span>Перейти к персонажам</span><span>→</span>`;
+
+    // Show mode-specific hint
+    const hintEl = document.getElementById('selected-mode-hint');
+    if (hintEl) {
+      const hints = {
+        idea: '',
+        suggested: '💡 Зайдите в раздел <strong>«Поиск идей»</strong> в меню слева, чтобы выбрать тему из трендов. Или продолжайте — AI сам подберёт актуальную тему на странице генерации.',
+        script: '📝 На странице генерации вы сможете написать реплики для персонажей A и B.',
+        video: '🎥 На странице генерации загрузите видео-файл (MP4/MOV) для ремейка.',
+      };
+      const hint = hints[mode] || '';
+      if (hint) {
+        hintEl.innerHTML = hint;
+        hintEl.classList.remove('hidden');
+      } else {
+        hintEl.classList.add('hidden');
+      }
+    }
   }
 
   // Update mode-specific UI
