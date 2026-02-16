@@ -1202,7 +1202,7 @@ function initGenerate() {
       }
     }
     if (state.inputMode === 'video' && !state.videoMeta) {
-      showGenStatus('⚠️ Сначала загрузи видео или вставь ссылку', 'text-orange-400');
+      showGenStatus('⚠️ Сначала загрузи видео-файл в режиме «🎥 По видео»', 'text-orange-400');
       return;
     }
 
@@ -1834,7 +1834,7 @@ async function fetchTrends() {
         <div class="text-[11px] text-gray-400">${escapeHtml(t.why_trending)}</div>
         <div class="text-[11px] text-cyan-300/80"><span class="text-gray-500">🎬 Угол:</span> ${escapeHtml(t.comedy_angle)}</div>
         <div class="text-[11px] text-violet-300/80 bg-violet-500/8 rounded p-2"><span class="text-gray-500">💡 Идея:</span> ${escapeHtml(t.example_idea)}</div>
-        <button class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors mt-1" onclick="document.getElementById('idea-input').value='${escapeHtml(t.topic + ': ' + (t.comedy_angle || '')).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено в идею!'">📋 Использовать как идею для видео →</button>
+        <button class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors mt-1" onclick="document.getElementById('idea-input').value='${escapeHtml(t.topic + ': ' + (t.comedy_angle || '')).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ').replace(/\r/g, '')}';document.querySelector('.nav-item[data-section=generate]')?.click();this.textContent='✓ Вставлено в идею!'">📋 Использовать как идею для видео →</button>
       </div>`;
     }).join('');
 
