@@ -82,11 +82,11 @@
           <div class="nav-item" data-section="consult"><span>💬</span><span>Помощник</span></div>
           <div class="nav-item" data-section="ideas"><span>🔍</span><span>Поиск идей</span></div>
           <div class="nav-item" data-section="jokes"><span>😂</span><span>Библиотека шуток</span></div>
-          <div class="nav-item active" data-section="generation-mode"><span>🎯</span><span>Режим генерации</span></div>
-          <div class="nav-item" data-section="characters"><span>👥</span><span>Персонажи</span></div>
-          <div class="nav-item" data-section="locations"><span>📍</span><span>Локации</span></div>
+          <div class="nav-item active" data-section="generation-mode"><span>🎯</span><span>1. Режим</span></div>
+          <div class="nav-item" data-section="characters"><span>👥</span><span>2. Персонажи</span></div>
+          <div class="nav-item" data-section="locations"><span>📍</span><span>3. Локации</span></div>
           <div class="nav-item" data-section="series"><span>📺</span><span>Серии</span></div>
-          <div class="nav-item" data-section="generate"><span>⚡</span><span>Генерация</span></div>
+          <div class="nav-item" data-section="generate"><span>⚡</span><span>4. Генерация</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
         </div>
         <!-- Surprise Button -->
@@ -183,8 +183,8 @@
               <div class="text-[11px] text-gray-300 space-y-1.5 leading-relaxed">
                 <div>💡 <span class="text-amber-300 font-medium">Вирусный юмор = бесплатный охват.</span> Reels со смешными AI-персонажами набирают миллионы просмотров — алгоритм Instagram продвигает их бесплатно.</div>
                 <div>📈 <span class="text-emerald-300 font-medium">Аудитория → клиенты.</span> Люди подписываются ради юмора, остаются ради продукта. Ваш товар можно встроить прямо в сюжет ролика.</div>
-                <div>� <span class="text-violet-300 font-medium">Загрузи фото товара или референс.</span> После генерации подгрузи фото своего товара — AI встроит его в кадр. Или загрузи стиль-референс — AI подстроит эстетику под твоё видение.</div>
-                <div>�🚀 <span class="text-cyan-300 font-medium">Ниша под ваш проект.</span> Выбирайте темы под свою аудиторию: еда, красота, финансы, технологии, недвижимость — 12 ниш на выбор.</div>
+                <div>📷 <span class="text-violet-300 font-medium">Загрузи фото товара или референс.</span> После генерации подгрузи фото своего товара — AI встроит его в кадр. Или загрузи стиль-референс — AI подстроит эстетику под твоё видение.</div>
+                <div>🚀 <span class="text-cyan-300 font-medium">Ниша под ваш проект.</span> Выбирайте темы под свою аудиторию: еда, красота, финансы, технологии, недвижимость — 12 ниш на выбор.</div>
               </div>
             </div>
 
@@ -197,7 +197,7 @@
                   Бесплатно прямо сейчас
                 </div>
                 <div class="text-[11px] text-gray-400 space-y-1">
-                  <div>• Смотри всех <span class="text-gray-200" id="welcome-char-count">115</span> <span class="text-gray-200">персонажей</span> и их характеристики</div>
+                  <div>• Смотри всех <span class="text-gray-200" id="welcome-char-count">200+</span> <span class="text-gray-200">персонажей</span> и их характеристики</div>
                   <div>• Выбирай пары и проверяй совместимость</div>
                   <div>• Изучай все режимы и настройки</div>
                   <div>• Загружай видео-референсы</div>
@@ -391,7 +391,7 @@
           <!-- Smart Match Analysis Panel -->
           <div id="smart-match-panel" class="hidden glass-panel p-4 space-y-3 border-l-2 border-cyan-500/40">
             <div class="flex items-center justify-between">
-              <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">🧠 AI-анализ подбора</div>
+              <div class="text-xs text-gray-300 flex items-center gap-1.5">🧠 AI-анализ подбора</div>
               <div id="match-score-badge" class="text-xs font-bold px-2.5 py-1 rounded-full"></div>
             </div>
             <div id="match-progress-bar" class="w-full h-2 rounded-full bg-gray-800 overflow-hidden">
@@ -1145,7 +1145,7 @@
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white text-sm font-bold">😂</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Библиотека шуток</h2>
-              <p class="text-xs text-gray-400">Выбери готовую шутку → AI подберёт персонажей и локацию → генерация в один клик</p>
+              <p class="text-xs text-gray-400">364 шутки · 12 тем · оценка вирусности · генерация в один клик</p>
             </div>
           </div>
 
@@ -1398,7 +1398,7 @@
                 <div id="consult-response" class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
                 <div class="pt-2 border-t border-emerald-500/10 flex gap-3">
                   <button onclick="navigateTo('characters')" class="text-[11px] text-cyan-400 hover:text-cyan-300 transition-colors">✨ Создать персонажа →</button>
-                  <button onclick="navigateTo('locations')" class="text-[11px] text-violet-400 hover:text-violet-300 transition-colors">� Создать локацию →</button>
+                  <button onclick="navigateTo('locations')" class="text-[11px] text-violet-400 hover:text-violet-300 transition-colors">📍 Создать локацию →</button>
                 </div>
               </div>
             </div>
@@ -1417,7 +1417,7 @@
             <div class="text-xs text-gray-400 font-medium">🔑 Промо-код</div>
             <div class="flex gap-2">
               <input id="promo-input" type="password" class="input-field flex-1 text-center tracking-widest" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
-              <button id="promo-save-btn" class="btn-neon text-xs whitespace-nowrap">Сохранить</button>
+              <button id="promo-save-btn" class="btn-neon text-xs whitespace-nowrap">Активировать</button>
             </div>
             <div id="promo-status" class="text-xs h-5"></div>
             <p class="text-[11px] text-gray-500/70">Без промо-кода вы можете просматривать персонажей, но генерация недоступна.</p>
