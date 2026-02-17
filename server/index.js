@@ -68,7 +68,7 @@ const RL_AUTH    = { window: 900_000, max: 5 };   // 5 per 15min (anti-brute-for
 const RL_GEN     = { window: 60_000,  max: 6 };   // 6 per min
 const RL_TRENDS  = { window: 60_000,  max: 4 };   // 4 per min
 const RL_PRODUCT = { window: 60_000,  max: 8 };   // 8 per min
-const RL_CONSULT = { window: 600_000, max: 1 };   // 1 per 10min (free, no auth)
+const RL_CONSULT = { window: 600_000, max: 5 };   // 5 per 10min per IP (free, no auth)
 
 // ─── Enhanced Security Headers ────────────────────────
 app.use((req, res, next) => {
