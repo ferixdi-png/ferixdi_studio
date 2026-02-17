@@ -3839,6 +3839,126 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ─── AI CONSULTATION (FREE, no promo required) ────
+function initConsultation() {
+  const input = document.getElementById('consult-input');
+  const btn = document.getElementById('btn-consult-ask');
+  const statusEl = document.getElementById('consult-status');
+  const responseArea = document.getElementById('consult-response-area');
+  const responseEl = document.getElementById('consult-response');
+  const tokensEl = document.getElementById('consult-tokens');
+  const counterEl = document.getElementById('consult-counter');
+  const copyBtn = document.getElementById('consult-copy-btn');
+  const historyEl = document.getElementById('consult-history');
+  if (!input || !btn) return;
+
+  // Character counter
+  input.addEventListener('input', () => {
+    if (counterEl) counterEl.textContent = `${input.value.length} / 2000`;
+  });
+
+  // Example questions — click to fill
+  document.querySelectorAll('.consult-example').forEach(el => {
+    el.addEventListener('click', () => {
+      input.value = el.dataset.q || '';
+      input.focus();
+      if (counterEl) counterEl.textContent = `${input.value.length} / 2000`;
+    });
+  });
+
+  // Copy button
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const text = responseEl?.textContent || '';
+      if (text) {
+        navigator.clipboard.writeText(text);
+        copyBtn.textContent = '✓ Скопировано';
+        setTimeout(() => { copyBtn.textContent = '📋 Копировать'; }, 1500);
+      }
+    });
+  }
+
+  // Ask button
+  btn.addEventListener('click', async () => {
+    const question = input.value.trim();
+    if (!question || question.length < 3) {
+      if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-orange-400">⚠️ Напишите вопрос (минимум 3 символа)</span>'; }
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> AI думает...';
+    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-cyan-400">🧠 Обрабатываю запрос...</span>'; }
+
+    // Build context from current app state
+    const context = {};
+    if (state.selectedA) context.characterA = state.selectedA.name_ru || state.selectedA.id;
+    if (state.selectedB) context.characterB = state.selectedB.name_ru || state.selectedB.id;
+    if (state.selectedLocation) {
+      const loc = state.locations?.find(l => l.id === state.selectedLocation);
+      if (loc) context.location = loc.name_ru || loc.scene_en;
+    }
+    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'По видео' }[state.generationMode] || state.generationMode;
+    if (state.lastResult) {
+      const d = state.lastResult.video_prompt_en_json?.dialogue;
+      if (d?.final_A_ru) context.lastDialogueA = d.final_A_ru;
+      if (d?.final_B_ru) context.lastDialogueB = d.final_B_ru;
+      if (state.lastResult.log?.category?.ru) context.category = state.lastResult.log.category.ru;
+    }
+
+    try {
+      const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+      const resp = await fetch(`${apiUrl}/api/consult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, context }),
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.error || `Ошибка ${resp.status}`);
+      }
+
+      // Show response
+      if (responseArea) responseArea.classList.remove('hidden');
+      if (responseEl) responseEl.textContent = data.answer;
+      if (tokensEl) tokensEl.textContent = data.tokens ? `${data.tokens} токенов` : '';
+      if (statusEl) statusEl.classList.add('hidden');
+
+      // Save to history
+      if (historyEl) {
+        const histItem = document.createElement('div');
+        histItem.className = 'glass-panel p-3 space-y-2 border-l border-gray-700/50 opacity-60';
+        histItem.innerHTML = `
+          <div class="text-[10px] text-cyan-400 font-medium">❓ ${escapeHtml(question)}</div>
+          <div class="text-[11px] text-gray-400 leading-relaxed whitespace-pre-wrap">${escapeHtml(data.answer).slice(0, 500)}${data.answer.length > 500 ? '...' : ''}</div>
+        `;
+        historyEl.prepend(histItem);
+        // Keep max 5 history items
+        while (historyEl.children.length > 5) historyEl.removeChild(historyEl.lastChild);
+      }
+
+      log('OK', 'КОНСУЛЬТАЦИЯ', `Ответ получен (${data.tokens || '?'} токенов)`);
+
+    } catch (e) {
+      if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(e.message)}</span>`; }
+      log('ERR', 'КОНСУЛЬТАЦИЯ', e.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>🧠</span> Спросить AI';
+    }
+  });
+
+  // Enter to send (Ctrl+Enter or Cmd+Enter)
+  input.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+}
+
 // Save current state to localStorage
 function saveCurrentState() {
   const stateToSave = {
@@ -4257,6 +4377,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLogPanel();
   initLocationPicker();
   initTrends();
+  initConsultation();
   loadLocations().then(() => {
     renderLocationsBrowse();
     initLocationsBrowse();

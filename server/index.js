@@ -68,6 +68,7 @@ const RL_AUTH    = { window: 900_000, max: 5 };   // 5 per 15min (anti-brute-for
 const RL_GEN     = { window: 60_000,  max: 6 };   // 6 per min
 const RL_TRENDS  = { window: 60_000,  max: 4 };   // 4 per min
 const RL_PRODUCT = { window: 60_000,  max: 8 };   // 8 per min
+const RL_CONSULT = { window: 60_000,  max: 3 };   // 3 per min (free, no auth)
 
 // ─── Enhanced Security Headers ────────────────────────
 app.use((req, res, next) => {
@@ -1520,6 +1521,112 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
   } catch (e) {
     console.error('Trends API error:', e.message);
     res.status(500).json({ error: 'Ошибка при запросе трендов' });
+  }
+});
+
+// ─── POST /api/consult — Free AI consultation (NO auth required) ──────
+app.post('/api/consult', async (req, res) => {
+  const ip = getClientIP(req);
+
+  // Rate limiting by IP — 3 per min (free endpoint, stricter limit)
+  if (!checkRateLimit(`consult:${ip}`, RL_CONSULT.window, RL_CONSULT.max)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту (лимит: 3 вопроса в минуту).' });
+  }
+
+  const GEMINI_KEY = nextGeminiKey();
+  if (!GEMINI_KEY) {
+    return res.status(503).json({ error: 'AI-движок не настроен.' });
+  }
+
+  const { question, context } = req.body;
+  if (!question || typeof question !== 'string' || question.trim().length < 3) {
+    return res.status(400).json({ error: 'Напишите вопрос (минимум 3 символа).' });
+  }
+  if (question.length > 2000) {
+    return res.status(400).json({ error: 'Вопрос слишком длинный (максимум 2000 символов).' });
+  }
+
+  // Build context block from what user has selected in the app
+  let contextBlock = '';
+  if (context) {
+    const parts = [];
+    if (context.characterA) parts.push(`Персонаж A: ${context.characterA}`);
+    if (context.characterB) parts.push(`Персонаж B: ${context.characterB}`);
+    if (context.location) parts.push(`Локация: ${context.location}`);
+    if (context.mode) parts.push(`Режим генерации: ${context.mode}`);
+    if (context.category) parts.push(`Категория юмора: ${context.category}`);
+    if (context.lastDialogueA) parts.push(`Последняя реплика A: "${context.lastDialogueA}"`);
+    if (context.lastDialogueB) parts.push(`Последняя реплика B: "${context.lastDialogueB}"`);
+    if (parts.length > 0) {
+      contextBlock = `\n\nТЕКУЩИЙ КОНТЕКСТ ПОЛЬЗОВАТЕЛЯ В FERIXDI STUDIO:\n${parts.join('\n')}`;
+    }
+  }
+
+  const prompt = `Ты — AI-консультант FERIXDI Studio, платформы для создания вирусных Reels/TikTok видео с AI-персонажами.
+
+О ПЛАТФОРМЕ:
+- FERIXDI Studio генерирует полные промпт-пакеты для AI-видео: промпт для фото (стартовый кадр), промпт для видео (Veo/другие нейросети), диалог на русском с таймингами, Инста-пакет (заголовок, хештеги, комментарии)
+- 100+ персонажей (бабки, деды, молодёжь, мультяшные) с кинематографической детализацией
+- 100+ локаций (от советской кухни до аэропорта)
+- 4 режима: Своя идея, Готовые идеи (AI-тренды), Свой диалог, По видео (ремейк)
+- AI-поиск трендов через Google Search в реальном времени
+- Анализ совместимости персонажей
+- Формат видео: 8 секунд, два спикера (A провоцирует, B добивает панчлайном)
+${contextBlock}
+
+ПРАВИЛА ОТВЕТА:
+1. Отвечай на русском языке
+2. Будь полезным, конкретным и дружелюбным
+3. Если вопрос о создании контента — давай конкретные советы с примерами
+4. Если вопрос о платформе — объясняй функции FERIXDI Studio
+5. Если вопрос не по теме — всё равно постарайся помочь, но мягко направь к созданию контента
+6. Форматируй ответ с эмодзи и структурой (списки, абзацы) для читаемости
+7. Максимум 500 слов в ответе
+8. Если спрашивают про конкретных персонажей/локации — давай рекомендации по выбору пар и мест
+9. Если спрашивают как сделать видео вирусным — давай конкретные приёмы
+
+ВОПРОС ПОЛЬЗОВАТЕЛЯ:
+"${question.trim().slice(0, 2000)}"
+
+Ответь развёрнуто и полезно:`;
+
+  try {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.8,
+        maxOutputTokens: 2048,
+      },
+    };
+
+    const resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      const errMsg = data.error?.message || 'AI error';
+      console.error('Consult API error:', errMsg);
+      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      return res.status(422).json({ error: 'AI не вернул ответ. Попробуйте переформулировать вопрос.' });
+    }
+
+    res.json({
+      answer: text.trim(),
+      tokens: data.usageMetadata?.totalTokenCount || 0,
+    });
+
+  } catch (e) {
+    console.error('Consult API error:', e.message);
+    res.status(500).json({ error: 'Ошибка при обработке вопроса.' });
   }
 });
 

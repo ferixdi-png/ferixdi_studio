@@ -78,7 +78,8 @@
           <div class="text-[10px] text-gray-500 uppercase tracking-[0.25em] font-medium">навигация</div>
         </div>
         <div id="nav-items" class="space-y-1 px-2">
-          <div class="nav-item" data-section="ideas"><span>�</span><span>Поиск идей</span></div>
+          <div class="nav-item" data-section="ideas"><span>💡</span><span>Поиск идей</span></div>
+          <div class="nav-item" data-section="consult"><span>🧠</span><span>Консультация</span></div>
           <div class="nav-item active" data-section="generation-mode"><span>🎯</span><span>Режим генерации</span></div>
           <div class="nav-item" data-section="characters"><span>👥</span><span>Персонажи</span></div>
           <div class="nav-item" data-section="locations"><span>📍</span><span>Локации</span></div>
@@ -1036,6 +1037,71 @@
               <div><span class="text-violet-300 font-bold">Вариант 3 — Микс:</span> Возьми тренд + стиль из видео конкурента → опиши в «Идея» тренд + в «🎥 По видео» загрузи стиль → получи свежий контент на актуальную тему</div>
             </div>
           </div>
+        </section>
+
+        <!-- SECTION: AI Consultation (FREE, no promo required) -->
+        <section id="section-consult" class="section-panel hidden space-y-5">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-emerald-600 to-cyan-600 text-white text-sm font-bold">🧠</div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">AI-Консультант</h2>
+              <p class="text-xs text-gray-400">Задайте любой вопрос — AI ответит с учётом контекста вашего проекта</p>
+            </div>
+          </div>
+
+          <!-- Free badge -->
+          <div class="flex items-center gap-2 bg-emerald-500/8 border border-emerald-500/20 rounded-lg px-3 py-2">
+            <span class="text-emerald-400 text-sm">🆓</span>
+            <span class="text-xs text-emerald-300 font-medium">Бесплатно для всех</span>
+            <span class="text-[10px] text-gray-500 ml-auto">до 3 вопросов в минуту</span>
+          </div>
+
+          <!-- What can I ask -->
+          <div class="glass-panel p-4 space-y-3 border-l-2 border-cyan-500/30">
+            <div class="text-xs text-cyan-400 font-semibold flex items-center gap-2">💡 Что можно спросить</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Какую пару персонажей выбрать для вирусного видео?">
+                <span class="text-cyan-400">👥</span> Какую пару персонажей выбрать для вирусного видео?
+              </div>
+              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Как сделать Reels которые залетают в рекомендации?">
+                <span class="text-pink-400">🚀</span> Как сделать Reels которые залетают в рекомендации?
+              </div>
+              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Придумай 5 идей для смешных видео про бабушек">
+                <span class="text-amber-400">💡</span> Придумай 5 идей для смешных видео про бабушек
+              </div>
+              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Как работает режим ремейка по видео?">
+                <span class="text-violet-400">🎥</span> Как работает режим ремейка по видео?
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat area -->
+          <div class="glass-panel p-4 space-y-3 border-l-2 border-emerald-500/30">
+            <div class="text-xs text-emerald-400 font-semibold flex items-center gap-2">🧠 Ваш вопрос</div>
+            <textarea id="consult-input" class="input-field h-24 resize-none" placeholder="Напишите любой вопрос: про контент, персонажей, тренды, нейросети, продвижение..." maxlength="2000"></textarea>
+            <div class="flex items-center gap-2">
+              <button id="btn-consult-ask" class="btn-primary flex-1 py-2.5 text-sm font-medium flex items-center justify-center gap-2">
+                <span>🧠</span> Спросить AI
+              </button>
+              <div id="consult-counter" class="text-[10px] text-gray-600 whitespace-nowrap">0 / 2000</div>
+            </div>
+            <div id="consult-status" class="hidden text-xs text-center"></div>
+          </div>
+
+          <!-- Response area -->
+          <div id="consult-response-area" class="hidden space-y-3">
+            <div class="glass-panel p-5 space-y-3 border-l-2 border-emerald-500/40 relative" style="background: linear-gradient(135deg, rgba(0,229,255,0.02) 0%, rgba(45,212,168,0.03) 100%)">
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-emerald-400 font-semibold flex items-center gap-2">🤖 Ответ AI-Консультанта</div>
+                <button id="consult-copy-btn" class="text-[10px] text-gray-500 hover:text-cyan-400 transition-colors flex items-center gap-1">📋 Копировать</button>
+              </div>
+              <div id="consult-response" class="text-xs text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
+              <div id="consult-tokens" class="text-[10px] text-gray-600 text-right"></div>
+            </div>
+          </div>
+
+          <!-- Chat history -->
+          <div id="consult-history" class="space-y-3"></div>
         </section>
 
         <!-- SECTION: Settings -->
