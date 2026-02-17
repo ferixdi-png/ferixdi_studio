@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FERIXDI STUDIO — Генератор контента для Reels</title>
-  <meta name="description" content="Выбери персонажей, опиши идею — получи готовый промпт для фото, видео и текст для поста с хештегами.">
+  <title>FERIXDI STUDIO — Помощник для работы с Veo | Генератор промптов для AI-видео</title>
+  <meta name="description" content="FERIXDI Studio — помощник для работы с нейросетью Veo. Выбери персонажей, опиши идею — получи готовые промпты для Veo, фото и полный Instagram-пакет.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
   <!-- Tailwind CDN (no build required) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -54,6 +54,7 @@
       <div class="flex items-center gap-3">
         <span class="text-lg font-bold neon-text tracking-wide glitch" data-text="FERIXDI">FERIXDI</span>
         <span class="text-xs text-gray-500 font-light neon-flicker">STUDIO</span>
+        <span class="text-[9px] bg-cyan-500/15 text-cyan-400 px-1.5 py-0.5 rounded font-medium tracking-wide">for Veo</span>
         <div class="pulse-dot"></div>
       </div>
       <div class="flex items-center gap-4">
@@ -168,8 +169,8 @@
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/20 text-2xl">🚀</div>
               <div class="flex-1">
-                <h3 class="text-base font-bold text-white leading-tight">Добро пожаловать в FERIXDI Studio</h3>
-                <p class="text-sm text-gray-300 mt-1.5 leading-relaxed">AI-генератор вирусных Reels за 2 минуты. Выбери персонажей, опиши идею — получи готовые промпты для фото и видео + тексты для Instagram.</p>
+                <h3 class="text-base font-bold text-white leading-tight">Помощник для работы с нейросетью Veo</h3>
+                <p class="text-sm text-gray-300 mt-1.5 leading-relaxed">FERIXDI Studio создаёт готовые промпты для <span class="text-cyan-400 font-semibold">Veo</span> за 2 минуты. Выбери персонажей → опиши идею → получи видео-промпт, фото-промпт и полный Instagram-пакет.</p>
               </div>
             </div>
 
@@ -195,7 +196,7 @@
                   С промо-кодом
                 </div>
                 <div class="text-[11px] text-gray-400 space-y-1">
-                  <div>• <span class="text-gray-200">AI-генерация</span> нашим движком FERIXDI AI</div>
+                  <div>• <span class="text-gray-200">AI-генерация</span> промптов для Veo</div>
                   <div>• Уникальные диалоги, фото и видео промпты</div>
                   <div>• Хештеги, заголовки, комменты для Инсты</div>
                   <div>• Безлимитные генерации</div>
@@ -657,7 +658,7 @@
 
             <div class="h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
             <div class="flex gap-2 flex-wrap">
-              <button class="mode-btn active" data-tab="veo">🎬 Видео-промпт</button>
+              <button class="mode-btn active" data-tab="veo">🎬 Промпт для Veo</button>
               <button class="mode-btn" data-tab="photo">📸 Фото (кадр 0)</button>
               <button class="mode-btn" data-tab="video">📋 Видео JSON</button>
               <button class="mode-btn" data-tab="insta">📱 Инста</button>
@@ -667,8 +668,8 @@
             <div id="tab-veo" class="glass-panel p-4 max-h-[500px] overflow-y-auto relative space-y-3 border-l-2 border-emerald-500/40">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-emerald-400">🎬 Видео-промпт</span>
-                  <span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded">FERIXDI Engine</span>
+                  <span class="text-xs font-bold text-emerald-400">🎬 Промпт для Veo</span>
+                  <span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded">FERIXDI × Veo</span>
                 </div>
                 <button class="copy-btn" data-tab="veo">Копировать</button>
               </div>
@@ -678,7 +679,7 @@
                 <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="navigator.clipboard.writeText(document.getElementById('veo-prompt-text').textContent);this.textContent='✓ Скопировано!';setTimeout(()=>this.textContent='📋 Копировать всё',1500)">📋 Копировать всё</button>
               </div>
               <div class="text-[9px] text-gray-600 leading-relaxed space-y-1">
-                <div>💡 Скопируй промпт → вставь в AI-генератор видео → нажми Generate.</div>
+                <div>💡 Скопируй промпт → вставь в Veo → нажми Generate.</div>
                 <div>📦 Если загрузил фото товара — его описание уже в промпте. Также прикрепи фото товара как референс для максимальной точности.</div>
               </div>
             </div>
@@ -807,11 +808,11 @@
                 <div class="flex items-start gap-3">
                   <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-violet-500/20 text-violet-400 text-sm font-bold border border-violet-500/30">2</div>
                   <div class="flex-1">
-                    <div class="text-sm font-semibold text-violet-400">🎬 Сгенерируй видео по фото</div>
+                    <div class="text-sm font-semibold text-violet-400">🎬 Сгенерируй видео в Veo</div>
                     <div class="text-xs text-gray-400 mt-1 leading-relaxed">
-                      Загрузи полученное фото + скопируй <span class="text-violet-300 font-medium">«Видео-промпт»</span> в наш AI-генератор видео.
+                      Загрузи полученное фото + скопируй <span class="text-violet-300 font-medium">«Промпт для Veo»</span> в Veo.
                     </div>
-                    <div class="text-[10px] text-gray-500 mt-2">Загрузи фото из шага 1 → вставь видео-промпт → режим Image-to-Video → 8 секунд → формат 9:16.</div>
+                    <div class="text-[10px] text-gray-500 mt-2">Загрузи фото из шага 1 → вставь промпт в Veo → режим Image-to-Video → 8 секунд → формат 9:16.</div>
                   </div>
                 </div>
               </div>
