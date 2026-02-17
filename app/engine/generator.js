@@ -1210,7 +1210,7 @@ function buildVeoPrompt(opts) {
   lines.push('');
 
   // Scene flow
-  lines.push(`The video begins mid-argument — no setup, no intro. A ${hookBrief}, staring directly into the camera with intense emotion.`);
+  lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
   lines.push('');
   lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}. B listens silently with sealed lips, only eyes reacting.`);
   lines.push('');
@@ -1546,7 +1546,7 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Smartphone selfie photo taken mid-argument — raw, unposed, real. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. The photo looks like someone paused a selfie video on the most intense frame.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
+    scene: `Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) — the first frame from which the video will begin. This is NOT a random mid-argument shot — this is the PRECISE starting position. ${hookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
     characters: [
       {
@@ -1615,7 +1615,7 @@ export function generate(input) {
       ? 'bright even daylight, minimal color cast, accurate skin tones, clean and honest look, slight warmth from ground bounce'
       : 'soft neutral palette, slight blue undertone, gentle contrast, natural skin tones with minimal color cast',
     hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
-    style: 'Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, wrinkles, age marks, oily sheen VISIBLE and CELEBRATED. This looks like someone pulled out a phone and took a photo mid-argument.',
+    style: 'Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, wrinkles, age marks, oily sheen VISIBLE and CELEBRATED. This is FRAME 0 of the video — the exact starting point. The video will be generated FROM this image via image-to-video AI. Poses and expressions must be the natural starting position for the 8-second video that follows.',
     negative: 'no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no graphic overlays, no title cards, no speech bubbles, no name tags, no phone/camera visible in frame, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
     ...(product_info?.description_en ? {
       product_placement: {
