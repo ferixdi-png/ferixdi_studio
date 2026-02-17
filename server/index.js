@@ -1219,7 +1219,7 @@ app.post('/api/video/fetch', authMiddleware, async (req, res) => {
   }
 });
 
-// ─── POST /api/trends — AI with Google Search grounding ──────
+// ─── POST /api/trends — AI trend analysis with online grounding ──────
 app.post('/api/trends', authMiddleware, async (req, res) => {
   const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) {
@@ -1373,7 +1373,7 @@ app.post('/api/trends', authMiddleware, async (req, res) => {
    Темы для этой ниши: ${nicheCtx.topics}
    Тон контента: ${nicheCtx.tone}
 
-Используй Google Search чтобы найти ЧТО РЕАЛЬНО ОБСУЖДАЮТ люди в России ПРЯМО СЕЙЧАС (${today}).
+Найди ЧТО РЕАЛЬНО ОБСУЖДАЮТ люди в России ПРЯМО СЕЙЧАС (${today}), используя поиск в интернете.
 Ищи в: новости России сегодня, тренды TikTok Россия, что обсуждают в Telegram, мемы дня.
 ${niche !== 'universal' ? `
 🎯 ВАЖНО: Все 30 идей должны быть РЕЛЕВАНТНЫ нише "${niche}" и интересны аудитории: ${nicheCtx.audience}` : ''}
@@ -1512,7 +1512,7 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
   try {
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
-    // First try WITH Google Search grounding for real-time data
+    // First try WITH online grounding for real-time data
     let resp = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

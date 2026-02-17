@@ -657,7 +657,7 @@
 
             <div class="h-[1px] bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"></div>
             <div class="flex gap-2 flex-wrap">
-              <button class="mode-btn active" data-tab="veo">🎬 Veo 3.1</button>
+              <button class="mode-btn active" data-tab="veo">🎬 Видео-промпт</button>
               <button class="mode-btn" data-tab="photo">📸 Фото (кадр 0)</button>
               <button class="mode-btn" data-tab="video">📋 Видео JSON</button>
               <button class="mode-btn" data-tab="insta">📱 Инста</button>
@@ -667,20 +667,19 @@
             <div id="tab-veo" class="glass-panel p-4 max-h-[500px] overflow-y-auto relative space-y-3 border-l-2 border-emerald-500/40">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-emerald-400">🎬 Промпт для Veo 3.1</span>
-                  <span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded">Google Flow</span>
+                  <span class="text-xs font-bold text-emerald-400">🎬 Видео-промпт</span>
+                  <span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded">FERIXDI Engine</span>
                 </div>
                 <button class="copy-btn" data-tab="veo">Копировать</button>
               </div>
               <div id="veo-product-badge" class="hidden bg-emerald-500/5 border border-emerald-500/15 rounded-lg p-2.5"></div>
               <pre id="veo-prompt-text" class="text-xs text-gray-300 whitespace-pre-wrap leading-relaxed"></pre>
               <div class="flex gap-2 pt-2 border-t border-gray-800">
-                <a href="https://labs.google/fx/tools/flow" target="_blank" class="text-[10px] px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors font-medium flex items-center gap-1">🚀 Открыть Flow</a>
                 <button class="text-[10px] px-3 py-1.5 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-medium" onclick="navigator.clipboard.writeText(document.getElementById('veo-prompt-text').textContent);this.textContent='✓ Скопировано!';setTimeout(()=>this.textContent='📋 Копировать всё',1500)">📋 Копировать всё</button>
               </div>
               <div class="text-[9px] text-gray-600 leading-relaxed space-y-1">
-                <div>💡 Скопируй промпт → вставь в <a href="https://labs.google/fx/tools/flow" target="_blank" class="text-emerald-400 underline">Google Flow</a> → нажми Generate.</div>
-                <div>📦 Если загрузил фото товара — его описание уже в промпте. В Flow также прикрепи фото товара как референс чтобы Veo точно воспроизвёл его.</div>
+                <div>💡 Скопируй промпт → вставь в AI-генератор видео → нажми Generate.</div>
+                <div>📦 Если загрузил фото товара — его описание уже в промпте. Также прикрепи фото товара как референс для максимальной точности.</div>
               </div>
             </div>
             <div id="tab-photo" class="glass-panel p-4 max-h-[400px] overflow-y-auto hidden relative"><button class="copy-btn" data-tab="photo">Копировать</button><pre class="text-xs text-gray-300 whitespace-pre-wrap"></pre></div>
@@ -1212,7 +1211,7 @@
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-600 text-white text-sm font-bold">💡</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Поиск идей для видео</h2>
-              <p class="text-xs text-gray-400">AI ищет через Google что обсуждают в России прямо сейчас + готовые диалоги для видео.</p>
+              <p class="text-xs text-gray-400">AI анализирует что обсуждают в России прямо сейчас + готовые диалоги для видео.</p>
             </div>
           </div>
 
@@ -1222,9 +1221,9 @@
               <div>
                 <div class="text-sm font-semibold text-emerald-400 flex items-center gap-2">🤖 AI Trends — Что обсуждают сегодня</div>
                 <div class="text-xs text-gray-300 mt-1 leading-relaxed">
-                  FERIXDI AI ищет актуальные новости через Google Search + анализирует вечные боли + предлагает вирусные форматы.
+                  FERIXDI AI ищет актуальные новости в сети + анализирует вечные боли + предлагает вирусные форматы.
                 </div>
-                <div class="text-[10px] text-gray-500 mt-1">FERIXDI AI + Google Search → реальные новости, вечные боли, проверенные вирусные форматы. Каждая идея = готовый диалог.</div>
+<div class="text-[10px] text-gray-500 mt-1">FERIXDI AI → реальные новости, вечные боли, проверенные вирусные форматы. Каждая идея = готовый диалог.</div>
               </div>
             </div>
 

@@ -3642,9 +3642,9 @@ async function fetchTrends() {
   const nicheName = nicheNames[selectedNiche] || 'универсальные';
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="animate-pulse">⏳</span> AI ищет тренды через Google...';
+  btn.innerHTML = '<span class="animate-pulse">⏳</span> FERIXDI AI ищет тренды...';
   st.classList.remove('hidden');
-  st.innerHTML = `<span class="text-gray-400 animate-pulse">FERIXDI AI ищет <span class="text-cyan-400">${nicheName}</span> идеи через Google Search...</span>`;
+  st.innerHTML = `<span class="text-gray-400 animate-pulse">FERIXDI AI ищет <span class="text-cyan-400">${nicheName}</span> идеи...</span>`;
   res.classList.add('hidden');
   if (toolbar) toolbar.classList.add('hidden');
 
@@ -3676,7 +3676,7 @@ async function fetchTrends() {
 
     // Status badge
     const groundedBadge = data.grounded
-      ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">🌐 Google Search</span>'
+      ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">🌐 Онлайн</span>'
       : '<span class="text-[9px] bg-gray-500/15 text-gray-500 px-1.5 py-0.5 rounded ml-2">📚 AI-анализ</span>';
     const nicheBadge = niche !== 'universal'
       ? `<span class="text-[9px] bg-cyan-500/15 text-cyan-400 px-1.5 py-0.5 rounded ml-2">🎯 ${nicheName}</span>`
@@ -3693,7 +3693,7 @@ async function fetchTrends() {
     document.querySelectorAll('.trend-filter-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === 'all'));
     // Render
     _renderTrends();
-    log('OK', 'ТРЕНДЫ', `Загружено ${_trendsData.length} идей${data.grounded ? ' (Google Search)' : ''}`);
+    log('OK', 'ТРЕНДЫ', `Загружено ${_trendsData.length} идей${data.grounded ? ' (онлайн)' : ''}`);
   } catch (e) {
     st.innerHTML = `<span class="text-red-400">❌ Ошибка сети: ${escapeHtml(e.message)}</span>`;
     log('ERR', 'ТРЕНДЫ', e.message);

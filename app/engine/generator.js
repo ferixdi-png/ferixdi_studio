@@ -1157,9 +1157,9 @@ function runQCGate(blueprint, cast) {
   };
 }
 
-// ─── VEO 3.1 PROMPT BUILDER ─────────────────
-// Generates a single copy-paste text prompt optimized for Google Flow (labs.google/fx/tools/flow)
-// Veo 3.1 expects: natural language, scene + characters + dialogue + camera + sound in one block
+// ─── VIDEO PROMPT BUILDER ─────────────────
+// Generates a single copy-paste text prompt optimized for AI video generation
+// Expects: natural language, scene + characters + dialogue + camera + sound in one block
 function buildVeoPrompt(opts) {
   const {
     charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
