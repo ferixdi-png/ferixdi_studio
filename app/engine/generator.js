@@ -1072,8 +1072,8 @@ function buildRemakeInstruction(video_meta, charA, charB) {
   parts.push('- dialogue_B_ru = ДОСЛОВНАЯ копия речи второго говорящего из оригинала (можно изменить 1-2 слова МАКСИМУМ)');
   parts.push('- killer_word = последнее ударное слово из ОРИГИНАЛЬНОЙ речи B');
   parts.push('- НЕ ПРИДУМЫВАЙ новый диалог! Бери ДОСЛОВНО из оригинала!');
-  parts.push('- Реплика A: 6-10 слов, окно 3.2 секунды');
-  parts.push('- Реплика B: 6-12 слов, окно 3.5 секунды');
+  parts.push('- Реплика A: 8-15 слов, окно 3.5 секунды');
+  parts.push('- Реплика B: 8-18 слов, окно 4.0 секунды');
   parts.push('- Если к сообщению приложено фото обложки — используй его как визуальный референс');
   parts.push('- Воспроизведи композицию кадра, позы, энергию из обложки');
 
@@ -1087,8 +1087,8 @@ function buildTimingGridV2(hookObj, releaseObj) {
     tolerance_s: 0.2,
     grid: [
       { segment: 'hook', ...GRID_V2.hook, action_en: hookObj.action_en, audio: hookObj.audio },
-      { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers pompous provocation (6-10 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
-      { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (6-12 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
+      { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers pompous provocation (8-15 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
+      { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (8-18 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
       { segment: 'release', ...GRID_V2.release, action_en: releaseObj.action_en, audio: releaseObj.audio, note: 'ZERO words, shared laughter only' },
     ],
   };
@@ -1296,12 +1296,13 @@ export function generate(input) {
   
   // Validate script content
   if (input_mode === 'script' && script_ru) {
-    const maxWords = 15;
-    if (script_ru.A && script_ru.A.split(/\s+/).length > maxWords) {
-      warnings.push(`Реплика A слишком длинная (${script_ru.A.split(/\s+/).length} слов) — может быть обрезана`);
+    const maxWordsA = 15;
+    const maxWordsB = 18;
+    if (script_ru.A && script_ru.A.split(/\s+/).length > maxWordsA) {
+      warnings.push(`Реплика A слишком длинная (${script_ru.A.split(/\s+/).length} слов, макс ${maxWordsA}) — может быть обрезана`);
     }
-    if (script_ru.B && script_ru.B.split(/\s+/).length > maxWords) {
-      warnings.push(`Реплика B слишком длинная (${script_ru.B.split(/\s+/).length} слов) — может быть обрезана`);
+    if (script_ru.B && script_ru.B.split(/\s+/).length > maxWordsB) {
+      warnings.push(`Реплика B слишком длинная (${script_ru.B.split(/\s+/).length} слов, макс ${maxWordsB}) — может быть обрезана`);
     }
   }
   

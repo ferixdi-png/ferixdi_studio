@@ -15,8 +15,8 @@ const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', '�
 const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[,\\.!?])`, 'gi');
 
 // Speaker windows (must match estimator.js)
-const SPEAKER_WINDOW = { A: 3.2, B: 3.5 };
-const WINDOW_TOLERANCE = 1.0; // must match estimator.js
+const SPEAKER_WINDOW = { A: 3.5, B: 4.0 };
+const WINDOW_TOLERANCE = 1.2; // must match estimator.js
 const WORD_LIMITS = { A: 15, B: 18 };
 
 // ─── STEP 0: Remove excess pause markers ────

@@ -2840,14 +2840,15 @@ function initGenerate() {
         return;
       }
       
-      // Additional validation for script mode
-      const maxWords = 15;
-      if (scriptA && scriptA.split(/\s+/).length > maxWords) {
-        showGenStatus(`⚠️ Реплика A слишком длинная (${scriptA.split(/\s+/).length} слов). Максимум: ${maxWords} слов`, 'text-orange-400');
+      // Additional validation for script mode (per-speaker limits)
+      const maxWordsA = 15;
+      const maxWordsB = 18;
+      if (scriptA && scriptA.split(/\s+/).length > maxWordsA) {
+        showGenStatus(`⚠️ Реплика A слишком длинная (${scriptA.split(/\s+/).length} слов). Максимум: ${maxWordsA} слов`, 'text-orange-400');
         return;
       }
-      if (scriptB && scriptB.split(/\s+/).length > maxWords) {
-        showGenStatus(`⚠️ Реплика B слишком длинная (${scriptB.split(/\s+/).length} слов). Максимум: ${maxWords} слов`, 'text-orange-400');
+      if (scriptB && scriptB.split(/\s+/).length > maxWordsB) {
+        showGenStatus(`⚠️ Реплика B слишком длинная (${scriptB.split(/\s+/).length} слов). Максимум: ${maxWordsB} слов`, 'text-orange-400');
         return;
       }
     }
@@ -3427,16 +3428,16 @@ function updateEditorEstimates() {
   const wordsA = inputA.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
   const wordsB = inputB.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
 
-  const overA = estA.duration > 4.2; // 3.2s window + 1.0s tolerance (speech flex)
-  const overB = estB.duration > 4.5; // 3.5s window + 1.0s tolerance
-  const risk = total > 7.5 || overA || overB ? 'high' : total > 6.5 ? 'medium' : 'low';
+  const overA = estA.duration > 4.7; // 3.5s window + 1.2s tolerance (speech flex)
+  const overB = estB.duration > 5.2; // 4.0s window + 1.2s tolerance
+  const risk = total > 8.5 || overA || overB ? 'high' : total > 7.0 ? 'medium' : 'low';
 
-  document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 15 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 4.2с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 15 ? ' — много' : ''}</span>`;
-  document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 18 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 4.5с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 18 ? ' — много' : ''}</span>`;
+  document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 15 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 4.7с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 15 ? ' — много' : ''}</span>`;
+  document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 18 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 5.2с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 18 ? ' — много' : ''}</span>`;
 
   const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
   const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
-  document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 6.7с ${riskLabel}</span>`;
+  document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 7.5с ${riskLabel}</span>`;
 
   const badge = document.getElementById('editor-timing-badge');
   if (badge) {
