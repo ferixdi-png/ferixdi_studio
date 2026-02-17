@@ -79,7 +79,7 @@
         </div>
         <div id="nav-items" class="space-y-1 px-2">
           <div class="nav-item" data-section="ideas"><span>💡</span><span>Поиск идей</span></div>
-          <div class="nav-item" data-section="consult"><span>🧠</span><span>Консультация</span></div>
+          <div class="nav-item" data-section="consult"><span>💬</span><span>Помощник</span></div>
           <div class="nav-item active" data-section="generation-mode"><span>🎯</span><span>Режим генерации</span></div>
           <div class="nav-item" data-section="characters"><span>👥</span><span>Персонажи</span></div>
           <div class="nav-item" data-section="locations"><span>📍</span><span>Локации</span></div>
@@ -1039,75 +1039,105 @@
           </div>
         </section>
 
-        <!-- SECTION: AI Consultation (FREE, no promo required) -->
+        <!-- SECTION: AI Support (FREE, no promo required) -->
         <section id="section-consult" class="section-panel hidden space-y-5">
-          <div class="flex items-center gap-3 mb-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-emerald-600 to-cyan-600 text-white text-sm font-bold">🧠</div>
+
+          <!-- Header with online indicator -->
+          <div class="flex items-center gap-3 mb-1">
+            <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-cyan-600 text-white text-lg font-bold shadow-lg shadow-emerald-500/20">
+              �
+              <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-space-dark animate-pulse"></div>
+            </div>
             <div>
-              <h2 class="text-lg font-semibold text-white">AI-Консультант</h2>
-              <p class="text-xs text-gray-400">Подскажет как использовать платформу в вашей сфере и предложит идеи</p>
+              <h2 class="text-lg font-semibold text-white flex items-center gap-2">Помощник <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-normal">онлайн</span></h2>
+              <p class="text-xs text-gray-400">Ваш персональный гид по FERIXDI Studio</p>
             </div>
           </div>
 
-          <!-- Free badge -->
-          <div class="flex items-center gap-2 bg-emerald-500/8 border border-emerald-500/20 rounded-lg px-3 py-2">
-            <span class="text-emerald-400 text-sm">🆓</span>
-            <span class="text-xs text-emerald-300 font-medium">Бесплатно для всех</span>
-            <span class="text-[10px] text-gray-500 ml-auto">1 вопрос в час</span>
-          </div>
-
-          <!-- What this is -->
-          <div class="bg-gradient-to-r from-cyan-500/5 via-emerald-500/5 to-cyan-500/5 rounded-lg p-3 border border-cyan-500/10 space-y-1.5">
-            <div class="text-[11px] text-gray-300 leading-relaxed">🧑‍💼 <strong class="text-cyan-300">Это советник, не генератор.</strong> Он поможет понять как использовать FERIXDI Studio в вашей нише, предложит идеи персонажей и тем для видео.</div>
-            <div class="text-[11px] text-gray-300 leading-relaxed">📩 Нужны кастомные персонажи или локации под вашу сферу? Пишите <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 font-medium hover:text-cyan-300">@ferixdiii в Telegram</a> — создам персонально.</div>
-          </div>
-
-          <!-- What can I ask -->
-          <div class="glass-panel p-4 space-y-3 border-l-2 border-cyan-500/30">
-            <div class="text-xs text-cyan-400 font-semibold flex items-center gap-2">💡 Примеры вопросов</div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Я веду блог про фитнес — каких персонажей и темы мне использовать?">
-                <span class="text-cyan-400">�</span> Я веду блог про фитнес — каких персонажей использовать?
+          <!-- What this is — clear explanation -->
+          <div class="relative overflow-hidden rounded-xl border border-emerald-500/20" style="background: linear-gradient(135deg, rgba(45,212,168,0.05) 0%, rgba(0,229,255,0.04) 100%)">
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent"></div>
+            <div class="p-4 space-y-2.5">
+              <div class="text-xs text-emerald-300 font-semibold flex items-center gap-1.5">💡 Чем я могу помочь</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                <div class="text-[11px] text-gray-300 flex items-start gap-1.5"><span class="text-emerald-400 mt-px">✓</span> Подскажу каких персонажей выбрать под вашу нишу</div>
+                <div class="text-[11px] text-gray-300 flex items-start gap-1.5"><span class="text-emerald-400 mt-px">✓</span> Посоветую локации для вашей сферы</div>
+                <div class="text-[11px] text-gray-300 flex items-start gap-1.5"><span class="text-emerald-400 mt-px">✓</span> Предложу направления для тем видео</div>
+                <div class="text-[11px] text-gray-300 flex items-start gap-1.5"><span class="text-emerald-400 mt-px">✓</span> Объясню как работает каждый режим</div>
+                <div class="text-[11px] text-gray-300 flex items-start gap-1.5"><span class="text-emerald-400 mt-px">✓</span> Помогу разобраться с платформой</div>
+                <div class="text-[11px] text-gray-300 flex items-start gap-1.5"><span class="text-emerald-400 mt-px">✓</span> Подберу оптимальный режим под задачу</div>
               </div>
-              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Какие темы сейчас лучше заходят в нише недвижимости?">
-                <span class="text-pink-400">🏠</span> Какие темы заходят в нише недвижимости?
-              </div>
-              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Как лучше использовать платформу для моего интернет-магазина?">
-                <span class="text-amber-400">�️</span> Как использовать платформу для интернет-магазина?
-              </div>
-              <div class="bg-black/30 rounded-lg p-2.5 text-[11px] text-gray-300 leading-relaxed border border-gray-800/50 cursor-pointer hover:border-cyan-500/30 transition-colors consult-example" data-q="Какие локации подойдут для видео про еду и рецепты?">
-                <span class="text-violet-400">�</span> Какие локации подойдут для видео про еду?
+              <div class="flex items-center gap-2 pt-1 border-t border-emerald-500/10">
+                <span class="text-[10px] text-gray-500">📩 Нужны кастомные персонажи под вашу сферу?</span>
+                <a href="https://t.me/ferixdiii" target="_blank" class="text-[10px] text-cyan-400 font-medium hover:text-cyan-300 transition-colors">Пишите @ferixdiii →</a>
               </div>
             </div>
           </div>
 
-          <!-- Chat area -->
-          <div class="glass-panel p-4 space-y-3 border-l-2 border-emerald-500/30">
-            <div class="text-xs text-emerald-400 font-semibold flex items-center gap-2">🧠 Ваш вопрос</div>
-            <textarea id="consult-input" class="input-field h-24 resize-none" placeholder="Напишите любой вопрос: про контент, персонажей, тренды, нейросети, продвижение..." maxlength="2000"></textarea>
-            <div class="flex items-center gap-2">
-              <button id="btn-consult-ask" class="btn-primary flex-1 py-2.5 text-sm font-medium flex items-center justify-center gap-2">
-                <span>🧠</span> Спросить AI
-              </button>
-              <div id="consult-counter" class="text-[10px] text-gray-600 whitespace-nowrap">0 / 2000</div>
+          <!-- Quick questions — click to fill -->
+          <div class="space-y-2">
+            <div class="text-[10px] text-gray-500 uppercase tracking-wider font-medium px-1">Частые вопросы — нажмите чтобы спросить</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              <div class="bg-black/30 rounded-lg px-3 py-2 text-[11px] text-gray-300 border border-gray-800/40 cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all consult-example flex items-center gap-2" data-q="Я веду блог про фитнес — каких персонажей и темы мне использовать на платформе?">
+                <span class="text-emerald-400 text-xs">💪</span> Фитнес-блог — какие персонажи подойдут?
+              </div>
+              <div class="bg-black/30 rounded-lg px-3 py-2 text-[11px] text-gray-300 border border-gray-800/40 cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all consult-example flex items-center gap-2" data-q="У меня интернет-магазин — как использовать платформу для продвижения товаров?">
+                <span class="text-cyan-400 text-xs">🛒</span> Интернет-магазин — как продвигать?
+              </div>
+              <div class="bg-black/30 rounded-lg px-3 py-2 text-[11px] text-gray-300 border border-gray-800/40 cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all consult-example flex items-center gap-2" data-q="Какой режим генерации лучше выбрать если я хочу ремейк чужого вирусного видео?">
+                <span class="text-pink-400 text-xs">🎥</span> Какой режим выбрать для ремейка?
+              </div>
+              <div class="bg-black/30 rounded-lg px-3 py-2 text-[11px] text-gray-300 border border-gray-800/40 cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all consult-example flex items-center gap-2" data-q="Какие локации лучше всего подходят для видео в нише недвижимости и ремонта?">
+                <span class="text-amber-400 text-xs">🏠</span> Локации для ниши недвижимости?
+              </div>
             </div>
-            <div id="consult-status" class="hidden text-xs text-center"></div>
+          </div>
+
+          <!-- Chat input area -->
+          <div class="relative overflow-hidden rounded-xl border border-emerald-500/15" style="background: rgba(6,8,15,0.6)">
+            <div class="p-4 space-y-3">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                <div class="text-xs text-emerald-400 font-medium">Задайте вопрос о платформе</div>
+                <div class="flex-1"></div>
+                <div id="consult-counter" class="text-[10px] text-gray-600">0 / 500</div>
+              </div>
+              <textarea id="consult-input" class="input-field h-20 resize-none text-sm" placeholder="Опишите вашу нишу и что хотите узнать...&#10;Пример: «Я продаю косметику — какие персонажи и форматы подойдут?»" maxlength="500"></textarea>
+              <div class="flex items-center gap-3">
+                <button id="btn-consult-ask" class="btn-primary flex-1 py-2.5 text-sm font-medium flex items-center justify-center gap-2 relative overflow-hidden">
+                  <span>💬</span> Спросить помощника
+                </button>
+                <div class="text-[10px] text-gray-600 whitespace-nowrap flex items-center gap-1">
+                  <span class="text-emerald-500">🆓</span> 1 раз в 10 мин
+                </div>
+              </div>
+              <div id="consult-status" class="hidden text-xs text-center"></div>
+            </div>
           </div>
 
           <!-- Response area -->
-          <div id="consult-response-area" class="hidden space-y-3">
-            <div class="glass-panel p-5 space-y-3 border-l-2 border-emerald-500/40 relative" style="background: linear-gradient(135deg, rgba(0,229,255,0.02) 0%, rgba(45,212,168,0.03) 100%)">
-              <div class="flex items-center justify-between">
-                <div class="text-xs text-emerald-400 font-semibold flex items-center gap-2">🤖 Ответ AI-Консультанта</div>
-                <button id="consult-copy-btn" class="text-[10px] text-gray-500 hover:text-cyan-400 transition-colors flex items-center gap-1">📋 Копировать</button>
+          <div id="consult-response-area" class="hidden">
+            <div class="relative overflow-hidden rounded-xl border border-emerald-500/25" style="background: linear-gradient(135deg, rgba(45,212,168,0.04) 0%, rgba(0,229,255,0.03) 100%)">
+              <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent"></div>
+              <div class="p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">🤖</div>
+                    <div class="text-xs text-emerald-400 font-semibold">Помощник FERIXDI</div>
+                  </div>
+                  <button id="consult-copy-btn" class="text-[10px] text-gray-500 hover:text-emerald-400 transition-colors flex items-center gap-1">📋 Копировать</button>
+                </div>
+                <div id="consult-response" class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
+                <div class="flex items-center justify-between pt-2 border-t border-emerald-500/10">
+                  <div id="consult-tokens" class="text-[10px] text-gray-600"></div>
+                  <a href="https://t.me/ferixdiii" target="_blank" class="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors">📩 Подробнее — @ferixdiii</a>
+                </div>
               </div>
-              <div id="consult-response" class="text-xs text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
-              <div id="consult-tokens" class="text-[10px] text-gray-600 text-right"></div>
             </div>
           </div>
 
           <!-- Chat history -->
-          <div id="consult-history" class="space-y-3"></div>
+          <div id="consult-history" class="space-y-2"></div>
         </section>
 
         <!-- SECTION: Settings -->

@@ -3854,7 +3854,7 @@ function initConsultation() {
 
   // Character counter
   input.addEventListener('input', () => {
-    if (counterEl) counterEl.textContent = `${input.value.length} / 2000`;
+    if (counterEl) counterEl.textContent = `${input.value.length} / 500`;
   });
 
   // Example questions — click to fill
@@ -3862,7 +3862,7 @@ function initConsultation() {
     el.addEventListener('click', () => {
       input.value = el.dataset.q || '';
       input.focus();
-      if (counterEl) counterEl.textContent = `${input.value.length} / 2000`;
+      if (counterEl) counterEl.textContent = `${input.value.length} / 500`;
     });
   });
 
@@ -3887,8 +3887,8 @@ function initConsultation() {
     }
 
     btn.disabled = true;
-    btn.innerHTML = '<span>⏳</span> AI думает...';
-    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-cyan-400">🧠 Обрабатываю запрос...</span>'; }
+    btn.innerHTML = '<span class="animate-pulse">💬</span> Помощник пишет...';
+    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-emerald-400 animate-pulse">🧠 Обрабатываю ваш вопрос...</span>'; }
 
     // Build context from current app state
     const context = {};
@@ -3920,10 +3920,22 @@ function initConsultation() {
         throw new Error(data.error || `Ошибка ${resp.status}`);
       }
 
-      // Show response
+      // Show response with typing effect
       if (responseArea) responseArea.classList.remove('hidden');
-      if (responseEl) responseEl.textContent = data.answer;
-      if (tokensEl) tokensEl.textContent = data.tokens ? `${data.tokens} токенов` : '';
+      if (responseEl) {
+        responseEl.textContent = '';
+        const fullText = data.answer;
+        let i = 0;
+        const typeInterval = setInterval(() => {
+          if (i < fullText.length) {
+            responseEl.textContent += fullText[i];
+            i++;
+          } else {
+            clearInterval(typeInterval);
+          }
+        }, 8);
+      }
+      if (tokensEl) tokensEl.textContent = '';
       if (statusEl) statusEl.classList.add('hidden');
 
       // Save to history
@@ -3946,7 +3958,7 @@ function initConsultation() {
       log('ERR', 'КОНСУЛЬТАЦИЯ', e.message);
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<span>🧠</span> Спросить AI';
+      btn.innerHTML = '<span>💬</span> Спросить помощника';
     }
   });
 
