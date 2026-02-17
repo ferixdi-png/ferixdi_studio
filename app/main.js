@@ -290,6 +290,7 @@ function deselectLocation() {
   updateProgress();
 }
 window.deselectLocation = deselectLocation;
+window.navigateTo = navigateTo;
 
 function initLocationPicker() {
   document.getElementById('loc-grid')?.addEventListener('click', (e) => {
@@ -442,6 +443,8 @@ async function refreshCharacters() {
     log('OK', 'ДАННЫЕ', `Загружено ${state.characters.length} персонажей`);
     populateFilters();
     renderCharacters();
+    loadCustomCharacters();
+    populateSeriesSelects();
   } catch (e) {
     log('ERR', 'ДАННЫЕ', `Ошибка загрузки персонажей: ${e.message}`);
   }
@@ -2057,6 +2060,264 @@ function showProductStatus(text, cls) {
 
 // Category is always auto-picked by generator — no manual selection needed
 
+// ─── POST-GENERATION: Enhance prompt with reference/product photo ────
+let _postPhotoMode = null; // 'reference' | 'product'
+
+function initPostGenPhoto() {
+  const dropzone = document.getElementById('post-photo-dropzone');
+  const fileInput = document.getElementById('post-photo-file');
+  if (!dropzone || !fileInput) return;
+
+  // Mode buttons
+  document.getElementById('post-photo-mode-ref')?.addEventListener('click', () => {
+    _postPhotoMode = 'reference';
+    document.getElementById('post-photo-mode-ref').classList.add('ring-2', 'ring-violet-500');
+    document.getElementById('post-photo-mode-prod').classList.remove('ring-2', 'ring-emerald-500');
+    document.getElementById('post-photo-icon').textContent = '🎨';
+    document.getElementById('post-photo-label').textContent = 'Загрузи фото-референс (стиль, настроение, эстетика)';
+    dropzone.classList.remove('hidden');
+    log('INFO', 'POST-PHOTO', 'Режим: референс стиля');
+  });
+
+  document.getElementById('post-photo-mode-prod')?.addEventListener('click', () => {
+    _postPhotoMode = 'product';
+    document.getElementById('post-photo-mode-prod').classList.add('ring-2', 'ring-emerald-500');
+    document.getElementById('post-photo-mode-ref').classList.remove('ring-2', 'ring-violet-500');
+    document.getElementById('post-photo-icon').textContent = '📦';
+    document.getElementById('post-photo-label').textContent = 'Загрузи фото товара (появится в кадре)';
+    dropzone.classList.remove('hidden');
+    log('INFO', 'POST-PHOTO', 'Режим: фото товара');
+  });
+
+  // Dropzone events
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = 'rgba(139,92,246,0.5)'; });
+  dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropzone.style.borderColor = '';
+    if (e.dataTransfer.files.length) handlePostGenPhoto(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) handlePostGenPhoto(fileInput.files[0]); });
+
+  // Apply button
+  document.getElementById('post-photo-apply')?.addEventListener('click', () => applyPostGenPhoto());
+
+  // Clear button
+  document.getElementById('post-photo-clear')?.addEventListener('click', () => clearPostGenPhoto());
+}
+
+async function handlePostGenPhoto(file) {
+  if (!_postPhotoMode) {
+    showPostPhotoStatus('Сначала выбери тип: референс или товар', 'text-amber-400');
+    return;
+  }
+  if (!isPromoValid()) {
+    showPostPhotoStatus('Для анализа фото нужен промо-код', 'text-amber-400');
+    return;
+  }
+  if (!file.type.startsWith('image/')) {
+    showPostPhotoStatus('Нужно фото (JPG, PNG, WebP)', 'text-red-400');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showPostPhotoStatus('Файл слишком большой (макс. 10 МБ)', 'text-red-400');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+
+    // Show preview
+    const previewImg = document.getElementById('post-photo-preview-img');
+    if (previewImg) previewImg.src = dataUrl;
+    document.getElementById('post-photo-preview')?.classList.remove('hidden');
+
+    const base64 = dataUrl.split(',')[1];
+    const mimeType = file.type;
+
+    showPostPhotoStatus('AI анализирует фото...', 'text-violet-400 animate-pulse');
+
+    try {
+      const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+      const token = localStorage.getItem('ferixdi_jwt');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const resp = await fetch(`${apiBase}/api/product/describe`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          image_base64: base64,
+          mime_type: mimeType,
+          mode: _postPhotoMode,
+        }),
+      });
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        showPostPhotoStatus(`${data.error || 'Ошибка'}`, 'text-red-400');
+        return;
+      }
+
+      // Store for apply
+      state._postGenPhoto = {
+        mode: _postPhotoMode,
+        description_en: data.description_en,
+        image_base64: base64,
+        mime_type: mimeType,
+      };
+
+      // Show result
+      const resultTitle = document.getElementById('post-photo-result-title');
+      if (resultTitle) {
+        resultTitle.textContent = _postPhotoMode === 'reference'
+          ? '🎨 ОПИСАНИЕ РЕФЕРЕНСА (EN)'
+          : '📦 ОПИСАНИЕ ТОВАРА (EN)';
+        resultTitle.className = `text-[10px] font-semibold uppercase tracking-wider mb-1 ${_postPhotoMode === 'reference' ? 'text-violet-400' : 'text-emerald-400'}`;
+      }
+      document.getElementById('post-photo-description').textContent = data.description_en;
+      document.getElementById('post-photo-result')?.classList.remove('hidden');
+      showPostPhotoStatus('', 'hidden');
+
+      log('OK', 'POST-PHOTO', `AI описал фото (${_postPhotoMode}): ${data.description_en.slice(0, 80)}...`);
+
+    } catch (err) {
+      showPostPhotoStatus(`Сетевая ошибка: ${err.message}`, 'text-red-400');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function applyPostGenPhoto() {
+  const info = state._postGenPhoto;
+  if (!info?.description_en || !state.lastResult) {
+    showPostPhotoStatus('Нет данных для применения', 'text-amber-400');
+    return;
+  }
+
+  const desc = info.description_en;
+  const r = state.lastResult;
+
+  if (info.mode === 'product') {
+    // Product mode — inject product description into all prompts
+    const productLine = `\n\n[PRODUCT IN FRAME]: One of the characters is holding/showing this product: ${desc}. The product must be clearly visible throughout the entire video, matching the original photo exactly — colors, shape, brand, packaging.`;
+
+    // Veo prompt
+    const veoEl = document.getElementById('veo-prompt-text');
+    if (veoEl) veoEl.textContent = (veoEl.textContent || '') + productLine;
+
+    // Photo prompt
+    if (r.photo_prompt_en_json) {
+      r.photo_prompt_en_json.product_in_frame = desc;
+      const photoEl = document.querySelector('#tab-photo pre');
+      if (photoEl) photoEl.textContent = JSON.stringify(r.photo_prompt_en_json, null, 2);
+    }
+
+    // Video prompt
+    if (r.video_prompt_en_json) {
+      r.video_prompt_en_json.product_in_frame = desc;
+      const videoEl = document.querySelector('#tab-video pre');
+      if (videoEl) videoEl.textContent = JSON.stringify(r.video_prompt_en_json, null, 2);
+    }
+
+    // RU package
+    const ruEl = document.querySelector('#tab-ru pre');
+    if (ruEl) {
+      ruEl.textContent = (ruEl.textContent || '') + `\n\n📦 ТОВАР В КАДРЕ (добавлено по фото):\n${desc}\n⚠️ Товар строго как на загруженном фото — цвета, форма, бренд!`;
+    }
+
+    // Also save to state for future regenerations
+    state.productInfo = {
+      image_base64: info.image_base64,
+      mime_type: info.mime_type,
+      description_en: desc,
+    };
+
+    // Show product badge in Veo tab
+    const veoProdBadge = document.getElementById('veo-product-badge');
+    if (veoProdBadge) {
+      veoProdBadge.classList.remove('hidden');
+      const prodImg = `<img src="data:${info.mime_type};base64,${info.image_base64}" class="w-10 h-10 rounded object-cover border border-emerald-500/30 flex-shrink-0" alt="товар">`;
+      const prodDesc = desc.length > 120 ? desc.slice(0, 120) + '...' : desc;
+      veoProdBadge.innerHTML = `
+        <div class="flex items-start gap-2">
+          ${prodImg}
+          <div class="min-w-0">
+            <div class="text-[10px] font-bold text-emerald-400">📦 Товар добавлен в промпт ✓</div>
+            <div class="text-[9px] text-gray-400 leading-tight mt-0.5">${escapeHtml(prodDesc)}</div>
+            <div class="text-[9px] text-emerald-500/60 mt-0.5">Строго как на загруженном фото</div>
+          </div>
+        </div>`;
+    }
+
+    showPostPhotoStatus('Товар добавлен во все промпты!', 'text-emerald-400');
+    log('OK', 'POST-PHOTO', 'Товар применён к промптам');
+
+  } else {
+    // Reference mode — inject style/mood description
+    const refLine = `\n\n[VISUAL REFERENCE — match this aesthetic]: ${desc}. Replicate the lighting, color palette, mood, and composition style from this reference image as closely as possible while keeping the characters and dialogue intact.`;
+
+    // Veo prompt
+    const veoEl = document.getElementById('veo-prompt-text');
+    if (veoEl) veoEl.textContent = (veoEl.textContent || '') + refLine;
+
+    // Photo prompt
+    if (r.photo_prompt_en_json) {
+      r.photo_prompt_en_json.visual_reference = desc;
+      const photoEl = document.querySelector('#tab-photo pre');
+      if (photoEl) photoEl.textContent = JSON.stringify(r.photo_prompt_en_json, null, 2);
+    }
+
+    // Video prompt
+    if (r.video_prompt_en_json) {
+      r.video_prompt_en_json.visual_reference = desc;
+      const videoEl = document.querySelector('#tab-video pre');
+      if (videoEl) videoEl.textContent = JSON.stringify(r.video_prompt_en_json, null, 2);
+    }
+
+    // RU package
+    const ruEl = document.querySelector('#tab-ru pre');
+    if (ruEl) {
+      ruEl.textContent = (ruEl.textContent || '') + `\n\n🎨 ВИЗУАЛЬНЫЙ РЕФЕРЕНС (добавлено по фото):\n${desc}\n💡 Повтори освещение, цветовую палитру и настроение с загруженного фото`;
+    }
+
+    showPostPhotoStatus('Референс добавлен во все промпты!', 'text-violet-400');
+    log('OK', 'POST-PHOTO', 'Референс применён к промптам');
+  }
+
+  // Flash apply button for feedback
+  const applyBtn = document.getElementById('post-photo-apply');
+  if (applyBtn) {
+    applyBtn.textContent = '✓ Применено!';
+    applyBtn.disabled = true;
+    setTimeout(() => { applyBtn.textContent = '✨ Применить к промпту'; applyBtn.disabled = false; }, 2000);
+  }
+}
+
+function clearPostGenPhoto() {
+  state._postGenPhoto = null;
+  _postPhotoMode = null;
+  document.getElementById('post-photo-preview')?.classList.add('hidden');
+  document.getElementById('post-photo-result')?.classList.remove('hidden');
+  document.getElementById('post-photo-result')?.classList.add('hidden');
+  document.getElementById('post-photo-dropzone')?.classList.add('hidden');
+  document.getElementById('post-photo-status')?.classList.add('hidden');
+  document.getElementById('post-photo-mode-ref')?.classList.remove('ring-2', 'ring-violet-500');
+  document.getElementById('post-photo-mode-prod')?.classList.remove('ring-2', 'ring-emerald-500');
+  document.getElementById('post-photo-file').value = '';
+  log('INFO', 'POST-PHOTO', 'Фото убрано');
+}
+
+function showPostPhotoStatus(text, cls) {
+  const el = document.getElementById('post-photo-status');
+  if (!el) return;
+  if (!text) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  el.className = `text-xs text-center ${cls}`;
+  el.textContent = text;
+}
+
 // ─── PRE-FLIGHT: Professional parameter breakdown ────
 function renderPreflight(localResult) {
   const el = document.getElementById('gen-preflight');
@@ -2259,6 +2520,9 @@ function displayResult(result) {
   // Populate Insta package tab
   populateInstaTab(result);
 
+  // Show post-generation photo enhancement panel
+  document.getElementById('post-gen-photo')?.classList.remove('hidden');
+
   document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // Warnings with categorization
@@ -2309,6 +2573,27 @@ function displayResult(result) {
 
   // Populate dialogue editor
   populateDialogueEditor(result);
+
+  // Storyboard preview
+  populateStoryboard(result);
+
+  // Show A/B testing button
+  document.getElementById('ab-testing-panel')?.classList.remove('hidden');
+
+  // Save series episode if generating from series
+  if (state._currentSeries) {
+    try {
+      const series = getSeries();
+      const s = series[state._currentSeries.idx];
+      if (s) {
+        if (!s.episodes) s.episodes = [];
+        s.episodes.push({ date: Date.now(), dialogueA: result._apiContext?.dialogueA, dialogueB: result._apiContext?.dialogueB });
+        saveSeries(series);
+        log('OK', 'SERIES', `Эпизод #${s.episodes.length} сохранён в серию "${s.name}"`);
+      }
+      state._currentSeries = null;
+    } catch (e) { log('ERR', 'SERIES', e.message); }
+  }
 
   const ver = result.log?.generator_version || '2.0';
   log('OK', 'ГЕНЕРАЦИЯ', `${ver} Пакет собран! Длительность: ${result.duration_estimate?.total || '?'}с, Риск: ${result.duration_estimate?.risk || '?'}`);
@@ -4364,6 +4649,620 @@ function copyToClipboardWithFeedback(text, type, id) {
     });
 }
 
+// ─── JOKES LIBRARY ────────────────────────
+let _jokes = [];
+let _jokeTheme = 'all';
+let _jokeSortMode = 'viral';
+
+async function loadJokes() {
+  try {
+    const resp = await fetch('./data/jokes.json');
+    _jokes = await resp.json();
+    log('OK', 'JOKES', `Загружено ${_jokes.length} шуток`);
+    renderJokes();
+  } catch (e) {
+    log('ERR', 'JOKES', `Ошибка загрузки: ${e.message}`);
+  }
+}
+
+function renderJokes() {
+  const grid = document.getElementById('jokes-grid');
+  if (!grid) return;
+
+  let filtered = _jokeTheme === 'all' ? [..._jokes] : _jokes.filter(j => j.theme === _jokeTheme);
+
+  const search = (document.getElementById('joke-search')?.value || '').toLowerCase().trim();
+  if (search) filtered = filtered.filter(j => j.text.toLowerCase().includes(search) || j.tags.some(t => t.includes(search)));
+
+  if (_jokeSortMode === 'viral') filtered.sort((a, b) => (b.viral_score || 0) - (a.viral_score || 0));
+  else filtered.sort(() => Math.random() - 0.5);
+
+  document.getElementById('joke-count-badge').textContent = `${filtered.length} из ${_jokes.length}`;
+
+  grid.innerHTML = filtered.slice(0, 50).map(j => {
+    const viralClass = j.viral_score >= 90 ? 'text-pink-400' : j.viral_score >= 85 ? 'text-amber-400' : 'text-gray-400';
+    const tags = j.tags.slice(0, 3).map(t => `<span class="text-[9px] bg-gray-800 text-gray-500 px-1.5 py-0.5 rounded">${t}</span>`).join('');
+    return `
+      <div class="glass-panel p-4 space-y-2 hover:border-pink-500/30 transition-colors border border-transparent cursor-pointer joke-card" data-joke-id="${j.id}">
+        <div class="flex items-start justify-between gap-2">
+          <div class="text-xs font-medium text-gray-200 leading-relaxed whitespace-pre-line">${escapeHtml(j.text)}</div>
+          <span class="${viralClass} text-[10px] font-bold flex-shrink-0">${j.viral_score}🔥</span>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">${tags}</div>
+        <div class="flex gap-2 pt-1">
+          <button class="joke-use-btn text-[10px] px-3 py-1.5 rounded bg-pink-500/15 text-pink-400 border border-pink-500/30 hover:bg-pink-500/25 transition-colors font-medium" data-joke-id="${j.id}">🚀 Генерация в 1 клик</button>
+          <button class="joke-script-btn text-[10px] px-3 py-1.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors" data-joke-id="${j.id}">📝 Как свой диалог</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.joke-use-btn').forEach(btn => btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    quickGenerateFromJoke(btn.dataset.jokeId);
+  }));
+  grid.querySelectorAll('.joke-script-btn').forEach(btn => btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    useJokeAsScript(btn.dataset.jokeId);
+  }));
+}
+
+function quickGenerateFromJoke(jokeId) {
+  const joke = _jokes.find(j => j.id === jokeId);
+  if (!joke) return;
+
+  if (!isPromoValid()) {
+    showNotification('🔑 Для генерации нужен промо-код', 'error');
+    navigateTo('settings');
+    return;
+  }
+
+  // Auto-pick characters from joke's best_groups
+  const groups = joke.best_groups || [];
+  let charA = null, charB = null;
+  if (groups.length >= 2 && state.characters?.length) {
+    const poolA = state.characters.filter(c => c.group === groups[0]);
+    const poolB = state.characters.filter(c => c.group === groups[1]);
+    if (poolA.length) charA = poolA[Math.floor(Math.random() * poolA.length)];
+    if (poolB.length) charB = poolB[Math.floor(Math.random() * poolB.length)];
+    if (charA && charB && charA.id === charB.id) {
+      charB = poolB.find(c => c.id !== charA.id) || poolB[0];
+    }
+  }
+  if (!charA || !charB) {
+    autoSelectRandomPair();
+  } else {
+    selectChar('A', charA.id);
+    selectChar('B', charB.id);
+  }
+
+  // Auto-pick location
+  if (joke.best_location && state.locations?.length) {
+    const loc = state.locations.find(l => l.id === joke.best_location);
+    if (loc) {
+      state.selectedLocation = loc.id;
+      updateLocationInfo?.();
+    }
+  }
+
+  // Set mode to script with joke lines
+  state.generationMode = 'idea';
+  state.inputMode = 'script';
+  selectGenerationMode?.('idea');
+
+  const ideaInput = document.getElementById('idea-input');
+  if (ideaInput) ideaInput.value = joke.text;
+  const ideaInputSuggested = document.getElementById('idea-input-suggested');
+  if (ideaInputSuggested) ideaInputSuggested.value = joke.text;
+
+  navigateTo('generate');
+  updateReadiness?.();
+  showNotification(`😂 Шутка выбрана! Персонажи и локация подобраны`, 'success');
+  log('OK', 'JOKES', `Быстрая генерация: ${joke.id}`);
+}
+
+function useJokeAsScript(jokeId) {
+  const joke = _jokes.find(j => j.id === jokeId);
+  if (!joke) return;
+
+  state.generationMode = 'idea';
+  state.inputMode = 'script';
+  selectGenerationMode?.('idea');
+
+  const scriptA = document.getElementById('script-a');
+  const scriptB = document.getElementById('script-b');
+  if (scriptA) scriptA.value = joke.line_a;
+  if (scriptB) scriptB.value = joke.line_b;
+
+  navigateTo('generate');
+  updateModeSpecificUI?.('script');
+  updateReadiness?.();
+  showNotification('📝 Реплики вставлены в режим "Свой диалог"', 'success');
+}
+
+function initJokesLibrary() {
+  loadJokes();
+
+  document.querySelectorAll('.joke-theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.joke-theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _jokeTheme = btn.dataset.theme;
+      renderJokes();
+    });
+  });
+
+  document.getElementById('joke-search')?.addEventListener('input', () => renderJokes());
+
+  document.getElementById('joke-sort-viral')?.addEventListener('click', () => {
+    _jokeSortMode = 'viral';
+    document.getElementById('joke-sort-viral').classList.add('bg-pink-500/15', 'text-pink-400', 'border-pink-500/30');
+    document.getElementById('joke-sort-viral').classList.remove('bg-gray-700/50', 'text-gray-400', 'border-gray-700');
+    document.getElementById('joke-sort-random').classList.remove('bg-pink-500/15', 'text-pink-400', 'border-pink-500/30');
+    document.getElementById('joke-sort-random').classList.add('bg-gray-700/50', 'text-gray-400', 'border-gray-700');
+    renderJokes();
+  });
+  document.getElementById('joke-sort-random')?.addEventListener('click', () => {
+    _jokeSortMode = 'random';
+    document.getElementById('joke-sort-random').classList.add('bg-violet-500/15', 'text-violet-400', 'border-violet-500/30');
+    document.getElementById('joke-sort-random').classList.remove('bg-gray-700/50', 'text-gray-400', 'border-gray-700');
+    document.getElementById('joke-sort-viral').classList.remove('bg-pink-500/15', 'text-pink-400', 'border-pink-500/30');
+    document.getElementById('joke-sort-viral').classList.add('bg-gray-700/50', 'text-gray-400', 'border-gray-700');
+    renderJokes();
+  });
+}
+
+// ─── SERIES / RUBRICS ────────────────────
+function getSeries() {
+  try { return JSON.parse(localStorage.getItem('ferixdi_series') || '[]'); } catch { return []; }
+}
+function saveSeries(series) {
+  localStorage.setItem('ferixdi_series', JSON.stringify(series));
+}
+
+function renderSeriesList() {
+  const list = document.getElementById('series-list');
+  const empty = document.getElementById('series-empty');
+  const series = getSeries();
+
+  if (!list) return;
+  if (series.length === 0) {
+    list.innerHTML = '';
+    empty?.classList.remove('hidden');
+    return;
+  }
+  empty?.classList.add('hidden');
+
+  list.innerHTML = series.map((s, i) => {
+    const charA = state.characters?.find(c => c.id === s.charA_id);
+    const charB = state.characters?.find(c => c.id === s.charB_id);
+    const epCount = s.episodes?.length || 0;
+    return `
+      <div class="glass-panel p-4 space-y-2 border-l-2 border-amber-500/30">
+        <div class="flex items-center justify-between">
+          <div class="text-sm font-semibold text-amber-400">${escapeHtml(s.name)}</div>
+          <div class="flex gap-2">
+            <button class="series-gen-btn text-[10px] px-3 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition-colors" data-idx="${i}">▶ Новый эпизод</button>
+            <button class="series-del-btn text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors" data-idx="${i}">✕</button>
+          </div>
+        </div>
+        <div class="flex gap-3 text-[11px]">
+          <span class="text-cyan-400">A: ${charA?.name_ru || s.charA_id}</span>
+          <span class="text-gray-600">×</span>
+          <span class="text-violet-400">B: ${charB?.name_ru || s.charB_id}</span>
+        </div>
+        ${s.style ? `<div class="text-[10px] text-gray-500">Стиль: ${escapeHtml(s.style)}</div>` : ''}
+        <div class="text-[10px] text-gray-600">${epCount} ${epCount === 1 ? 'эпизод' : 'эпизодов'}</div>
+      </div>`;
+  }).join('');
+
+  list.querySelectorAll('.series-gen-btn').forEach(btn => btn.addEventListener('click', () => generateFromSeries(parseInt(btn.dataset.idx))));
+  list.querySelectorAll('.series-del-btn').forEach(btn => btn.addEventListener('click', () => deleteSeries(parseInt(btn.dataset.idx))));
+}
+
+function createSeries() {
+  if (!isPromoValid()) { showNotification('🔑 Нужен промо-код', 'error'); return; }
+
+  const name = document.getElementById('series-name-input')?.value.trim();
+  const charA = document.getElementById('series-char-a')?.value;
+  const charB = document.getElementById('series-char-b')?.value;
+  const style = document.getElementById('series-style-input')?.value.trim();
+
+  if (!name) { showNotification('Введите название серии', 'error'); return; }
+  if (!charA || !charB) { showNotification('Выберите обоих персонажей', 'error'); return; }
+  if (charA === charB) { showNotification('Персонажи должны быть разные', 'error'); return; }
+
+  const series = getSeries();
+  series.push({ name, charA_id: charA, charB_id: charB, style, episodes: [], created: Date.now() });
+  saveSeries(series);
+
+  document.getElementById('series-name-input').value = '';
+  document.getElementById('series-style-input').value = '';
+  renderSeriesList();
+  showNotification(`📺 Серия "${name}" создана!`, 'success');
+  log('OK', 'SERIES', `Создана серия: ${name}`);
+}
+
+function deleteSeries(idx) {
+  const series = getSeries();
+  if (!confirm(`Удалить серию "${series[idx]?.name}"?`)) return;
+  series.splice(idx, 1);
+  saveSeries(series);
+  renderSeriesList();
+  showNotification('Серия удалена', 'info');
+}
+
+function generateFromSeries(idx) {
+  const series = getSeries();
+  const s = series[idx];
+  if (!s) return;
+
+  if (!isPromoValid()) { showNotification('🔑 Нужен промо-код', 'error'); return; }
+
+  selectChar('A', s.charA_id);
+  selectChar('B', s.charB_id);
+  state.generationMode = 'idea';
+  state.inputMode = 'idea';
+  selectGenerationMode?.('idea');
+
+  const hint = s.style ? `Тема серии: ${s.style}. Это эпизод #${(s.episodes?.length || 0) + 1}.` : '';
+  const ideaInput = document.getElementById('idea-input');
+  if (ideaInput && hint) ideaInput.value = hint;
+
+  // Save episode reference for thread memory
+  state._currentSeries = { idx, name: s.name };
+
+  navigateTo('generate');
+  updateReadiness?.();
+  showNotification(`📺 Серия "${s.name}" — создаём новый эпизод`, 'success');
+}
+
+function populateSeriesSelects() {
+  const selA = document.getElementById('series-char-a');
+  const selB = document.getElementById('series-char-b');
+  if (!selA || !selB || !state.characters?.length) return;
+
+  const opts = state.characters.map(c => `<option value="${c.id}">${c.name_ru} (${c.group})</option>`).join('');
+  selA.innerHTML = `<option value="">— Выбрать —</option>${opts}`;
+  selB.innerHTML = `<option value="">— Выбрать —</option>${opts}`;
+}
+
+function initSeries() {
+  document.getElementById('btn-create-series')?.addEventListener('click', createSeries);
+  renderSeriesList();
+}
+
+// ─── SURPRISE BUTTON (full random) ───────
+function initSurprise() {
+  document.getElementById('btn-surprise')?.addEventListener('click', () => {
+    if (!isPromoValid()) { showNotification('🔑 Нужен промо-код для генерации', 'error'); navigateTo('settings'); return; }
+
+    // Random pair
+    autoSelectRandomPair();
+
+    // Random location
+    if (state.locations?.length) {
+      const loc = state.locations[Math.floor(Math.random() * state.locations.length)];
+      state.selectedLocation = loc.id;
+      updateLocationInfo?.();
+    }
+
+    // Random mode (always idea, free generation)
+    state.generationMode = 'idea';
+    state.inputMode = 'idea';
+    selectGenerationMode?.('idea');
+
+    // Clear idea input to trigger free generation
+    const ideaInput = document.getElementById('idea-input');
+    if (ideaInput) ideaInput.value = '';
+    const ideaInputSuggested = document.getElementById('idea-input-suggested');
+    if (ideaInputSuggested) ideaInputSuggested.value = '';
+
+    navigateTo('generate');
+    updateReadiness?.();
+    showNotification('🎲 Сюрприз! Всё выбрано случайно — жми "Создать контент"', 'success');
+    log('OK', 'SURPRISE', `Рандом: ${state.selectedA} × ${state.selectedB}, loc: ${state.selectedLocation}`);
+  });
+}
+
+// ─── STORYBOARD PREVIEW ──────────────────
+function populateStoryboard(result) {
+  const panel = document.getElementById('storyboard-preview');
+  if (!panel) return;
+
+  const segs = result.blueprint_json?.dialogue_segments || [];
+  const lineA = segs.find(s => s.speaker === 'A');
+  const lineB = segs.find(s => s.speaker === 'B');
+  const ctx = result._apiContext || {};
+  const dialogueA = lineA?.text_ru || ctx.dialogueA || result.dialogue_A_ru || '—';
+  const dialogueB = lineB?.text_ru || ctx.dialogueB || result.dialogue_B_ru || '—';
+  const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || result.killer_word || '💥';
+
+  document.getElementById('sb-line-a').textContent = dialogueA;
+  document.getElementById('sb-line-b').textContent = dialogueB;
+  document.getElementById('sb-killer').textContent = killerWord;
+
+  panel.classList.remove('hidden');
+}
+
+// ─── A/B TESTING ─────────────────────────
+function initABTesting() {
+  document.getElementById('btn-generate-ab')?.addEventListener('click', generateABVariants);
+}
+
+async function generateABVariants() {
+  if (!isPromoValid() || !state.lastResult?._apiContext) {
+    showNotification('Сначала выполните основную генерацию', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-generate-ab');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Генерирую...'; }
+
+  const panel = document.getElementById('ab-testing-panel');
+  const container = document.getElementById('ab-variants');
+  if (!container) return;
+  panel?.classList.remove('hidden');
+
+  try {
+    const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const token = localStorage.getItem('ferixdi_jwt');
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const ctx = state.lastResult._apiContext;
+    const payload = { ...ctx, ab_variants: 2 };
+
+    const resp = await fetch(`${apiBase}/api/generate`, { method: 'POST', headers, body: JSON.stringify(payload) });
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      showNotification(data.error || 'Ошибка A/B генерации', 'error');
+      return;
+    }
+
+    // Render variants (main result + new ones)
+    const variants = [
+      { label: 'Основной', a: state.lastResult.dialogue_A_ru || '—', b: state.lastResult.dialogue_B_ru || '—', killer: state.lastResult.killer_word || '', active: true },
+    ];
+
+    if (data.dialogue_A_ru) {
+      variants.push({ label: 'Вариант B', a: data.dialogue_A_ru, b: data.dialogue_B_ru || '—', killer: data.killer_word || '' });
+    }
+    if (data.ab_variant_2) {
+      variants.push({ label: 'Вариант C', a: data.ab_variant_2.dialogue_A_ru || '—', b: data.ab_variant_2.dialogue_B_ru || '—', killer: data.ab_variant_2.killer_word || '' });
+    }
+
+    container.innerHTML = variants.map((v, i) => `
+      <div class="p-3 rounded-lg border ${v.active ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-gray-700 hover:border-amber-500/30'} cursor-pointer transition-colors ab-variant-card" data-idx="${i}">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[10px] font-bold ${v.active ? 'text-emerald-400' : 'text-amber-400'}">${v.label} ${v.active ? '✓' : ''}</span>
+          ${v.killer ? `<span class="text-[9px] text-pink-400">💥 ${escapeHtml(v.killer)}</span>` : ''}
+        </div>
+        <div class="text-[11px] text-cyan-300 mb-0.5">A: ${escapeHtml(v.a)}</div>
+        <div class="text-[11px] text-violet-300">B: ${escapeHtml(v.b)}</div>
+        ${!v.active ? `<button class="ab-select-btn mt-1.5 text-[9px] px-2 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors" data-idx="${i}">✓ Выбрать этот</button>` : ''}
+      </div>
+    `).join('');
+
+    // Handle variant selection
+    container.querySelectorAll('.ab-select-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.idx);
+        const v = variants[idx];
+        if (!v) return;
+        // Update main result
+        state.lastResult.dialogue_A_ru = v.a;
+        state.lastResult.dialogue_B_ru = v.b;
+        state.lastResult.killer_word = v.killer;
+        document.getElementById('gen-dialogue-a').textContent = v.a;
+        document.getElementById('gen-dialogue-b').textContent = v.b;
+        document.getElementById('gen-killer-word').textContent = v.killer ? `💥 killer word: ${v.killer}` : '';
+        populateStoryboard(state.lastResult);
+        showNotification(`✓ Выбран ${v.label}`, 'success');
+      });
+    });
+
+    log('OK', 'A/B', `Сгенерировано ${variants.length} вариантов`);
+  } catch (err) {
+    showNotification(`Ошибка: ${err.message}`, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ещё 2 варианта'; }
+  }
+}
+
+// ─── CUSTOM CHARACTER CONSTRUCTOR ────────
+function initCharConstructor() {
+  document.getElementById('btn-toggle-char-constructor')?.addEventListener('click', () => {
+    const panel = document.getElementById('char-constructor');
+    if (panel) panel.classList.toggle('hidden');
+  });
+
+  const dropzone = document.getElementById('cc-photo-dropzone');
+  const fileInput = document.getElementById('cc-photo-file');
+  if (dropzone && fileInput) {
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.getElementById('cc-photo-preview');
+          if (img) { img.src = e.target.result; img.classList.remove('hidden'); }
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    });
+  }
+
+  document.getElementById('btn-create-character')?.addEventListener('click', createCustomCharacter);
+}
+
+async function createCustomCharacter() {
+  if (!isPromoValid()) { showCCStatus('🔑 Нужен промо-код', 'text-amber-400'); return; }
+
+  const nameRu = document.getElementById('cc-name-ru')?.value.trim();
+  const group = document.getElementById('cc-group')?.value;
+  const appearance = document.getElementById('cc-appearance')?.value.trim();
+  const speech = document.getElementById('cc-speech')?.value.trim();
+  const compat = document.getElementById('cc-compat')?.value || 'balanced';
+  const role = document.getElementById('cc-role')?.value || 'A';
+
+  if (!nameRu) { showCCStatus('Введите имя персонажа', 'text-red-400'); return; }
+  if (!appearance) { showCCStatus('Опишите внешность', 'text-red-400'); return; }
+
+  showCCStatus('AI создаёт персонажа...', 'text-cyan-400 animate-pulse');
+
+  // Generate character_en from appearance description using AI
+  const id = 'custom_' + nameRu.toLowerCase().replace(/[^а-яa-z0-9]/gi, '_').replace(/_+/g, '_') + '_' + Date.now().toString(36);
+
+  // Build character_en prompt token from the description
+  const character_en = `${appearance.replace(/\.$/, '')}. ${speech ? speech.replace(/\.$/, '') + '.' : ''} Expressive facial reactions, natural micro-gestures, cinematic realism.`;
+
+  const newChar = {
+    id,
+    name_ru: nameRu,
+    name_en: nameRu,
+    group: group === 'custom' ? 'пользовательские' : group,
+    compatibility: compat,
+    role_default: role,
+    vibe_archetype: 'custom',
+    appearance_ru: appearance,
+    speech_style_ru: speech || 'Обычная разговорная речь',
+    behavior_ru: speech || '',
+    speech_pace: 'normal',
+    swear_level: 0,
+    signature_words_ru: [],
+    world_aesthetic: 'custom',
+    prompt_tokens: { character_en },
+    identity_anchors: { face_silhouette: 'custom', signature_element: 'custom' },
+    modifiers: {},
+    _custom: true,
+  };
+
+  // Add to characters array
+  state.characters.push(newChar);
+
+  // Save custom chars to localStorage
+  const customChars = JSON.parse(localStorage.getItem('ferixdi_custom_chars') || '[]');
+  customChars.push(newChar);
+  localStorage.setItem('ferixdi_custom_chars', JSON.stringify(customChars));
+
+  // Re-render
+  renderCharacters();
+  populateSeriesSelects();
+
+  // Clear form
+  document.getElementById('cc-name-ru').value = '';
+  document.getElementById('cc-appearance').value = '';
+  document.getElementById('cc-speech').value = '';
+  document.getElementById('cc-photo-preview')?.classList.add('hidden');
+
+  showCCStatus(`✓ Персонаж "${nameRu}" создан!`, 'text-emerald-400');
+  showNotification(`✨ Персонаж "${nameRu}" добавлен в каталог`, 'success');
+  log('OK', 'CHAR-CREATE', `Создан: ${nameRu} (${id})`);
+}
+
+function showCCStatus(text, cls) {
+  const el = document.getElementById('cc-status');
+  if (!el) return;
+  el.classList.remove('hidden');
+  el.className = `text-xs text-center ${cls}`;
+  el.textContent = text;
+}
+
+let _customCharsLoaded = false;
+function loadCustomCharacters() {
+  try {
+    const customChars = JSON.parse(localStorage.getItem('ferixdi_custom_chars') || '[]');
+    if (customChars.length && state.characters) {
+      const existingIds = new Set(state.characters.map(c => c.id));
+      let added = 0;
+      customChars.forEach(c => { if (!existingIds.has(c.id)) { state.characters.push(c); added++; } });
+      if (added > 0) log('OK', 'CHAR-CUSTOM', `Загружено ${added} пользовательских персонажей`);
+    }
+    _customCharsLoaded = true;
+  } catch (e) { log('ERR', 'CHAR-CUSTOM', e.message); }
+}
+
+// ─── CUSTOM LOCATION CONSTRUCTOR ─────────
+function initLocConstructor() {
+  document.getElementById('btn-toggle-loc-constructor')?.addEventListener('click', () => {
+    const panel = document.getElementById('loc-constructor');
+    if (panel) panel.classList.toggle('hidden');
+  });
+
+  document.getElementById('btn-create-location')?.addEventListener('click', createCustomLocation);
+}
+
+function createCustomLocation() {
+  if (!isPromoValid()) { showLCStatus('🔑 Нужен промо-код', 'text-amber-400'); return; }
+
+  const nameRu = document.getElementById('lc-name-ru')?.value.trim();
+  const group = document.getElementById('lc-group')?.value;
+  const scene = document.getElementById('lc-scene')?.value.trim();
+  const lighting = document.getElementById('lc-lighting')?.value.trim();
+  const mood = document.getElementById('lc-mood')?.value.trim();
+
+  if (!nameRu) { showLCStatus('Введите название', 'text-red-400'); return; }
+  if (!scene) { showLCStatus('Опишите сцену', 'text-red-400'); return; }
+
+  const id = 'custom_' + nameRu.toLowerCase().replace(/[^а-яa-z0-9]/gi, '_').replace(/_+/g, '_') + '_' + Date.now().toString(36);
+
+  const newLoc = {
+    id,
+    name_ru: nameRu,
+    tagline_ru: scene.slice(0, 80),
+    group: group === 'custom' ? 'пользовательские' : group,
+    tags: [group, 'custom'],
+    scene_en: scene,
+    audio_hints: '',
+    lighting: lighting || 'natural ambient light',
+    mood: mood || 'neutral',
+    category_hints: [],
+    _custom: true,
+  };
+
+  state.locations.push(newLoc);
+
+  // Save to localStorage
+  const customLocs = JSON.parse(localStorage.getItem('ferixdi_custom_locs') || '[]');
+  customLocs.push(newLoc);
+  localStorage.setItem('ferixdi_custom_locs', JSON.stringify(customLocs));
+
+  // Re-render
+  renderLocations?.();
+  renderLocationsBrowse?.();
+
+  // Clear
+  document.getElementById('lc-name-ru').value = '';
+  document.getElementById('lc-scene').value = '';
+  document.getElementById('lc-lighting').value = '';
+  document.getElementById('lc-mood').value = '';
+
+  showLCStatus(`✓ Локация "${nameRu}" создана!`, 'text-emerald-400');
+  showNotification(`📍 Локация "${nameRu}" добавлена`, 'success');
+  log('OK', 'LOC-CREATE', `Создана: ${nameRu} (${id})`);
+}
+
+function showLCStatus(text, cls) {
+  const el = document.getElementById('lc-status');
+  if (!el) return;
+  el.classList.remove('hidden');
+  el.className = `text-xs text-center ${cls}`;
+  el.textContent = text;
+}
+
+function loadCustomLocations() {
+  try {
+    const customLocs = JSON.parse(localStorage.getItem('ferixdi_custom_locs') || '[]');
+    if (customLocs.length && state.locations) {
+      const existingIds = new Set(state.locations.map(l => l.id));
+      customLocs.forEach(l => { if (!existingIds.has(l.id)) state.locations.push(l); });
+      log('OK', 'LOC-CUSTOM', `Загружено ${customLocs.length} пользовательских локаций`);
+    }
+  } catch (e) { log('ERR', 'LOC-CUSTOM', e.message); }
+}
+
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedState(); // Load saved state first
@@ -4377,6 +5276,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initVideoUpload();
   initVideoUrlFetch();
   initProductUpload();
+  initPostGenPhoto();
   initGenerate();
   initDialogueEditor();
   initSettings();
@@ -4389,12 +5289,24 @@ document.addEventListener('DOMContentLoaded', () => {
   initTrends();
   initConsultation();
   loadLocations().then(() => {
+    loadCustomLocations();
     renderLocationsBrowse();
     initLocationsBrowse();
   });
+  initJokesLibrary();
+  initSeries();
+  initSurprise();
+  initABTesting();
+  initCharConstructor();
+  initLocConstructor();
   initMatrixRain();
   // Initial readiness check after all components loaded
-  setTimeout(() => updateReadiness(), 300);
+  setTimeout(() => {
+    updateReadiness();
+    loadCustomCharacters();
+    populateSeriesSelects();
+    renderSeriesList();
+  }, 300);
 
   // ─── GLOBAL SOUND: catch ALL buttons/interactive elements ───
   // Plays soft click for any button/link that doesn't already have a specific sound

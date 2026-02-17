@@ -78,13 +78,22 @@
           <div class="text-[10px] text-gray-500 uppercase tracking-[0.25em] font-medium">навигация</div>
         </div>
         <div id="nav-items" class="space-y-1 px-2">
-          <div class="nav-item" data-section="consult"><span>�</span><span>Помощник</span></div>
-          <div class="nav-item" data-section="ideas"><span>�</span><span>Поиск идей</span></div>
+          <div class="nav-item" data-section="consult"><span>💬</span><span>Помощник</span></div>
+          <div class="nav-item" data-section="ideas"><span>🔍</span><span>Поиск идей</span></div>
+          <div class="nav-item" data-section="jokes"><span>😂</span><span>Библиотека шуток</span></div>
           <div class="nav-item active" data-section="generation-mode"><span>🎯</span><span>Режим генерации</span></div>
           <div class="nav-item" data-section="characters"><span>👥</span><span>Персонажи</span></div>
           <div class="nav-item" data-section="locations"><span>📍</span><span>Локации</span></div>
+          <div class="nav-item" data-section="series"><span>📺</span><span>Серии</span></div>
           <div class="nav-item" data-section="generate"><span>⚡</span><span>Генерация</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
+        </div>
+        <!-- Surprise Button -->
+        <div class="px-3 mt-3">
+          <button id="btn-surprise" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500/20 via-violet-500/20 to-cyan-500/20 border border-pink-500/30 hover:border-pink-500/50 hover:from-pink-500/30 hover:via-violet-500/30 hover:to-cyan-500/30 transition-all text-sm font-semibold text-white flex items-center justify-center gap-2">
+            🎲 Сюрприз
+          </button>
+          <div class="text-[9px] text-gray-600 text-center mt-1">AI всё выберет сам</div>
         </div>
         <!-- Progress Tracker -->
         <div class="px-4 mt-6 pt-4 border-t border-gray-800/50">
@@ -386,15 +395,76 @@
           <!-- Grid -->
           <div id="char-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[480px] overflow-y-auto pr-2"></div>
 
-          <!-- Request custom character -->
-          <div class="glass-panel p-4 flex items-center justify-between gap-3 mt-3">
-            <div>
-              <div class="text-xs text-gray-300 font-medium">Не нашёл нужного персонажа?</div>
-              <div class="text-[10px] text-gray-500 mt-0.5">Опиши кого хочешь — мы создадим уникального персонажа под твой контент</div>
+          <!-- Custom Character Constructor -->
+          <div id="custom-char-panel" class="glass-panel p-4 space-y-3 mt-3 border-l-2 border-cyan-500/30">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs text-cyan-400 font-medium flex items-center gap-1.5">✨ Конструктор персонажей</div>
+                <div class="text-[10px] text-gray-500 mt-0.5">Создай СВОЕГО уникального персонажа (нужен промо-код)</div>
+              </div>
+              <button id="btn-toggle-char-constructor" class="text-[10px] px-3 py-1.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/25 transition-colors">➕ Создать</button>
             </div>
-            <a href="https://t.me/ferixdiii" target="_blank" class="btn-neon text-xs whitespace-nowrap flex items-center gap-1.5">
-              <span>✨</span> Заказать персонажа
-            </a>
+            <div id="char-constructor" class="hidden space-y-3 pt-2 border-t border-gray-800/50">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Имя персонажа (рус):</label>
+                  <input id="cc-name-ru" type="text" class="input-field text-xs" placeholder="Бабка Зина">
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Группа:</label>
+                  <select id="cc-group" class="input-field text-xs w-full">
+                    <option value="бабушки">бабушки</option>
+                    <option value="дедушки">дедушки</option>
+                    <option value="мамы">мамы</option>
+                    <option value="папы">папы</option>
+                    <option value="дочери и сыновья">дочери и сыновья</option>
+                    <option value="знаменитости">знаменитости</option>
+                    <option value="профессии">профессии</option>
+                    <option value="архетипы">архетипы</option>
+                    <option value="custom">👤 Свой</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="text-[10px] text-gray-400 font-medium block mb-1">Внешность (опишите подробно):</label>
+                <textarea id="cc-appearance" class="input-field h-16 resize-none text-xs" placeholder="75-летняя женщина, седые кудри, пёстрый фартук, тапки, грозный взгляд поверх очков..."></textarea>
+              </div>
+              <div>
+                <label class="text-[10px] text-gray-400 font-medium block mb-1">Стиль речи и поведение:</label>
+                <textarea id="cc-speech" class="input-field h-16 resize-none text-xs" placeholder="Грубоватый деревенский говор, матерится шёпотом, всё критикует, советы раздаёт бесплатно..."></textarea>
+              </div>
+              <div>
+                <label class="text-[10px] text-gray-400 font-medium block mb-1">Фото-референс (необязательно):</label>
+                <div class="flex gap-2 items-center">
+                  <div id="cc-photo-dropzone" class="flex-1 border-2 border-dashed border-gray-700 rounded-lg p-2 text-center cursor-pointer hover:border-cyan-500/40 transition-colors">
+                    <input type="file" id="cc-photo-file" accept="image/*" class="hidden">
+                    <span class="text-[10px] text-gray-500">📷 Загрузить фото</span>
+                  </div>
+                  <img id="cc-photo-preview" class="hidden w-12 h-12 rounded-lg object-cover border border-cyan-500/30" alt="ref">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Совместимость:</label>
+                  <select id="cc-compat" class="input-field text-xs w-full">
+                    <option value="chaotic">хаотичный</option>
+                    <option value="conflict">конфликтный</option>
+                    <option value="calm">спокойный</option>
+                    <option value="meme">мемный</option>
+                    <option value="balanced">сбалансированный</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Роль по умолчанию:</label>
+                  <select id="cc-role" class="input-field text-xs w-full">
+                    <option value="A">A — провокатор</option>
+                    <option value="B">B — панчлайн</option>
+                  </select>
+                </div>
+              </div>
+              <button id="btn-create-character" class="btn-neon-green w-full py-2.5 text-xs font-medium">✨ Создать персонажа</button>
+              <div id="cc-status" class="hidden text-xs text-center"></div>
+            </div>
           </div>
         </section>
 
@@ -440,12 +510,12 @@
             </div>
             <div id="loc-grid" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1"></div>
             <div id="loc-selected-info" class="hidden text-[11px] text-gray-400 border-t border-gray-800/50 pt-2"></div>
-            <!-- Request custom location -->
+            <!-- Custom location link -->
             <div class="flex items-center justify-between gap-3 border-t border-gray-800/50 pt-2 mt-1">
               <span class="text-[10px] text-gray-500">Нужна своя локация?</span>
-              <a href="https://t.me/ferixdiii" target="_blank" class="text-[10px] text-cyan-400/70 hover:text-cyan-300 transition-colors flex items-center gap-1">
-                <span>📍</span> Предложить локацию →
-              </a>
+              <button onclick="navigateTo('locations')" class="text-[10px] text-violet-400/70 hover:text-violet-300 transition-colors flex items-center gap-1">
+                <span>📍</span> Конструктор локаций →
+              </button>
             </div>
           </div>
 
@@ -646,6 +716,59 @@
               <div id="editor-fixes" class="hidden text-[10px] text-emerald-400 space-y-0.5"></div>
             </div>
 
+            <!-- Storyboard Preview (8s visual timeline) -->
+            <div id="storyboard-preview" class="hidden glass-panel p-4 space-y-3 border-l-2 border-pink-500/40">
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-pink-400 font-semibold flex items-center gap-1.5">🎬 Раскадровка — 8 секунд</div>
+                <span class="text-[9px] text-gray-600">визуальный таймлайн</span>
+              </div>
+              <!-- Timeline bar -->
+              <div class="relative bg-black/40 rounded-xl overflow-hidden h-20 border border-gray-800">
+                <!-- Time markers -->
+                <div class="absolute top-0 left-0 right-0 flex text-[8px] text-gray-600 px-1 pt-0.5">
+                  <span class="flex-shrink-0" style="width:6.25%">0s</span>
+                  <span class="flex-shrink-0" style="width:6.25%">0.5s</span>
+                  <span style="flex:1"></span>
+                  <span class="flex-shrink-0" style="width:6.25%">3s</span>
+                  <span style="flex:1"></span>
+                  <span class="flex-shrink-0" style="width:6.25%">7s</span>
+                  <span class="flex-shrink-0">8s</span>
+                </div>
+                <!-- Segments -->
+                <div class="absolute bottom-0 left-0 right-0 flex h-14">
+                  <div class="bg-amber-500/20 border-r border-amber-500/40 flex items-center justify-center" style="width:6.25%">
+                    <span class="text-[9px] text-amber-400 font-bold">ХУК</span>
+                  </div>
+                  <div id="sb-segment-a" class="bg-cyan-500/15 border-r border-cyan-500/30 flex items-center px-1.5 overflow-hidden" style="width:31.25%">
+                    <div class="text-[10px] text-cyan-300 leading-tight line-clamp-2" id="sb-line-a">—</div>
+                  </div>
+                  <div id="sb-segment-b" class="bg-violet-500/15 border-r border-violet-500/30 flex items-center px-1.5 overflow-hidden" style="width:50%">
+                    <div class="text-[10px] text-violet-300 leading-tight line-clamp-2" id="sb-line-b">—</div>
+                  </div>
+                  <div class="bg-pink-500/20 flex items-center justify-center" style="width:12.5%">
+                    <span class="text-[9px] text-pink-400 font-bold" id="sb-killer">💥</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Legend -->
+              <div class="flex gap-3 text-[9px]">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-amber-500/40"></span><span class="text-gray-500">0-0.5с Хук</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-cyan-500/30"></span><span class="text-gray-500">0.5-3с Реплика A</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-violet-500/30"></span><span class="text-gray-500">3-7с Реплика B</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-pink-500/40"></span><span class="text-gray-500">7-8с Killer Word</span></span>
+              </div>
+            </div>
+
+            <!-- A/B Testing — multiple variants -->
+            <div id="ab-testing-panel" class="hidden glass-panel p-4 space-y-3 border-l-2 border-amber-500/40">
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-amber-400 font-semibold flex items-center gap-1.5">⚡ A/B Варианты диалога</div>
+                <button id="btn-generate-ab" class="text-[10px] px-3 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors">🔄 Ещё 2 варианта</button>
+              </div>
+              <div class="text-[10px] text-gray-500">Сравните несколько вариантов диалога и выберите лучший</div>
+              <div id="ab-variants" class="space-y-2"></div>
+            </div>
+
             <!-- Warnings -->
             <div id="gen-warnings" class="hidden glass-panel p-3 border-l-2 border-orange-500/40">
               <div class="text-xs text-orange-400 mb-1 font-medium">⚠️ Предупреждения:</div>
@@ -747,6 +870,63 @@
               </div>
             </div>
 
+            <!-- ═══ POST-GENERATION: Enhance prompt with photo ═══ -->
+            <div id="post-gen-photo" class="hidden space-y-3">
+              <div class="glass-panel p-4 space-y-4 border-l-2 border-violet-500/40">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="flex items-center justify-center w-6 h-6 rounded-full bg-violet-500/20 text-violet-400 text-xs">📷</span>
+                    <div>
+                      <div class="text-xs font-semibold text-violet-400">УЛУЧШИ ПРОМПТ ФОТОГРАФИЕЙ</div>
+                      <div class="text-[10px] text-gray-500">Загрузи референс или фото товара — AI дополнит промпт описанием</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Two mode buttons -->
+                <div class="flex gap-2">
+                  <button id="post-photo-mode-ref" class="flex-1 py-2.5 px-3 rounded-lg border border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/15 transition-all text-center cursor-pointer group" data-post-mode="reference">
+                    <div class="text-sm group-hover:scale-105 transition-transform">🎨</div>
+                    <div class="text-[11px] text-violet-300 font-medium mt-1">Референс стиля</div>
+                    <div class="text-[9px] text-gray-500 mt-0.5">Настроение, эстетика, цвета</div>
+                  </button>
+                  <button id="post-photo-mode-prod" class="flex-1 py-2.5 px-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/15 transition-all text-center cursor-pointer group" data-post-mode="product">
+                    <div class="text-sm group-hover:scale-105 transition-transform">📦</div>
+                    <div class="text-[11px] text-emerald-300 font-medium mt-1">Фото товара</div>
+                    <div class="text-[9px] text-gray-500 mt-0.5">Товар появится в кадре</div>
+                  </button>
+                </div>
+
+                <!-- Dropzone -->
+                <div id="post-photo-dropzone" class="hidden border-2 border-dashed border-gray-700 rounded-xl p-6 text-center cursor-pointer hover:border-violet-500/50 transition-colors">
+                  <input type="file" id="post-photo-file" accept="image/*" class="hidden">
+                  <div id="post-photo-dropzone-inner">
+                    <div class="text-2xl mb-1" id="post-photo-icon">📷</div>
+                    <div class="text-xs text-gray-400" id="post-photo-label">Перетащи фото или нажми</div>
+                    <div class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP · до 10 МБ</div>
+                  </div>
+                </div>
+
+                <!-- Preview -->
+                <div id="post-photo-preview" class="hidden">
+                  <img id="post-photo-preview-img" class="w-20 h-20 rounded-lg object-cover border border-violet-500/30" alt="preview">
+                </div>
+
+                <!-- Status -->
+                <div id="post-photo-status" class="hidden text-xs text-center"></div>
+
+                <!-- Result -->
+                <div id="post-photo-result" class="hidden space-y-2">
+                  <div class="bg-black/30 rounded-lg p-3">
+                    <div class="text-[10px] font-semibold uppercase tracking-wider mb-1" id="post-photo-result-title">Описание</div>
+                    <div id="post-photo-description" class="text-[11px] text-gray-300 leading-relaxed"></div>
+                  </div>
+                  <button id="post-photo-apply" class="btn-neon-green w-full py-2.5 text-xs font-medium">✨ Применить к промпту</button>
+                  <button id="post-photo-clear" class="text-[10px] text-gray-500 hover:text-gray-300 transition-colors cursor-pointer w-full text-center">Убрать фото</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Regenerate with feedback -->
             <div class="glass-panel p-4 space-y-3 border-l-2 border-cyan-400/30">
               <div class="text-xs text-cyan-400 font-semibold flex items-center gap-1.5">🔄 Не то что нужно? Перегенерируй с уточнением</div>
@@ -775,14 +955,54 @@
           </div>
           <div id="loc-browse-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-2"></div>
           <div id="loc-browse-selected-info" class="hidden glass-panel p-4 border-l-2 border-violet-500/40"></div>
-          <div class="glass-panel p-4 flex items-center justify-between gap-3">
-            <div>
-              <div class="text-xs text-gray-300 font-medium">Нужна своя локация?</div>
-              <div class="text-[10px] text-gray-500 mt-0.5">Опиши что хочешь — мы создадим уникальную локацию</div>
+          <!-- Custom Location Constructor -->
+          <div class="glass-panel p-4 space-y-3 border-l-2 border-violet-500/30">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs text-violet-400 font-medium flex items-center gap-1.5">📍 Конструктор локаций</div>
+                <div class="text-[10px] text-gray-500 mt-0.5">Создай СВОЮ уникальную локацию (нужен промо-код)</div>
+              </div>
+              <button id="btn-toggle-loc-constructor" class="text-[10px] px-3 py-1.5 rounded bg-violet-500/15 text-violet-400 border border-violet-500/30 hover:bg-violet-500/25 transition-colors">➕ Создать</button>
             </div>
-            <a href="https://t.me/ferixdiii" target="_blank" class="btn-neon text-xs whitespace-nowrap flex items-center gap-1.5">
-              <span>📍</span> Предложить локацию
-            </a>
+            <div id="loc-constructor" class="hidden space-y-3 pt-2 border-t border-gray-800/50">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Название (рус):</label>
+                  <input id="lc-name-ru" type="text" class="input-field text-xs" placeholder="Гаражный кооператив">
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Группа:</label>
+                  <select id="lc-group" class="input-field text-xs w-full">
+                    <option value="дом">дом</option>
+                    <option value="улица">улица</option>
+                    <option value="кафе">кафе</option>
+                    <option value="офис">офис</option>
+                    <option value="спорт">спорт</option>
+                    <option value="учреждения">учреждения</option>
+                    <option value="транспорт">транспорт</option>
+                    <option value="деревня">деревня</option>
+                    <option value="магазин">магазин</option>
+                    <option value="custom">📍 Свой</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="text-[10px] text-gray-400 font-medium block mb-1">Описание сцены (что видит камера):</label>
+                <textarea id="lc-scene" class="input-field h-20 resize-none text-xs" placeholder="Ряд кирпичных гаражей с облупившейся краской, бетонный пол, запах бензина, старый верстак с инструментами, тусклая лампочка на проводе..."></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Освещение:</label>
+                  <input id="lc-lighting" type="text" class="input-field text-xs" placeholder="Тусклая лампа, тени">
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-400 font-medium block mb-1">Настроение:</label>
+                  <input id="lc-mood" type="text" class="input-field text-xs" placeholder="мужское, ностальгия">
+                </div>
+              </div>
+              <button id="btn-create-location" class="btn-neon-green w-full py-2.5 text-xs font-medium">📍 Создать локацию</button>
+              <div id="lc-status" class="hidden text-xs text-center"></div>
+            </div>
           </div>
 
           <!-- Continue to generation -->
@@ -902,6 +1122,87 @@
             <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Сохранить ритм</span><div class="toggle-track active" data-opt="preserveRhythm"><div class="toggle-thumb"></div></div></div>
             <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Точный липсинк</span><div class="toggle-track active" data-opt="strictLipSync"><div class="toggle-thumb"></div></div></div>
             <div class="flex items-center justify-between"><span class="text-[11px] text-gray-400">Автообрезка</span><div class="toggle-track" data-opt="allowAutoTrim"><div class="toggle-thumb"></div></div></div>
+          </div>
+        </section>
+
+        <!-- SECTION: Jokes Library -->
+        <section id="section-jokes" class="section-panel hidden space-y-5">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white text-sm font-bold">😂</div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">Библиотека шуток</h2>
+              <p class="text-xs text-gray-400">Выбери готовую шутку → AI подберёт персонажей и локацию → генерация в один клик</p>
+            </div>
+          </div>
+
+          <!-- Theme filter -->
+          <div class="flex gap-2 flex-wrap items-center">
+            <button class="joke-theme-btn mode-btn active text-xs" data-theme="all">Все</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="семья">👨‍👩‍👧 Семья</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="деньги">💰 Деньги</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="работа">💼 Работа</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="технологии">📱 Технологии</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="здоровье">💊 Здоровье</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="еда">🍽 Еда</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="дача">🌿 Дача</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="поколения">👴 Поколения</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="отношения">❤️ Отношения</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="транспорт">🚌 Транспорт</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="ЖКХ">🏠 ЖКХ</button>
+            <button class="joke-theme-btn mode-btn text-xs" data-theme="школа">🎓 Школа</button>
+          </div>
+
+          <!-- Search -->
+          <input id="joke-search" type="text" class="input-field text-sm" placeholder="🔍 Поиск по тексту шутки...">
+
+          <!-- Sort -->
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-gray-500">Сортировка:</span>
+            <button id="joke-sort-viral" class="text-[10px] px-2 py-1 rounded bg-pink-500/15 text-pink-400 border border-pink-500/30">🔥 По вирусности</button>
+            <button id="joke-sort-random" class="text-[10px] px-2 py-1 rounded bg-gray-700/50 text-gray-400 border border-gray-700 hover:border-violet-500/30 transition-colors">🎲 Случайные</button>
+            <span id="joke-count-badge" class="text-[10px] text-gray-600 ml-auto">—</span>
+          </div>
+
+          <!-- Jokes grid -->
+          <div id="jokes-grid" class="space-y-3 max-h-[600px] overflow-y-auto pr-2"></div>
+        </section>
+
+        <!-- SECTION: Series / Rubrics -->
+        <section id="section-series" class="section-panel hidden space-y-5">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-600 text-white text-sm font-bold">📺</div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">Мои серии</h2>
+              <p class="text-xs text-gray-400">Создавай рубрики с фиксированной парой персонажей — стройте каналы на повторяющихся героях</p>
+            </div>
+          </div>
+
+          <!-- Create new series -->
+          <div class="glass-panel p-4 space-y-3 border-l-2 border-amber-500/40">
+            <div class="text-xs text-amber-400 font-semibold flex items-center gap-1.5">➕ Создать новую серию</div>
+            <input id="series-name-input" type="text" class="input-field text-sm" placeholder="Название серии (напр: Бабка Зина vs Хипстер: Технофобия)">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[10px] text-cyan-400 font-medium block mb-1">🅰️ Персонаж A:</label>
+                <select id="series-char-a" class="input-field text-xs w-full"></select>
+              </div>
+              <div>
+                <label class="text-[10px] text-violet-400 font-medium block mb-1">🅱️ Персонаж B:</label>
+                <select id="series-char-b" class="input-field text-xs w-full"></select>
+              </div>
+            </div>
+            <input id="series-style-input" type="text" class="input-field text-xs" placeholder="Стиль/тема серии (напр: споры о технологиях, бытовые конфликты)">
+            <button id="btn-create-series" class="btn-neon w-full py-2 text-xs font-medium">📺 Создать серию</button>
+          </div>
+
+          <!-- Series list -->
+          <div id="series-list" class="space-y-3"></div>
+
+          <!-- Empty state -->
+          <div id="series-empty" class="glass-panel p-6 text-center">
+            <div class="text-2xl mb-2">📺</div>
+            <div class="text-sm text-gray-400">Пока нет серий</div>
+            <div class="text-[10px] text-gray-600 mt-1">Создайте первую серию — фиксированная пара персонажей для вашей рубрики</div>
           </div>
         </section>
 
@@ -1081,8 +1382,9 @@
                   <button id="consult-copy-btn" class="text-[10px] text-gray-500 hover:text-emerald-400 transition-colors">📋 Копировать</button>
                 </div>
                 <div id="consult-response" class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
-                <div class="pt-2 border-t border-emerald-500/10">
-                  <a href="https://t.me/ferixdiii" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 transition-colors">📩 Нужны кастомные персонажи/локации? Пишите @ferixdiii</a>
+                <div class="pt-2 border-t border-emerald-500/10 flex gap-3">
+                  <button onclick="navigateTo('characters')" class="text-[11px] text-cyan-400 hover:text-cyan-300 transition-colors">✨ Создать персонажа →</button>
+                  <button onclick="navigateTo('locations')" class="text-[11px] text-violet-400 hover:text-violet-300 transition-colors">� Создать локацию →</button>
                 </div>
               </div>
             </div>
