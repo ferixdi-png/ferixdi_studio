@@ -4744,9 +4744,9 @@ function quickGenerateFromJoke(jokeId) {
     }
   }
 
-  // Set mode to script with joke lines
+  // Set mode to idea with joke text
   state.generationMode = 'idea';
-  state.inputMode = 'script';
+  state.inputMode = 'idea';
   selectGenerationMode?.('idea');
 
   const ideaInput = document.getElementById('idea-input');
@@ -4764,9 +4764,9 @@ function useJokeAsScript(jokeId) {
   const joke = _jokes.find(j => j.id === jokeId);
   if (!joke) return;
 
-  state.generationMode = 'idea';
+  state.generationMode = 'script';
   state.inputMode = 'script';
-  selectGenerationMode?.('idea');
+  selectGenerationMode?.('script');
 
   const scriptA = document.getElementById('script-a');
   const scriptB = document.getElementById('script-b');
@@ -4774,7 +4774,6 @@ function useJokeAsScript(jokeId) {
   if (scriptB) scriptB.value = joke.line_b;
 
   navigateTo('generate');
-  updateModeSpecificUI?.('script');
   updateReadiness?.();
   showNotification('📝 Реплики вставлены в режим "Свой диалог"', 'success');
 }
@@ -4946,12 +4945,12 @@ function initSurprise() {
       updateLocationInfo?.();
     }
 
-    // Random mode (always idea, free generation)
-    state.generationMode = 'idea';
-    state.inputMode = 'idea';
-    selectGenerationMode?.('idea');
+    // Random mode — use 'suggested' which allows empty topic (AI picks topic itself)
+    state.generationMode = 'suggested';
+    state.inputMode = 'suggested';
+    selectGenerationMode?.('suggested');
 
-    // Clear idea input to trigger free generation
+    // Clear idea inputs — AI will pick topic itself
     const ideaInput = document.getElementById('idea-input');
     if (ideaInput) ideaInput.value = '';
     const ideaInputSuggested = document.getElementById('idea-input-suggested');
@@ -5006,11 +5005,17 @@ async function generateABVariants() {
   try {
     const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
     const token = localStorage.getItem('ferixdi_jwt');
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (!token) { showNotification('🔑 Нет токена авторизации', 'error'); return; }
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
 
     const ctx = state.lastResult._apiContext;
-    const payload = { ...ctx, ab_variants: 2 };
+    const payload = { context: ctx };
+
+    // Attach product/video if available (same as callAIEngine)
+    if (state.productInfo?.image_base64) {
+      payload.product_image = state.productInfo.image_base64;
+      payload.product_mime = state.productInfo.mime_type || 'image/jpeg';
+    }
 
     const resp = await fetch(`${apiBase}/api/generate`, { method: 'POST', headers, body: JSON.stringify(payload) });
     const data = await resp.json();
@@ -5020,16 +5025,22 @@ async function generateABVariants() {
       return;
     }
 
-    // Render variants (main result + new ones)
+    // Server returns { ai: geminiResult, model, tokens }
+    const ai = data.ai || {};
+
+    // Extract main result dialogue from existing result
+    const segs = state.lastResult.blueprint_json?.dialogue_segments || [];
+    const mainA = segs.find(s => s.speaker === 'A')?.text_ru || state.lastResult._apiContext?.dialogueA || '—';
+    const mainB = segs.find(s => s.speaker === 'B')?.text_ru || state.lastResult._apiContext?.dialogueB || '—';
+    const mainKiller = state.lastResult.blueprint_json?.killer_word || state.lastResult._apiContext?.killerWord || '';
+
+    // Render variants (main result + new one)
     const variants = [
-      { label: 'Основной', a: state.lastResult.dialogue_A_ru || '—', b: state.lastResult.dialogue_B_ru || '—', killer: state.lastResult.killer_word || '', active: true },
+      { label: 'Основной', a: mainA, b: mainB, killer: mainKiller, active: true },
     ];
 
-    if (data.dialogue_A_ru) {
-      variants.push({ label: 'Вариант B', a: data.dialogue_A_ru, b: data.dialogue_B_ru || '—', killer: data.killer_word || '' });
-    }
-    if (data.ab_variant_2) {
-      variants.push({ label: 'Вариант C', a: data.ab_variant_2.dialogue_A_ru || '—', b: data.ab_variant_2.dialogue_B_ru || '—', killer: data.ab_variant_2.killer_word || '' });
+    if (ai.dialogue_A_ru) {
+      variants.push({ label: 'Вариант B', a: ai.dialogue_A_ru, b: ai.dialogue_B_ru || '—', killer: ai.killer_word || '' });
     }
 
     container.innerHTML = variants.map((v, i) => `
@@ -5257,8 +5268,9 @@ function loadCustomLocations() {
     const customLocs = JSON.parse(localStorage.getItem('ferixdi_custom_locs') || '[]');
     if (customLocs.length && state.locations) {
       const existingIds = new Set(state.locations.map(l => l.id));
-      customLocs.forEach(l => { if (!existingIds.has(l.id)) state.locations.push(l); });
-      log('OK', 'LOC-CUSTOM', `Загружено ${customLocs.length} пользовательских локаций`);
+      let added = 0;
+      customLocs.forEach(l => { if (!existingIds.has(l.id)) { state.locations.push(l); added++; } });
+      if (added > 0) log('OK', 'LOC-CUSTOM', `Загружено ${added} пользовательских локаций`);
     }
   } catch (e) { log('ERR', 'LOC-CUSTOM', e.message); }
 }
