@@ -1050,7 +1050,7 @@ app.post('/api/product/describe', authMiddleware, async (req, res) => {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
-  const { image_base64, mime_type } = req.body;
+  const { image_base64, mime_type, mode } = req.body;
   if (!image_base64) return res.status(400).json({ error: 'image_base64 required' });
 
   const GEMINI_KEY = nextGeminiKey();
@@ -1063,7 +1063,20 @@ app.post('/api/product/describe', authMiddleware, async (req, res) => {
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
-    const prompt = `You are a product photography analyst specializing in creating descriptions for AI image and video generation. Analyze this product photo and provide an ULTRA-DETAILED description in English.
+    // Different prompts for product vs reference mode
+    const prompt = mode === 'reference'
+      ? `You are a visual style analyst specializing in creating descriptions for AI image and video generation. Analyze this reference image and describe its VISUAL AESTHETIC in English.
+
+Focus ONLY on the visual style, NOT on objects or people:
+1. **LIGHTING**: Direction, quality (soft/hard), color temperature, key-to-fill ratio, shadows, highlights, any dramatic light effects
+2. **COLOR PALETTE**: Dominant colors, accent colors, saturation level, warm/cool balance, any color grading or filters applied
+3. **MOOD & ATMOSPHERE**: Overall feeling, energy level, emotional tone, cinematic quality
+4. **COMPOSITION**: Framing style, depth of field, perspective, negative space usage
+5. **TEXTURE & GRAIN**: Film grain, digital noise, sharpness, any vintage or processed look
+6. **STYLE REFERENCES**: If it resembles a known visual style (e.g., "Wes Anderson pastel palette", "noir high-contrast", "golden hour warmth")
+
+Format your response as a single dense paragraph optimized for AI video generation prompts. Start directly with the style description, no preamble. The goal is that an AI model can replicate this EXACT visual aesthetic in a completely different scene.`
+      : `You are a product photography analyst specializing in creating descriptions for AI image and video generation. Analyze this product photo and provide an ULTRA-DETAILED description in English.
 
 IGNORE the background completely — describe ONLY the product itself.
 

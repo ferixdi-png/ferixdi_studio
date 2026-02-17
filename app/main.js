@@ -2299,13 +2299,13 @@ function clearPostGenPhoto() {
   state._postGenPhoto = null;
   _postPhotoMode = null;
   document.getElementById('post-photo-preview')?.classList.add('hidden');
-  document.getElementById('post-photo-result')?.classList.remove('hidden');
   document.getElementById('post-photo-result')?.classList.add('hidden');
   document.getElementById('post-photo-dropzone')?.classList.add('hidden');
   document.getElementById('post-photo-status')?.classList.add('hidden');
   document.getElementById('post-photo-mode-ref')?.classList.remove('ring-2', 'ring-violet-500');
   document.getElementById('post-photo-mode-prod')?.classList.remove('ring-2', 'ring-emerald-500');
-  document.getElementById('post-photo-file').value = '';
+  const fileInput = document.getElementById('post-photo-file');
+  if (fileInput) fileInput.value = '';
   log('INFO', 'POST-PHOTO', 'Фото убрано');
 }
 
