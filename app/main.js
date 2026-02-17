@@ -3924,6 +3924,10 @@ function initConsultation() {
           } else {
             clearInterval(_typeTimer);
             _typeTimer = null;
+            // Make @ferixdiii a clickable Telegram link
+            responseEl.innerHTML = responseEl.textContent
+              .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '\n')
+              .replace(/@ferixdiii/g, '<a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition-colors">@ferixdiii</a>');
           }
         }, 6);
       }
