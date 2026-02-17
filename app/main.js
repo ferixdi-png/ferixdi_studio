@@ -2577,8 +2577,10 @@ function displayResult(result) {
   // Storyboard preview
   populateStoryboard(result);
 
-  // Show A/B testing button
-  document.getElementById('ab-testing-panel')?.classList.remove('hidden');
+  // Show A/B testing button only when API context exists (no point for local-only results)
+  if (result._apiContext) {
+    document.getElementById('ab-testing-panel')?.classList.remove('hidden');
+  }
 
   // Save series episode if generating from series
   if (state._currentSeries) {
@@ -4850,7 +4852,7 @@ function renderSeriesList() {
           <span class="text-violet-400">B: ${charB?.name_ru || s.charB_id}</span>
         </div>
         ${s.style ? `<div class="text-[10px] text-gray-500">Стиль: ${escapeHtml(s.style)}</div>` : ''}
-        <div class="text-[10px] text-gray-600">${epCount} ${epCount === 1 ? 'эпизод' : 'эпизодов'}</div>
+        <div class="text-[10px] text-gray-600">${epCount} ${epCount === 1 ? 'эпизод' : (epCount >= 2 && epCount <= 4) ? 'эпизода' : 'эпизодов'}</div>
       </div>`;
   }).join('');
 
@@ -4995,7 +4997,7 @@ async function generateABVariants() {
   }
 
   const btn = document.getElementById('btn-generate-ab');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Генерирую...'; }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ AI генерирует 3 варианта...'; }
 
   const panel = document.getElementById('ab-testing-panel');
   const container = document.getElementById('ab-variants');
@@ -5009,7 +5011,8 @@ async function generateABVariants() {
     const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
 
     const ctx = state.lastResult._apiContext;
-    const payload = { context: ctx };
+    // ab_variants=2 tells server to ask Gemini for 2 extra variants in a SINGLE request
+    const payload = { context: ctx, ab_variants: 2 };
 
     // Attach product/video if available (same as callAIEngine)
     if (state.productInfo?.image_base64) {
@@ -5025,22 +5028,33 @@ async function generateABVariants() {
       return;
     }
 
-    // Server returns { ai: geminiResult, model, tokens }
+    // Server returns { ai: { ...mainResult, ab_variants: [{...}, {...}] }, model, tokens }
     const ai = data.ai || {};
 
-    // Extract main result dialogue from existing result
+    // Extract current main result dialogue
     const segs = state.lastResult.blueprint_json?.dialogue_segments || [];
     const mainA = segs.find(s => s.speaker === 'A')?.text_ru || state.lastResult._apiContext?.dialogueA || '—';
     const mainB = segs.find(s => s.speaker === 'B')?.text_ru || state.lastResult._apiContext?.dialogueB || '—';
     const mainKiller = state.lastResult.blueprint_json?.killer_word || state.lastResult._apiContext?.killerWord || '';
 
-    // Render variants (main result + new one)
+    // Build variants array: current main + new main from AI + ab_variants from AI
     const variants = [
-      { label: 'Основной', a: mainA, b: mainB, killer: mainKiller, active: true },
+      { label: 'Текущий', a: mainA, b: mainB, killer: mainKiller, active: true },
     ];
 
+    // The new main dialogue from AI (variant B)
     if (ai.dialogue_A_ru) {
       variants.push({ label: 'Вариант B', a: ai.dialogue_A_ru, b: ai.dialogue_B_ru || '—', killer: ai.killer_word || '' });
+    }
+
+    // Extra variants from ab_variants array (variant C, D...)
+    const labels = ['Вариант C', 'Вариант D', 'Вариант E'];
+    if (Array.isArray(ai.ab_variants)) {
+      ai.ab_variants.forEach((v, i) => {
+        if (v?.dialogue_A_ru && v?.dialogue_B_ru) {
+          variants.push({ label: labels[i] || `Вариант ${i + 3}`, a: v.dialogue_A_ru, b: v.dialogue_B_ru, killer: v.killer_word || '' });
+        }
+      });
     }
 
     container.innerHTML = variants.map((v, i) => `
@@ -5056,29 +5070,43 @@ async function generateABVariants() {
     `).join('');
 
     // Handle variant selection
-    container.querySelectorAll('.ab-select-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    container.querySelectorAll('.ab-select-btn').forEach(b => {
+      b.addEventListener('click', (e) => {
         e.stopPropagation();
-        const idx = parseInt(btn.dataset.idx);
+        const idx = parseInt(b.dataset.idx);
         const v = variants[idx];
         if (!v) return;
-        // Update main result
-        state.lastResult.dialogue_A_ru = v.a;
-        state.lastResult.dialogue_B_ru = v.b;
-        state.lastResult.killer_word = v.killer;
+        // Update main result dialogues
+        if (state.lastResult.blueprint_json?.dialogue_segments) {
+          const segA = state.lastResult.blueprint_json.dialogue_segments.find(s => s.speaker === 'A');
+          const segB = state.lastResult.blueprint_json.dialogue_segments.find(s => s.speaker === 'B');
+          if (segA) segA.text_ru = v.a;
+          if (segB) segB.text_ru = v.b;
+          state.lastResult.blueprint_json.killer_word = v.killer;
+        }
         document.getElementById('gen-dialogue-a').textContent = v.a;
         document.getElementById('gen-dialogue-b').textContent = v.b;
         document.getElementById('gen-killer-word').textContent = v.killer ? `💥 killer word: ${v.killer}` : '';
         populateStoryboard(state.lastResult);
+        // Update active state in UI
+        container.querySelectorAll('.ab-variant-card').forEach(card => {
+          card.classList.remove('border-emerald-500/40', 'bg-emerald-500/5');
+          card.classList.add('border-gray-700');
+        });
+        const activeCard = container.querySelector(`.ab-variant-card[data-idx="${idx}"]`);
+        if (activeCard) {
+          activeCard.classList.remove('border-gray-700');
+          activeCard.classList.add('border-emerald-500/40', 'bg-emerald-500/5');
+        }
         showNotification(`✓ Выбран ${v.label}`, 'success');
       });
     });
 
-    log('OK', 'A/B', `Сгенерировано ${variants.length} вариантов`);
+    log('OK', 'A/B', `Сгенерировано ${variants.length} вариантов за 1 запрос`);
   } catch (err) {
     showNotification(`Ошибка: ${err.message}`, 'error');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ещё 2 варианта'; }
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ещё варианты'; }
   }
 }
 
@@ -5121,12 +5149,9 @@ async function createCustomCharacter() {
   if (!nameRu) { showCCStatus('Введите имя персонажа', 'text-red-400'); return; }
   if (!appearance) { showCCStatus('Опишите внешность', 'text-red-400'); return; }
 
-  showCCStatus('AI создаёт персонажа...', 'text-cyan-400 animate-pulse');
+  showCCStatus('Проверяю доступ и создаю персонажа...', 'text-cyan-400 animate-pulse');
 
-  // Generate character_en from appearance description using AI
   const id = 'custom_' + nameRu.toLowerCase().replace(/[^а-яa-z0-9]/gi, '_').replace(/_+/g, '_') + '_' + Date.now().toString(36);
-
-  // Build character_en prompt token from the description
   const character_en = `${appearance.replace(/\.$/, '')}. ${speech ? speech.replace(/\.$/, '') + '.' : ''} Expressive facial reactions, natural micro-gestures, cinematic realism.`;
 
   const newChar = {
@@ -5149,6 +5174,28 @@ async function createCustomCharacter() {
     modifiers: {},
     _custom: true,
   };
+
+  // Server-side promo validation — prevents DevTools bypass
+  try {
+    const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const token = localStorage.getItem('ferixdi_jwt');
+    if (token) {
+      const resp = await fetch(`${apiBase}/api/custom/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ type: 'character', data: newChar }),
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        showCCStatus(err.error || '🔑 Ошибка валидации промо-кода на сервере', 'text-red-400');
+        log('ERR', 'CHAR-CREATE', `Сервер отклонил: ${err.error || resp.status}`);
+        return;
+      }
+    }
+  } catch (e) {
+    // Server unavailable — allow local creation as fallback
+    log('WARN', 'CHAR-CREATE', `Сервер недоступен, создаём локально: ${e.message}`);
+  }
 
   // Add to characters array
   state.characters.push(newChar);
@@ -5205,7 +5252,7 @@ function initLocConstructor() {
   document.getElementById('btn-create-location')?.addEventListener('click', createCustomLocation);
 }
 
-function createCustomLocation() {
+async function createCustomLocation() {
   if (!isPromoValid()) { showLCStatus('🔑 Нужен промо-код', 'text-amber-400'); return; }
 
   const nameRu = document.getElementById('lc-name-ru')?.value.trim();
@@ -5216,6 +5263,8 @@ function createCustomLocation() {
 
   if (!nameRu) { showLCStatus('Введите название', 'text-red-400'); return; }
   if (!scene) { showLCStatus('Опишите сцену', 'text-red-400'); return; }
+
+  showLCStatus('Проверяю доступ...', 'text-cyan-400 animate-pulse');
 
   const id = 'custom_' + nameRu.toLowerCase().replace(/[^а-яa-z0-9]/gi, '_').replace(/_+/g, '_') + '_' + Date.now().toString(36);
 
@@ -5232,6 +5281,27 @@ function createCustomLocation() {
     category_hints: [],
     _custom: true,
   };
+
+  // Server-side promo validation — prevents DevTools bypass
+  try {
+    const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const token = localStorage.getItem('ferixdi_jwt');
+    if (token) {
+      const resp = await fetch(`${apiBase}/api/custom/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ type: 'location', data: newLoc }),
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        showLCStatus(err.error || '🔑 Ошибка валидации промо-кода на сервере', 'text-red-400');
+        log('ERR', 'LOC-CREATE', `Сервер отклонил: ${err.error || resp.status}`);
+        return;
+      }
+    }
+  } catch (e) {
+    log('WARN', 'LOC-CREATE', `Сервер недоступен, создаём локально: ${e.message}`);
+  }
 
   state.locations.push(newLoc);
 

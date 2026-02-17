@@ -160,6 +160,30 @@ app.post('/api/auth/validate', async (req, res) => {
   }
 });
 
+// ─── POST /api/custom/create — Validate promo + save custom content ────
+// Requires JWT auth — prevents DevTools bypass of client-side isPromoValid()
+app.post('/api/custom/create', authMiddleware, (req, res) => {
+  const { type, data: itemData } = req.body;
+  if (!type || !itemData) {
+    return res.status(400).json({ error: 'type and data required' });
+  }
+  if (!['character', 'location'].includes(type)) {
+    return res.status(400).json({ error: 'type must be character or location' });
+  }
+  // Validate required fields
+  if (type === 'character') {
+    if (!itemData.name_ru || !itemData.appearance_ru) {
+      return res.status(400).json({ error: 'name_ru and appearance_ru required for character' });
+    }
+  } else {
+    if (!itemData.name_ru || !itemData.scene_en) {
+      return res.status(400).json({ error: 'name_ru and scene_en required for location' });
+    }
+  }
+  // Auth middleware already validated JWT — user is VIP
+  res.json({ ok: true, type, id: itemData.id || `srv_${Date.now().toString(36)}` });
+});
+
 // ─── POST /api/fun/category ──────────────────
 app.post('/api/fun/category', authMiddleware, (req, res) => {
   const categories = [
@@ -700,7 +724,8 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
-  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime } = req.body;
+  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime, ab_variants } = req.body;
+  const requestedVariants = Math.min(Math.max(parseInt(ab_variants) || 0, 0), 3); // 0 = normal, 1-3 = extra variants
   
   // Enhanced validation
   if (!context) {
@@ -745,7 +770,30 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   context.hasVideoCover = !!video_cover;
 
   try {
-    const promptText = buildAIPrompt(context);
+    let promptText = buildAIPrompt(context);
+
+    // A/B Testing: inject instruction for multiple dialogue variants
+    if (requestedVariants > 0) {
+      promptText += `\n\n════════════════════════════════════════════════════════════════
+⚡ A/B ТЕСТИРОВАНИЕ: СГЕНЕРИРУЙ ${requestedVariants + 1} ВАРИАНТА ДИАЛОГА
+
+Помимо основного диалога (dialogue_A_ru, dialogue_B_ru, killer_word), добавь в JSON массив "ab_variants" с ${requestedVariants} АЛЬТЕРНАТИВНЫМИ вариантами.
+
+Каждый вариант в массиве — объект с полями:
+{ "dialogue_A_ru": "...", "dialogue_B_ru": "...", "dialogue_A2_ru": "..." или null, "killer_word": "..." }
+
+ПРАВИЛА ДЛЯ ВАРИАНТОВ:
+• Каждый вариант — ДРУГОЙ угол юмора, ДРУГИЕ слова, ДРУГОЙ поворот
+• Все варианты про ТУ ЖЕ тему, но с разными панчлайнами
+• Все правила диалога (длина, пайпы, без тире, без «Зато») действуют для каждого варианта
+• Основной вариант — самый сильный. Альтернативные — экспериментальные
+
+Пример структуры:
+"ab_variants": [
+  { "dialogue_A_ru": "альт реплика A", "dialogue_B_ru": "альт реплика B", "dialogue_A2_ru": null, "killer_word": "слово" }
+]
+════════════════════════════════════════════════════════════════`;
+    }
 
     // Build multimodal parts: text + optional images
     const parts = [{ text: promptText }];
@@ -789,8 +837,8 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       const body = {
         contents: [{ parts }],
         generationConfig: {
-          temperature: 0.82,
-          maxOutputTokens: 4096,
+          temperature: requestedVariants > 0 ? 0.9 : 0.82,
+          maxOutputTokens: requestedVariants > 0 ? 6144 : 4096,
           responseMimeType: 'application/json',
         },
       };
@@ -930,6 +978,28 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       if (!geminiResult.dialogue_A2_ru.trim()) geminiResult.dialogue_A2_ru = null;
     } else {
       geminiResult.dialogue_A2_ru = null;
+    }
+
+    // ── Sanitize A/B variants if present ──
+    if (Array.isArray(geminiResult.ab_variants)) {
+      geminiResult.ab_variants = geminiResult.ab_variants.filter(v => v && v.dialogue_A_ru && v.dialogue_B_ru).map(v => {
+        v.dialogue_A_ru = sanitizeLine(v.dialogue_A_ru);
+        let bLine = sanitizeLine(v.dialogue_B_ru);
+        if (/^\s*[Зз]ато\s/i.test(bLine)) {
+          bLine = bLine.replace(/^\s*[Зз]ато\s+/i, '').trim();
+          if (bLine.length > 0) bLine = bLine[0].toUpperCase() + bLine.slice(1);
+        }
+        v.dialogue_B_ru = bLine;
+        if (v.dialogue_A2_ru && typeof v.dialogue_A2_ru === 'string') {
+          v.dialogue_A2_ru = sanitizeLine(v.dialogue_A2_ru);
+          if (!v.dialogue_A2_ru.trim()) v.dialogue_A2_ru = null;
+        } else { v.dialogue_A2_ru = null; }
+        // Fix killer_word for variant
+        const kwSrc = v.dialogue_A2_ru || v.dialogue_B_ru;
+        const kwW = kwSrc.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
+        if (kwW.length > 0) v.killer_word = kwW[kwW.length - 1];
+        return v;
+      });
     }
 
     res.json({
@@ -1626,7 +1696,7 @@ ${contextBlock}
   — Какие эмоции вызывает каждая пара: ностальгия, абсурд, узнаваемость, шок
 • Если спрашивает как пользоваться — объясни пошагово, подробно, с примерами
 • Если вопрос не про платформу — «Я помогаю только с FERIXDI Studio 😊»
-• В конце: «Нужны кастомные персонажи/локации? Пишите @ferixdiii в Telegram 💬»
+• В конце: «Нужны уникальные персонажи/локации? Используй Конструктор персонажей ✨ и Конструктор локаций 📍 прямо в приложении!»
 • Пиши живо, с эмодзи, структурируй с заголовками (**жирный текст**). Разбивай на секции. Давай МАКСИМУМ пользы.
 • НЕ ЭКОНОМЬ на деталях — пользователь пришёл за помощью, дай ему полноценную стратегию.
 
