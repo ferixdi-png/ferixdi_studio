@@ -5107,7 +5107,7 @@ async function generateABVariants() {
   } catch (err) {
     showNotification(`Ошибка: ${err.message}`, 'error');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ещё варианты'; }
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ещё 3 варианта'; }
   }
 }
 
