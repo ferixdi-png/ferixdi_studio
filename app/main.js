@@ -442,8 +442,8 @@ async function refreshCharacters() {
     
     log('OK', 'ДАННЫЕ', `Загружено ${state.characters.length} персонажей`);
     populateFilters();
-    renderCharacters();
     loadCustomCharacters();
+    renderCharacters();
     populateSeriesSelects();
   } catch (e) {
     log('ERR', 'ДАННЫЕ', `Ошибка загрузки персонажей: ${e.message}`);
@@ -5372,6 +5372,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initConsultation();
   loadLocations().then(() => {
     loadCustomLocations();
+    renderLocations();
     renderLocationsBrowse();
     initLocationsBrowse();
   });
@@ -5386,6 +5387,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     updateReadiness();
     loadCustomCharacters();
+    renderCharacters();
     populateSeriesSelects();
     renderSeriesList();
   }, 300);
