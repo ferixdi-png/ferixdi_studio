@@ -3846,24 +3846,16 @@ function initConsultation() {
   const statusEl = document.getElementById('consult-status');
   const responseArea = document.getElementById('consult-response-area');
   const responseEl = document.getElementById('consult-response');
-  const tokensEl = document.getElementById('consult-tokens');
   const counterEl = document.getElementById('consult-counter');
   const copyBtn = document.getElementById('consult-copy-btn');
   const historyEl = document.getElementById('consult-history');
   if (!input || !btn) return;
 
+  let _typeTimer = null; // track typing animation so we can cancel
+
   // Character counter
   input.addEventListener('input', () => {
     if (counterEl) counterEl.textContent = `${input.value.length} / 500`;
-  });
-
-  // Example questions — click to fill
-  document.querySelectorAll('.consult-example').forEach(el => {
-    el.addEventListener('click', () => {
-      input.value = el.dataset.q || '';
-      input.focus();
-      if (counterEl) counterEl.textContent = `${input.value.length} / 500`;
-    });
   });
 
   // Copy button
@@ -3886,9 +3878,13 @@ function initConsultation() {
       return;
     }
 
+    // Cancel any running typing animation
+    if (_typeTimer) { clearInterval(_typeTimer); _typeTimer = null; }
+
     btn.disabled = true;
-    btn.innerHTML = '<span class="animate-pulse">💬</span> Помощник пишет...';
-    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-emerald-400 animate-pulse">🧠 Обрабатываю ваш вопрос...</span>'; }
+    btn.innerHTML = '<span class="animate-pulse">💬</span> Пишет...';
+    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-emerald-400 animate-pulse">🧠 Думаю...</span>'; }
+    if (responseArea) responseArea.classList.add('hidden');
 
     // Build context from current app state
     const context = {};
@@ -3899,12 +3895,6 @@ function initConsultation() {
       if (loc) context.location = loc.name_ru || loc.scene_en;
     }
     if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'По видео' }[state.generationMode] || state.generationMode;
-    if (state.lastResult) {
-      const d = state.lastResult.video_prompt_en_json?.dialogue;
-      if (d?.final_A_ru) context.lastDialogueA = d.final_A_ru;
-      if (d?.final_B_ru) context.lastDialogueB = d.final_B_ru;
-      if (state.lastResult.log?.category?.ru) context.category = state.lastResult.log.category.ru;
-    }
 
     try {
       const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
@@ -3920,45 +3910,49 @@ function initConsultation() {
         throw new Error(data.error || `Ошибка ${resp.status}`);
       }
 
-      // Show response with typing effect
+      // Show response with fast typing effect
       if (responseArea) responseArea.classList.remove('hidden');
       if (responseEl) {
         responseEl.textContent = '';
         const fullText = data.answer;
         let i = 0;
-        const typeInterval = setInterval(() => {
+        const chunkSize = 3; // type 3 chars at a time for speed
+        _typeTimer = setInterval(() => {
           if (i < fullText.length) {
-            responseEl.textContent += fullText[i];
-            i++;
+            responseEl.textContent += fullText.slice(i, i + chunkSize);
+            i += chunkSize;
           } else {
-            clearInterval(typeInterval);
+            clearInterval(_typeTimer);
+            _typeTimer = null;
           }
-        }, 8);
+        }, 6);
       }
-      if (tokensEl) tokensEl.textContent = '';
       if (statusEl) statusEl.classList.add('hidden');
 
-      // Save to history
+      // Move previous response to history
       if (historyEl) {
         const histItem = document.createElement('div');
-        histItem.className = 'glass-panel p-3 space-y-2 border-l border-gray-700/50 opacity-60';
+        histItem.className = 'rounded-lg p-3 space-y-1.5 border border-gray-800/30 bg-black/20 opacity-50';
         histItem.innerHTML = `
-          <div class="text-[10px] text-cyan-400 font-medium">❓ ${escapeHtml(question)}</div>
-          <div class="text-[11px] text-gray-400 leading-relaxed whitespace-pre-wrap">${escapeHtml(data.answer).slice(0, 500)}${data.answer.length > 500 ? '...' : ''}</div>
+          <div class="text-[10px] text-gray-500 font-medium">💬 ${escapeHtml(question)}</div>
+          <div class="text-[11px] text-gray-500 leading-relaxed line-clamp-3">${escapeHtml(data.answer).slice(0, 300)}${data.answer.length > 300 ? '...' : ''}</div>
         `;
         historyEl.prepend(histItem);
-        // Keep max 5 history items
-        while (historyEl.children.length > 5) historyEl.removeChild(historyEl.lastChild);
+        while (historyEl.children.length > 3) historyEl.removeChild(historyEl.lastChild);
       }
 
-      log('OK', 'КОНСУЛЬТАЦИЯ', `Ответ получен (${data.tokens || '?'} токенов)`);
+      // Clear input after successful response
+      input.value = '';
+      if (counterEl) counterEl.textContent = '0 / 500';
+
+      log('OK', 'ПОМОЩНИК', `Ответ получен`);
 
     } catch (e) {
       if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(e.message)}</span>`; }
-      log('ERR', 'КОНСУЛЬТАЦИЯ', e.message);
+      log('ERR', 'ПОМОЩНИК', e.message);
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<span>💬</span> Спросить помощника';
+      btn.innerHTML = '<span>💬</span> Спросить';
     }
   });
 
