@@ -5422,6 +5422,24 @@ function renderEducation() {
     studyPlanWrap.classList.remove('hidden');
   }
 
+  // Character Guide (step-by-step + niche examples)
+  const charGuideWrap = document.getElementById('edu-char-guide-wrap');
+  const charGuideSteps = document.getElementById('edu-char-guide-steps');
+  const charGuideNiches = document.getElementById('edu-char-guide-niches');
+  if (charGuideWrap && charGuideSteps && d.character_guide) {
+    const cg = d.character_guide;
+    charGuideSteps.innerHTML = (cg.steps || []).map(s =>
+      `<div class="bg-pink-500/5 rounded-lg p-3 border border-pink-500/10"><div class="flex items-start gap-2"><span class="flex items-center justify-center w-6 h-6 rounded-full bg-pink-500/20 text-pink-300 text-[11px] font-bold flex-shrink-0">${s.num}</span><div><div class="text-[11px] text-pink-200 font-semibold mb-1">${s.title}</div><div class="text-[10px] text-gray-400 leading-relaxed">${s.text}</div></div></div></div>`
+    ).join('');
+    if (charGuideNiches && cg.niche_examples && cg.niche_examples.length) {
+      charGuideNiches.innerHTML = '<div class="text-[10px] text-pink-400 font-semibold mb-1.5">Примеры по нишам:</div>' +
+        cg.niche_examples.map(n =>
+          `<div class="bg-pink-500/5 rounded-lg p-2.5 border border-pink-500/10"><div class="text-[11px] text-pink-200 font-medium">${n.niche}</div><div class="text-[10px] text-gray-400 mt-0.5"><span class="text-pink-300/80">Формула:</span> ${n.formula}</div><div class="text-[10px] text-gray-500 mt-0.5">${n.why}</div></div>`
+        ).join('');
+    }
+    charGuideWrap.classList.remove('hidden');
+  }
+
   // Stop-list (searchable)
   const stopListWrap = document.getElementById('edu-stop-list-wrap');
   const stopListEl = document.getElementById('edu-stop-list');
@@ -5464,6 +5482,7 @@ function renderEducation() {
   const checkContent = document.getElementById('edu-checklist-content');
   if (checkWrap && checkTabs && checkContent && d.checklists) {
     const checkLabels = {
+      character_selection: '🎭 Подбор персонажей',
       before_generation: '🎯 До генерации',
       before_publish: '📤 До публикации',
       after_publish: '📊 После публикации',
