@@ -5466,6 +5466,39 @@ function renderEducation() {
     pubGuideWrap.classList.remove('hidden');
   }
 
+  // Profile Guide (Instagram profile for conversion)
+  const profileGuideWrap = document.getElementById('edu-profile-guide-wrap');
+  if (profileGuideWrap && d.profile_guide) {
+    const pg = d.profile_guide;
+    const subtEl = document.getElementById('edu-profile-guide-subtitle');
+    if (subtEl) subtEl.textContent = pg.subtitle || '';
+
+    const elementsEl = document.getElementById('edu-profile-elements');
+    if (elementsEl && pg.elements) {
+      elementsEl.innerHTML = pg.elements.map(e =>
+        `<div class="bg-purple-500/5 rounded-lg p-3 border border-purple-500/10 space-y-2">
+          <div class="text-[11px] text-purple-200 font-semibold flex items-center gap-1.5"><span>${e.icon}</span> ${e.element}</div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="rounded-lg p-2 bg-red-500/5 border border-red-500/10"><div class="text-[9px] text-red-400 font-semibold mb-1">✗ Плохо</div><div class="text-[10px] text-gray-500 leading-relaxed">${e.bad}</div></div>
+            <div class="rounded-lg p-2 bg-emerald-500/5 border border-emerald-500/10"><div class="text-[9px] text-emerald-400 font-semibold mb-1">✓ Хорошо</div><div class="text-[10px] text-gray-400 leading-relaxed">${e.good}</div></div>
+          </div>
+          <div class="text-[10px] text-gray-500 leading-relaxed"><span class="text-purple-400/70 font-medium">Почему:</span> ${e.why}</div>
+          <div class="text-[10px] text-purple-300/80 leading-relaxed bg-purple-500/5 rounded p-2"><span class="font-medium">💡 Совет:</span> ${e.tip}</div>
+        </div>`
+      ).join('');
+    }
+
+    const checklistEl = document.getElementById('edu-profile-checklist');
+    if (checklistEl && pg.checklist) {
+      checklistEl.innerHTML = '<div class="text-[10px] text-purple-400 font-semibold mb-1">✅ Чеклист оформления профиля:</div>' +
+        pg.checklist.map(item =>
+          `<div class="flex items-start gap-2 text-[10px] text-gray-400 leading-relaxed"><span class="text-purple-400 mt-0.5 flex-shrink-0">☐</span><span>${item}</span></div>`
+        ).join('');
+    }
+
+    profileGuideWrap.classList.remove('hidden');
+  }
+
   // Character Guide (step-by-step + niche examples)
   const charGuideWrap = document.getElementById('edu-char-guide-wrap');
   const charGuideSteps = document.getElementById('edu-char-guide-steps');
