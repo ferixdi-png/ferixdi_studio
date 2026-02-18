@@ -5384,6 +5384,34 @@ function renderEducation() {
     if (proofLabel) proofLabel.textContent = d.proof_link.label;
   }
 
+  // Core principle
+  const corePrincipleWrap = document.getElementById('edu-core-principle-wrap');
+  const corePrincipleEl = document.getElementById('edu-core-principle');
+  if (corePrincipleWrap && corePrincipleEl && d.core_principle) {
+    corePrincipleEl.textContent = d.core_principle;
+    corePrincipleWrap.classList.remove('hidden');
+  }
+
+  // Timeline
+  const timelineWrap = document.getElementById('edu-timeline-wrap');
+  const timelineEl = document.getElementById('edu-timeline');
+  if (timelineWrap && timelineEl && d.timeline && d.timeline.length) {
+    timelineEl.innerHTML = d.timeline.map(t =>
+      `<div class="bg-sky-500/5 rounded-lg p-3 border border-sky-500/10"><div class="text-[11px] text-sky-300 font-semibold mb-1">${t.week}</div><div class="text-[11px] text-gray-400 leading-relaxed">${t.description}</div></div>`
+    ).join('');
+    timelineWrap.classList.remove('hidden');
+  }
+
+  // Mindset rules
+  const mindsetWrap = document.getElementById('edu-mindset-wrap');
+  const mindsetEl = document.getElementById('edu-mindset');
+  if (mindsetWrap && mindsetEl && d.mindset_rules && d.mindset_rules.length) {
+    mindsetEl.innerHTML = d.mindset_rules.map((r, i) =>
+      `<div class="flex items-start gap-2 text-[11px] text-gray-300 leading-relaxed"><span class="text-orange-400 font-bold flex-shrink-0">${i + 1}.</span><span>${r}</span></div>`
+    ).join('');
+    mindsetWrap.classList.remove('hidden');
+  }
+
   if (benefitsEl && d.benefits) {
     benefitsEl.innerHTML = d.benefits.map(b =>
       `<div class="flex items-start gap-2 text-[11px] text-gray-300 leading-relaxed"><span class="text-emerald-400 mt-0.5 flex-shrink-0">→</span><span>${b}</span></div>`
