@@ -5412,6 +5412,26 @@ function renderEducation() {
     mindsetWrap.classList.remove('hidden');
   }
 
+  // Study plan (7 days)
+  const studyPlanWrap = document.getElementById('edu-study-plan-wrap');
+  const studyPlanEl = document.getElementById('edu-study-plan');
+  if (studyPlanWrap && studyPlanEl && d.study_plan && d.study_plan.length) {
+    studyPlanEl.innerHTML = d.study_plan.map(s =>
+      `<div class="bg-indigo-500/5 rounded-lg p-3 border border-indigo-500/10"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-indigo-300 font-semibold">${s.day}</span><span class="text-[9px] text-gray-500">${s.time}</span></div><div class="text-[10px] text-gray-500 mb-0.5">${s.lessons}</div><div class="text-[11px] text-gray-400 leading-relaxed">${s.focus}</div></div>`
+    ).join('');
+    studyPlanWrap.classList.remove('hidden');
+  }
+
+  // Stop-list
+  const stopListWrap = document.getElementById('edu-stop-list-wrap');
+  const stopListEl = document.getElementById('edu-stop-list');
+  if (stopListWrap && stopListEl && d.stop_list && d.stop_list.length) {
+    stopListEl.innerHTML = d.stop_list.map((s, i) =>
+      `<div class="bg-red-500/5 rounded-lg p-3 border border-red-500/10"><div class="text-[11px] text-red-300 font-semibold mb-1">${i + 1}. ${s.mistake}</div><div class="text-[10px] text-gray-500 mb-1"><span class="text-red-400/70">Убивает:</span> ${s.why_kills}</div><div class="text-[10px] text-emerald-400/80"><span class="font-medium">Решение:</span> ${s.fix}</div></div>`
+    ).join('');
+    stopListWrap.classList.remove('hidden');
+  }
+
   if (benefitsEl && d.benefits) {
     benefitsEl.innerHTML = d.benefits.map(b =>
       `<div class="flex items-start gap-2 text-[11px] text-gray-300 leading-relaxed"><span class="text-emerald-400 mt-0.5 flex-shrink-0">→</span><span>${b}</span></div>`
