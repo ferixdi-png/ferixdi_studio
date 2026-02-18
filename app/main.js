@@ -96,6 +96,7 @@ function initPromoCode() {
       updateWelcomeBanner();
       autoAuth(hash);
       updateReadiness();
+      renderEducation();
     } else {
       status.innerHTML = '<span class="text-red-400">✗ Неверный промо-код</span>';
       log('WARN', 'ПРОМО', 'Неверный промо-код');
@@ -5346,6 +5347,179 @@ function loadCustomLocations() {
   } catch (e) { log('ERR', 'LOC-CUSTOM', e.message); }
 }
 
+// ─── EDUCATION / COURSE ──────────────────
+let _courseData = null;
+
+async function loadCourse() {
+  try {
+    const res = await fetch('./data/course.json');
+    if (!res.ok) throw new Error('course.json not found');
+    _courseData = await res.json();
+    renderEducation();
+  } catch (e) {
+    log('ERR', 'COURSE', e.message);
+  }
+}
+
+function renderEducation() {
+  if (!_courseData) return;
+  const d = _courseData;
+
+  const titleEl = document.getElementById('edu-title');
+  const subtitleEl = document.getElementById('edu-subtitle');
+  const pricingEl = document.getElementById('edu-pricing');
+  const proofLink = document.getElementById('edu-proof-link');
+  const proofLabel = document.getElementById('edu-proof-label');
+  const benefitsEl = document.getElementById('edu-benefits');
+  const defsEl = document.getElementById('edu-definitions');
+  const lessonsGrid = document.getElementById('edu-lessons-grid');
+  const lessonCount = document.getElementById('edu-lesson-count');
+  const accessBadge = document.getElementById('edu-access-badge');
+
+  if (titleEl) titleEl.textContent = d.title;
+  if (subtitleEl) subtitleEl.textContent = d.subtitle;
+  if (pricingEl) pricingEl.textContent = d.pricing_note;
+  if (proofLink && d.proof_link) {
+    proofLink.href = d.proof_link.url;
+    if (proofLabel) proofLabel.textContent = d.proof_link.label;
+  }
+
+  if (benefitsEl && d.benefits) {
+    benefitsEl.innerHTML = d.benefits.map(b =>
+      `<div class="flex items-start gap-2 text-[11px] text-gray-300 leading-relaxed"><span class="text-emerald-400 mt-0.5 flex-shrink-0">→</span><span>${b}</span></div>`
+    ).join('');
+  }
+
+  if (defsEl && d.definitions) {
+    defsEl.innerHTML = d.definitions.map(df =>
+      `<div class="text-[11px]"><span class="text-violet-300 font-semibold">${df.term}:</span> <span class="text-gray-400">${df.value}</span></div>`
+    ).join('');
+  }
+
+  const hasAccess = isPromoValid();
+  if (accessBadge) {
+    if (hasAccess) {
+      accessBadge.className = 'text-[10px] px-2 py-1 rounded-full font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+      accessBadge.textContent = '✓ Доступ открыт';
+    } else {
+      accessBadge.className = 'text-[10px] px-2 py-1 rounded-full font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30';
+      accessBadge.textContent = '🔒 Нужен промо-код';
+    }
+  }
+
+  if (lessonCount) lessonCount.textContent = `${d.lessons.length} уроков`;
+
+  if (lessonsGrid && d.lessons) {
+    lessonsGrid.innerHTML = d.lessons.map(lesson => {
+      const lockIcon = hasAccess ? '📖' : '🔒';
+      const cardBorder = hasAccess ? 'border-amber-500/30 hover:border-amber-500/50' : 'border-gray-700/50 hover:border-amber-500/30';
+      const cardBg = hasAccess ? 'hover:bg-amber-500/5' : 'hover:bg-gray-800/30';
+      return `<div class="edu-lesson-card glass-panel p-4 border-l-2 ${cardBorder} cursor-pointer transition-all ${cardBg}" data-lesson-id="${lesson.id}">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-amber-500/15 text-amber-400 text-sm font-bold border border-amber-500/25">${lesson.num}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs">${lockIcon}</span>
+              <span class="text-[10px] text-gray-500">⏱ ${lesson.duration}</span>
+            </div>
+            <div class="text-sm font-medium text-gray-200 leading-snug">${lesson.title}</div>
+            <div class="mt-2 space-y-1">
+              ${lesson.bullets.map(b => `<div class="text-[10px] text-gray-500 flex items-start gap-1.5"><span class="text-amber-500/60 mt-px">•</span><span>${b}</span></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    lessonsGrid.querySelectorAll('.edu-lesson-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const lessonId = card.dataset.lessonId;
+        openLesson(lessonId);
+      });
+    });
+  }
+}
+
+function openLesson(lessonId) {
+  if (!_courseData) return;
+  const lesson = _courseData.lessons.find(l => l.id === lessonId);
+  if (!lesson) return;
+
+  if (!isPromoValid()) {
+    showNotification('🔒 Доступ к урокам откроется после активации промо-кода', 'warning');
+    setTimeout(() => {
+      navigateTo('settings');
+      setTimeout(() => {
+        const promoInput = document.getElementById('promo-input');
+        if (promoInput) {
+          promoInput.focus();
+          promoInput.closest('.glass-panel')?.classList.add('ring-2', 'ring-amber-500/50');
+          setTimeout(() => promoInput.closest('.glass-panel')?.classList.remove('ring-2', 'ring-amber-500/50'), 3000);
+        }
+      }, 400);
+    }, 800);
+    return;
+  }
+
+  const overlay = document.getElementById('lesson-modal-overlay');
+  if (!overlay) return;
+
+  document.getElementById('lesson-modal-num').textContent = lesson.num;
+  document.getElementById('lesson-modal-duration').textContent = `⏱ ${lesson.duration}`;
+  document.getElementById('lesson-modal-title').textContent = lesson.title;
+
+  const contentEl = document.getElementById('lesson-modal-content');
+  if (contentEl) {
+    contentEl.innerHTML = lesson.content.map(p =>
+      `<p class="text-[13px] text-gray-300 leading-relaxed">${p}</p>`
+    ).join('');
+  }
+
+  const metricsWrap = document.getElementById('lesson-modal-metrics-wrap');
+  const metricsEl = document.getElementById('lesson-modal-metrics');
+  if (lesson.metrics && lesson.metrics.length > 0) {
+    metricsWrap?.classList.remove('hidden');
+    if (metricsEl) {
+      metricsEl.innerHTML = lesson.metrics.map(m =>
+        `<div class="flex items-start gap-2 text-[11px] text-gray-300"><span class="text-cyan-400 mt-0.5 flex-shrink-0">📈</span><span>${m}</span></div>`
+      ).join('');
+    }
+  } else {
+    metricsWrap?.classList.add('hidden');
+  }
+
+  const deliverablesEl = document.getElementById('lesson-modal-deliverables');
+  if (deliverablesEl && lesson.deliverables) {
+    deliverablesEl.innerHTML = lesson.deliverables.map(d =>
+      `<div class="flex items-start gap-2 text-[11px] text-gray-300"><span class="text-emerald-400 mt-0.5 flex-shrink-0">☑</span><span>${d}</span></div>`
+    ).join('');
+  }
+
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  sfx.clickSoft();
+}
+
+function closeLessonModal() {
+  const overlay = document.getElementById('lesson-modal-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function initEducation() {
+  loadCourse();
+
+  document.getElementById('lesson-modal-close')?.addEventListener('click', closeLessonModal);
+
+  document.getElementById('lesson-modal-overlay')?.addEventListener('click', (e) => {
+    if (e.target.id === 'lesson-modal-overlay') closeLessonModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLessonModal();
+  });
+}
+
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedState(); // Load saved state first
@@ -5383,6 +5557,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initABTesting();
   initCharConstructor();
   initLocConstructor();
+  initEducation();
   initMatrixRain();
   // Initial readiness check after all components loaded
   setTimeout(() => {

@@ -87,6 +87,7 @@
           <div class="nav-item" data-section="locations"><span>📍</span><span>3. Локации</span></div>
           <div class="nav-item" data-section="series"><span>📺</span><span>Серии</span></div>
           <div class="nav-item" data-section="generate"><span>⚡</span><span>4. Генерация</span></div>
+          <div class="nav-item" data-section="education"><span>🎓</span><span>Обучение</span></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
         </div>
         <!-- Surprise Button -->
@@ -1468,9 +1469,100 @@
             <p class="text-[11px] text-gray-500/60 mt-2">Вопросы, баги, предложения — пишите в Telegram.</p>
           </div>
         </section>
+
+        <!-- SECTION: Education / Course -->
+        <section id="section-education" class="section-panel hidden space-y-5">
+
+          <!-- Header -->
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-sm font-bold">🎓</div>
+            <div>
+              <h2 id="edu-title" class="text-lg font-semibold text-white">Обучение</h2>
+              <p id="edu-subtitle" class="text-xs text-gray-400">Загрузка...</p>
+            </div>
+          </div>
+
+          <!-- Pricing note -->
+          <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/8 to-pink-500/10 rounded-xl p-4 border border-amber-500/20">
+            <div class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/20 text-base flex-shrink-0">💰</span>
+              <div>
+                <div id="edu-pricing" class="text-sm text-amber-200 font-medium leading-relaxed"></div>
+                <a id="edu-proof-link" href="#" target="_blank" class="inline-flex items-center gap-1.5 mt-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors font-medium">
+                  <span>📸</span> <span id="edu-proof-label">Примеры</span> <span>→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Benefits -->
+          <div class="glass-panel p-4 space-y-3 border-l-2 border-emerald-500/40">
+            <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">✅ Что ты получаешь</div>
+            <div id="edu-benefits" class="space-y-2"></div>
+          </div>
+
+          <!-- Definitions -->
+          <div class="glass-panel p-4 space-y-3 border-l-2 border-violet-500/40">
+            <div class="text-xs text-violet-400 font-semibold flex items-center gap-1.5">📖 Термины курса</div>
+            <div id="edu-definitions" class="space-y-2"></div>
+          </div>
+
+          <!-- Lessons grid -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="text-sm font-semibold text-white flex items-center gap-2">📚 Уроки <span id="edu-lesson-count" class="text-[10px] bg-amber-500/15 text-amber-400 px-1.5 py-0.5 rounded font-normal">—</span></div>
+              <div id="edu-access-badge" class="text-[10px] px-2 py-1 rounded-full font-medium"></div>
+            </div>
+            <div id="edu-lessons-grid" class="space-y-3"></div>
+          </div>
+
+        </section>
+
       </main>
     </div>
 
+  </div>
+
+  <!-- Lesson Modal Overlay -->
+  <div id="lesson-modal-overlay" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85); backdrop-filter:blur(12px)">
+    <div class="flex items-start justify-center h-full overflow-y-auto py-8 px-4">
+      <div class="w-full max-w-2xl relative">
+        <!-- Close button -->
+        <button id="lesson-modal-close" class="absolute -top-1 -right-1 z-10 w-9 h-9 rounded-full bg-gray-800 border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-all flex items-center justify-center text-lg">✕</button>
+
+        <!-- Modal content -->
+        <div class="rounded-2xl border border-amber-500/20 overflow-hidden" style="background: linear-gradient(180deg, rgba(14,18,32,0.98) 0%, rgba(6,8,15,0.98) 100%)">
+          <!-- Header -->
+          <div class="p-6 border-b border-amber-500/15" style="background: linear-gradient(135deg, rgba(245,184,0,0.06) 0%, rgba(234,88,12,0.04) 100%)">
+            <div class="flex items-center gap-2 mb-2">
+              <span id="lesson-modal-num" class="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold border border-amber-500/30"></span>
+              <span id="lesson-modal-duration" class="text-[10px] text-gray-500"></span>
+            </div>
+            <h3 id="lesson-modal-title" class="text-base font-bold text-white leading-snug"></h3>
+          </div>
+
+          <!-- Body -->
+          <div class="p-6 space-y-5">
+            <!-- Content paragraphs -->
+            <div id="lesson-modal-content" class="space-y-3"></div>
+
+            <!-- Metrics -->
+            <div id="lesson-modal-metrics-wrap" class="hidden">
+              <div class="glass-panel p-4 space-y-2 border-l-2 border-cyan-500/40">
+                <div class="text-xs text-cyan-400 font-semibold flex items-center gap-1.5">📊 Метрики и пороги</div>
+                <div id="lesson-modal-metrics" class="space-y-1.5"></div>
+              </div>
+            </div>
+
+            <!-- Deliverables -->
+            <div class="glass-panel p-4 space-y-2 border-l-2 border-emerald-500/40">
+              <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">✅ Результат урока (deliverable)</div>
+              <div id="lesson-modal-deliverables" class="space-y-1.5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Log panel (hidden from UI) -->
