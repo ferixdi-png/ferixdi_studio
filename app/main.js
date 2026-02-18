@@ -5422,6 +5422,50 @@ function renderEducation() {
     studyPlanWrap.classList.remove('hidden');
   }
 
+  // Publishing Guide (time by GEO, frequency, algorithm, missed days)
+  const pubGuideWrap = document.getElementById('edu-pub-guide-wrap');
+  if (pubGuideWrap && d.publishing_guide) {
+    const pg = d.publishing_guide;
+    const subtitleEl = document.getElementById('edu-pub-guide-subtitle');
+    if (subtitleEl) subtitleEl.textContent = pg.subtitle || '';
+
+    const scheduleEl = document.getElementById('edu-pub-schedule');
+    if (scheduleEl && pg.schedule_by_geo) {
+      scheduleEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">🌍 Лучшее время по регионам:</div>' +
+        pg.schedule_by_geo.map(g =>
+          `<div class="bg-amber-500/5 rounded-lg p-3 border border-amber-500/10"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-amber-200 font-semibold">${g.geo}</span><span class="text-[10px] text-amber-400 font-bold">Пик: ${g.peak}</span></div><div class="text-[10px] text-gray-400">Окна: ${g.best_times.join(' · ')}</div><div class="text-[10px] text-gray-500 mt-1">${g.why}</div></div>`
+        ).join('');
+    }
+
+    const freqEl = document.getElementById('edu-pub-frequency');
+    if (freqEl && pg.frequency_rules) {
+      freqEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">📊 Частота публикаций:</div>' +
+        pg.frequency_rules.map(f => {
+          const color = f.level.includes('Оптимум') ? 'emerald' : f.level.includes('Агрессивный') ? 'red' : 'gray';
+          return `<div class="bg-${color}-500/5 rounded-lg p-3 border border-${color}-500/10"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-${color}-300 font-semibold">${f.level}</span><span class="text-[10px] text-${color}-400 font-bold">${f.posts_per_week} / нед</span></div><div class="text-[10px] text-gray-400">${f.posts_per_day}</div><div class="text-[10px] text-gray-500 mt-1">${f.note}</div></div>`;
+        }).join('');
+    }
+
+    const algoEl = document.getElementById('edu-pub-algorithm');
+    if (algoEl && pg.algorithm_rules) {
+      algoEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">🤖 Как работает алгоритм:</div>' +
+        pg.algorithm_rules.map(r =>
+          `<div class="flex items-start gap-2 text-[10px] text-gray-400 leading-relaxed"><span class="text-amber-400 mt-0.5 flex-shrink-0">→</span><span>${r}</span></div>`
+        ).join('');
+    }
+
+    const missedEl = document.getElementById('edu-pub-missed');
+    if (missedEl && pg.missed_day_protocol) {
+      missedEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">⚠️ Пропустил день — что делать:</div>' +
+        pg.missed_day_protocol.map(m => {
+          const severity = m.scenario.includes('2+') ? 'red' : m.scenario.includes('неделю') ? 'orange' : m.scenario.includes('2–3') ? 'yellow' : 'emerald';
+          return `<div class="bg-${severity}-500/5 rounded-lg p-3 border border-${severity}-500/10"><div class="text-[11px] text-${severity}-300 font-semibold mb-1">${m.scenario}</div><div class="text-[10px] text-gray-400 mb-1"><span class="text-${severity}-400/70">Влияние:</span> ${m.impact}</div><div class="text-[10px] text-gray-300"><span class="font-medium">Действие:</span> ${m.action}</div></div>`;
+        }).join('');
+    }
+
+    pubGuideWrap.classList.remove('hidden');
+  }
+
   // Character Guide (step-by-step + niche examples)
   const charGuideWrap = document.getElementById('edu-char-guide-wrap');
   const charGuideSteps = document.getElementById('edu-char-guide-steps');
