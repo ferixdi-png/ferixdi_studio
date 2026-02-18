@@ -5530,6 +5530,7 @@ function renderEducation() {
           savedChecks[ck][ci] = cb.checked;
           localStorage.setItem('ferixdi_checklists', JSON.stringify(savedChecks));
           renderCheckTabs();
+          updateEduProgress();
         });
       });
     };
@@ -5720,8 +5721,26 @@ function closeLessonModal() {
   const overlay = document.getElementById('lesson-modal-overlay');
   if (overlay) overlay.classList.add('hidden');
   document.body.style.overflow = '';
-  // Re-render lessons to update read state
-  if (_courseData) renderCourse(_courseData);
+  // Re-render only lessons grid (not full renderCourse which resets search fields)
+  if (_courseData) {
+    const grid = document.getElementById('edu-lessons-grid');
+    if (grid) {
+      const readLessons = JSON.parse(localStorage.getItem('ferixdi_lessons_read') || '[]');
+      const hasAccess = isPromoValid();
+      grid.innerHTML = _courseData.lessons.map(lesson => {
+        const isRead = readLessons.includes(lesson.id);
+        const lockIcon = hasAccess ? (isRead ? '\u2705' : '\ud83d\udcd6') : '\ud83d\udd12';
+        const cardBorder = hasAccess ? (isRead ? 'border-emerald-500/30 hover:border-emerald-500/50' : 'border-amber-500/30 hover:border-amber-500/50') : 'border-gray-700/50 hover:border-amber-500/30';
+        const cardBg = hasAccess ? (isRead ? 'bg-emerald-500/3 hover:bg-emerald-500/8' : 'hover:bg-amber-500/5') : 'hover:bg-gray-800/30';
+        const numStyle = isRead ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border-amber-500/25';
+        return `<div class="edu-lesson-card glass-panel p-4 border-l-2 ${cardBorder} cursor-pointer transition-all ${cardBg}" data-lesson-id="${lesson.id}"><div class="flex items-start gap-3"><div class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full ${numStyle} text-sm font-bold border">${lesson.num}</div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-xs">${lockIcon}</span><span class="text-[10px] text-gray-500">\u23f1 ${lesson.duration}</span>${isRead ? '<span class="text-[9px] text-emerald-500/70 font-medium">\u043f\u0440\u043e\u0447\u0438\u0442\u0430\u043d\u043e</span>' : ''}</div><div class="text-sm font-medium ${isRead ? 'text-gray-400' : 'text-gray-200'} leading-snug">${lesson.title}</div><div class="mt-2 space-y-1">${lesson.bullets.map(b => `<div class="text-[10px] text-gray-500 flex items-start gap-1.5"><span class="text-amber-500/60 mt-px">\u2022</span><span>${b}</span></div>`).join('')}</div></div></div></div>`;
+      }).join('');
+      grid.querySelectorAll('.edu-lesson-card').forEach(card => {
+        card.addEventListener('click', () => openLesson(card.dataset.lessonId));
+      });
+    }
+    updateEduProgress();
+  }
 }
 
 function initEducation() {
