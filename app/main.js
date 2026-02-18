@@ -5562,20 +5562,25 @@ function renderEducation() {
 
   if (lessonCount) lessonCount.textContent = `${d.lessons.length} уроков`;
 
+  const readLessons = JSON.parse(localStorage.getItem('ferixdi_lessons_read') || '[]');
+
   if (lessonsGrid && d.lessons) {
     lessonsGrid.innerHTML = d.lessons.map(lesson => {
-      const lockIcon = hasAccess ? '📖' : '🔒';
-      const cardBorder = hasAccess ? 'border-amber-500/30 hover:border-amber-500/50' : 'border-gray-700/50 hover:border-amber-500/30';
-      const cardBg = hasAccess ? 'hover:bg-amber-500/5' : 'hover:bg-gray-800/30';
+      const isRead = readLessons.includes(lesson.id);
+      const lockIcon = hasAccess ? (isRead ? '✅' : '📖') : '🔒';
+      const cardBorder = hasAccess ? (isRead ? 'border-emerald-500/30 hover:border-emerald-500/50' : 'border-amber-500/30 hover:border-amber-500/50') : 'border-gray-700/50 hover:border-amber-500/30';
+      const cardBg = hasAccess ? (isRead ? 'bg-emerald-500/3 hover:bg-emerald-500/8' : 'hover:bg-amber-500/5') : 'hover:bg-gray-800/30';
+      const numStyle = isRead ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border-amber-500/25';
       return `<div class="edu-lesson-card glass-panel p-4 border-l-2 ${cardBorder} cursor-pointer transition-all ${cardBg}" data-lesson-id="${lesson.id}">
         <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-amber-500/15 text-amber-400 text-sm font-bold border border-amber-500/25">${lesson.num}</div>
+          <div class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full ${numStyle} text-sm font-bold border">${lesson.num}</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1">
               <span class="text-xs">${lockIcon}</span>
               <span class="text-[10px] text-gray-500">⏱ ${lesson.duration}</span>
+              ${isRead ? '<span class="text-[9px] text-emerald-500/70 font-medium">прочитано</span>' : ''}
             </div>
-            <div class="text-sm font-medium text-gray-200 leading-snug">${lesson.title}</div>
+            <div class="text-sm font-medium ${isRead ? 'text-gray-400' : 'text-gray-200'} leading-snug">${lesson.title}</div>
             <div class="mt-2 space-y-1">
               ${lesson.bullets.map(b => `<div class="text-[10px] text-gray-500 flex items-start gap-1.5"><span class="text-amber-500/60 mt-px">•</span><span>${b}</span></div>`).join('')}
             </div>
@@ -5599,10 +5604,45 @@ function renderEducation() {
   if (welcomeEl) welcomeEl.classList.toggle('hidden', !hasAccess);
 }
 
+function _markLessonRead(lessonId) {
+  const read = JSON.parse(localStorage.getItem('ferixdi_lessons_read') || '[]');
+  if (!read.includes(lessonId)) {
+    read.push(lessonId);
+    localStorage.setItem('ferixdi_lessons_read', JSON.stringify(read));
+  }
+  updateEduProgress();
+}
+
+function updateEduProgress() {
+  if (!_courseData) return;
+  const readLessons = JSON.parse(localStorage.getItem('ferixdi_lessons_read') || '[]');
+  const savedChecks = JSON.parse(localStorage.getItem('ferixdi_checklists') || '{}');
+  const totalChecks = Object.values(_courseData.checklists || {}).reduce((a, v) => a + v.length, 0);
+  const doneChecks = Object.values(savedChecks).reduce((a, v) => a + Object.values(v).filter(Boolean).length, 0);
+  const lessonsRead = readLessons.length;
+  const totalLessons = _courseData.lessons.length;
+  const pct = Math.round(((lessonsRead / totalLessons) * 70 + (doneChecks / Math.max(totalChecks, 1)) * 30));
+
+  const dashboard = document.getElementById('edu-progress-dashboard');
+  if (dashboard && isPromoValid()) dashboard.classList.remove('hidden');
+  const bar = document.getElementById('edu-progress-bar');
+  if (bar) bar.style.width = pct + '%';
+  const pctEl = document.getElementById('edu-progress-pct');
+  if (pctEl) pctEl.textContent = pct + '%';
+  const statL = document.getElementById('edu-stat-lessons');
+  if (statL) statL.textContent = `${lessonsRead}/${totalLessons}`;
+  const statC = document.getElementById('edu-stat-checklists');
+  if (statC) statC.textContent = `${doneChecks}/${totalChecks}`;
+  const statF = document.getElementById('edu-stat-faq');
+  if (statF) statF.textContent = String(_courseData.faq?.length || 0);
+}
+
 function openLesson(lessonId) {
   if (!_courseData) return;
-  const lesson = _courseData.lessons.find(l => l.id === lessonId);
-  if (!lesson) return;
+  const lessons = _courseData.lessons;
+  const idx = lessons.findIndex(l => l.id === lessonId);
+  if (idx < 0) return;
+  const lesson = lessons[idx];
 
   if (!isPromoValid()) {
     showNotification('🔒 Доступ к урокам откроется после активации промо-кода', 'warning');
@@ -5619,6 +5659,9 @@ function openLesson(lessonId) {
     }, 800);
     return;
   }
+
+  // Mark as read
+  _markLessonRead(lessonId);
 
   const overlay = document.getElementById('lesson-modal-overlay');
   if (!overlay) return;
@@ -5654,8 +5697,22 @@ function openLesson(lessonId) {
     ).join('');
   }
 
+  // Prev/Next buttons
+  const prevBtn = document.getElementById('lesson-modal-prev');
+  const nextBtn = document.getElementById('lesson-modal-next');
+  if (prevBtn) {
+    prevBtn.disabled = idx === 0;
+    prevBtn.onclick = idx > 0 ? () => openLesson(lessons[idx - 1].id) : null;
+  }
+  if (nextBtn) {
+    nextBtn.disabled = idx === lessons.length - 1;
+    nextBtn.onclick = idx < lessons.length - 1 ? () => openLesson(lessons[idx + 1].id) : null;
+  }
+
   overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  // Scroll modal to top when switching lessons
+  overlay.querySelector('.overflow-y-auto')?.scrollTo(0, 0);
   sfx.clickSoft();
 }
 
@@ -5663,6 +5720,8 @@ function closeLessonModal() {
   const overlay = document.getElementById('lesson-modal-overlay');
   if (overlay) overlay.classList.add('hidden');
   document.body.style.overflow = '';
+  // Re-render lessons to update read state
+  if (_courseData) renderCourse(_courseData);
 }
 
 function initEducation() {
@@ -5676,7 +5735,25 @@ function initEducation() {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLessonModal();
+    // Arrow keys for lesson navigation in modal
+    const overlay = document.getElementById('lesson-modal-overlay');
+    if (overlay && !overlay.classList.contains('hidden')) {
+      if (e.key === 'ArrowLeft') document.getElementById('lesson-modal-prev')?.click();
+      if (e.key === 'ArrowRight') document.getElementById('lesson-modal-next')?.click();
+    }
   });
+
+  // Quick-nav scroll buttons
+  document.querySelectorAll('.edu-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.scroll;
+      const el = document.getElementById(targetId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Update progress on init
+  setTimeout(() => updateEduProgress(), 500);
 }
 
 // ─── INIT ────────────────────────────────
