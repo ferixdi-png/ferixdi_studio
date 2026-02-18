@@ -5440,20 +5440,33 @@ function renderEducation() {
     charGuideWrap.classList.remove('hidden');
   }
 
-  // Stop-list (searchable)
+  // Stop-list (searchable, collapsed by default)
   const stopListWrap = document.getElementById('edu-stop-list-wrap');
   const stopListEl = document.getElementById('edu-stop-list');
   if (stopListWrap && stopListEl && d.stop_list && d.stop_list.length) {
+    let stopExpanded = false;
+    const STOP_PREVIEW = 10;
     const renderStopList = (filter) => {
       const f = (filter || '').toLowerCase();
-      const items = d.stop_list.filter(s => !f || s.mistake.toLowerCase().includes(f) || s.why_kills.toLowerCase().includes(f) || s.fix.toLowerCase().includes(f));
-      stopListEl.innerHTML = items.map((s, i) =>
+      const all = d.stop_list.filter(s => !f || s.mistake.toLowerCase().includes(f) || s.why_kills.toLowerCase().includes(f) || s.fix.toLowerCase().includes(f));
+      const show = (f || stopExpanded) ? all : all.slice(0, STOP_PREVIEW);
+      stopListEl.innerHTML = show.map(s =>
         `<div class="bg-red-500/5 rounded-lg p-3 border border-red-500/10"><div class="text-[11px] text-red-300 font-semibold mb-1">${d.stop_list.indexOf(s) + 1}. ${s.mistake}</div><div class="text-[10px] text-gray-500 mb-1"><span class="text-red-400/70">Убивает:</span> ${s.why_kills}</div><div class="text-[10px] text-emerald-400/80"><span class="font-medium">Решение:</span> ${s.fix}</div></div>`
       ).join('') || '<div class="text-[10px] text-gray-600 text-center py-2">Ничего не найдено</div>';
+      const toggleEl = document.getElementById('edu-stop-list-toggle');
+      if (toggleEl) {
+        if (!f && all.length > STOP_PREVIEW && !stopExpanded) {
+          toggleEl.classList.remove('hidden');
+          toggleEl.innerHTML = `<button class="text-[10px] text-red-400/70 hover:text-red-400 transition-colors">Показать все ${all.length} ошибок ↓</button>`;
+          toggleEl.querySelector('button').addEventListener('click', () => { stopExpanded = true; renderStopList(document.getElementById('edu-stop-search')?.value); });
+        } else {
+          toggleEl.classList.add('hidden');
+        }
+      }
     };
     renderStopList('');
     const stopSearch = document.getElementById('edu-stop-search');
-    if (stopSearch) stopSearch.addEventListener('input', () => renderStopList(stopSearch.value));
+    if (stopSearch) stopSearch.addEventListener('input', () => { stopExpanded = false; renderStopList(stopSearch.value); });
     stopListWrap.classList.remove('hidden');
   }
 
@@ -5494,9 +5507,13 @@ function renderEducation() {
     const savedChecks = JSON.parse(localStorage.getItem('ferixdi_checklists') || '{}');
 
     const renderCheckTabs = () => {
-      checkTabs.innerHTML = checkKeys.map(k =>
-        `<button class="text-[10px] px-2.5 py-1 rounded-lg border transition-all ${k === activeCheck ? 'bg-teal-500/20 text-teal-300 border-teal-500/40 font-semibold' : 'bg-black/20 text-gray-500 border-gray-700/30 hover:text-gray-400'}" data-ck="${k}">${checkLabels[k] || k}</button>`
-      ).join('');
+      checkTabs.innerHTML = checkKeys.map(k => {
+        const total = (d.checklists[k] || []).length;
+        const done = Object.values(savedChecks[k] || {}).filter(Boolean).length;
+        const progress = total > 0 ? ` ${done}/${total}` : '';
+        const allDone = done === total && total > 0;
+        return `<button class="text-[10px] px-2.5 py-1 rounded-lg border transition-all ${k === activeCheck ? 'bg-teal-500/20 text-teal-300 border-teal-500/40 font-semibold' : allDone ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-black/20 text-gray-500 border-gray-700/30 hover:text-gray-400'}" data-ck="${k}">${checkLabels[k] || k}<span class="ml-1 opacity-60">${progress}</span></button>`;
+      }).join('');
       checkTabs.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => { activeCheck = btn.dataset.ck; renderCheckTabs(); });
       });
