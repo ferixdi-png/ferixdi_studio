@@ -5555,6 +5555,12 @@ function renderEducation() {
       });
     });
   }
+
+  // Show buy CTA or welcome based on promo status
+  const buyCta = document.getElementById('edu-buy-cta');
+  const welcomeEl = document.getElementById('edu-welcome');
+  if (buyCta) buyCta.classList.toggle('hidden', hasAccess);
+  if (welcomeEl) welcomeEl.classList.toggle('hidden', !hasAccess);
 }
 
 function openLesson(lessonId) {
