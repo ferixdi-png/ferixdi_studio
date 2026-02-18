@@ -5422,14 +5422,83 @@ function renderEducation() {
     studyPlanWrap.classList.remove('hidden');
   }
 
-  // Stop-list
+  // Stop-list (searchable)
   const stopListWrap = document.getElementById('edu-stop-list-wrap');
   const stopListEl = document.getElementById('edu-stop-list');
   if (stopListWrap && stopListEl && d.stop_list && d.stop_list.length) {
-    stopListEl.innerHTML = d.stop_list.map((s, i) =>
-      `<div class="bg-red-500/5 rounded-lg p-3 border border-red-500/10"><div class="text-[11px] text-red-300 font-semibold mb-1">${i + 1}. ${s.mistake}</div><div class="text-[10px] text-gray-500 mb-1"><span class="text-red-400/70">Убивает:</span> ${s.why_kills}</div><div class="text-[10px] text-emerald-400/80"><span class="font-medium">Решение:</span> ${s.fix}</div></div>`
-    ).join('');
+    const renderStopList = (filter) => {
+      const f = (filter || '').toLowerCase();
+      const items = d.stop_list.filter(s => !f || s.mistake.toLowerCase().includes(f) || s.why_kills.toLowerCase().includes(f) || s.fix.toLowerCase().includes(f));
+      stopListEl.innerHTML = items.map((s, i) =>
+        `<div class="bg-red-500/5 rounded-lg p-3 border border-red-500/10"><div class="text-[11px] text-red-300 font-semibold mb-1">${d.stop_list.indexOf(s) + 1}. ${s.mistake}</div><div class="text-[10px] text-gray-500 mb-1"><span class="text-red-400/70">Убивает:</span> ${s.why_kills}</div><div class="text-[10px] text-emerald-400/80"><span class="font-medium">Решение:</span> ${s.fix}</div></div>`
+      ).join('') || '<div class="text-[10px] text-gray-600 text-center py-2">Ничего не найдено</div>';
+    };
+    renderStopList('');
+    const stopSearch = document.getElementById('edu-stop-search');
+    if (stopSearch) stopSearch.addEventListener('input', () => renderStopList(stopSearch.value));
     stopListWrap.classList.remove('hidden');
+  }
+
+  // FAQ (searchable, collapsible)
+  const faqWrap = document.getElementById('edu-faq-wrap');
+  const faqEl = document.getElementById('edu-faq');
+  const faqCount = document.getElementById('edu-faq-count');
+  if (faqWrap && faqEl && d.faq && d.faq.length) {
+    if (faqCount) faqCount.textContent = d.faq.length;
+    const renderFaq = (filter) => {
+      const f = (filter || '').toLowerCase();
+      const items = d.faq.filter(item => !f || item.q.toLowerCase().includes(f) || item.a.toLowerCase().includes(f));
+      faqEl.innerHTML = items.map((item, i) =>
+        `<details class="bg-blue-500/5 rounded-lg border border-blue-500/10 group"><summary class="flex items-start gap-2 p-3 cursor-pointer select-none"><span class="text-blue-400 mt-0.5 flex-shrink-0 text-[10px]">▸</span><span class="text-[11px] text-blue-200 font-medium leading-snug group-open:text-blue-300">${item.q}</span></summary><div class="px-3 pb-3 pt-0 pl-7 text-[11px] text-gray-400 leading-relaxed">${item.a}</div></details>`
+      ).join('') || '<div class="text-[10px] text-gray-600 text-center py-2">Ничего не найдено</div>';
+    };
+    renderFaq('');
+    const faqSearch = document.getElementById('edu-faq-search');
+    if (faqSearch) faqSearch.addEventListener('input', () => renderFaq(faqSearch.value));
+    faqWrap.classList.remove('hidden');
+  }
+
+  // Checklists (tabbed with localStorage progress)
+  const checkWrap = document.getElementById('edu-checklists-wrap');
+  const checkTabs = document.getElementById('edu-checklist-tabs');
+  const checkContent = document.getElementById('edu-checklist-content');
+  if (checkWrap && checkTabs && checkContent && d.checklists) {
+    const checkLabels = {
+      before_generation: '🎯 До генерации',
+      before_publish: '📤 До публикации',
+      after_publish: '📊 После публикации',
+      if_low_views: '📉 Мало просмотров',
+      if_series_took_off: '🚀 Серия полетела'
+    };
+    const checkKeys = Object.keys(d.checklists);
+    let activeCheck = checkKeys[0];
+    const savedChecks = JSON.parse(localStorage.getItem('ferixdi_checklists') || '{}');
+
+    const renderCheckTabs = () => {
+      checkTabs.innerHTML = checkKeys.map(k =>
+        `<button class="text-[10px] px-2.5 py-1 rounded-lg border transition-all ${k === activeCheck ? 'bg-teal-500/20 text-teal-300 border-teal-500/40 font-semibold' : 'bg-black/20 text-gray-500 border-gray-700/30 hover:text-gray-400'}" data-ck="${k}">${checkLabels[k] || k}</button>`
+      ).join('');
+      checkTabs.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => { activeCheck = btn.dataset.ck; renderCheckTabs(); });
+      });
+      const items = d.checklists[activeCheck] || [];
+      const ckState = savedChecks[activeCheck] || {};
+      checkContent.innerHTML = items.map((item, i) => {
+        const checked = ckState[i] ? 'checked' : '';
+        return `<label class="flex items-start gap-2 p-2 rounded-lg cursor-pointer hover:bg-teal-500/5 transition-colors ${ckState[i] ? 'opacity-60' : ''}"><input type="checkbox" ${checked} data-ck="${activeCheck}" data-ci="${i}" class="mt-0.5 accent-teal-500 flex-shrink-0"><span class="text-[11px] text-gray-300 leading-relaxed ${ckState[i] ? 'line-through text-gray-500' : ''}">${item}</span></label>`;
+      }).join('');
+      checkContent.querySelectorAll('input[type=checkbox]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const ck = cb.dataset.ck, ci = cb.dataset.ci;
+          if (!savedChecks[ck]) savedChecks[ck] = {};
+          savedChecks[ck][ci] = cb.checked;
+          localStorage.setItem('ferixdi_checklists', JSON.stringify(savedChecks));
+          renderCheckTabs();
+        });
+      });
+    };
+    renderCheckTabs();
+    checkWrap.classList.remove('hidden');
   }
 
   if (benefitsEl && d.benefits) {
@@ -5614,6 +5683,13 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCharacters();
     populateSeriesSelects();
     renderSeriesList();
+    // Handle hash deep-links (e.g. #education from landing)
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      const sectionMap = { education: 'education', academy: 'education', consult: 'consult', settings: 'settings' };
+      const target = sectionMap[hash];
+      if (target && typeof navigateTo === 'function') navigateTo(target);
+    }
   }, 300);
 
   // ─── GLOBAL SOUND: catch ALL buttons/interactive elements ───

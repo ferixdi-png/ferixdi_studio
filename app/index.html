@@ -1533,9 +1533,27 @@
 
           <!-- Stop-list -->
           <div id="edu-stop-list-wrap" class="hidden glass-panel p-4 space-y-3 border-l-2 border-red-500/40">
-            <div class="text-xs text-red-400 font-semibold flex items-center gap-1.5">🚫 Стоп-лист: 10 ошибок, которые убивают охваты</div>
+            <div class="text-xs text-red-400 font-semibold flex items-center gap-1.5">🚫 Стоп-лист: 50 ошибок, которые убивают охваты</div>
             <div class="text-[10px] text-gray-500 mb-1">Грабли, на которые уже наступили до тебя. Не наступай.</div>
-            <div id="edu-stop-list" class="space-y-2"></div>
+            <div class="mt-2"><input id="edu-stop-search" type="text" placeholder="Поиск по ошибкам..." class="w-full bg-black/30 border border-red-500/20 rounded-lg px-3 py-1.5 text-[11px] text-gray-300 placeholder-gray-600 focus:outline-none focus:border-red-500/40"></div>
+            <div id="edu-stop-list" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
+            <div id="edu-stop-list-toggle" class="hidden text-center mt-2"><button class="text-[10px] text-red-400/70 hover:text-red-400 transition-colors">Показать все 50 ↓</button></div>
+          </div>
+
+          <!-- FAQ -->
+          <div id="edu-faq-wrap" class="hidden glass-panel p-4 space-y-3 border-l-2 border-blue-500/40">
+            <div class="flex items-center justify-between">
+              <div class="text-xs text-blue-400 font-semibold flex items-center gap-1.5">❓ FAQ — <span id="edu-faq-count">0</span> вопросов и ответов</div>
+            </div>
+            <input id="edu-faq-search" type="text" placeholder="Поиск по вопросам..." class="w-full bg-black/30 border border-blue-500/20 rounded-lg px-3 py-1.5 text-[11px] text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500/40">
+            <div id="edu-faq" class="space-y-1.5 max-h-[500px] overflow-y-auto"></div>
+          </div>
+
+          <!-- Checklists -->
+          <div id="edu-checklists-wrap" class="hidden glass-panel p-4 space-y-3 border-l-2 border-teal-500/40">
+            <div class="text-xs text-teal-400 font-semibold flex items-center gap-1.5">✅ Чеклисты — используй перед каждым действием</div>
+            <div id="edu-checklist-tabs" class="flex flex-wrap gap-1.5 mt-1"></div>
+            <div id="edu-checklist-content" class="space-y-1.5 mt-2"></div>
           </div>
 
           <!-- Benefits -->
