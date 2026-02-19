@@ -2117,6 +2117,25 @@ app.post('/api/translate', authMiddleware, async (req, res) => {
   }
 
   try {
+    // Escape quotes to prevent prompt injection
+    const esc = (s) => (s || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+
+    // Build expected output fields dynamically to avoid trailing comma issues
+    const outputFields = [
+      '"dialogue_A_en": "..."',
+      '"dialogue_B_en": "..."',
+      dialogue_A2_ru ? '"dialogue_A2_en": "..."' : null,
+      '"killer_word_en": "..."',
+      '"viral_title_en": "..."',
+      '"share_bait_en": "..."',
+      '"pin_comment_en": "..."',
+      '"first_comment_en": "..."',
+      '"hashtags_en": ["#tag1", "#tag2"]',
+      series_tag ? '"series_tag_en": "..."' : null,
+      veo_prompt ? '"veo_prompt_en": "...translated veo prompt..."' : null,
+      ru_package ? '"ru_package_en": "...full translated production package with preserved formatting..."' : null,
+    ].filter(Boolean).join(',\n  ');
+
     const prompt = `You are a professional comedy translator specializing in short-form social media content (Reels, TikTok, Shorts).
 
 Your task: translate the following Russian AI-Reels dialogue and Instagram package to ENGLISH.
@@ -2131,33 +2150,22 @@ RULES:
 7. The veo_prompt contains Russian dialogue embedded in an English cinematic prompt. Replace ONLY the Russian dialogue lines with English translations. Keep ALL other English cinematography instructions exactly as they are.
 
 INPUT (Russian):
-dialogue_A_ru: "${dialogue_A_ru || ''}"
-dialogue_B_ru: "${dialogue_B_ru || ''}"
-${dialogue_A2_ru ? `dialogue_A2_ru: "${dialogue_A2_ru}"` : ''}
-killer_word: "${killer_word || ''}"
-viral_title: "${viral_title || ''}"
-share_bait: "${share_bait || ''}"
-pin_comment: "${pin_comment || ''}"
-first_comment: "${first_comment || ''}"
+dialogue_A_ru: "${esc(dialogue_A_ru)}"
+dialogue_B_ru: "${esc(dialogue_B_ru)}"
+${dialogue_A2_ru ? `dialogue_A2_ru: "${esc(dialogue_A2_ru)}"` : ''}
+killer_word: "${esc(killer_word)}"
+viral_title: "${esc(viral_title)}"
+share_bait: "${esc(share_bait)}"
+pin_comment: "${esc(pin_comment)}"
+first_comment: "${esc(first_comment)}"
 hashtags: ${JSON.stringify(hashtags || [])}
-${series_tag ? `series_tag: "${series_tag}"` : ''}
+${series_tag ? `series_tag: "${esc(series_tag)}"` : ''}
 ${veo_prompt ? `\nveo_prompt (translate ONLY the Russian dialogue lines inside, keep everything else as-is):\n---\n${veo_prompt.slice(0, 3000)}\n---` : ''}
 ${ru_package ? `\nru_package (FULL production package in Russian — translate EVERYTHING to English, preserve emoji structure and formatting):\n---\n${ru_package.slice(0, 5000)}\n---` : ''}
 
-Return ONLY valid JSON (no markdown, no \`\`\`):
+Return ONLY valid JSON (no markdown):
 {
-  "dialogue_A_en": "...",
-  "dialogue_B_en": "...",
-  ${dialogue_A2_ru ? '"dialogue_A2_en": "...",' : ''}
-  "killer_word_en": "...",
-  "viral_title_en": "...",
-  "share_bait_en": "...",
-  "pin_comment_en": "...",
-  "first_comment_en": "...",
-  "hashtags_en": ["#tag1", "#tag2", ...],
-  ${series_tag ? '"series_tag_en": "...",' : ''}
-  ${veo_prompt ? '"veo_prompt_en": "...",' : ''}
-  ${ru_package ? '"ru_package_en": "...full translated production package with preserved formatting..."' : ''}
+  ${outputFields}
 }`;
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;

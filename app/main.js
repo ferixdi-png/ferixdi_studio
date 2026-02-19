@@ -2623,6 +2623,11 @@ function displayResult(result) {
     document.getElementById('ab-testing-panel')?.classList.remove('hidden');
   }
 
+  // Reset English mode on new generation
+  result._isEnglish = false;
+  const ruTabBtn = document.querySelector('#gen-results .mode-btn[data-tab="ru"]');
+  if (ruTabBtn) ruTabBtn.textContent = '🇷🇺 Пост';
+
   // Show English adaptation button
   const translatePanel = document.getElementById('translate-panel');
   if (translatePanel) {
@@ -3240,8 +3245,9 @@ function initTranslate() {
       if (dB && en.dialogue_B_en) dB.textContent = `«${en.dialogue_B_en}»`;
       if (kw && en.killer_word_en) kw.textContent = `💥 Killer word: «${en.killer_word_en}»`;
 
-      // Update Veo prompt
+      // Update Veo prompt (both DOM and state)
       if (en.veo_prompt_en) {
+        result.veo_prompt = en.veo_prompt_en;
         document.getElementById('veo-prompt-text').textContent = en.veo_prompt_en;
       }
 
