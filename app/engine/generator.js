@@ -311,7 +311,7 @@ const VIRAL_TITLES = {
   'Разрыв поколений': [
     '{A} узнала чем занимается внучка — реакция 💀',
     'Когда {B} объяснил молодёжь одной фразой',
-    '{A} vs TikTok: бой века',
+    '{A} vs Reels: бой века',
     'Вот так {B} видит поколение Z',
     'Покажи бабушке — проверь реакцию 🤣',
   ],
@@ -965,7 +965,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       midground: `1 prop anchor: ${propAnchor} — at arm\'s length behind characters, in computational bokeh blur (recognizable shape, fuzzy edges). Provides context.`,
       background: '2-3 environmental details in deep bokeh. Recognizable as shapes/colors but NOT sharp. A wall, a shelf, a window — NOT a detailed set. Smartphone portrait mode makes background deliberately simple.',
       headroom: '5-10% of frame above heads. Characters slightly below center (natural selfie composition — arm extends slightly up). No chin-crop, no forehead-crop.',
-      aspect_ratio: '9:16 vertical (portrait mode). This is non-negotiable for Reels/TikTok. Characters fill the vertical frame. Horizontal detail is naturally limited by the narrow width.',
+      aspect_ratio: '9:16 vertical (portrait mode). This is non-negotiable for Instagram Reels. Characters fill the vertical frame. Horizontal detail is naturally limited by the narrow width.',
       forbidden: 'ABSOLUTELY NO text overlays, NO subtitles, NO captions, NO letters/numbers on screen, NO REC badge, NO timestamp, NO timecode, NO frames, NO borders, NO watermarks, NO logos, NO UI elements, NO phones/screens visible, NO mirror reflections showing camera, NO graphic overlays of any kind. Image/video must be CLEAN — only the scene with characters, ZERO visual overlays. No more than 5 distinct visual elements total. CLUTTERED = FAKE, CLEAN = REAL.',
       detail_budget: 'Visual element cap: 2 faces + 2 wardrobe reads + 1 prop + 2 background shapes = 7 maximum. Every extra item competes with faces for attention and reduces realism.',
     },
@@ -1030,7 +1030,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       killer_delivery: 'B\'s killer word at ~7.1s: slight camera push (phone holder leans forward unconsciously). A\'s physical reaction is VISIBLE and SIMULTANEOUS: freeze mid-gesture, eyes widen, jaw slackens. The REACTION sells the punchline.',
       end_on_reaction: 'Final 0.5-0.8s: end on the REACTION to the punchline, NOT the punchline itself. Shared laughter, A\'s defeated smile, mutual physical contact. This is what makes people REWATCH — they want to see that moment of surrender again.',
       rewatch_bait: 'In the final 0.3-0.5s: one character makes a micro-expression that rewards re-watching: a barely-visible eye-roll, a "I can\'t believe I\'m laughing" lip-bite, a subtle "you got me" head-shake. Something new to discover on rewatch #2-3.',
-      loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (TikTok/Reels) feels semi-continuous. Not identical, but compatible mood — warmth transitioning back to tension.',
+      loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (Reels) feels semi-continuous. Not identical, but compatible mood — warmth transitioning back to tension.',
       forbidden: 'No clean endings (fade out, wave, "that\'s all folks"). No text overlays, no subtitles, no frames/borders, no REC badge, no timestamp on screen, no graphic overlays of any kind. No setup before the action. No dead air at start or end. No beat longer than 0.3s without visual/audio content. Every single frame of 240 frames (30fps×8s) earns its place.',
     },
   };
@@ -1060,7 +1060,7 @@ function buildRemakeInstruction(video_meta, charA, charB) {
     parts.push(`📝 Название оригинала: "${video_meta.title}"`);
   }
   if (video_meta.author) {
-    parts.push(`👤 Автор: @${video_meta.author} (${video_meta.platform || 'TikTok/Instagram'})`);
+    parts.push(`👤 Автор: @${video_meta.author} (${video_meta.platform || 'Instagram'})`);
   }
   if (video_meta.duration) {
     parts.push(`⏱ Длительность оригинала: ${video_meta.duration}с`);
@@ -1115,7 +1115,7 @@ function runQCGate(blueprint, cast) {
     { id: 's4', name_ru: 'Шум сенсора', name_en: 'sensor_noise', desc_fail: 'Изображение слишком чистое — выглядит синтетически', desc_fix: 'Добавлен лёгкий ISO noise + grain_amount=0.04 для реалистичности', group: 'камера' },
     { id: 's5', name_ru: 'Motion blur жестов', name_en: 'gesture_motion_blur', desc_fail: 'Резкие жесты без размытия — нереалистично', desc_fix: 'Включен motion_blur для быстрых жестов (shutter_angle=180°)', group: 'камера' },
     { id: 's6', name_ru: 'Баланс белого', name_en: 'white_balance_drift', desc_fail: 'Белый баланс идеален — не похоже на реальную съёмку', desc_fix: 'Добавлен wb_drift=±200K для имитации реальной камеры', group: 'камера' },
-    { id: 's7', name_ru: 'Компрессия видео', name_en: 'compression_artifacts', desc_fail: 'Нет артефактов сжатия — слишком идеально', desc_fix: 'Добавлены subtle_block_artifacts=0.02 для TikTok-реализма', group: 'камера' },
+    { id: 's7', name_ru: 'Компрессия видео', name_en: 'compression_artifacts', desc_fail: 'Нет артефактов сжатия — слишком идеально', desc_fix: 'Добавлены subtle_block_artifacts=0.02 для Reels-реализма', group: 'камера' },
     { id: 's8', name_ru: 'Дыхание персонажей', name_en: 'breathing_animation', desc_fail: 'Грудная клетка статична — нет дыхания', desc_fix: 'Активирована chest_rise_cycle=3.5s для обоих персонажей', group: 'тело' },
     { id: 's9', name_ru: 'Микрожесты рук', name_en: 'hand_micro_gestures', desc_fail: 'Руки слишком статичны во время речи', desc_fix: 'Добавлены hand_gesture_frequency=0.7 + finger_curl_variation', group: 'тело' },
     { id: 's10', name_ru: 'Вес тела', name_en: 'body_weight_shift', desc_fail: 'Нет переноса веса — персонажи как статуи', desc_fix: 'Включен weight_shift_interval=2s + subtle_sway для обоих', group: 'тело' },

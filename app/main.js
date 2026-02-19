@@ -1612,12 +1612,12 @@ function initModeSwitcher() {
     });
   });
 
-  // Smart URL detection: if user pastes a TikTok/Instagram link into the main idea field,
+  // Smart URL detection: if user pastes an Instagram link into the main idea field,
   // notify user to use video mode instead (no auto-fetch since video URL input is removed)
   document.getElementById('idea-input')?.addEventListener('paste', (e) => {
     setTimeout(() => {
       const text = e.target.value.trim();
-      if (text.includes('tiktok.com/') || text.includes('instagram.com/')) {
+      if (text.includes('instagram.com/')) {
         log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключи в режим «🎥 По видео» и загрузи файл');
         // Switch to video mode UI (both advanced and main page)
         document.querySelectorAll('#section-advanced .mode-btn').forEach(b => b.classList.remove('active'));
@@ -1795,7 +1795,7 @@ function initVideoDropzoneMain() {
 
 // ─── VIDEO URL FETCH (removed — now using external download services) ───
 function initVideoUrlFetch() {
-  // No-op: TikTok/Instagram downloads handled via external links
+  // No-op: Instagram downloads handled via external links
   // (tikvideo.app / saveclip.app) — user downloads MP4, then uploads here
 }
 
