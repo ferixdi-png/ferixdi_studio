@@ -1,4 +1,4 @@
-/**
+﻿/**
  * FERIXDI Studio — Main Application
  * Космический хакерский командный центр для ремикса видео
  */
@@ -4946,131 +4946,162 @@ function initSeries() {
   renderSeriesList();
 }
 
-// ─── VIRAL SURPRISE PRESETS ──────────────────
-// 60 proven viral formulas — each guarantees a funny, logical, trending video
+// ─── VIRAL SURPRISE PRESETS v2 ───────────────
+// 120 curated viral formulas — hook, killer word, share trigger, weighted pair matching, anti-repeat
+
 const VIRAL_SURPRISE_PRESETS = [
-  // ── AI и технологии (2025-2026 mega-trend) ──
-  { topic: 'ChatGPT написал за внука сочинение, а бабка нашла и решила что внук гений', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['chaotic','meme'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
-  { topic: 'Дед скачал нейросеть и теперь генерирует себе невесту из молодости', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme','chaotic'] }, loc: ['living_room','kitchen'], cat: 'AI и технологии' },
-  { topic: 'Бабка узнала что Алиса в Яндексе это не соседка а робот', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
-  { topic: 'Мама нашла в телефоне дочки приложение для старения лица и увидела себя', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
-  { topic: 'Дед попросил Siri позвонить жене а та набрала бывшую', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme'] }, loc: ['kitchen','car'], cat: 'AI и технологии' },
-  { topic: 'Нейросеть сгенерировала портрет по описанию бабки и получился кот', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme','chaotic'] }, loc: ['living_room'], cat: 'AI и технологии' },
+  // ═══ AI И ТЕХНОЛОГИИ ═══
+  { topic: 'ChatGPT написал за внука сочинение — бабка решила что внук гений', hook: 'A хватает тетрадку и трясёт перед камерой', killer: 'робот', share: 'скинь тому кто даёт детям ChatGPT', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['chaotic','meme'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Дед скачал нейросеть — генерирует себе невесту из молодости', hook: 'A поворачивает телефон к камере с безумной улыбкой', killer: 'молодость', share: 'покажи дедушке', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme','chaotic'] }, loc: ['living_room','kitchen'], cat: 'AI и технологии' },
+  { topic: 'Бабка узнала что Алиса это не соседка а робот в телефоне', hook: 'A отбрасывает телефон с ужасом', killer: 'колонка', share: 'скинь бабушке пусть проверит', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Мама нашла приложение для старения лица — увидела себя через 20 лет', hook: 'A роняет телефон на стол с открытым ртом', killer: 'удалить', share: 'скинь маме пусть попробует', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Дед попросил Siri позвонить жене — та набрала бывшую', hook: 'A замирает с телефоном у уха', killer: 'бывшая', share: 'покажи тому кто разговаривает с телефоном', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme'] }, loc: ['kitchen','car'], cat: 'AI и технологии' },
+  { topic: 'Нейросеть нарисовала портрет бабки по описанию — получился кот', hook: 'A тычет пальцем в экран возмущённо', killer: 'мяу', share: 'скинь подруге у которой кот похож на хозяйку', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme','chaotic'] }, loc: ['living_room'], cat: 'AI и технологии' },
+  { topic: 'Бабка диктует нейросети рецепт борща — та предлагает заказать доставку', hook: 'A хлопает по столу и показывает палец', killer: 'доставка', share: 'скинь тому кто не умеет готовить', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['chaotic','conflict'] }, loc: ['kitchen'], cat: 'AI и технологии' },
+  { topic: 'Дед установил голосовой помощник — теперь спорит с ним каждый вечер', hook: 'A наклоняется к колонке и грозит пальцем', killer: 'выключить', share: 'покажи тому кто разговаривает с Алисой', pair: { groupA: ['dedy'], groupB: ['babki','parni'], compatA: ['meme'] }, loc: ['living_room','kitchen'], cat: 'AI и технологии' },
+  { topic: 'Внучка показала бабке дипфейк видео с ней — бабка звонит в полицию', hook: 'A хватается за сердце и пятится', killer: 'полиция', share: 'скинь бабушке', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic'] }, loc: ['living_room','kitchen'], cat: 'AI и технологии' },
+  { topic: 'Мама попросила ChatGPT написать СМС мужу — вышло слишком романтично', hook: 'A читает с телефона и краснеет', killer: 'романтика', share: 'скинь подруге пусть попробует', pair: { groupA: ['mamy'], groupB: ['dedy','parni'], compatA: ['meme','conflict'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Бабка позвонила на горячую линию банка — подружилась с роботом', hook: 'A прижимает телефон к уху и улыбается', killer: 'подруга', share: 'скинь тому кто висит на горячей линии', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Дед купил робот-пылесос — следит за ним как за внуком', hook: 'A сидит на полу и наблюдает за пылесосом', killer: 'внук', share: 'покажи тому у кого робот-пылесос', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme'] }, loc: ['living_room'], cat: 'AI и технологии' },
 
-  // ── Цены и инфляция (вечнозелёная боль) ──
-  { topic: 'Сыр за 800 рублей и бабка торгуется с кассиром как на базаре', pair: { groupA: ['babki'], groupB: ['prodavtsy','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['shop','market'], cat: 'Цены и инфляция' },
-  { topic: 'Дед увидел чек из Пятёрочки и думает что это ипотека', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['kitchen','shop'], cat: 'Цены и инфляция' },
-  { topic: 'Мама купила авокадо за 300 рублей а свекровь чуть не упала', pair: { groupA: ['mamy'], groupB: ['babki'], compatA: ['conflict'] }, loc: ['kitchen'], cat: 'Цены и инфляция' },
-  { topic: 'Бабка сравнивает цены 1990 и 2026 и каждый раз охает громче', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['chaotic','meme'] }, loc: ['kitchen','shop'], cat: 'Цены и инфляция' },
-  { topic: 'Парень заказал кофе за 600 рублей а дед рассказал сколько стоила машина', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['conflict','meme'] }, loc: ['cafe'], cat: 'Цены и инфляция' },
-  { topic: 'Бабка увидела цену на огурцы зимой и решила что это цена за килограмм золота', pair: { groupA: ['babki'], groupB: ['prodavtsy'], compatA: ['chaotic'] }, loc: ['shop','market'], cat: 'Цены и инфляция' },
+  // ═══ ЦЕНЫ И ИНФЛЯЦИЯ ═══
+  { topic: 'Сыр за 800₽ — бабка торгуется с кассиром как на базаре', hook: 'A швыряет чек на стол и тычет пальцем', killer: 'рассрочка', share: 'скинь тому кто помнит сыр за 50₽', pair: { groupA: ['babki'], groupB: ['prodavtsy','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['shop','market'], cat: 'Цены и инфляция' },
+  { topic: 'Дед увидел чек из Пятёрочки — думает это квитанция за ипотеку', hook: 'A разворачивает чек и он падает до пола', killer: 'ипотека', share: 'скинь мужу после магазина', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['kitchen','shop'], cat: 'Цены и инфляция' },
+  { topic: 'Мама купила авокадо за 300₽ — свекровь считает это предательством', hook: 'A поднимает авокадо как улику', killer: 'авокадо', share: 'скинь свекрови или тёще', pair: { groupA: ['mamy'], groupB: ['babki'], compatA: ['conflict'] }, loc: ['kitchen'], cat: 'Цены и инфляция' },
+  { topic: 'Бабка сравнивает цены 1990 и 2026 — каждый раз охает громче', hook: 'A загибает пальцы и охает театрально', killer: 'копейки', share: 'скинь маме пусть посчитает', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['chaotic','meme'] }, loc: ['kitchen','shop'], cat: 'Цены и инфляция' },
+  { topic: 'Парень заказал кофе за 600₽ — дед рассказал сколько стоила машина', hook: 'A подавился кофе уставившись в чек', killer: 'машина', share: 'покажи тому кто покупает кофе каждый день', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['conflict','meme'] }, loc: ['cafe'], cat: 'Цены и инфляция' },
+  { topic: 'Бабка увидела огурцы зимой — решила что это цена за золото', hook: 'A хватает ценник и подносит к глазам трижды', killer: 'золото', share: 'скинь тому кто покупает огурцы зимой', pair: { groupA: ['babki'], groupB: ['prodavtsy'], compatA: ['chaotic'] }, loc: ['shop','market'], cat: 'Цены и инфляция' },
+  { topic: 'Дед увидел цену на бензин — решил пересесть на велосипед', hook: 'A бросает ключи от машины на стол', killer: 'велосипед', share: 'скинь автомобилисту', pair: { groupA: ['dedy'], groupB: ['parni','babki'], compatA: ['meme'] }, loc: ['car','kitchen'], cat: 'Цены и инфляция' },
+  { topic: 'Курьер принёс еду для кота за 2000₽ — бабка в шоке от приоритетов', hook: 'A смотрит в пакет и поднимает брови', killer: 'кот', share: 'скинь владельцу кота', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme','chaotic'] }, loc: ['kitchen','stairwell'], cat: 'Цены и инфляция' },
 
-  // ── Разрыв поколений (viral gold) ──
-  { topic: 'Внучка показала бабке свой макияж а та решила что она больна', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['bathroom','living_room'], cat: 'Разрыв поколений' },
-  { topic: 'Дед увидел рваные джинсы за 15 тысяч и предложил зашить бесплатно', pair: { groupA: ['dedy'], groupB: ['parni','devushki'], compatA: ['meme'] }, loc: ['living_room','shop'], cat: 'Разрыв поколений' },
-  { topic: 'Бабка пытается понять почему внук зарабатывает в телефоне больше чем она на заводе', pair: { groupA: ['babki'], groupB: ['parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
-  { topic: 'Мама узнала что дочка встречается с парнем из другого города через интернет', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['conflict'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
-  { topic: 'Дед учит внука чинить кран а тот гуглит видео на ютубе', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['conflict','meme'] }, loc: ['bathroom','kitchen'], cat: 'Разрыв поколений' },
-  { topic: 'Бабка увидела что внучка заказывает еду на дом и устроила лекцию про лень', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic'] }, loc: ['kitchen'], cat: 'Разрыв поколений' },
+  // ═══ РАЗРЫВ ПОКОЛЕНИЙ ═══
+  { topic: 'Внучка показала макияж — бабка вызвала скорую', hook: 'A хватает внучку за лицо и рассматривает', killer: 'скорая', share: 'скинь подруге с макияжем', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['bathroom','living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Дед увидел рваные джинсы за 15000₽ — предложил зашить бесплатно', hook: 'A хватает джинсы и ищет дырку', killer: 'зашить', share: 'покажи тому кто носит рваные джинсы', pair: { groupA: ['dedy'], groupB: ['parni','devushki'], compatA: ['meme'] }, loc: ['living_room','shop'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка не понимает как внук зарабатывает в телефоне больше чем она на заводе', hook: 'A тычет в телефон потом в свои руки', killer: 'телефон', share: 'скинь фрилансеру', pair: { groupA: ['babki'], groupB: ['parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Дед учит внука чинить кран — тот гуглит видео на YouTube', hook: 'A выхватывает телефон и машет ключом', killer: 'YouTube', share: 'скинь тому кто чинит всё по YouTube', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['conflict','meme'] }, loc: ['bathroom','kitchen'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка увидела доставку — лекция о лени поколения', hook: 'A перехватывает пакет доставки', killer: 'лень', share: 'скинь тому кто заказывает доставку каждый день', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic'] }, loc: ['kitchen'], cat: 'Разрыв поколений' },
+  { topic: 'Внук показал деду NFT — дед предложил повесить на стену в рамке', hook: 'A крутит телефон пытаясь разглядеть', killer: 'рамка', share: 'покажи тому кто покупает NFT', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['meme'] }, loc: ['living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Мама узнала что дочка встречается через интернет', hook: 'A хватается за голову обеими руками', killer: 'интернет', share: 'скинь тому кто познакомился в приложении', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['conflict'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка увидела стрим внучки — решила что та работает в цирке', hook: 'A показывает на экран с ужасом', killer: 'цирк', share: 'скинь стримеру', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['chaotic','meme'] }, loc: ['living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Дед объясняет что развлечение раньше — выйти на улицу', hook: 'A разводит руки и показывает на дверь', killer: 'улица', share: 'покажи ребёнку который не выходит из дома', pair: { groupA: ['dedy'], groupB: ['devushki'], compatA: ['meme'] }, loc: ['living_room','yard'], cat: 'Разрыв поколений' },
+  { topic: 'Дед впервые увидел смузи — решил что это недомешанный компот', hook: 'A крутит стакан и смотрит на просвет', killer: 'компот', share: 'покажи тому кто пьёт смузи', pair: { groupA: ['dedy'], groupB: ['devushki','parni'], compatA: ['meme'] }, loc: ['kitchen','cafe'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка увидела авокадо-тост внучки — спросила где мясо', hook: 'A заглядывает в тарелку и разводит руками', killer: 'мясо', share: 'скинь вегану', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['kitchen','cafe'], cat: 'Разрыв поколений' },
+  { topic: 'Дед нашёл пиджак 1975 года — говорит что он снова в моде', hook: 'A надевает пиджак и поправляет лацканы', killer: 'мода', share: 'скинь моднику', pair: { groupA: ['dedy'], groupB: ['parni','devushki'], compatA: ['meme'] }, loc: ['living_room','bedroom'], cat: 'Разрыв поколений' },
+  { topic: 'Айтишник объясняет бабке свою работу — она до сих пор не поняла', hook: 'A рисует схемы в воздухе руками', killer: 'кнопки', share: 'покажи родителям которые не понимают чем ты занимаешься', pair: { groupA: ['parni'], groupB: ['babki','mamy'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
 
-  // ── Бытовой абсурд (universal viral) ──
-  { topic: 'Кто последний брал пульт от телевизора — расследование на кухне', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','conflict'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Бабка нашла чужой носок в стиралке и начала расследование', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic','meme'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Дед сломал кран пытаясь починить и теперь обвиняет кран', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Кот разбил вазу а каждый обвиняет другого что не уследил', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['conflict'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Муж купил не тот хлеб и жена реагирует как на предательство', pair: { groupA: ['mamy','zheny'], groupB: ['dedy','parni'], compatA: ['chaotic','conflict'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Бабка пересолила суп и обвиняет соль что она стала солонее', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['meme','chaotic'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+  // ═══ БЫТОВОЙ АБСУРД ═══
+  { topic: 'Расследование — кто последний брал пульт', hook: 'A потрясает пультом как уликой', killer: 'кот', share: 'скинь тому кто вечно теряет пульт', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','conflict'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка нашла чужой носок в стиралке — расследование', hook: 'A держит носок двумя пальцами', killer: 'сосед', share: 'скинь тому у кого пропадают носки', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic','meme'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Дед сломал кран починяя — обвиняет кран', hook: 'A швыряет ключ на пол', killer: 'сам', share: 'покажи тому кто чинит сам', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Кот разбил вазу — каждый обвиняет другого', hook: 'A показывает на осколки потом на B', killer: 'твой', share: 'скинь тому у кого кот хулиган', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['conflict'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Муж купил не тот хлеб — жена как будто измена', hook: 'A хлопает батоном по столу', killer: 'измена', share: 'скинь мужу который покупает не тот хлеб', pair: { groupA: ['mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','conflict'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка пересолила суп — обвиняет соль что стала солонее', hook: 'A пробует и выплёвывает', killer: 'солонее', share: 'скинь тому кто пересаливает', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['meme','chaotic'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Спор кто лучше готовит — оба сгорело пока спорили', hook: 'A нюхает воздух и замирает', killer: 'сгорело', share: 'скинь тому кто считает себя поваром', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','meme','conflict'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Кто храпит — оба отрицают при записи на телефоне', hook: 'A включает запись и поворачивает экран', killer: 'запись', share: 'скинь тому кто храпит и отрицает', pair: { groupA: ['dedy','babki'], groupB: ['babki','dedy'], compatA: ['meme','conflict'] }, loc: ['bedroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка 3 часа искала очки — они на голове', hook: 'A переворачивает подушки с паникой', killer: 'голова', share: 'скинь тому кто теряет очки', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['meme'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Дед нажал не ту кнопку на стиралке — она стирает 4 часа', hook: 'A жмёт все кнопки подряд', killer: 'кнопка', share: 'покажи тому кто боится техники', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка попробовала суши — решила рыба сырая из экономии', hook: 'A тыкает палочками и нюхает', killer: 'сырая', share: 'скинь тому кто не ел суши', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['chaotic','meme'] }, loc: ['cafe','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Начальник созвал совещание по поводу совещания', hook: 'A раскладывает документы с серьёзным лицом', killer: 'совещание', share: 'скинь коллеге из офиса', pair: { groupA: ['chinovniki','biznes'], groupB: ['parni','devushki'], compatA: ['conflict'] }, loc: ['office'], cat: 'Бытовой абсурд' },
+  { topic: 'Учитель поставил двойку — родитель пришёл разбираться и получил тройку', hook: 'A тычет в дневник и стучит по столу', killer: 'тройка', share: 'скинь учителю или родителю школьника', pair: { groupA: ['mamy'], groupB: ['uchitelya'], compatA: ['conflict','chaotic'] }, loc: ['school','office'], cat: 'Бытовой абсурд' },
 
-  // ── Здоровье и поликлиника ──
-  { topic: 'Бабка лечится народными средствами и учит врача как правильно', pair: { groupA: ['babki'], groupB: ['doktory','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['clinic','kitchen'], cat: 'Здоровье и поликлиника' },
-  { topic: 'Дед прочитал в интернете диагноз и решил что ему осталось три дня', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme'] }, loc: ['living_room','clinic'], cat: 'Здоровье и поликлиника' },
-  { topic: 'Мама нашла у сына витамины и думает что это наркотики', pair: { groupA: ['mamy'], groupB: ['parni'], compatA: ['chaotic','conflict'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
-  { topic: 'Бабка в аптеке спорит с провизором что подорожник лучше любого лекарства', pair: { groupA: ['babki'], groupB: ['prodavtsy','doktory'], compatA: ['chaotic'] }, loc: ['clinic','shop'], cat: 'Здоровье и поликлиника' },
-  { topic: 'Дед отказывается идти к врачу потому что в 45 лет не ходил и жив', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['conflict','meme'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
+  // ═══ ЗДОРОВЬЕ ═══
+  { topic: 'Бабка учит врача — подорожник решает всё', hook: 'A достаёт пучок травы из сумки', killer: 'подорожник', share: 'скинь бабушке которая лечит чаем', pair: { groupA: ['babki'], groupB: ['doktory','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['clinic','kitchen'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Дед загуглил симптомы — решил что осталось 3 дня', hook: 'A показывает телефон как приговор', killer: 'интернет', share: 'скинь тому кто гуглит симптомы', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme'] }, loc: ['living_room','clinic'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Мама нашла витамины сына — думает наркотики', hook: 'A держит банку как улику', killer: 'витамины', share: 'скинь маме которая проверяет сумки', pair: { groupA: ['mamy'], groupB: ['parni'], compatA: ['chaotic','conflict'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Дед отказывается к врачу — в 45 не ходил и жив', hook: 'A скрещивает руки и качает головой', killer: 'жив', share: 'скинь тому кто боится врачей', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['conflict','meme'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Бабка лечит внука горчичниками малиной и заговорами одновременно', hook: 'A расставляет банки как на алтаре', killer: 'заговор', share: 'скинь тому кого лечили бабушкиными методами', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['chaotic','meme'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
 
-  // ── ЖКХ и коммуналка ──
-  { topic: 'Пришла квитанция за отопление в мае и бабка идёт воевать с управляющей', pair: { groupA: ['babki'], groupB: ['sosedi','chinovniki'], compatA: ['chaotic','conflict'] }, loc: ['stairwell','kitchen'], cat: 'ЖКХ и коммуналка' },
-  { topic: 'Сосед сверху затопил и оба обвиняют трубы', pair: { groupA: ['dedy','babki'], groupB: ['sosedi'], compatA: ['conflict','chaotic'] }, loc: ['stairwell','bathroom'], cat: 'ЖКХ и коммуналка' },
-  { topic: 'Бабка считает показания счётчика и обнаруживает что воды налили на бассейн', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['chaotic','meme'] }, loc: ['kitchen','bathroom'], cat: 'ЖКХ и коммуналка' },
-  { topic: 'Дед vs домофон: третий день не может запомнить код', pair: { groupA: ['dedy'], groupB: ['sosedi','parni'], compatA: ['meme'] }, loc: ['stairwell','yard'], cat: 'ЖКХ и коммуналка' },
+  // ═══ ЖКХ ═══
+  { topic: 'Квитанция за отопление в мае — бабка воюет', hook: 'A разворачивает квитанцию с трясущимися руками', killer: 'май', share: 'скинь соседу по подъезду', pair: { groupA: ['babki'], groupB: ['sosedi','chinovniki'], compatA: ['chaotic','conflict'] }, loc: ['stairwell','kitchen'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Сосед затопил — оба обвиняют трубы', hook: 'A показывает на потолок с которого капает', killer: 'трубы', share: 'скинь соседу сверху', pair: { groupA: ['dedy','babki'], groupB: ['sosedi'], compatA: ['conflict','chaotic'] }, loc: ['stairwell','bathroom'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Бабка считает воду — налили на олимпийский бассейн', hook: 'A тычет калькулятором в камеру', killer: 'бассейн', share: 'скинь тому кто не следит за счётчиками', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['chaotic','meme'] }, loc: ['kitchen','bathroom'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Дед третий день не запомнит код домофона', hook: 'A бьёт по домофону ладонью', killer: 'ключ', share: 'скинь тому кто забывает пароли', pair: { groupA: ['dedy'], groupB: ['sosedi','parni'], compatA: ['meme'] }, loc: ['stairwell','yard'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Бабка собрала подписи подъезда против кошки соседки', hook: 'A разворачивает список длиной в метр', killer: 'кошка', share: 'скинь соседу с питомцем', pair: { groupA: ['babki'], groupB: ['sosedi'], compatA: ['conflict','chaotic'] }, loc: ['stairwell'], cat: 'ЖКХ и коммуналка' },
 
-  // ── Дача и огород ──
-  { topic: 'Бабка хвастается урожаем а соседка говорит что у неё помидоры больше', pair: { groupA: ['babki'], groupB: ['sosedi','babki'], compatA: ['conflict','meme'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
-  { topic: 'Дед построил теплицу из окон от старых рам и считает себя архитектором', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme','chaotic'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
-  { topic: 'Кто-то украл кабачки с грядки и бабка ведёт допрос всех соседей', pair: { groupA: ['babki'], groupB: ['sosedi','dedy'], compatA: ['chaotic','conflict'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
-  { topic: 'Внучка приехала на дачу в белом платье и бабка отправила её полоть', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','meme'] }, loc: ['dacha'], cat: 'Дача и огород' },
+  // ═══ ДАЧА ═══
+  { topic: 'Бабка хвастается урожаем — соседка говорит её помидоры крупнее', hook: 'A поднимает помидор размером с кулак', killer: 'крупнее', share: 'скинь дачнику', pair: { groupA: ['babki'], groupB: ['sosedi','babki'], compatA: ['conflict','meme'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
+  { topic: 'Дед построил теплицу из старых окон — считает себя архитектором', hook: 'A разводит руки показывая масштаб', killer: 'архитектор', share: 'покажи тому кто строит из подручных', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme','chaotic'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
+  { topic: 'Украли кабачки — бабка допрашивает соседей', hook: 'A показывает пустую грядку и сжимает кулаки', killer: 'кабачки', share: 'скинь дачнику у которого воруют', pair: { groupA: ['babki'], groupB: ['sosedi','dedy'], compatA: ['chaotic','conflict'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
+  { topic: 'Внучка на дачу в белом — бабка выдала тяпку', hook: 'A оглядывает B сверху вниз', killer: 'тяпка', share: 'скинь тому кто ездит на дачу в городском', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','meme'] }, loc: ['dacha'], cat: 'Дача и огород' },
+  { topic: 'Бабка выращивает рассаду — заняла все подоконники', hook: 'A показывает на все окна заставленные горшками', killer: 'подоконник', share: 'скинь тому у кого рассада повсюду', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic'] }, loc: ['kitchen','living_room'], cat: 'Дача и огород' },
+  { topic: 'Бабка поставила камеру на дачу — смотрит огурцы 24/7 как сериал', hook: 'A сидит с телефоном и комментирует рост', killer: 'серия', share: 'скинь дачнику', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['meme','chaotic'] }, loc: ['dacha','kitchen'], cat: 'Дача и огород' },
 
-  // ── Соцсети и тренды ──
-  { topic: 'Бабка случайно записала рилс и набрала миллион просмотров', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
-  { topic: 'Дед завёл тикток и выкладывает обзоры на борщ', pair: { groupA: ['dedy'], groupB: ['babki','parni'], compatA: ['meme','chaotic'] }, loc: ['kitchen'], cat: 'Соцсети и тренды' },
-  { topic: 'Мама увидела фото дочки в инстаграме и не узнала из-за фильтров', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['living_room','kitchen'], cat: 'Соцсети и тренды' },
-  { topic: 'Бабка подписалась на все рассылки и думает что выиграла айфон', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
-  { topic: 'Парень объясняет бабке что такое донат а она думает это еда', pair: { groupA: ['parni'], groupB: ['babki'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+  // ═══ СОЦСЕТИ ═══
+  { topic: 'Бабка случайно записала рилс — миллион просмотров', hook: 'A смотрит в телефон и хватается за щёки', killer: 'миллион', share: 'скинь тому кто мечтает о просмотрах', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+  { topic: 'Дед завёл тикток — обзоры на борщ', hook: 'A ставит борщ перед камерой серьёзно', killer: 'подписчики', share: 'покажи дедушке', pair: { groupA: ['dedy'], groupB: ['babki','parni'], compatA: ['meme','chaotic'] }, loc: ['kitchen'], cat: 'Соцсети и тренды' },
+  { topic: 'Мама не узнала дочку в инсте из-за фильтров', hook: 'A подносит телефон к лицу B и сравнивает', killer: 'фильтр', share: 'скинь подруге с фильтрами', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['living_room','kitchen'], cat: 'Соцсети и тренды' },
+  { topic: 'Бабка думает что выиграла айфон подписавшись на рассылку', hook: 'A радостно трясёт телефоном', killer: 'спам', share: 'скинь бабушке которая верит в розыгрыши', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+  { topic: 'Парень объясняет бабке донат — она думает пончик', hook: 'A разводит руками пытаясь объяснить', killer: 'пончик', share: 'скинь геймеру', pair: { groupA: ['parni'], groupB: ['babki'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+  { topic: 'Подписка на кинотеатр стоит денег — бабка предложила видеомагнитофон', hook: 'A достаёт VHS кассету из шкафа', killer: 'кассета', share: 'покажи тому кто помнит видеокассеты', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['living_room'], cat: 'Соцсети и тренды' },
+  { topic: 'Бабка заказала на WB — пришло 15 посылок вместо одной', hook: 'A стоит перед горой пакетов', killer: 'корзина', share: 'скинь тому кто не может остановиться на WB', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme','chaotic'] }, loc: ['living_room','stairwell'], cat: 'Соцсети и тренды' },
+  { topic: 'Дед увидел пункт выдачи — думает это новая почта', hook: 'A стоит в очереди и озирается', killer: 'почта', share: 'покажи тому кто ходит в ПВЗ каждый день', pair: { groupA: ['dedy'], groupB: ['prodavtsy','devushki'], compatA: ['meme'] }, loc: ['shop'], cat: 'Соцсети и тренды' },
+  { topic: 'Мама оставила отзыв — написала роман на 3 страницы', hook: 'A показывает бесконечный текст на телефоне', killer: 'роман', share: 'скинь тому кто пишет длинные отзывы', pair: { groupA: ['mamy'], groupB: ['devushki','parni'], compatA: ['meme','conflict'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
 
-  // ── Отношения (вечная тема) ──
-  { topic: 'Жена нашла в телефоне мужа лайк на фото коллеги', pair: { groupA: ['mamy','zheny'], groupB: ['dedy','parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','bedroom'], cat: 'Отношения' },
-  { topic: 'Бабка учит внучку как правильно выбирать мужа по рукам', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
-  { topic: 'Дед даёт совет внуку по отношениям а бабка комментирует из-за угла', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['meme'] }, loc: ['kitchen','yard'], cat: 'Отношения' },
-  { topic: 'Мама знакомится с парнем дочки и допрашивает его как на собеседовании', pair: { groupA: ['mamy'], groupB: ['parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
-  { topic: 'Свекровь приехала в гости и сразу полезла проверять холодильник', pair: { groupA: ['babki'], groupB: ['mamy','devushki'], compatA: ['conflict'] }, loc: ['kitchen'], cat: 'Отношения' },
-  { topic: 'Парень подарил девушке пылесос на 8 марта и не понимает в чём проблема', pair: { groupA: ['parni'], groupB: ['devushki','mamy'], compatA: ['meme'] }, loc: ['living_room','kitchen'], cat: 'Отношения' },
+  // ═══ ОТНОШЕНИЯ ═══
+  { topic: 'Жена нашла лайк мужа на фото коллеги — допрос', hook: 'A поворачивает телефон экраном к B', killer: 'лайк', share: 'скинь мужу для профилактики', pair: { groupA: ['mamy'], groupB: ['dedy','parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','bedroom'], cat: 'Отношения' },
+  { topic: 'Бабка учит выбирать мужа — по рукам', hook: 'A хватает руку B и рассматривает', killer: 'руки', share: 'скинь подруге ищущей мужа', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
+  { topic: 'Мама допрашивает парня дочки как на собеседовании', hook: 'A садится напротив и складывает руки как HR', killer: 'зарплата', share: 'скинь парню который знакомится с мамой', pair: { groupA: ['mamy'], groupB: ['parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
+  { topic: 'Свекровь приехала — первым делом открыла холодильник', hook: 'A распахивает холодильник с пристрастием', killer: 'холодильник', share: 'скинь невестке или свекрови', pair: { groupA: ['babki'], groupB: ['mamy','devushki'], compatA: ['conflict'] }, loc: ['kitchen'], cat: 'Отношения' },
+  { topic: 'Парень подарил пылесос на 8 марта — не понимает проблему', hook: 'A показывает пылесос с довольной улыбкой', killer: 'пылесос', share: 'скинь мужу перед 8 марта', pair: { groupA: ['parni'], groupB: ['devushki','mamy'], compatA: ['meme'] }, loc: ['living_room','kitchen'], cat: 'Отношения' },
+  { topic: 'Дед даёт совет по отношениям — бабка корректирует из-за угла', hook: 'A обнимает B и начинает поучать', killer: 'слушай', share: 'покажи дедушке', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['meme'] }, loc: ['kitchen','yard'], cat: 'Отношения' },
+  { topic: 'Мама помогает молодожёнам — через час они мечтают чтоб ушла', hook: 'A двигает мебель без спроса', killer: 'помощь', share: 'скинь молодожёнам', pair: { groupA: ['mamy'], groupB: ['devushki','parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
+  { topic: 'Бабка нашла профиль деда на сайте знакомств — а им 50 лет', hook: 'A тычет в телефон со слезами от смеха', killer: 'профиль', share: 'скинь женатой паре', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['conflict','meme'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
 
-  // ── Транспорт и пробки ──
-  { topic: 'Бабка в маршрутке учит водителя как правильно ехать', pair: { groupA: ['babki'], groupB: ['taksisty','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['car','bus_stop'], cat: 'Транспорт и пробки' },
-  { topic: 'Дед vs навигатор: кто из них лучше знает дорогу', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['car'], cat: 'Транспорт и пробки' },
-  { topic: 'Мама опоздала из-за пробки и обвиняет весь город', pair: { groupA: ['mamy'], groupB: ['parni','dedy'], compatA: ['chaotic'] }, loc: ['car','kitchen'], cat: 'Транспорт и пробки' },
-
-  // ── МЕГА-ВИРУСНЫЕ (универсальные хиты) ──
-  { topic: 'Спор кто лучше готовит — и оба блюда сгорели пока спорили', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','meme','conflict'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Бабка нашла в интернете свой возраст дожития и устроила сцену', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic','meme'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
-  { topic: 'Кто из них храпит ночью — оба отрицают при наличии записи на телефоне', pair: { groupA: ['dedy','babki'], groupB: ['babki','dedy'], compatA: ['meme','conflict'] }, loc: ['bedroom','kitchen'], cat: 'Бытовой абсурд' },
-  { topic: 'Мама пришла помочь молодожёнам и через час они мечтают чтоб она ушла', pair: { groupA: ['mamy'], groupB: ['devushki','parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
-  { topic: 'Дед объясняет внучке что в его время развлечение было выйти на улицу', pair: { groupA: ['dedy'], groupB: ['devushki'], compatA: ['meme'] }, loc: ['living_room','yard'], cat: 'Разрыв поколений' },
-  { topic: 'Бабка увидела сколько стоит подписка на кинотеатр и предложила свой видеомагнитофон', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['living_room'], cat: 'Цены и инфляция' },
+  // ═══ ТРАНСПОРТ ═══
+  { topic: 'Бабка учит водителя маршрутки ехать правильно', hook: 'A наклоняется и показывает направление', killer: 'знаю', share: 'скинь тому кто учит водителя', pair: { groupA: ['babki'], groupB: ['taksisty','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['car','bus_stop'], cat: 'Транспорт и пробки' },
+  { topic: 'Дед vs навигатор — кто лучше знает дорогу', hook: 'A выключает навигатор решительно', killer: 'карта', share: 'покажи тому кто не доверяет навигатору', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['car'], cat: 'Транспорт и пробки' },
+  { topic: 'Бабка требует остановить маршрутку между остановками', hook: 'A встаёт и стучит по стеклу', killer: 'здесь', share: 'скинь тому кто ездит на маршрутке', pair: { groupA: ['babki'], groupB: ['taksisty','sosedi'], compatA: ['chaotic'] }, loc: ['car'], cat: 'Транспорт и пробки' },
+  { topic: 'Дед припарковался — никто не может выехать', hook: 'A разводит руками и пожимает плечами', killer: 'место', share: 'скинь тому кто криво паркуется', pair: { groupA: ['dedy'], groupB: ['parni','mamy'], compatA: ['meme'] }, loc: ['yard','car'], cat: 'Транспорт и пробки' },
 ];
 
-// ─── SMART PAIR MATCHING FOR SURPRISE ────────
+// Track recent presets to avoid repetition
+let _lastSurpriseIndices = [];
+
+// ─── SMART PAIR MATCHING v2 (weighted scoring) ─
 function pickSmartPairForPreset(preset, chars) {
   if (!chars?.length || chars.length < 2) return null;
   const p = preset.pair;
 
-  // Build pool A: match group AND compatibility
-  const isGroupMatchA = (c) => !p.groupA?.length || p.groupA.some(g => (c.group || '').toLowerCase().includes(g));
-  const isCompatMatchA = (c) => !p.compatA?.length || p.compatA.includes(c.compatibility);
-  let poolA = chars.filter(c => isGroupMatchA(c) && isCompatMatchA(c));
-  if (!poolA.length) poolA = chars.filter(c => isGroupMatchA(c));
-  if (!poolA.length) poolA = chars.filter(c => isCompatMatchA(c));
-  if (!poolA.length) poolA = [...chars];
+  const scoreA = (c) => {
+    let s = 0;
+    const grp = (c.group || '').toLowerCase();
+    if (p.groupA?.length) { if (p.groupA.some(g => grp.includes(g))) s += 10; else s -= 5; }
+    if (p.compatA?.length) { if (p.compatA.includes(c.compatibility)) s += 5; }
+    if (c.compatibility === 'chaotic' || c.compatibility === 'meme') s += 2;
+    if (c.modifiers?.hook_style && c.modifiers.hook_style !== 'natural attention grab') s += 3;
+    return s;
+  };
 
-  const charA = poolA[Math.floor(Math.random() * poolA.length)];
+  const scoredA = chars.map(c => ({ c, s: scoreA(c) })).sort((a, b) => b.s - a.s);
+  const topA = scoredA.filter(x => x.s >= scoredA[0].s - 3).map(x => x.c);
+  const charA = topA[Math.floor(Math.random() * topA.length)];
 
-  // Build pool B: match group, DIFFERENT from A, prefer DIFFERENT group for contrast
-  const isGroupMatchB = (c) => !p.groupB?.length || p.groupB.some(g => (c.group || '').toLowerCase().includes(g));
-  let poolB = chars.filter(c => c.id !== charA.id && isGroupMatchB(c));
-  // Prefer different group for comic contrast
-  const diffGroup = poolB.filter(c => c.group !== charA.group);
-  if (diffGroup.length >= 3) poolB = diffGroup;
-  if (!poolB.length) poolB = chars.filter(c => c.id !== charA.id);
+  const scoreB = (c) => {
+    if (c.id === charA.id) return -999;
+    let s = 0;
+    const grp = (c.group || '').toLowerCase();
+    if (p.groupB?.length) { if (p.groupB.some(g => grp.includes(g))) s += 10; else s -= 3; }
+    if (c.group !== charA.group) s += 6;
+    const contrast = { chaotic: 'calm', calm: 'chaotic', conflict: 'meme', meme: 'conflict', balanced: 'chaotic' };
+    if (c.compatibility === contrast[charA.compatibility]) s += 8;
+    if (c.speech_pace !== charA.speech_pace) s += 3;
+    if (c.vibe_archetype !== charA.vibe_archetype) s += 2;
+    return s;
+  };
 
-  // Prefer contrasting compatibility for maximum comedy
-  const contrastPairs = { chaotic: 'calm', calm: 'chaotic', conflict: 'meme', meme: 'conflict' };
-  const idealCompat = contrastPairs[charA.compatibility];
-  if (idealCompat) {
-    const contrast = poolB.filter(c => c.compatibility === idealCompat);
-    if (contrast.length >= 2) poolB = contrast;
-  }
+  const scoredB = chars.map(c => ({ c, s: scoreB(c) })).filter(x => x.s > -999).sort((a, b) => b.s - a.s);
+  const topB = scoredB.filter(x => x.s >= scoredB[0].s - 4).map(x => x.c);
+  const charB = topB[Math.floor(Math.random() * topB.length)];
 
-  const charB = poolB[Math.floor(Math.random() * poolB.length)];
   return charA && charB ? { A: charA, B: charB } : null;
 }
 
-// ─── SMART LOCATION MATCHING FOR SURPRISE ────
+// ─── SMART LOCATION MATCHING ─────────────────
 function pickSmartLocationForPreset(preset, locations) {
   if (!locations?.length) return null;
   const hints = preset.loc || [];
   if (!hints.length) return locations[Math.floor(Math.random() * locations.length)];
 
-  // Try to find location matching any hint keyword
   let matches = locations.filter(l => {
     const lid = (l.id || '').toLowerCase();
     const lname = (l.name_ru || '').toLowerCase();
@@ -5079,7 +5110,6 @@ function pickSmartLocationForPreset(preset, locations) {
   });
   if (matches.length) return matches[Math.floor(Math.random() * matches.length)];
 
-  // Fallback: any indoor location for indoor presets, outdoor for outdoor
   const isOutdoorPreset = hints.some(h => ['dacha','yard','park','street','bus_stop','market'].includes(h));
   const filtered = locations.filter(l => {
     const scene = (l.scene_en || '').toLowerCase();
@@ -5088,7 +5118,7 @@ function pickSmartLocationForPreset(preset, locations) {
   return (filtered.length ? filtered : locations)[Math.floor(Math.random() * (filtered.length || locations.length))];
 }
 
-// ─── SURPRISE BUTTON (viral presets) ─────────
+// ─── SURPRISE BUTTON v2 (anti-repeat + hook/killer info) ─
 function initSurprise() {
   document.getElementById('btn-surprise')?.addEventListener('click', () => {
     if (!isPromoValid()) { showNotification('🔑 Нужен промо-код для генерации', 'error'); navigateTo('settings'); return; }
@@ -5096,10 +5126,18 @@ function initSurprise() {
     const chars = state.characters;
     if (!chars || chars.length < 2) { showNotification('⚠️ Персонажи не загружены', 'error'); return; }
 
-    // Pick a random viral preset
-    const preset = VIRAL_SURPRISE_PRESETS[Math.floor(Math.random() * VIRAL_SURPRISE_PRESETS.length)];
+    // Anti-repeat: pick preset not used in last 20 clicks
+    let idx;
+    let attempts = 0;
+    do {
+      idx = Math.floor(Math.random() * VIRAL_SURPRISE_PRESETS.length);
+      attempts++;
+    } while (_lastSurpriseIndices.includes(idx) && attempts < 30);
+    _lastSurpriseIndices.push(idx);
+    if (_lastSurpriseIndices.length > 20) _lastSurpriseIndices.shift();
 
-    // Smart pair selection based on preset requirements
+    const preset = VIRAL_SURPRISE_PRESETS[idx];
+
     const pair = pickSmartPairForPreset(preset, chars);
     if (pair) {
       selectChar('A', pair.A.id);
@@ -5108,7 +5146,6 @@ function initSurprise() {
       autoSelectRandomPair();
     }
 
-    // Smart location selection
     if (state.locations?.length) {
       const loc = pickSmartLocationForPreset(preset, state.locations);
       if (loc) {
@@ -5117,24 +5154,28 @@ function initSurprise() {
       }
     }
 
-    // Set mode to 'suggested' with the viral topic pre-filled
     state.generationMode = 'suggested';
     state.inputMode = 'suggested';
     selectGenerationMode?.('suggested');
 
-    // Fill topic into the idea input — this is the key difference from old random
+    // Build enriched topic with hook context for AI
+    let fullTopic = preset.topic;
+    if (preset.hook) fullTopic += ` [ХУК: ${preset.hook}]`;
+    if (preset.killer) fullTopic += ` [KILLER WORD: "${preset.killer}"]`;
+
     const ideaInput = document.getElementById('idea-input');
-    if (ideaInput) ideaInput.value = preset.topic;
+    if (ideaInput) ideaInput.value = fullTopic;
     const ideaInputSuggested = document.getElementById('idea-input-suggested');
-    if (ideaInputSuggested) ideaInputSuggested.value = preset.topic;
+    if (ideaInputSuggested) ideaInputSuggested.value = fullTopic;
 
     navigateTo('generate');
     updateReadiness?.();
 
     const nameA = pair?.A?.name_ru || state.selectedA?.name_ru || '?';
     const nameB = pair?.B?.name_ru || state.selectedB?.name_ru || '?';
-    showNotification(`🎯 Вирусный сюрприз! ${nameA} × ${nameB}: "${preset.topic.slice(0, 60)}..."`, 'success');
-    log('OK', 'VIRAL_SURPRISE', `Пресет: "${preset.topic}" | ${nameA} × ${nameB} | Кат: ${preset.cat}`);
+    const shareHint = preset.share ? ` | 📤 ${preset.share}` : '';
+    showNotification(`🎯 ${nameA} × ${nameB}: "${preset.topic.slice(0, 50)}..."${shareHint}`, 'success');
+    log('OK', 'VIRAL_SURPRISE', `#${idx} "${preset.topic}" | ${nameA} × ${nameB} | 🎣${preset.hook || '-'} | 💀${preset.killer || '-'} | Кат: ${preset.cat}`);
   });
 }
 
