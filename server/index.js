@@ -2106,7 +2106,7 @@ app.post('/api/translate', authMiddleware, async (req, res) => {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
-  const { dialogue_A_ru, dialogue_B_ru, dialogue_A2_ru, killer_word, viral_title, share_bait, pin_comment, first_comment, hashtags, veo_prompt } = req.body;
+  const { dialogue_A_ru, dialogue_B_ru, dialogue_A2_ru, killer_word, viral_title, share_bait, pin_comment, first_comment, hashtags, veo_prompt, ru_package, series_tag } = req.body;
   if (!dialogue_A_ru && !dialogue_B_ru) {
     return res.status(400).json({ error: 'dialogue_A_ru or dialogue_B_ru required' });
   }
@@ -2140,7 +2140,9 @@ share_bait: "${share_bait || ''}"
 pin_comment: "${pin_comment || ''}"
 first_comment: "${first_comment || ''}"
 hashtags: ${JSON.stringify(hashtags || [])}
+${series_tag ? `series_tag: "${series_tag}"` : ''}
 ${veo_prompt ? `\nveo_prompt (translate ONLY the Russian dialogue lines inside, keep everything else as-is):\n---\n${veo_prompt.slice(0, 3000)}\n---` : ''}
+${ru_package ? `\nru_package (FULL production package in Russian — translate EVERYTHING to English, preserve emoji structure and formatting):\n---\n${ru_package.slice(0, 5000)}\n---` : ''}
 
 Return ONLY valid JSON (no markdown, no \`\`\`):
 {
@@ -2152,8 +2154,10 @@ Return ONLY valid JSON (no markdown, no \`\`\`):
   "share_bait_en": "...",
   "pin_comment_en": "...",
   "first_comment_en": "...",
-  "hashtags_en": ["#tag1", "#tag2", ...]
-  ${veo_prompt ? ',"veo_prompt_en": "..."' : ''}
+  "hashtags_en": ["#tag1", "#tag2", ...],
+  ${series_tag ? '"series_tag_en": "...",' : ''}
+  ${veo_prompt ? '"veo_prompt_en": "...",' : ''}
+  ${ru_package ? '"ru_package_en": "...full translated production package with preserved formatting..."' : ''}
 }`;
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
@@ -2161,7 +2165,7 @@ Return ONLY valid JSON (no markdown, no \`\`\`):
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 4096,
+        maxOutputTokens: 8192,
         responseMimeType: 'application/json',
       },
     };

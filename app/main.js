@@ -2698,6 +2698,7 @@ function populateInstaTab(result) {
   const ctx = result._apiContext || {};
   const charA = ctx.charA || state.selectedA || {};
   const charB = ctx.charB || state.selectedB || {};
+  const isEN = !!result._isEnglish;
 
   const viralTitle = engage.viral_title || '—';
   const shareBait = engage.share_bait || '—';
@@ -2705,6 +2706,8 @@ function populateInstaTab(result) {
   const firstComment = engage.first_comment || '—';
   const hashtags = engage.hashtags || [];
   const seriesTag = engage.series_tag || '';
+  const copyLabel = isEN ? 'Copy' : 'Копировать';
+  const copiedLabel = isEN ? '✓ Copied' : '✓ Скопировано';
 
   // Build copy-friendly hashtag string
   const hashtagStr = hashtags.join(' ');
@@ -2712,56 +2715,64 @@ function populateInstaTab(result) {
   el.innerHTML = `
     <!-- Viral Title -->
     <div class="glass-panel p-4 relative">
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
-      <div class="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">🔥 Вирусный заголовок</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">🔥 ${isEN ? 'Viral Title' : 'Вирусный заголовок'}</div>
       <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(viralTitle)}</div>
-      <div class="text-[9px] text-gray-600 mt-2">Вставь как заголовок Reels — цепляет в ленте</div>
+      <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Paste as Reels caption — hooks viewers in the feed' : 'Вставь как заголовок Reels — цепляет в ленте'}</div>
     </div>
 
     <!-- Share Bait (video description for forwarding) -->
     <div class="glass-panel p-4 relative border-l-2 border-orange-400/40">
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
-      <div class="text-[10px] text-orange-400 font-semibold uppercase tracking-wider mb-2">📝 Описание видео · для пересылки</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-orange-400 font-semibold uppercase tracking-wider mb-2">📝 ${isEN ? 'Video Description · share bait' : 'Описание видео · для пересылки'}</div>
       <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(shareBait)}</div>
-      <div class="text-[9px] text-gray-600 mt-2">Скинь другу с этой фразой — байт на пересылку в контексте видео</div>
+      <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Send to a friend with this line — bait for shares' : 'Скинь другу с этой фразой — байт на пересылку в контексте видео'}</div>
     </div>
 
     <!-- Hashtags -->
     <div class="glass-panel p-4 relative">
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
-      <div class="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider mb-2"># Хештеги · ${hashtags.length} шт</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider mb-2"># ${isEN ? `Hashtags · ${hashtags.length}` : `Хештеги · ${hashtags.length} шт`}</div>
       <div class="copy-target text-xs text-gray-300 leading-relaxed bg-black/30 rounded-lg p-3 select-all">${escapeHtml(hashtagStr)}</div>
-      ${seriesTag ? `<div class="text-[9px] text-violet-400 mt-2">Серия: ${escapeHtml(seriesTag)}</div>` : ''}
-      <div class="text-[9px] text-gray-600 mt-1">Вставь в первый комментарий или в описание</div>
+      ${seriesTag ? `<div class="text-[9px] text-violet-400 mt-2">${isEN ? 'Series' : 'Серия'}: ${escapeHtml(seriesTag)}</div>` : ''}
+      <div class="text-[9px] text-gray-600 mt-1">${isEN ? 'Paste in the first comment or in description' : 'Вставь в первый комментарий или в описание'}</div>
     </div>
 
     <!-- Pin Comment (bait for shares) -->
     <div class="glass-panel p-4 relative">
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
-      <div class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider mb-2">📌 Закреплённый комментарий</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider mb-2">📌 ${isEN ? 'Pinned Comment' : 'Закреплённый комментарий'}</div>
       <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(pinComment)}</div>
-      <div class="text-[9px] text-gray-600 mt-2">Закрепи — провоцирует пересылки и сохранения</div>
+      <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Pin this — triggers shares and saves' : 'Закрепи — провоцирует пересылки и сохранения'}</div>
     </div>
 
     <!-- First Comment -->
     <div class="glass-panel p-4 relative">
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',1500)">Копировать</button>
-      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">💬 Первый комментарий</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">💬 ${isEN ? 'First Comment' : 'Первый комментарий'}</div>
       <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(firstComment)}</div>
-      <div class="text-[9px] text-gray-600 mt-2">Напиши сразу после публикации — запускает обсуждение</div>
+      <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Post right after publishing — sparks discussion' : 'Напиши сразу после публикации — запускает обсуждение'}</div>
     </div>
 
     <!-- Share bait tip -->
     <div class="bg-gradient-to-r from-violet-500/8 to-cyan-500/8 rounded-lg p-4 border border-violet-500/15">
-      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">🚀 Порядок публикации в Instagram</div>
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">🚀 ${isEN ? 'Instagram Publishing Order' : 'Порядок публикации в Instagram'}</div>
       <div class="text-xs text-gray-300 leading-relaxed space-y-1.5">
+        ${isEN ? `
+        <div>1. <span class="text-amber-300 font-medium">Title</span> → paste as Reels caption. Title only, no hashtags!</div>
+        <div>2. <span class="text-gray-200 font-medium">Publish</span> your Reel</div>
+        <div>3. <span class="text-cyan-300 font-medium">Hashtags</span> → post as FIRST comment (IG doesn't throttle reach)</div>
+        <div>4. <span class="text-emerald-300 font-medium">Pin</span> → write a second comment and pin it (triggers "send to a friend")</div>
+        <div>5. <span class="text-violet-300 font-medium">First comment</span> → post third comment 1-2 min later (sparks discussion)</div>
+        ` : `
         <div>1. <span class="text-amber-300 font-medium">Заголовок</span> → вставь в описание Reels (caption). Только заголовок, без хештегов!</div>
         <div>2. <span class="text-gray-200 font-medium">Опубликуй</span> Reels</div>
         <div>3. <span class="text-cyan-300 font-medium">Хештеги</span> → напиши ПЕРВЫЙ комментарий с хештегами (IG не режет охват)</div>
         <div>4. <span class="text-emerald-300 font-medium">Закреп</span> → напиши второй коммент и закрепи его (провоцирует «отправь подруге»)</div>
         <div>5. <span class="text-violet-300 font-medium">Первый коммент</span> → напиши третий коммент через 1-2 мин (запускает обсуждение)</div>
+        `}
       </div>
-      <div class="text-[9px] text-gray-500 mt-3">Серия: ${charA.name_ru || 'A'} × ${charB.name_ru || 'B'} — используй один серийный тег на все видео этой пары</div>
+      <div class="text-[9px] text-gray-500 mt-3">${isEN ? 'Series' : 'Серия'}: ${charA.name_ru || 'A'} × ${charB.name_ru || 'B'} — ${isEN ? 'use one series tag for all videos of this pair' : 'используй один серийный тег на все видео этой пары'}</div>
     </div>
   `;
 }
@@ -3208,7 +3219,9 @@ function initTranslate() {
           pin_comment: engage.pin_comment || '',
           first_comment: engage.first_comment || '',
           hashtags: engage.hashtags || [],
+          series_tag: engage.series_tag || '',
           veo_prompt: result.veo_prompt || '',
+          ru_package: result.ru_package || '',
         }),
       });
 
@@ -3253,16 +3266,22 @@ function initTranslate() {
       }
 
       // Update insta tab with English content
-      if (en.viral_title_en || en.share_bait_en) {
-        // Store English engagement data and re-render insta tab
-        result.log = result.log || {};
-        result.log.engagement = result.log.engagement || {};
-        result.log.engagement.viral_title = en.viral_title_en || engage.viral_title;
-        result.log.engagement.share_bait = en.share_bait_en || engage.share_bait;
-        result.log.engagement.pin_comment = en.pin_comment_en || engage.pin_comment;
-        result.log.engagement.first_comment = en.first_comment_en || engage.first_comment;
-        result.log.engagement.hashtags = en.hashtags_en || engage.hashtags;
-        populateInstaTab(result);
+      result.log = result.log || {};
+      result.log.engagement = result.log.engagement || {};
+      if (en.viral_title_en) result.log.engagement.viral_title = en.viral_title_en;
+      if (en.share_bait_en) result.log.engagement.share_bait = en.share_bait_en;
+      if (en.pin_comment_en) result.log.engagement.pin_comment = en.pin_comment_en;
+      if (en.first_comment_en) result.log.engagement.first_comment = en.first_comment_en;
+      if (en.hashtags_en) result.log.engagement.hashtags = en.hashtags_en;
+      if (en.series_tag_en) result.log.engagement.series_tag = en.series_tag_en;
+      // Mark English mode and re-render insta tab with English labels
+      result._isEnglish = true;
+      populateInstaTab(result);
+
+      // Update ru_package tab (now English)
+      if (en.ru_package_en) {
+        result.ru_package = en.ru_package_en;
+        document.querySelector('#tab-ru pre').textContent = en.ru_package_en;
       }
 
       // Update dialogue editor inputs
@@ -3271,9 +3290,13 @@ function initTranslate() {
       if (edA && en.dialogue_A_en) edA.value = en.dialogue_A_en;
       if (edB && en.dialogue_B_en) edB.value = en.dialogue_B_en;
 
+      // Switch tab label from 🇷🇺 to 🇬🇧
+      const ruTabBtn = document.querySelector('#gen-results .mode-btn[data-tab="ru"]');
+      if (ruTabBtn) ruTabBtn.textContent = '🇬🇧 Post';
+
       btn.innerHTML = '✅ English готово!';
       log('OK', 'TRANSLATE', `Адаптация на English: A="${en.dialogue_A_en?.slice(0, 40)}..." B="${en.dialogue_B_en?.slice(0, 40)}..."`);
-      showNotification('🇬🇧 Контент адаптирован на английский! Все поля обновлены.', 'success');
+      showNotification('🇬🇧 Весь контент адаптирован на английский — диалог, инста-пакет, хештеги, описание!', 'success');
 
       setTimeout(() => { btn.innerHTML = '🇬🇧 Адаптация на English'; btn.disabled = false; }, 3000);
 
