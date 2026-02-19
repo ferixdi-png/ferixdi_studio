@@ -36,12 +36,13 @@
     },
     "identity_anchors": {
       "type": "object",
-      "description": "Якоря стабильности для Veo — предотвращают перерисовку между генерациями",
+      "description": "Якоря стабильности для Veo — предотвращают перерисовку между генерациями. ВСЕ поля ОБЯЗАТЕЛЬНЫ для повторяемости.",
+      "required": ["face_silhouette", "signature_element", "micro_gesture", "wardrobe_anchor"],
       "properties": {
-        "face_silhouette": { "type": "string", "description": "Отличимый силуэт лица (подбородок/скулы/нос/брови)" },
-        "signature_element": { "type": "string", "description": "Один заметный элемент (серьги/платок/кепка/очки)" },
-        "micro_gesture": { "type": "string", "description": "Повторяемый микрожест (lip bite / усмешка / бровь)" },
-        "wardrobe_anchor": { "type": "string", "description": "Якорный элемент одежды (текстура/стиль)" }
+        "face_silhouette": { "type": "string", "minLength": 20, "description": "Отличимый силуэт лица (подбородок/скулы/нос/брови) — EN, 20+ символов" },
+        "signature_element": { "type": "string", "minLength": 10, "description": "1-2 заметных элемента (серьги/платок/кепка/очки/тату)" },
+        "micro_gesture": { "type": "string", "minLength": 15, "description": "Повторяемый микрожест при речи (lip bite / усмешка / бровь)" },
+        "wardrobe_anchor": { "type": "string", "minLength": 30, "description": "Полное описание одежды: материал + цвет + состояние + аксессуары" }
       }
     },
     "vibe_archetype": {
@@ -54,11 +55,18 @@
     },
     "biology_override": {
       "type": "object",
-      "description": "Переопределение биологических параметров из golden_standard",
+      "description": "Биологические параметры для ТОЧНОЙ повторяемости в Veo. ВСЕ поля ОБЯЗАТЕЛЬНЫ.",
+      "required": ["age", "skin_tokens", "eye_tokens"],
       "properties": {
-        "age": { "type": "string" },
-        "skin_tokens": { "type": "array", "items": { "type": "string" } },
-        "eye_tokens": { "type": "array", "items": { "type": "string" } }
+        "age": { "type": "string", "description": "Точный возраст персонажа" },
+        "skin_tokens": { "type": "array", "items": { "type": "string" }, "minItems": 2, "description": "2+ токена кожи EN: текстура, цвет, дефекты (wrinkles, age spots, ruddy)" },
+        "eye_tokens": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "1+ токен глаз EN: цвет + характер (piercing pale blue, tired brown)" },
+        "hair_tokens": { "type": "array", "items": { "type": "string" }, "description": "Токены волос EN: цвет, текстура, стиль (wispy grey with lilac tint)" },
+        "nose_tokens": { "type": "array", "items": { "type": "string" }, "description": "Токены носа EN: форма, дефекты (bulbous red-veined, crooked from break)" },
+        "mouth_tokens": { "type": "array", "items": { "type": "string" }, "description": "Токены рта EN: губы, зубы, особенности (thin lips, gold crown left)" },
+        "hands_tokens": { "type": "array", "items": { "type": "string" }, "description": "Токены рук EN: текстура, мозоли, кольца (gnarled roots, sawdust under nails)" },
+        "posture_tokens": { "type": "array", "items": { "type": "string" }, "description": "Токены осанки EN: (straight military bearing, hunched from gaming)" },
+        "height_build": { "type": "string", "description": "Рост и телосложение EN: (tall wiry, short stocky, petite curvy)" }
       }
     }
   }

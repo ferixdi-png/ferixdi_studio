@@ -4237,6 +4237,7 @@ function initConsultation() {
       if (loc) context.location = loc.name_ru || loc.scene_en;
     }
     if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'По видео' }[state.generationMode] || state.generationMode;
+    context.hasPromo = isPromoValid();
 
     try {
       const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
