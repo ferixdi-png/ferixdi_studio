@@ -53,6 +53,21 @@
       "type": "string",
       "description": "Эстетика мира персонажа (VIP-деревня / городской гранж / офис)"
     },
+    "speech_identity": {
+      "type": "object",
+      "description": "Речевая идентичность — 9 параметров для ТОЧНОЙ повторяемости стиля речи. Gemini ОБЯЗАН писать реплики в этом стиле.",
+      "properties": {
+        "vocabulary_level": { "type": "string", "description": "Уровень лексики: простой бытовой / с профессиональными вставками / богатый литературный" },
+        "sentence_structure": { "type": "string", "description": "Структура предложений: короткие рубленые / длинные тягучие / смешанные с перескоками" },
+        "filler_words": { "type": "array", "items": { "type": "string" }, "description": "Слова-паразиты: это ж, ну, типа, значит, вот" },
+        "reaction_sounds": { "type": "array", "items": { "type": "string" }, "description": "Реакционные звуки: ой, ах, тьфу, хм, ну-ну, батюшки" },
+        "emphasis_pattern": { "type": "string", "description": "Как акцентирует: повтор слова / пауза перед ударным / нарастающая громкость" },
+        "question_style": { "type": "string", "description": "Стиль вопросов: риторические обвинительные / утвердительные с подтекстом / саркастические" },
+        "interruption_style": { "type": "string", "description": "Стиль перебивания: врывается не дослушав / ждёт и бьёт одной фразой / никогда не перебивает" },
+        "dialect_markers": { "type": "string", "description": "Диалектные маркеры: деревенские сокращения / старорусские обороты / молодёжный сленг / нет" },
+        "emotional_escalation": { "type": "string", "description": "Скорость эскалации: мгновенная 0-100 / медленная копит и бьёт / ледяная понижает голос" }
+      }
+    },
     "biology_override": {
       "type": "object",
       "description": "Биологические параметры для ТОЧНОЙ повторяемости в Veo. ВСЕ поля ОБЯЗАТЕЛЬНЫ.",
