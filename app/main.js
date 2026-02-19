@@ -4934,36 +4934,195 @@ function initSeries() {
   renderSeriesList();
 }
 
-// ─── SURPRISE BUTTON (full random) ───────
+// ─── VIRAL SURPRISE PRESETS ──────────────────
+// 60 proven viral formulas — each guarantees a funny, logical, trending video
+const VIRAL_SURPRISE_PRESETS = [
+  // ── AI и технологии (2025-2026 mega-trend) ──
+  { topic: 'ChatGPT написал за внука сочинение, а бабка нашла и решила что внук гений', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['chaotic','meme'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Дед скачал нейросеть и теперь генерирует себе невесту из молодости', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme','chaotic'] }, loc: ['living_room','kitchen'], cat: 'AI и технологии' },
+  { topic: 'Бабка узнала что Алиса в Яндексе это не соседка а робот', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Мама нашла в телефоне дочки приложение для старения лица и увидела себя', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Дед попросил Siri позвонить жене а та набрала бывшую', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme'] }, loc: ['kitchen','car'], cat: 'AI и технологии' },
+  { topic: 'Нейросеть сгенерировала портрет по описанию бабки и получился кот', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme','chaotic'] }, loc: ['living_room'], cat: 'AI и технологии' },
+
+  // ── Цены и инфляция (вечнозелёная боль) ──
+  { topic: 'Сыр за 800 рублей и бабка торгуется с кассиром как на базаре', pair: { groupA: ['babki'], groupB: ['prodavtsy','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['shop','market'], cat: 'Цены и инфляция' },
+  { topic: 'Дед увидел чек из Пятёрочки и думает что это ипотека', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['kitchen','shop'], cat: 'Цены и инфляция' },
+  { topic: 'Мама купила авокадо за 300 рублей а свекровь чуть не упала', pair: { groupA: ['mamy'], groupB: ['babki'], compatA: ['conflict'] }, loc: ['kitchen'], cat: 'Цены и инфляция' },
+  { topic: 'Бабка сравнивает цены 1990 и 2026 и каждый раз охает громче', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['chaotic','meme'] }, loc: ['kitchen','shop'], cat: 'Цены и инфляция' },
+  { topic: 'Парень заказал кофе за 600 рублей а дед рассказал сколько стоила машина', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['conflict','meme'] }, loc: ['cafe'], cat: 'Цены и инфляция' },
+  { topic: 'Бабка увидела цену на огурцы зимой и решила что это цена за килограмм золота', pair: { groupA: ['babki'], groupB: ['prodavtsy'], compatA: ['chaotic'] }, loc: ['shop','market'], cat: 'Цены и инфляция' },
+
+  // ── Разрыв поколений (viral gold) ──
+  { topic: 'Внучка показала бабке свой макияж а та решила что она больна', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['bathroom','living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Дед увидел рваные джинсы за 15 тысяч и предложил зашить бесплатно', pair: { groupA: ['dedy'], groupB: ['parni','devushki'], compatA: ['meme'] }, loc: ['living_room','shop'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка пытается понять почему внук зарабатывает в телефоне больше чем она на заводе', pair: { groupA: ['babki'], groupB: ['parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Мама узнала что дочка встречается с парнем из другого города через интернет', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['conflict'] }, loc: ['kitchen','living_room'], cat: 'Разрыв поколений' },
+  { topic: 'Дед учит внука чинить кран а тот гуглит видео на ютубе', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['conflict','meme'] }, loc: ['bathroom','kitchen'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка увидела что внучка заказывает еду на дом и устроила лекцию про лень', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic'] }, loc: ['kitchen'], cat: 'Разрыв поколений' },
+
+  // ── Бытовой абсурд (universal viral) ──
+  { topic: 'Кто последний брал пульт от телевизора — расследование на кухне', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','conflict'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка нашла чужой носок в стиралке и начала расследование', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic','meme'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Дед сломал кран пытаясь починить и теперь обвиняет кран', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['bathroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Кот разбил вазу а каждый обвиняет другого что не уследил', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['conflict'] }, loc: ['living_room','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Муж купил не тот хлеб и жена реагирует как на предательство', pair: { groupA: ['mamy','zheny'], groupB: ['dedy','parni'], compatA: ['chaotic','conflict'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка пересолила суп и обвиняет соль что она стала солонее', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['meme','chaotic'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+
+  // ── Здоровье и поликлиника ──
+  { topic: 'Бабка лечится народными средствами и учит врача как правильно', pair: { groupA: ['babki'], groupB: ['doktory','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['clinic','kitchen'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Дед прочитал в интернете диагноз и решил что ему осталось три дня', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme'] }, loc: ['living_room','clinic'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Мама нашла у сына витамины и думает что это наркотики', pair: { groupA: ['mamy'], groupB: ['parni'], compatA: ['chaotic','conflict'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Бабка в аптеке спорит с провизором что подорожник лучше любого лекарства', pair: { groupA: ['babki'], groupB: ['prodavtsy','doktory'], compatA: ['chaotic'] }, loc: ['clinic','shop'], cat: 'Здоровье и поликлиника' },
+  { topic: 'Дед отказывается идти к врачу потому что в 45 лет не ходил и жив', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['conflict','meme'] }, loc: ['kitchen','living_room'], cat: 'Здоровье и поликлиника' },
+
+  // ── ЖКХ и коммуналка ──
+  { topic: 'Пришла квитанция за отопление в мае и бабка идёт воевать с управляющей', pair: { groupA: ['babki'], groupB: ['sosedi','chinovniki'], compatA: ['chaotic','conflict'] }, loc: ['stairwell','kitchen'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Сосед сверху затопил и оба обвиняют трубы', pair: { groupA: ['dedy','babki'], groupB: ['sosedi'], compatA: ['conflict','chaotic'] }, loc: ['stairwell','bathroom'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Бабка считает показания счётчика и обнаруживает что воды налили на бассейн', pair: { groupA: ['babki'], groupB: ['dedy'], compatA: ['chaotic','meme'] }, loc: ['kitchen','bathroom'], cat: 'ЖКХ и коммуналка' },
+  { topic: 'Дед vs домофон: третий день не может запомнить код', pair: { groupA: ['dedy'], groupB: ['sosedi','parni'], compatA: ['meme'] }, loc: ['stairwell','yard'], cat: 'ЖКХ и коммуналка' },
+
+  // ── Дача и огород ──
+  { topic: 'Бабка хвастается урожаем а соседка говорит что у неё помидоры больше', pair: { groupA: ['babki'], groupB: ['sosedi','babki'], compatA: ['conflict','meme'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
+  { topic: 'Дед построил теплицу из окон от старых рам и считает себя архитектором', pair: { groupA: ['dedy'], groupB: ['babki'], compatA: ['meme','chaotic'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
+  { topic: 'Кто-то украл кабачки с грядки и бабка ведёт допрос всех соседей', pair: { groupA: ['babki'], groupB: ['sosedi','dedy'], compatA: ['chaotic','conflict'] }, loc: ['dacha','yard'], cat: 'Дача и огород' },
+  { topic: 'Внучка приехала на дачу в белом платье и бабка отправила её полоть', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['chaotic','meme'] }, loc: ['dacha'], cat: 'Дача и огород' },
+
+  // ── Соцсети и тренды ──
+  { topic: 'Бабка случайно записала рилс и набрала миллион просмотров', pair: { groupA: ['babki'], groupB: ['devushki','parni'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+  { topic: 'Дед завёл тикток и выкладывает обзоры на борщ', pair: { groupA: ['dedy'], groupB: ['babki','parni'], compatA: ['meme','chaotic'] }, loc: ['kitchen'], cat: 'Соцсети и тренды' },
+  { topic: 'Мама увидела фото дочки в инстаграме и не узнала из-за фильтров', pair: { groupA: ['mamy'], groupB: ['devushki'], compatA: ['chaotic','conflict'] }, loc: ['living_room','kitchen'], cat: 'Соцсети и тренды' },
+  { topic: 'Бабка подписалась на все рассылки и думает что выиграла айфон', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+  { topic: 'Парень объясняет бабке что такое донат а она думает это еда', pair: { groupA: ['parni'], groupB: ['babki'], compatA: ['meme'] }, loc: ['kitchen','living_room'], cat: 'Соцсети и тренды' },
+
+  // ── Отношения (вечная тема) ──
+  { topic: 'Жена нашла в телефоне мужа лайк на фото коллеги', pair: { groupA: ['mamy','zheny'], groupB: ['dedy','parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','bedroom'], cat: 'Отношения' },
+  { topic: 'Бабка учит внучку как правильно выбирать мужа по рукам', pair: { groupA: ['babki'], groupB: ['devushki'], compatA: ['meme','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
+  { topic: 'Дед даёт совет внуку по отношениям а бабка комментирует из-за угла', pair: { groupA: ['dedy'], groupB: ['parni'], compatA: ['meme'] }, loc: ['kitchen','yard'], cat: 'Отношения' },
+  { topic: 'Мама знакомится с парнем дочки и допрашивает его как на собеседовании', pair: { groupA: ['mamy'], groupB: ['parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
+  { topic: 'Свекровь приехала в гости и сразу полезла проверять холодильник', pair: { groupA: ['babki'], groupB: ['mamy','devushki'], compatA: ['conflict'] }, loc: ['kitchen'], cat: 'Отношения' },
+  { topic: 'Парень подарил девушке пылесос на 8 марта и не понимает в чём проблема', pair: { groupA: ['parni'], groupB: ['devushki','mamy'], compatA: ['meme'] }, loc: ['living_room','kitchen'], cat: 'Отношения' },
+
+  // ── Транспорт и пробки ──
+  { topic: 'Бабка в маршрутке учит водителя как правильно ехать', pair: { groupA: ['babki'], groupB: ['taksisty','sosedi'], compatA: ['chaotic','conflict'] }, loc: ['car','bus_stop'], cat: 'Транспорт и пробки' },
+  { topic: 'Дед vs навигатор: кто из них лучше знает дорогу', pair: { groupA: ['dedy'], groupB: ['babki','mamy'], compatA: ['meme','chaotic'] }, loc: ['car'], cat: 'Транспорт и пробки' },
+  { topic: 'Мама опоздала из-за пробки и обвиняет весь город', pair: { groupA: ['mamy'], groupB: ['parni','dedy'], compatA: ['chaotic'] }, loc: ['car','kitchen'], cat: 'Транспорт и пробки' },
+
+  // ── МЕГА-ВИРУСНЫЕ (универсальные хиты) ──
+  { topic: 'Спор кто лучше готовит — и оба блюда сгорели пока спорили', pair: { groupA: ['babki','mamy'], groupB: ['dedy','parni'], compatA: ['chaotic','meme','conflict'] }, loc: ['kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Бабка нашла в интернете свой возраст дожития и устроила сцену', pair: { groupA: ['babki'], groupB: ['dedy','parni'], compatA: ['chaotic','meme'] }, loc: ['kitchen','living_room'], cat: 'AI и технологии' },
+  { topic: 'Кто из них храпит ночью — оба отрицают при наличии записи на телефоне', pair: { groupA: ['dedy','babki'], groupB: ['babki','dedy'], compatA: ['meme','conflict'] }, loc: ['bedroom','kitchen'], cat: 'Бытовой абсурд' },
+  { topic: 'Мама пришла помочь молодожёнам и через час они мечтают чтоб она ушла', pair: { groupA: ['mamy'], groupB: ['devushki','parni'], compatA: ['conflict','chaotic'] }, loc: ['kitchen','living_room'], cat: 'Отношения' },
+  { topic: 'Дед объясняет внучке что в его время развлечение было выйти на улицу', pair: { groupA: ['dedy'], groupB: ['devushki'], compatA: ['meme'] }, loc: ['living_room','yard'], cat: 'Разрыв поколений' },
+  { topic: 'Бабка увидела сколько стоит подписка на кинотеатр и предложила свой видеомагнитофон', pair: { groupA: ['babki'], groupB: ['parni','devushki'], compatA: ['meme','chaotic'] }, loc: ['living_room'], cat: 'Цены и инфляция' },
+];
+
+// ─── SMART PAIR MATCHING FOR SURPRISE ────────
+function pickSmartPairForPreset(preset, chars) {
+  if (!chars?.length || chars.length < 2) return null;
+  const p = preset.pair;
+
+  // Build pool A: match group AND compatibility
+  const isGroupMatchA = (c) => !p.groupA?.length || p.groupA.some(g => (c.group || '').toLowerCase().includes(g));
+  const isCompatMatchA = (c) => !p.compatA?.length || p.compatA.includes(c.compatibility);
+  let poolA = chars.filter(c => isGroupMatchA(c) && isCompatMatchA(c));
+  if (!poolA.length) poolA = chars.filter(c => isGroupMatchA(c));
+  if (!poolA.length) poolA = chars.filter(c => isCompatMatchA(c));
+  if (!poolA.length) poolA = [...chars];
+
+  const charA = poolA[Math.floor(Math.random() * poolA.length)];
+
+  // Build pool B: match group, DIFFERENT from A, prefer DIFFERENT group for contrast
+  const isGroupMatchB = (c) => !p.groupB?.length || p.groupB.some(g => (c.group || '').toLowerCase().includes(g));
+  let poolB = chars.filter(c => c.id !== charA.id && isGroupMatchB(c));
+  // Prefer different group for comic contrast
+  const diffGroup = poolB.filter(c => c.group !== charA.group);
+  if (diffGroup.length >= 3) poolB = diffGroup;
+  if (!poolB.length) poolB = chars.filter(c => c.id !== charA.id);
+
+  // Prefer contrasting compatibility for maximum comedy
+  const contrastPairs = { chaotic: 'calm', calm: 'chaotic', conflict: 'meme', meme: 'conflict' };
+  const idealCompat = contrastPairs[charA.compatibility];
+  if (idealCompat) {
+    const contrast = poolB.filter(c => c.compatibility === idealCompat);
+    if (contrast.length >= 2) poolB = contrast;
+  }
+
+  const charB = poolB[Math.floor(Math.random() * poolB.length)];
+  return charA && charB ? { A: charA, B: charB } : null;
+}
+
+// ─── SMART LOCATION MATCHING FOR SURPRISE ────
+function pickSmartLocationForPreset(preset, locations) {
+  if (!locations?.length) return null;
+  const hints = preset.loc || [];
+  if (!hints.length) return locations[Math.floor(Math.random() * locations.length)];
+
+  // Try to find location matching any hint keyword
+  let matches = locations.filter(l => {
+    const lid = (l.id || '').toLowerCase();
+    const lname = (l.name_ru || '').toLowerCase();
+    const lscene = (l.scene_en || '').toLowerCase();
+    return hints.some(h => lid.includes(h) || lname.includes(h) || lscene.includes(h));
+  });
+  if (matches.length) return matches[Math.floor(Math.random() * matches.length)];
+
+  // Fallback: any indoor location for indoor presets, outdoor for outdoor
+  const isOutdoorPreset = hints.some(h => ['dacha','yard','park','street','bus_stop','market'].includes(h));
+  const filtered = locations.filter(l => {
+    const scene = (l.scene_en || '').toLowerCase();
+    return isOutdoorPreset ? scene.includes('outdoor') || scene.includes('yard') || scene.includes('garden') : !scene.includes('outdoor');
+  });
+  return (filtered.length ? filtered : locations)[Math.floor(Math.random() * (filtered.length || locations.length))];
+}
+
+// ─── SURPRISE BUTTON (viral presets) ─────────
 function initSurprise() {
   document.getElementById('btn-surprise')?.addEventListener('click', () => {
     if (!isPromoValid()) { showNotification('🔑 Нужен промо-код для генерации', 'error'); navigateTo('settings'); return; }
 
-    // Random pair
-    autoSelectRandomPair();
+    const chars = state.characters;
+    if (!chars || chars.length < 2) { showNotification('⚠️ Персонажи не загружены', 'error'); return; }
 
-    // Random location
-    if (state.locations?.length) {
-      const loc = state.locations[Math.floor(Math.random() * state.locations.length)];
-      state.selectedLocation = loc.id;
-      updateLocationInfo?.();
+    // Pick a random viral preset
+    const preset = VIRAL_SURPRISE_PRESETS[Math.floor(Math.random() * VIRAL_SURPRISE_PRESETS.length)];
+
+    // Smart pair selection based on preset requirements
+    const pair = pickSmartPairForPreset(preset, chars);
+    if (pair) {
+      selectChar('A', pair.A.id);
+      selectChar('B', pair.B.id);
+    } else {
+      autoSelectRandomPair();
     }
 
-    // Random mode — use 'suggested' which allows empty topic (AI picks topic itself)
+    // Smart location selection
+    if (state.locations?.length) {
+      const loc = pickSmartLocationForPreset(preset, state.locations);
+      if (loc) {
+        state.selectedLocation = loc.id;
+        updateLocationInfo?.();
+      }
+    }
+
+    // Set mode to 'suggested' with the viral topic pre-filled
     state.generationMode = 'suggested';
     state.inputMode = 'suggested';
     selectGenerationMode?.('suggested');
 
-    // Clear idea inputs — AI will pick topic itself
+    // Fill topic into the idea input — this is the key difference from old random
     const ideaInput = document.getElementById('idea-input');
-    if (ideaInput) ideaInput.value = '';
+    if (ideaInput) ideaInput.value = preset.topic;
     const ideaInputSuggested = document.getElementById('idea-input-suggested');
-    if (ideaInputSuggested) ideaInputSuggested.value = '';
+    if (ideaInputSuggested) ideaInputSuggested.value = preset.topic;
 
     navigateTo('generate');
     updateReadiness?.();
-    showNotification('🎲 Сюрприз! Всё выбрано случайно — жми "Создать контент"', 'success');
-    log('OK', 'SURPRISE', `Рандом: ${state.selectedA} × ${state.selectedB}, loc: ${state.selectedLocation}`);
+
+    const nameA = pair?.A?.name_ru || state.selectedA?.name_ru || '?';
+    const nameB = pair?.B?.name_ru || state.selectedB?.name_ru || '?';
+    showNotification(`🎯 Вирусный сюрприз! ${nameA} × ${nameB}: "${preset.topic.slice(0, 60)}..."`, 'success');
+    log('OK', 'VIRAL_SURPRISE', `Пресет: "${preset.topic}" | ${nameA} × ${nameB} | Кат: ${preset.cat}`);
   });
 }
 
