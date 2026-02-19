@@ -35,7 +35,18 @@
    "wardrobe_anchor": "emerald silk blouse with mother-of-pearl buttons, velvet collar, always tucked into high-waist wool skirt"
   },
   "vibe_archetype": "скандальный бухгалтер — всё подсчитала, всех раскусила",
-  "world_aesthetic": "VIP-деревенский уют"
+  "world_aesthetic": "VIP-деревенский уют",
+  "biology_override": {
+   "age": "88",
+   "height_build": "thin wiry frame, bony shoulders",
+   "skin_tokens": ["deep wrinkles mapping decades", "age spots on temples and hands", "sagging jowls", "papery translucent skin"],
+   "eye_tokens": ["piercing pale blue eyes like faded denim", "deep crow's feet like river delta"],
+   "hair_tokens": ["wispy grey hair with faint lilac tint", "sparse thin strands", "self-dyed at home"],
+   "nose_tokens": ["small upturned nose", "broken capillaries on nose bridge"],
+   "mouth_tokens": ["thin lips pressed in perpetual judgment", "gold dental crown catching light on left side"],
+   "hands_tokens": ["bony veined hands", "age spots", "accountant's precise fingers"],
+   "posture_tokens": ["hunched forward conspiratorial lean", "quick darting movements"]
+  }
  },
  {
   "id": "babka_valya",
@@ -73,7 +84,18 @@
    "wardrobe_anchor": "quilted cotton fufaika vest over thick wool sweater, one button missing, safety pin holding collar"
   },
   "vibe_archetype": "деревенский судья — молчит, но каждое слово как приговор",
-  "world_aesthetic": "советская классика"
+  "world_aesthetic": "советская классика",
+  "biology_override": {
+   "age": "91",
+   "height_build": "stocky wide-hipped build, thick forearms",
+   "skin_tokens": ["weathered leathery skin like aged clay", "sun damage spots on forehead", "deep furrows"],
+   "eye_tokens": ["small sharp eyes behind thick folds with wet glint", "heavy drooping lids"],
+   "hair_tokens": ["silver hair hidden under floral headscarf", "tied under chin in knot"],
+   "nose_tokens": ["hawk-like nose with permanently red tip from cold"],
+   "mouth_tokens": ["wide mouth with yellowed teeth", "moist lower lip"],
+   "hands_tokens": ["hands like gnarled tree roots", "thick calloused fingers from decades of farm work"],
+   "posture_tokens": ["immovable seated stance", "arms crossed permanent authority"]
+  }
  },
  {
   "id": "babka_klava",
@@ -111,7 +133,18 @@
    "wardrobe_anchor": "hand-knitted mohair cardigan with reindeer pattern, stretched at elbows, wooden toggle buttons"
   },
   "vibe_archetype": "главнокомандующая — орёт и все подчиняются",
-  "world_aesthetic": "коммунальный реализм"
+  "world_aesthetic": "коммунальный реализм",
+  "biology_override": {
+   "age": "89",
+   "height_build": "short sturdy build, barrel chest",
+   "skin_tokens": ["ruddy flushed cheeks with spider veins", "weathered outdoor skin"],
+   "eye_tokens": ["small fierce brown eyes always darting", "squint lines from commanding"],
+   "hair_tokens": ["reddish-grey hair with henna traces in white", "copper streaks in silver"],
+   "nose_tokens": ["snub nose with wide nostrils flaring when angry"],
+   "mouth_tokens": ["full lips with gap between front teeth", "ruddy lip color"],
+   "hands_tokens": ["strong weathered hands", "commanding finger always jabbing"],
+   "posture_tokens": ["barrel-chested commander stance", "hands on hips or jabbing air"]
+  }
  },
  {
   "id": "babka_lyuda",
@@ -149,7 +182,18 @@
    "wardrobe_anchor": "cream cashmere turtleneck under tweed blazer with elbow patches, cameo brooch at collar"
   },
   "vibe_archetype": "интеллигентный снайпер — тихий голос, убийственная точность",
-  "world_aesthetic": "петербургская интеллигенция"
+  "world_aesthetic": "петербургская интеллигенция",
+  "biology_override": {
+   "age": "92",
+   "height_build": "tall thin frame, remarkably straight posture",
+   "skin_tokens": ["porcelain pale skin with fine web of wrinkles", "translucent quality showing blue veins at temples"],
+   "eye_tokens": ["large grey-blue eyes behind vintage gold-rimmed spectacles", "calm intellectual gaze"],
+   "hair_tokens": ["pure white hair in neat bun at nape of neck", "thin fine strands"],
+   "nose_tokens": ["long thin aristocratic nose", "delicate bone structure"],
+   "mouth_tokens": ["narrow lips slightly pursed", "pearl stud earrings barely visible"],
+   "hands_tokens": ["elegant thin fingers", "teacher's precise gestures", "veined backs of hands"],
+   "posture_tokens": ["straight-backed former teacher posture", "dignified stillness"]
+  }
  },
  {
   "id": "babka_tamara",
@@ -187,7 +231,18 @@
    "wardrobe_anchor": "leopard-print chiffon shawl over black cashmere turtleneck, chunky amber rings on three fingers"
   },
   "vibe_archetype": "театральная дива — каждый жест как из Малого театра",
-  "world_aesthetic": "богемный шик"
+  "world_aesthetic": "богемный шик",
+  "biology_override": {
+   "age": "87",
+   "height_build": "plump dignified build, large presence",
+   "skin_tokens": ["theatrical makeup — kohl-lined eyes and crimson lipstick", "powdered face with visible pores"],
+   "eye_tokens": ["big dark expressive eyes always slightly narrowed", "dramatic kohl liner"],
+   "hair_tokens": ["dyed jet-black hair with deliberate silver streak at temple", "theatrical volume"],
+   "nose_tokens": ["large nose with drawn-on beauty mark above lip"],
+   "mouth_tokens": ["full crimson lips", "double chin held regally high"],
+   "hands_tokens": ["dramatic gesture hands", "chunky amber rings on three fingers"],
+   "posture_tokens": ["theatrical regal bearing", "chin always elevated"]
+  }
  },
  {
   "id": "babka_shura",
@@ -225,7 +280,18 @@
    "wardrobe_anchor": "faux-fur-trimmed burgundy coat, gold rose brooch on lapel, knitted beret tilted rakishly"
   },
   "vibe_archetype": "районная разведка — знает всё обо всех, шепчет громко",
-  "world_aesthetic": "дачный шик"
+  "world_aesthetic": "дачный шик",
+  "biology_override": {
+   "age": "90",
+   "height_build": "rounded plump figure, soft padding",
+   "skin_tokens": ["paper-thin translucent skin showing prominent veins at temples", "age-spotted"],
+   "eye_tokens": ["watery brown eyes with drooping lower lids", "conspiratorial squint"],
+   "hair_tokens": ["thin white hair in tight bun", "faux-ruby hairpin securing it"],
+   "nose_tokens": ["wide flat nose with visible enlarged pores"],
+   "mouth_tokens": ["pursed wrinkled lips with deep smoker lines radiating outward"],
+   "hands_tokens": ["soft pudgy hands", "gold rose brooch fiddling"],
+   "posture_tokens": ["leans in conspiratorially", "jerks back in shock"]
+  }
  },
  {
   "id": "ded_petya",
@@ -263,197 +329,18 @@
    "wardrobe_anchor": "grey wool vest over threadbare white dress shirt, sleeves rolled once, pocket watch chain visible"
   },
   "vibe_archetype": "философ с часами — длинная пауза, потом разрушительный панчлайн",
-  "world_aesthetic": "дачный шик"
- },
- {
-  "id": "ded_kolya",
-  "name_ru": "Дед Коля",
-  "tagline_ru": "Бывший слесарь в рабочем комбинезоне. Циничный юмор и добрые глаза.",
-  "group": "деды",
-  "tags": [
-   "деды",
-   "meme",
-   "normal"
-  ],
-  "appearance_ru": "89 лет, среднего роста, жилистый. Короткая стрижка ёжиком — сам стрижёт машинкой. Загорелое обветренное лицо. Прищуренные добрые карие глаза. Широкий нос, слегка набок — ломали в молодости. Щетина два дня. Руки в вечных мозолях, один палец чуть кривой.",
-  "speech_style_ru": "Спокойный голос, ироничный тон. Не торопится. Вставляет мемные фразы как бы невзначай. Юмор сухой, циничный, но глаза добрые.",
-  "behavior_ru": "Мемный практик — житейская мудрость с ироничной подачей",
-  "speech_pace": "normal",
-  "swear_level": 1,
-  "role_default": "B",
-  "signature_words_ru": [
-   "ну а чё, нормально",
-   "кто так делает-то?",
-   "это, между прочим, факт"
-  ],
-  "prompt_tokens": {
-   "character_en": "89 year old Russian man, wiry medium build, self-cut buzzcut grey hair, tanned weathered face with deep laugh lines, kind squinting brown eyes with permanent outdoor crinkle, wide nose slightly crooked from old break, two-day grey stubble, calloused hands with slightly bent ring finger, ears sticking out slightly, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
-  },
-  "modifiers": {
-   "hook_style": "leans back with arms crossed, slight smirk",
-   "laugh_style": "quiet snort through nose, shaking head"
-  },
-  "compatibility": "meme",
-  "identity_anchors": {
-   "face_silhouette": "rectangular face, prominent ears, permanent squint from sun",
-   "signature_element": "rolled-up sleeves showing sinewy forearms",
-   "micro_gesture": "rubs chin stubble thoughtfully then delivers punchline",
-   "wardrobe_anchor": "denim work overalls over thermal undershirt, oil stain on left knee, leather belt with heavy buckle"
-  },
-  "vibe_archetype": "мастер-на-все-руки — циничный юмор и руки в мозолях",
-  "world_aesthetic": "гаражный реализм"
- },
- {
-  "id": "ded_ivan",
-  "name_ru": "Дед Иван",
-  "tagline_ru": "Бывший военный в свитере с дырками. Сломанный нос и железная логика.",
-  "group": "деды",
-  "tags": [
-   "деды",
-   "conflict",
-   "normal"
-  ],
-  "appearance_ru": "91 год, бочкообразная грудь, толстая шея. Редкие серые пряди на пятнистом черепе. Глубоко изборождённый лоб — три чёткие горизонтальные линии. Мутноватые светлые глаза, но взгляд тяжёлый. Кривой нос — ломали. Серая щетина. Тонкие твёрдые губы.",
-  "speech_style_ru": "Говорит коротко, рублено, как отдаёт приказы. Без эмоций констатирует факты. Когда злится — голос не повышает, а понижает до шёпота.",
-  "behavior_ru": "Конфликтный генерал — давит фактами и авторитетом",
-  "speech_pace": "normal",
-  "swear_level": 1,
-  "role_default": "B",
-  "signature_words_ru": [
-   "это факт",
-   "без вариантов",
-   "разговор окончен"
-  ],
-  "prompt_tokens": {
-   "character_en": "91 year old Russian man, barrel-chested, thick bull neck, sparse grey wisps on liver-spotted scalp, deeply furrowed forehead with three distinct horizontal lines, weathered tan with age spots, rheumy pale grey eyes under heavy lids but piercing stare, thick white eyebrows, crooked nose clearly broken once with bump on bridge, grey stubble, thin firm lips set in permanent line, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
-  },
-  "modifiers": {
-   "hook_style": "stands motionless, arms at sides, stares",
-   "laugh_style": "single grudging exhale through nose — almost a smirk"
-  },
-  "compatibility": "conflict",
-  "identity_anchors": {
-   "face_silhouette": "broad heavy face, broken nose bridge creating asymmetry, deep brow shadow",
-   "signature_element": "faded military tattoo on forearm when sleeves pushed up",
-   "micro_gesture": "single slow eyebrow raise — 'are you done?'",
-   "wardrobe_anchor": "grey wool sweater with moth holes over white undershirt collar showing, leather watch strap on thick wrist"
-  },
-  "vibe_archetype": "отставной генерал — три слова и все по стойке смирно",
-  "world_aesthetic": "военная выправка"
- },
- {
-  "id": "ded_vasya",
-  "name_ru": "Дед Вася",
-  "tagline_ru": "Бывший артист в бордовом пальто. Слова как театральные реплики.",
-  "group": "деды",
-  "tags": [
-   "деды",
-   "meme",
-   "slow"
-  ],
-  "appearance_ru": "90 лет, худой жилистый, сутулится. Полная голова серебряных волос зачёсанных назад — его гордость. Красноватое лицо — разбитые капилляры на носу и щеках. Глубоко посаженные тёмные глаза под тяжёлыми бровями, всё ещё острые. Длинный прямой римский нос. Гладко выбрит, отвислая челюсть, вставные зубы.",
-  "speech_style_ru": "Театральные паузы, жесты оратора. Говорит медленно но ГРОМКО. Обожает начинать с 'Э нет, подожди!'. Каждая фраза — как со сцены.",
-  "behavior_ru": "Мемный артист — каждое слово как реплика из спектакля",
-  "speech_pace": "slow",
-  "swear_level": 2,
-  "role_default": "A",
-  "signature_words_ru": [
-   "э нет, подожди!",
-   "стоп-стоп-стоп",
-   "я те щас объясню на пальцах"
-  ],
-  "prompt_tokens": {
-   "character_en": "90 year old Russian man, lean sinewy build, stooped posture, remarkably full head of silver hair swept back like aging movie star, ruddy complexion with broken capillaries on nose and cheeks, deep-set dark eyes under heavy dramatic brows still sharp and theatrical, long straight Roman nose with visible nose hair, clean-shaven, slack jaw showing visible dentures when speaking, dramatic hand gestures, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
-  },
-  "modifiers": {
-   "hook_style": "aggressive finger point with dramatic lean forward",
-   "laugh_style": "explosive snort-laugh, slaps own thigh"
-  },
-  "compatibility": "meme",
-  "identity_anchors": {
-   "face_silhouette": "dramatic profile, strong Roman nose, swept-back silver mane",
-   "signature_element": "silver hair swept back like aging cinema star",
-   "micro_gesture": "slaps own thigh then extends palm like QED",
-   "wardrobe_anchor": "faux-fur-collared burgundy coat, gold lapel pin shaped like a star, white silk scarf"
-  },
-  "vibe_archetype": "артист на пенсии — каждый жест как последний акт",
-  "world_aesthetic": "богемный шик"
- },
- {
-  "id": "ded_grisha",
-  "name_ru": "Дед Гриша",
-  "tagline_ru": "Инженер-пенсионер в фуфайке. Видит всё, говорит редко — но в яблочко.",
-  "group": "деды",
-  "tags": [
-   "деды",
-   "conflict",
-   "slow"
-  ],
-  "appearance_ru": "92 года, среднего роста, ссохшийся но крепкий. Совершенно лысый, блестящий череп с пигментными пятнами. Впалые щёки, острые скулы. Светло-зелёные глаза — необычно яркие для возраста, взгляд инженера-аналитика. Тонкий нос с горбинкой. Седая бородка-эспаньолка — единственная вольность.",
-  "speech_style_ru": "Молчит и наблюдает. Когда говорит — тихо, точно, с хирургической точностью. Никаких лишних слов. Каждая фраза — диагноз.",
-  "behavior_ru": "Конфликтный аналитик — молчит, потом бьёт точно в болевую точку",
-  "speech_pace": "slow",
-  "swear_level": 2,
-  "role_default": "B",
-  "signature_words_ru": [
-   "а вот тут ты неправа",
-   "давай по фактам",
-   "логика где?"
-  ],
-  "prompt_tokens": {
-   "character_en": "92 year old Russian man, medium height, dried-out but wiry, completely bald shiny skull with age spots, sunken cheeks, sharp cheekbones, unusually bright light green eyes for his age with engineer's analytical stare, thin nose with bump at bridge, neat grey goatee beard neatly trimmed, hollow temples, visible jawbone muscles, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
-  },
-  "modifiers": {
-   "hook_style": "sits perfectly still, only eyes move",
-   "laugh_style": "single quiet 'hm' with minimal smirk"
-  },
-  "compatibility": "conflict",
-  "identity_anchors": {
-   "face_silhouette": "bald skull catching light, sharp cheekbones, goatee creating pointed chin",
-   "signature_element": "neat grey goatee beard",
-   "micro_gesture": "steeples fingers and waits, then delivers verdict",
-   "wardrobe_anchor": "quilted black vest over checked flannel shirt, reading glasses in breast pocket, mechanical pencil behind ear"
-  },
-  "vibe_archetype": "инженер-сканер — видит всё, говорит редко, бьёт точно",
-  "world_aesthetic": "советский НИИ"
- },
- {
-  "id": "ded_senya",
-  "name_ru": "Дед Сеня",
-  "tagline_ru": "Столяр в кожаном фартуке. Ноль мата, ноль эмоций — 100% правды.",
-  "group": "деды",
-  "tags": [
-   "деды",
-   "calm",
-   "slow"
-  ],
-  "appearance_ru": "90 лет, невысокий, кряжистый как пень. Белая борода лопатой — аккуратно подстрижена. Лысина, но густые белые брови. Спокойные тёмно-карие глаза — будто смотрит на тебя из глубины веков. Широкий приплюснутый нос. Большие крепкие руки с опилками под ногтями.",
-  "speech_style_ru": "Говорит очень мало и очень тихо. Абсолютный покой. Ни мата, ни эмоций. Просто констатирует факт — и этого достаточно.",
-  "behavior_ru": "Спокойный мастер — тишина, мудрость и опилки",
-  "speech_pace": "slow",
-  "swear_level": 0,
-  "role_default": "B",
-  "signature_words_ru": [
-   "ну, это понятно",
-   "бывает",
-   "а ты подумай ещё раз"
-  ],
-  "prompt_tokens": {
-   "character_en": "90 year old Russian man, short stocky build like tree stump, neat white spade-shaped beard carefully trimmed, bald top with thick white eyebrows, calm deep brown eyes gazing from profound depth, wide flat nose, large strong hands with sawdust under nails and old scars, ears slightly cauliflowered, permanent sawdust on shoulders, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
-  },
-  "modifiers": {
-   "hook_style": "continues whittling, barely glances up",
-   "laugh_style": "silent smile, eyes crinkling — no sound at all"
-  },
-  "compatibility": "calm",
-  "identity_anchors": {
-   "face_silhouette": "broad face framed by white beard, deep-set calm eyes, flat wide nose",
-   "signature_element": "white spade beard and sawdust on shoulders",
-   "micro_gesture": "pauses, looks down at hands, then delivers truth quietly",
-   "wardrobe_anchor": "brown leather work apron over striped grandfather shirt, sawdust perpetually on shoulders, wooden buttons"
-  },
-  "vibe_archetype": "мастер дзен — тишина, опилки и абсолютная правда",
-  "world_aesthetic": "столярная мастерская"
+  "world_aesthetic": "дачный шик",
+  "biology_override": {
+   "age": "93",
+   "height_build": "gaunt angular frame, prominent Adam's apple",
+   "skin_tokens": ["pale papery skin with visible blood vessels", "sagging skin under chin"],
+   "eye_tokens": ["bright watchful hazel eyes", "crow's feet like river delta"],
+   "hair_tokens": ["bald crown with white fringe of hair", "extraordinarily bushy white eyebrows like awnings"],
+   "nose_tokens": ["bulbous red-veined nose"],
+   "mouth_tokens": ["full white walrus mustache completely hiding upper lip"],
+   "hands_tokens": ["bony liver-spotted hands", "pocket watch always in grip"],
+   "posture_tokens": ["leaned back evaluating stance", "arms crossed philosopher pose"]
+  }
  },
  {
   "id": "mama_lena",
@@ -1515,7 +1402,18 @@
    "wardrobe_anchor": "maroon velvet dress, lace collar, amber pendant, gold rings every finger"
   },
   "vibe_archetype": "золотой рот — улыбка дороже слов",
-  "world_aesthetic": "южный базар"
+  "world_aesthetic": "южный базар",
+  "biology_override": {
+   "age": "86",
+   "height_build": "tiny round build",
+   "skin_tokens": ["round wrinkled baked-apple cheeks", "dark weathered skin"],
+   "eye_tokens": ["tiny shrewd black bead eyes"],
+   "hair_tokens": ["dark henna copper-black hair in high bun with amber pin"],
+   "nose_tokens": ["button nose"],
+   "mouth_tokens": ["FULL MOUTH OF 8 GOLD DENTAL CROWNS flash with every smile"],
+   "hands_tokens": ["three gold rings each hand", "small quick hands"],
+   "posture_tokens": ["energetic tiny frame", "leans forward when laughing"]
+  }
  },
  {
   "id": "babka_nyura",
@@ -1553,7 +1451,18 @@
    "wardrobe_anchor": "black leather vest over striped sailor telnyashka, wide leather bracelet, combat boots"
   },
   "vibe_archetype": "панк-бабка — ёжик, якорь, бунт в крови",
-  "world_aesthetic": "портовый хардкор"
+  "world_aesthetic": "портовый хардкор",
+  "biology_override": {
+   "age": "88",
+   "height_build": "wiry lean frame",
+   "skin_tokens": ["angular face protruding cheekbones", "deep voice lines around mouth"],
+   "eye_tokens": ["strikingly bright GREEN EYES unusual for age"],
+   "hair_tokens": ["ULTRA-SHORT SILVER BUZZCUT like paratrooper"],
+   "nose_tokens": ["thin hooked nose"],
+   "mouth_tokens": ["raspy voice lines around mouth"],
+   "hands_tokens": ["wide leather bracelet", "FADED ANCHOR TATTOO on forearm"],
+   "posture_tokens": ["aggressive forward lean", "cracks knuckles before speaking"]
+  }
  },
  {
   "id": "babka_zoya",
@@ -1591,7 +1500,18 @@
    "wardrobe_anchor": "immaculate white blouse buttoned to neck, grey wool skirt, no jewelry — surgical cleanliness"
   },
   "vibe_archetype": "хирург — каждое слово как скальпель",
-  "world_aesthetic": "больничная стерильность"
+  "world_aesthetic": "больничная стерильность",
+  "biology_override": {
+   "age": "94",
+   "height_build": "tall perfect surgical posture",
+   "skin_tokens": ["elongated face sunken temples", "papery translucent skin"],
+   "eye_tokens": ["ICY GREY EYES scanning like X-ray"],
+   "hair_tokens": ["PURE SNOW-WHITE HAIR to shoulders swept back", "pristine white not grey"],
+   "nose_tokens": ["long thin nose with bridge bump"],
+   "mouth_tokens": ["thin bloodless lips"],
+   "hands_tokens": ["surgeon hands long fingers perfect nails ZERO jewelry"],
+   "posture_tokens": ["surgical stillness", "perfect upright posture"]
+  }
  },
  {
   "id": "babka_raya",
@@ -1629,7 +1549,18 @@
    "wardrobe_anchor": "layered shawls deep purple and gold, ten necklace rows, jingling bracelets, hoop earrings"
   },
   "vibe_archetype": "цыганская королева — звенит, сверкает, пророчит",
-  "world_aesthetic": "мистический базар"
+  "world_aesthetic": "мистический базар",
+  "biology_override": {
+   "age": "85",
+   "height_build": "full regal bearing",
+   "skin_tokens": ["dark weathered skin deep wrinkles"],
+   "eye_tokens": ["ENORMOUS UNBLINKING BLACK EYES piercing hypnotic"],
+   "hair_tokens": ["black grey-streaked hair in thick braid to waist"],
+   "nose_tokens": ["large hooked nose"],
+   "mouth_tokens": ["wide expressive mouth"],
+   "hands_tokens": ["jingling bracelets both wrists", "rings on eight fingers"],
+   "posture_tokens": ["regal seated bearing", "mystic hand gestures"]
+  }
  },
  {
   "id": "babka_faya",
@@ -1667,7 +1598,18 @@
    "wardrobe_anchor": "midnight blue velvet blazer, silk scarf, cameo brooch, pearl earrings, wolf-head cane"
   },
   "vibe_archetype": "аристократка — стучит тростью и все замолкают",
-  "world_aesthetic": "петербургская аристократия"
+  "world_aesthetic": "петербургская аристократия",
+  "biology_override": {
+   "age": "93",
+   "height_build": "thin ballerina posture",
+   "skin_tokens": ["porcelain pale skin with fine wrinkles", "aristocratic translucence"],
+   "eye_tokens": ["pale ICE-BLUE EYES cold as glaciers"],
+   "hair_tokens": ["grey hair perfect French chignon"],
+   "nose_tokens": ["thin straight nose", "aristocratic profile"],
+   "mouth_tokens": ["lips permanently thin line", "cameo brooch at collar"],
+   "hands_tokens": ["elegant cane-holding hand", "pearl studs"],
+   "posture_tokens": ["ballerina posture", "cane taps for punctuation"]
+  }
  },
  {
   "id": "ded_fyodor",
@@ -1700,34 +1642,36 @@
   "compatibility": "calm",
   "identity_anchors": {
    "face_silhouette": "wolf profile, thick silver hair, temple scar, ice-blue predator eyes",
-   "signature_element": "white scar temple to ear + silver wolf hair",
    "micro_gesture": "touches scar absently before speaking truth",
    "wardrobe_anchor": "black cashmere turtleneck, dark wool coat, silver watch — all monochrome"
   },
   "vibe_archetype": "серебряный волк — шрам, тишина, взгляд видит всё",
-  "world_aesthetic": "нуар-минимализм"
+  "world_aesthetic": "нуар-минимализм",
+  "biology_override": {
+   "age": "88",
+   "height_build": "tall wiry predatory posture",
+   "skin_tokens": ["elongated high-cheekbone face", "neat 3-day silver stubble"],
+   "eye_tokens": ["ICE-BLUE EYES of man who figured everything out"],
+   "hair_tokens": ["THICK SILVER HAIR swept back like wolf remarkably full"],
+   "nose_tokens": ["thin nose hollow cheeks"],
+   "mouth_tokens": ["strong jawline", "THIN WHITE SCAR from left temple to ear"],
+   "hands_tokens": ["long predatory fingers", "silver watch on wrist"],
+   "posture_tokens": ["predatory stillness", "slow deliberate head turn"]
+  }
  },
  {
   "id": "ded_boris",
   "name_ru": "Дед Борис",
   "tagline_ru": "Гигант с бородой до груди. Опасный снаружи — плюшевый внутри.",
   "group": "деды",
-  "tags": [
-   "деды",
-   "balanced",
-   "slow"
-  ],
+  "tags": ["деды", "balanced", "slow"],
   "appearance_ru": "87 лет, ОГРОМНЫЙ — 190 см, плечи-шкаф. БЕЛАЯ БОРОДА ДО ГРУДИ — аккуратно расчёсана. Лысина, густые брови. МЯГКИЕ КАРИЕ ГЛАЗА как у медведя — добрые и сонные. Широкий мясистый нос. Улыбка превращает лицо в солнце. Руки-брёвна, но всё делают нежно.",
   "speech_style_ru": "Басом, медленно. Каждое слово как кирпич. Тон добрый. 'Ну-ну-ну, не кипятись' — мантра.",
   "behavior_ru": "Сбалансированный медведь — огромный и добрый",
   "speech_pace": "slow",
   "swear_level": 0,
   "role_default": "B",
-  "signature_words_ru": [
-   "ну-ну-ну",
-   "а чего ты хотел?",
-   "бывает"
-  ],
+  "signature_words_ru": ["ну-ну-ну", "а чего ты хотел?", "бывает"],
   "prompt_tokens": {
    "character_en": "87yo Russian man, MASSIVE 190cm enormously broad shoulders arms like logs yet gentle face, SNOW-WHITE BEARD TO CHEST neatly combed, bald head thick bushy eyebrows, SOFT WARM BROWN EYES like bear after hibernation kind sleepy, wide fleshy nose, when smiling wrinkles transform face into sunshine, enormous gentle hands, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
   },
@@ -1743,29 +1687,32 @@
    "wardrobe_anchor": "enormous brown hand-knit cardigan, white undershirt, massive wool socks, wooden cross on leather cord"
   },
   "vibe_archetype": "добрый гигант — медведь снаружи, плюш внутри",
-  "world_aesthetic": "деревенский тёплый"
+  "world_aesthetic": "деревенский тёплый",
+  "biology_override": {
+   "age": "87",
+   "height_build": "MASSIVE 190cm enormously broad shoulders",
+   "skin_tokens": ["when smiling wrinkles transform face into sunshine"],
+   "eye_tokens": ["SOFT WARM BROWN EYES like bear after hibernation kind sleepy"],
+   "hair_tokens": ["bald head thick bushy eyebrows", "SNOW-WHITE BEARD TO CHEST neatly combed"],
+   "nose_tokens": ["wide fleshy nose"],
+   "mouth_tokens": ["gentle smile in white beard"],
+   "hands_tokens": ["enormous gentle hands", "arms like logs yet gentle"],
+   "posture_tokens": ["massive gentle seated stance", "crosses arms with gentle concern"]
+  }
  },
  {
   "id": "ded_zakhar",
   "name_ru": "Дед Захар",
   "tagline_ru": "Одноглазый морской волк. Повязка, серьга и тысяча баек.",
   "group": "деды",
-  "tags": [
-   "деды",
-   "meme",
-   "normal"
-  ],
+  "tags": ["деды", "meme", "normal"],
   "appearance_ru": "91 год, жилистый. ЧЁРНАЯ ПОВЯЗКА НА ЛЕВОМ ГЛАЗУ — потерял на рыбалке, но каждый раз новая история. Один карий глаз — острый как гарпун. Рваное правое ухо. ЗОЛОТАЯ СЕРЬГА В ЛЕВОМ УХЕ — морское золото. Загорелая кожа-кожа, морщины-узлы. Седая бородка-шкипер. Нет мизинца на левой руке.",
   "speech_style_ru": "Байки как эпос. 'Вот помню, в 73-м...' Привирает на 80%. Но слушать — не оторваться.",
   "behavior_ru": "Мемный морской волк — один глаз, тысяча историй",
   "speech_pace": "normal",
   "swear_level": 2,
   "role_default": "A",
-  "signature_words_ru": [
-   "вот помню, в 73-м...",
-   "ты не поверишь!",
-   "клянусь своим глазом"
-  ],
+  "signature_words_ru": ["вот помню, в 73-м...", "ты не поверишь!", "клянусь своим глазом"],
   "prompt_tokens": {
    "character_en": "91yo Russian man, medium wiry, BLACK EYE PATCH over left eye, one remaining sharp brown eye like harpoon, torn right ear, GOLD EARRING IN LEFT EAR real sea gold, deeply tanned leather skin wrinkles like rope knots, grey skipper beard, missing left pinky finger, weathered sea-worn face, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
   },
@@ -1781,29 +1728,32 @@
    "wardrobe_anchor": "faded navy peacoat, striped telnyashka, captain cap tilted, gold earring"
   },
   "vibe_archetype": "одноглазый морской волк — повязка, серьга, 1000 баек",
-  "world_aesthetic": "портовый романтизм"
+  "world_aesthetic": "портовый романтизм",
+  "biology_override": {
+   "age": "91",
+   "height_build": "medium wiry sea-worn frame",
+   "skin_tokens": ["deeply tanned leather skin wrinkles like rope knots", "weathered sea-worn face"],
+   "eye_tokens": ["one remaining sharp brown eye like harpoon", "BLACK EYE PATCH over left eye"],
+   "hair_tokens": ["grey skipper beard"],
+   "nose_tokens": ["weathered broad nose"],
+   "mouth_tokens": ["torn right ear", "GOLD EARRING IN LEFT EAR"],
+   "hands_tokens": ["sea-roughened hands missing left pinky", "rope-calloused palms"],
+   "posture_tokens": ["sea-rolling stance", "taps eye patch for emphasis"]
+  }
  },
  {
   "id": "ded_matvey",
   "name_ru": "Дед Матвей",
   "tagline_ru": "Щёголь в бабочке и лаковых ботинках. 90 лет элегантности.",
   "group": "деды",
-  "tags": [
-   "деды",
-   "calm",
-   "normal"
-  ],
+  "tags": ["деды", "calm", "normal"],
   "appearance_ru": "90 лет, стройный подтянутый — зарядка каждое утро. ИДЕАЛЬНО УХОЖЕН — гладко выбрит, пахнет одеколоном. Серебряные волосы волосок к волоску. ТОНКИЕ УСИКИ как у Кларка Гейбла — подстригает каждое утро. БАБОЧКА-ГАЛСТУК — всегда, даже дома. Карие глаза с хитринкой. Лаковые ботинки как зеркало.",
   "speech_style_ru": "Элегантно, с иронией. 'Позвольте...' — начало. Цитирует классику. Комплименты дамам — суперсила.",
   "behavior_ru": "Спокойный денди — элегантность как оружие",
   "speech_pace": "normal",
   "swear_level": 0,
   "role_default": "B",
-  "signature_words_ru": [
-   "позвольте...",
-   "как говорил Чехов...",
-   "это моветон"
-  ],
+  "signature_words_ru": ["позвольте...", "как говорил Чехов...", "это моветон"],
   "prompt_tokens": {
    "character_en": "90yo Russian man, slim fit from daily exercise, IMMACULATELY GROOMED clean-shaven smelling of cologne, silver hair styled perfectly, THIN PENCIL MUSTACHE precisely trimmed, BOW TIE always worn even at home burgundy silk today, warm brown eyes mischievous glint, polished PATENT LEATHER SHOES gleaming like mirrors, elegant gestures, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
   },
@@ -1819,29 +1769,32 @@
    "wardrobe_anchor": "three-piece tweed suit, silk bow tie, pocket square, patent leather shoes, silver cufflinks"
   },
   "vibe_archetype": "90-летний денди — бабочка, усики, элегантность",
-  "world_aesthetic": "старомосковский шик"
+  "world_aesthetic": "старомосковский шик",
+  "biology_override": {
+   "age": "90",
+   "height_build": "slim fit from daily exercise",
+   "skin_tokens": ["IMMACULATELY GROOMED clean-shaven", "smelling of cologne"],
+   "eye_tokens": ["warm brown eyes mischievous glint"],
+   "hair_tokens": ["silver hair styled perfectly", "THIN PENCIL MUSTACHE precisely trimmed"],
+   "nose_tokens": ["refined straight nose"],
+   "mouth_tokens": ["pencil mustache hiding upper lip", "elegant smile"],
+   "hands_tokens": ["manicured hands", "silver cufflinks"],
+   "posture_tokens": ["elegant upright posture", "adjusts bow tie habitually"]
+  }
  },
  {
   "id": "ded_stepan",
   "name_ru": "Дед Степан",
   "tagline_ru": "Кузнец с выжженными бровями и руками-кувалдами.",
   "group": "деды",
-  "tags": [
-   "деды",
-   "conflict",
-   "normal"
-  ],
+  "tags": ["деды", "conflict", "normal"],
   "appearance_ru": "89 лет, среднего роста но КВАДРАТНЫЙ — плечи шире дверного проёма. ВЫЖЖЕННЫЕ БРОВИ — почти нет, только пеньки, от кузницы. Красное обветренное лицо, кожа как наждак. Маленькие упрямые серые глаза глубоко под надбровьями. Широченный нос, перебит дважды. РУКИ-КУВАЛДЫ — огромные, в старых ожогах и шрамах. Седой бобрик.",
   "speech_style_ru": "Говорит мало, грубо, по делу. Каждое слово — как удар молота. Не спорит — констатирует. 'Хватит болтать' — и всё.",
   "behavior_ru": "Конфликтный кузнец — молот вместо слов",
   "speech_pace": "normal",
   "swear_level": 2,
   "role_default": "B",
-  "signature_words_ru": [
-   "хватит болтать",
-   "руками надо",
-   "кто так делает?"
-  ],
+  "signature_words_ru": ["хватит болтать", "руками надо", "кто так делает?"],
   "prompt_tokens": {
    "character_en": "89yo Russian man, medium height but SQUARE — shoulders wider than doorframe, SINGED EYEBROWS barely stumps from forge work, red weathered sandpaper skin, small stubborn grey eyes deep under brow ridge, very wide nose broken twice with flat bridge, ENORMOUS HAMMER HANDS covered in old burn scars, grey buzzcut, thick bull neck, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
   },
@@ -1857,29 +1810,32 @@
    "wardrobe_anchor": "leather smithing apron over flannel, burn scars on forearms, work boots steel-toed"
   },
   "vibe_archetype": "кузнец — выжженные брови и кувалды вместо рук",
-  "world_aesthetic": "кузнечная мастерская"
+  "world_aesthetic": "кузнечная мастерская",
+  "biology_override": {
+   "age": "89",
+   "height_build": "medium height but SQUARE shoulders wider than doorframe",
+   "skin_tokens": ["red weathered sandpaper skin", "old burn scars on forearms"],
+   "eye_tokens": ["small stubborn grey eyes deep under brow ridge"],
+   "hair_tokens": ["grey buzzcut", "SINGED EYEBROWS barely stumps from forge work"],
+   "nose_tokens": ["very wide nose broken twice with flat bridge"],
+   "mouth_tokens": ["thick bull neck", "jaw set permanently"],
+   "hands_tokens": ["ENORMOUS HAMMER HANDS covered in old burn scars"],
+   "posture_tokens": ["square immovable stance", "cracks enormous knuckles"]
+  }
  },
  {
   "id": "mama_alyona",
   "name_ru": "Мама Алёна",
   "tagline_ru": "Ледяная блондинка с красной помадой. Улыбается — и ты замерзаешь.",
   "group": "мамы",
-  "tags": [
-   "мамы",
-   "conflict",
-   "slow"
-  ],
+  "tags": ["мамы", "conflict", "slow"],
   "appearance_ru": "51 год, высокая стройная, модельная осанка. ПЛАТИНОВОЕ КАРЕ до подбородка — холодный почти белый блонд. ОСТРЫЕ СКУЛЫ как лезвия. Ледяные серо-голубые глаза — никогда не улыбаются даже когда рот улыбается. Тонкий прямой нос. ЯРКО-КРАСНАЯ ПОМАДА — единственное яркое пятно. Фарфоровая кожа.",
   "speech_style_ru": "Медленно, тихо, с ледяной вежливостью. 'Какая прелесть' — звучит как приговор. Глаза не улыбаются никогда.",
   "behavior_ru": "Конфликтная снежная королева — слова как иглы",
   "speech_pace": "slow",
   "swear_level": 0,
   "role_default": "B",
-  "signature_words_ru": [
-   "какая прелесть",
-   "ну разумеется",
-   "я не расстроена — разочарована"
-  ],
+  "signature_words_ru": ["какая прелесть", "ну разумеется", "я не расстроена — разочарована"],
   "prompt_tokens": {
    "character_en": "51yo Russian woman, tall slim model posture, PLATINUM BLONDE cold-white chin-length bob, RAZOR-SHARP CHEEKBONES like blades, icy grey-blue eyes that NEVER smile even when mouth does, thin straight nose, BOLD RED LIPSTICK only color accent, porcelain translucent skin, minimalist diamond studs, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
   },
@@ -1898,13 +1854,14 @@
   "world_aesthetic": "скандинавский нуар",
   "biology_override": {
    "age": "51",
-   "skin_tokens": [
-    "porcelain translucent skin"
-   ],
-   "eye_tokens": [
-    "icy grey-blue eyes",
-    "never smile"
-   ]
+   "height_build": "tall slim model posture",
+   "skin_tokens": ["porcelain translucent skin", "RAZOR-SHARP CHEEKBONES like blades"],
+   "eye_tokens": ["icy grey-blue eyes that NEVER smile even when mouth does"],
+   "hair_tokens": ["PLATINUM BLONDE cold-white chin-length bob"],
+   "nose_tokens": ["thin straight nose"],
+   "mouth_tokens": ["BOLD RED LIPSTICK only color accent"],
+   "hands_tokens": ["minimalist diamond studs", "elegant pale fingers"],
+   "posture_tokens": ["model posture", "slow deliberate movements"]
   }
  },
  {

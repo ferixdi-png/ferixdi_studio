@@ -175,6 +175,21 @@ app.post('/api/custom/create', authMiddleware, (req, res) => {
     if (!itemData.name_ru || !itemData.appearance_ru) {
       return res.status(400).json({ error: 'name_ru and appearance_ru required for character' });
     }
+    // Validate identity completeness
+    const warnings = [];
+    const ia = itemData.identity_anchors || {};
+    const bo = itemData.biology_override || {};
+    if (!ia.face_silhouette || ia.face_silhouette === 'custom') warnings.push('identity_anchors.face_silhouette');
+    if (!ia.signature_element || ia.signature_element === 'custom') warnings.push('identity_anchors.signature_element');
+    if (!ia.wardrobe_anchor) warnings.push('identity_anchors.wardrobe_anchor');
+    if (!bo.age) warnings.push('biology_override.age');
+    if (!bo.height_build) warnings.push('biology_override.height_build');
+    const bioArrays = ['skin_tokens','eye_tokens','hair_tokens','nose_tokens','mouth_tokens','hands_tokens','posture_tokens'];
+    bioArrays.forEach(f => { if (!Array.isArray(bo[f]) || !bo[f].length || (bo[f].length === 1 && bo[f][0] === 'custom appearance')) warnings.push(`biology_override.${f}`); });
+    if (!itemData.prompt_tokens?.character_en) warnings.push('prompt_tokens.character_en');
+    if (warnings.length > 0) {
+      console.warn(`[CHAR-VALIDATE] ${itemData.name_ru}: ${warnings.length} weak fields: ${warnings.join(', ')}`);
+    }
   } else {
     if (!itemData.name_ru || !itemData.scene_en) {
       return res.status(400).json({ error: 'name_ru and scene_en required for location' });
@@ -334,30 +349,90 @@ ${threadBlock}${taskBlock}
 ${productBlock}
 
 ════════════════════════════════════════════════════════════════
+🔒🔒🔒 CHARACTER IDENTITY LOCK — АБСОЛЮТНАЯ ПОВТОРЯЕМОСТЬ 🔒🔒🔒
+Каждый персонаж ОБЯЗАН выглядеть ИДЕНТИЧНО в КАЖДОМ видео/фото.
+ЭТО НЕ РЕКОМЕНДАЦИЯ — ЭТО КОНТРАКТ. Любое отклонение = БРАК.
+Используй КАЖДЫЙ элемент ниже ДОСЛОВНО в промптах photo_scene_en и video_emotion_arc.
+НЕ ПРИДУМЫВАЙ НОВУЮ ВНЕШНОСТЬ. НЕ МЕНЯЙ ОДЕЖДУ. НЕ МЕНЯЙ ЧЕРТЫ ЛИЦА.
+════════════════════════════════════════════════════════════════
+
 ПЕРСОНАЖ A — ПРОВОКАТОР (говорит первый, начинает конфликт):
+━━━ ПАСПОРТ ИДЕНТИЧНОСТИ A ━━━
 • Имя: ${charA.name_ru}
 • Возраст: ${charA.biology_override?.age || 'elderly'}
-• Внешность: ${charA.appearance_ru || 'elderly Russian character'}
-• Визуал для промпта (EN): ${charA.prompt_tokens?.character_en || '—'}
+• Группа/Архетип: ${charA.group || '—'} / ${charA.vibe_archetype || 'провокатор'}
+• Эстетика мира: ${charA.world_aesthetic || 'универсальная'}
+
+━━━ ЛИЦО A (НЕИЗМЕНЯЕМОЕ — копируй дословно) ━━━
+• Полное визуальное описание (EN): ${charA.prompt_tokens?.character_en || '—'}
+• Силуэт лица: ${charA.identity_anchors?.face_silhouette || '—'}
+• Рост/телосложение: ${charA.biology_override?.height_build || '—'}
+• Кожа: ${(charA.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin with natural imperfections'}
+• Глаза: ${(charA.biology_override?.eye_tokens || []).join(', ') || '—'}
+• Волосы: ${(charA.biology_override?.hair_tokens || []).join(', ') || '—'}
+• Нос: ${(charA.biology_override?.nose_tokens || []).join(', ') || '—'}
+• Рот/зубы: ${(charA.biology_override?.mouth_tokens || []).join(', ') || '—'}
+• Руки: ${(charA.biology_override?.hands_tokens || []).join(', ') || '—'}
+• Осанка/поза: ${(charA.biology_override?.posture_tokens || []).join(', ') || '—'}
+
+━━━ ГАРДЕРОБ A (НЕИЗМЕНЯЕМЫЙ — один и тот же в каждом видео) ━━━
+• Якорный гардероб: ${charA.identity_anchors?.wardrobe_anchor || wardrobeA}
+• Фирменный элемент: ${charA.identity_anchors?.signature_element || '—'}
+
+━━━ ПОВЕДЕНИЕ A (визуальные маркеры речи) ━━━
+• Внешность (RU): ${charA.appearance_ru || 'elderly Russian character'}
 • Стиль речи: ${charA.speech_style_ru || 'expressive'}
 • Темп: ${charA.speech_pace || 'normal'} | Мат: ${charA.swear_level || 0}/3
-• Вайб: ${charA.vibe_archetype || 'провокатор'}
-• Микрожест: ${charA.identity_anchors?.micro_gesture || '—'}
-• Смех: ${charA.modifiers?.laugh_style || 'natural'}
-• Стиль хука: ${charA.modifiers?.hook_style || 'attention grab'}
-• Гардероб: ${wardrobeA}
+• Микрожест (повторяемый): ${charA.identity_anchors?.micro_gesture || '—'}
+• Стиль хука (кадр 0): ${charA.modifiers?.hook_style || 'attention grab'}
+• Стиль смеха: ${charA.modifiers?.laugh_style || 'natural'}
+• Фирменные слова: ${(charA.signature_words_ru || []).join(' / ') || '—'}
 
 ПЕРСОНАЖ B — ПАНЧЛАЙН (отвечает разрушительным ответом):
+━━━ ПАСПОРТ ИДЕНТИЧНОСТИ B ━━━
 • Имя: ${charB.name_ru}
 • Возраст: ${charB.biology_override?.age || 'elderly'}
-• Внешность: ${charB.appearance_ru || 'elderly Russian character'}
-• Визуал для промпта (EN): ${charB.prompt_tokens?.character_en || '—'}
+• Группа/Архетип: ${charB.group || '—'} / ${charB.vibe_archetype || 'база'}
+• Эстетика мира: ${charB.world_aesthetic || 'универсальная'}
+
+━━━ ЛИЦО B (НЕИЗМЕНЯЕМОЕ — копируй дословно) ━━━
+• Полное визуальное описание (EN): ${charB.prompt_tokens?.character_en || '—'}
+• Силуэт лица: ${charB.identity_anchors?.face_silhouette || '—'}
+• Рост/телосложение: ${charB.biology_override?.height_build || '—'}
+• Кожа: ${(charB.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin with natural imperfections'}
+• Глаза: ${(charB.biology_override?.eye_tokens || []).join(', ') || '—'}
+• Волосы: ${(charB.biology_override?.hair_tokens || []).join(', ') || '—'}
+• Нос: ${(charB.biology_override?.nose_tokens || []).join(', ') || '—'}
+• Рот/зубы: ${(charB.biology_override?.mouth_tokens || []).join(', ') || '—'}
+• Руки: ${(charB.biology_override?.hands_tokens || []).join(', ') || '—'}
+• Осанка/поза: ${(charB.biology_override?.posture_tokens || []).join(', ') || '—'}
+
+━━━ ГАРДЕРОБ B (НЕИЗМЕНЯЕМЫЙ — один и тот же в каждом видео) ━━━
+• Якорный гардероб: ${charB.identity_anchors?.wardrobe_anchor || wardrobeB}
+• Фирменный элемент: ${charB.identity_anchors?.signature_element || '—'}
+
+━━━ ПОВЕДЕНИЕ B (визуальные маркеры речи) ━━━
+• Внешность (RU): ${charB.appearance_ru || 'elderly Russian character'}
 • Стиль речи: ${charB.speech_style_ru || 'measured'}
 • Темп: ${charB.speech_pace || 'normal'} | Мат: ${charB.swear_level || 0}/3
-• Вайб: ${charB.vibe_archetype || 'база'}
-• Микрожест: ${charB.identity_anchors?.micro_gesture || '—'}
-• Смех: ${charB.modifiers?.laugh_style || 'quiet chuckle'}
-• Гардероб: ${wardrobeB}
+• Микрожест (повторяемый): ${charB.identity_anchors?.micro_gesture || '—'}
+• Стиль хука (кадр 0): ${charB.modifiers?.hook_style || 'quiet entrance'}
+• Стиль смеха: ${charB.modifiers?.laugh_style || 'quiet chuckle'}
+• Фирменные слова: ${(charB.signature_words_ru || []).join(' / ') || '—'}
+
+════════════════════════════════════════════════════════════════
+🔒 ПРАВИЛА IDENTITY LOCK (нарушение = БРАК):
+1. В photo_scene_en ОБЯЗАТЕЛЬНО включи ДОСЛОВНО character_en описание КАЖДОГО персонажа — НЕ пересказывай, НЕ сокращай, копируй
+2. В photo_scene_en ОБЯЗАТЕЛЬНО включи wardrobe_anchor КАЖДОГО персонажа — ТОЧНАЯ одежда, ТОЧНЫЕ цвета, ТОЧНЫЕ материалы
+3. В photo_scene_en ОБЯЗАТЕЛЬНО включи signature_element КАЖДОГО персонажа — ЭТО то что зритель узнаёт персонажа
+4. В video_emotion_arc при описании действий персонажа используй ЕГО micro_gesture и hook_style — НЕ придумывай новые жесты
+5. ЗАПРЕЩЕНО менять: цвет волос, цвет глаз, форму носа, одежду, аксессуары, татуировки, шрамы, пирсинг
+6. ЗАПРЕЩЕНО: добавлять аксессуары которых нет в описании, убирать аксессуары которые есть, менять стиль одежды
+7. Если у персонажа есть уникальная черта (золотой зуб, повязка на глазу, татуировка, трость) — она ОБЯЗАНА быть в КАЖДОМ кадре
+8. Skin_tokens и eye_tokens — ТОЧНЫЕ цвета и текстуры кожи/глаз, копируй как есть
+9. Face_silhouette — ТОЧНАЯ форма лица, скулы, подбородок, копируй при описании ракурса
+10. Wardrobe НИКОГДА не меняется между эпизодами — это УНИФОРМА персонажа
+════════════════════════════════════════════════════════════════
 
 ════════════════════════════════════════════════════════════════
 СЦЕНА:

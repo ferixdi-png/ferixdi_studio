@@ -5156,6 +5156,33 @@ async function createCustomCharacter() {
   const id = 'custom_' + nameRu.toLowerCase().replace(/[^а-яa-z0-9]/gi, '_').replace(/_+/g, '_') + '_' + Date.now().toString(36);
   const character_en = `${appearance.replace(/\.$/, '')}. ${speech ? speech.replace(/\.$/, '') + '.' : ''} Expressive facial reactions, natural micro-gestures, cinematic realism.`;
 
+  // Auto-extract identity anchors from appearance description
+  const appearanceLower = appearance.toLowerCase();
+  const extractTokens = (keywords) => {
+    const found = [];
+    keywords.forEach(kw => { if (appearanceLower.includes(kw.toLowerCase())) found.push(kw); });
+    return found.length ? found : ['custom appearance'];
+  };
+
+  const autoAnchors = {
+    face_silhouette: appearance.split('.')[0]?.trim() || 'custom face',
+    signature_element: appearance.split('.').find(s => /[А-ЯA-Z]{2,}/.test(s))?.trim() || 'distinctive feature',
+    micro_gesture: 'natural expressive gestures',
+    wardrobe_anchor: appearance.split('.').find(s => /одежд|платье|костюм|рубаш|куртк|свитер|пальто|шляп|очки|серьг|кольц|брасл|цеп|шарф|apron|coat|dress|shirt|jacket/i.test(s))?.trim() || 'casual clothing',
+  };
+
+  const autoBiology = {
+    age: (appearance.match(/(\d{1,3})\s*(лет|год|years?|yo\b)/i) || [])[1] || 'adult',
+    height_build: appearance.split('.').find(s => /рост|высок|низк|худ|полн|строй|крупн|tall|short|slim|large|massive/i.test(s))?.trim() || 'average build',
+    skin_tokens: extractTokens(['морщины', 'кожа', 'загар', 'бледн', 'веснушки', 'wrinkles', 'skin', 'freckles', 'tan', 'pale']),
+    eye_tokens: extractTokens(['глаза', 'взгляд', 'eyes', 'gaze']),
+    hair_tokens: extractTokens(['волосы', 'причёска', 'стрижка', 'борода', 'усы', 'лысин', 'hair', 'beard', 'mustache', 'bald']),
+    nose_tokens: extractTokens(['нос', 'nose']),
+    mouth_tokens: extractTokens(['губы', 'рот', 'зубы', 'улыбк', 'lips', 'mouth', 'teeth', 'smile']),
+    hands_tokens: extractTokens(['руки', 'пальцы', 'кольц', 'браслет', 'hands', 'fingers', 'ring', 'bracelet']),
+    posture_tokens: extractTokens(['осанк', 'поза', 'сутул', 'прям', 'posture', 'stance']),
+  };
+
   const newChar = {
     id,
     name_ru: nameRu,
@@ -5172,7 +5199,8 @@ async function createCustomCharacter() {
     signature_words_ru: [],
     world_aesthetic: 'custom',
     prompt_tokens: { character_en },
-    identity_anchors: { face_silhouette: 'custom', signature_element: 'custom' },
+    identity_anchors: autoAnchors,
+    biology_override: autoBiology,
     modifiers: {},
     _custom: true,
   };
