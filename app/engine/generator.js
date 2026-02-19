@@ -1410,8 +1410,49 @@ export function generate(input) {
   const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar';
   const wardrobeB = charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt';
 
-  // ── Hook & Release ──
-  const hookObj = pickRandom(HOOK_ACTIONS, rng);
+  // ── Hook & Release (character-aware) ──
+  // Character A's hook_style determines the hook action — NOT random
+  const charAHookStyle = (charA.modifiers?.hook_style || '').toLowerCase();
+  let hookObj;
+  if (charAHookStyle) {
+    // Score each HOOK_ACTION by similarity to character's hook_style
+    const scored = HOOK_ACTIONS.map(h => {
+      const words = charAHookStyle.split(/[\s,]+/).filter(w => w.length > 3);
+      const score = words.reduce((s, w) => s + (h.action_en.toLowerCase().includes(w) ? 2 : 0), 0)
+        + (charAHookStyle.includes('finger') && h.action_en.includes('finger') ? 5 : 0)
+        + (charAHookStyle.includes('lean') && h.action_en.includes('lean') ? 5 : 0)
+        + (charAHookStyle.includes('slap') && h.action_en.includes('slap') ? 5 : 0)
+        + (charAHookStyle.includes('clap') && h.action_en.includes('slam') ? 3 : 0)
+        + (charAHookStyle.includes('glasses') && h.action_en.includes('glasses') ? 5 : 0)
+        + (charAHookStyle.includes('phone') && h.action_en.includes('phone') ? 5 : 0)
+        + (charAHookStyle.includes('hands') && h.action_en.includes('hands') ? 3 : 0)
+        + (charAHookStyle.includes('arm') && h.action_en.includes('arm') ? 3 : 0)
+        + (charAHookStyle.includes('grab') && h.action_en.includes('grab') ? 5 : 0)
+        + (charAHookStyle.includes('cross') && h.action_en.includes('cross') ? 3 : 0)
+        + (charAHookStyle.includes('head') && h.action_en.includes('head') ? 3 : 0)
+        + (charAHookStyle.includes('stare') && h.action_en.includes('stare') ? 3 : 0)
+        + (charAHookStyle.includes('eyebrow') && h.action_en.includes('eye') ? 3 : 0)
+        + (charAHookStyle.includes('silence') && h.action_en.includes('shake') ? 3 : 0)
+        + ((charA.compatibility === 'chaotic' && (h.action_en.includes('jab') || h.action_en.includes('slam') || h.action_en.includes('throw'))) ? 2 : 0)
+        + ((charA.compatibility === 'calm' && (h.action_en.includes('lean') || h.action_en.includes('cross') || h.action_en.includes('shake'))) ? 2 : 0);
+      return { hook: h, score };
+    });
+    scored.sort((a, b) => b.score - a.score);
+    // Pick best match, or random if no match
+    hookObj = scored[0].score > 0 ? scored[0].hook : pickRandom(HOOK_ACTIONS, rng);
+  } else {
+    hookObj = pickRandom(HOOK_ACTIONS, rng);
+  }
+  // Merge: override hookObj action with character's hook_style for maximum specificity
+  const mergedHookObj = {
+    action_en: charAHookStyle
+      ? `${charA.modifiers.hook_style} — ${hookObj.action_en}`
+      : hookObj.action_en,
+    action_ru: charAHookStyle
+      ? `${charA.modifiers.hook_style} — ${hookObj.action_ru}`
+      : hookObj.action_ru,
+    audio: hookObj.audio,
+  };
   const releaseObj = pickRandom(RELEASE_ACTIONS, rng);
 
   // ── Serial prop anchor (category-aware + location-compatible + avoid repeats) ──
@@ -1534,8 +1575,8 @@ export function generate(input) {
   // ── Build all blocks ──
   const cast = buildCastContract(charA, charB);
   const cameraPreset = buildCameraPreset();
-  const timingGrid = buildTimingGridV2(hookObj, releaseObj);
-  const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, hookObj, releaseObj, propAnchor);
+  const timingGrid = buildTimingGridV2(mergedHookObj, releaseObj);
+  const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, mergedHookObj, releaseObj, propAnchor);
   const aesthetic = charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют';
 
   // ── Location-specific overrides from catalog ──
@@ -1547,7 +1588,7 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) — the first frame from which the video will begin. This is NOT a random mid-argument shot — this is the PRECISE starting position. ${hookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
+    scene: `Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) — the first frame from which the video will begin. This is NOT a random mid-argument shot — this is the PRECISE starting position. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
     characters: [
       {
@@ -1661,14 +1702,14 @@ export function generate(input) {
       environment_interaction: `Characters naturally inhabit ${location.split(',')[0]}. Ambient environment detail reinforces ${cat.en.toLowerCase()} theme.`,
     },
     emotion_arc: {
-      hook: `tension spike — ${hookObj.action_en}, ${charA.vibe_archetype || 'provocateur'} initiates with signature energy`,
+      hook: `tension spike — ${mergedHookObj.action_en}, ${charA.vibe_archetype || 'provocateur'} initiates with signature energy`,
       act_A: `escalation — ${charA.name_ru} builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${charB.name_ru} simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
       act_B: `reversal — ${charB.name_ru} delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${charA.name_ru}. ${charA.name_ru} freezes mid-gesture.`,
       release: `catharsis — ${releaseObj.action_ru}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`,
     },
     vibe: {
       dynamic: `${charA.name_ru} (A, ${charA.vibe_archetype || 'провокатор'}) → ${charB.name_ru} (B, ${charB.vibe_archetype || 'база'})`,
-      hook: hookObj.action_en,
+      hook: mergedHookObj.action_en,
       conflict: `Comedic tension about ${cat.en.toLowerCase()}${topicRu ? ': ' + topicRu : ''}, no personal insults, rage directed at situation only`,
       punchline: `Killer word "${killerWord}" lands near 7.1s mark, followed by ${releaseObj.action_en}`,
       tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy — physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension — understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull — both characters committed, natural escalation to punchline'}`,
@@ -1735,7 +1776,7 @@ export function generate(input) {
   // ── VEO 3.1 PROMPT (single text for Google Flow) ──
   const veo_prompt = buildVeoPrompt({
     charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
-    hookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
+    hookObj: mergedHookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2: null,
     productInfo: product_info,
   });
@@ -1763,8 +1804,8 @@ export function generate(input) {
 👔 B: ${wardrobeB}
 🪑 Реквизит: ${propAnchor}
 
-[0.00–0.60] 🎣 ХУК: ${hookObj.action_ru}
-  🔊 Звук: ${hookObj.audio}
+[0.00–0.60] 🎣 ХУК: ${mergedHookObj.action_ru}
+  🔊 Звук: ${mergedHookObj.audio}
   🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
 
 [0.60–3.80] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
@@ -1861,7 +1902,7 @@ ${engage.firstComment}
     category: cat,
     lighting: lightingMood,
     scenes: [
-      { id: 1, segment: 'hook', action: hookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${hookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
+      { id: 1, segment: 'hook', action: mergedHookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${mergedHookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
       { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-10 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
       { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-12 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
       { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers?.laugh_style || 'natural laugh'}, shared laugh` },
@@ -1945,7 +1986,7 @@ ${engage.firstComment}
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
       input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
-      propAnchor, lightingMood, hookAction: hookObj, releaseAction: releaseObj,
+      propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
       dialogueA, dialogueB, killerWord,
