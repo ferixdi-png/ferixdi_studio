@@ -184,8 +184,14 @@ app.post('/api/custom/create', authMiddleware, (req, res) => {
     if (!ia.wardrobe_anchor) warnings.push('identity_anchors.wardrobe_anchor');
     if (!bo.age) warnings.push('biology_override.age');
     if (!bo.height_build) warnings.push('biology_override.height_build');
-    const bioArrays = ['skin_tokens','eye_tokens','hair_tokens','nose_tokens','mouth_tokens','hands_tokens','posture_tokens'];
+    if (!bo.facial_expression_default) warnings.push('biology_override.facial_expression_default');
+    const bioArrays = ['skin_tokens','skin_color_tokens','wrinkle_map_tokens','eye_tokens','hair_tokens','facial_hair_tokens','nose_tokens','mouth_tokens','ear_tokens','neck_tokens','body_shape_tokens','hands_tokens','scar_mark_tokens','posture_tokens','gait_tokens','voice_texture_tokens'];
     bioArrays.forEach(f => { if (!Array.isArray(bo[f]) || !bo[f].length || (bo[f].length === 1 && bo[f][0] === 'custom appearance')) warnings.push(`biology_override.${f}`); });
+    if (!ia.accessory_anchors || !ia.accessory_anchors.length) warnings.push('identity_anchors.accessory_anchors');
+    if (!ia.footwear_anchor) warnings.push('identity_anchors.footwear_anchor');
+    if (!ia.color_palette || !ia.color_palette.length) warnings.push('identity_anchors.color_palette');
+    const mod = itemData.modifiers || {};
+    ['anger_expression','thinking_expression','surprise_expression','eye_contact_style'].forEach(f => { if (!mod[f]) warnings.push(`modifiers.${f}`); });
     if (!itemData.prompt_tokens?.character_en) warnings.push('prompt_tokens.character_en');
     if (warnings.length > 0) {
       console.warn(`[CHAR-VALIDATE] ${itemData.name_ru}: ${warnings.length} weak fields: ${warnings.join(', ')}`);
@@ -367,17 +373,31 @@ ${productBlock}
 • Полное визуальное описание (EN): ${charA.prompt_tokens?.character_en || '—'}
 • Силуэт лица: ${charA.identity_anchors?.face_silhouette || '—'}
 • Рост/телосложение: ${charA.biology_override?.height_build || '—'}
-• Кожа: ${(charA.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin with natural imperfections'}
+• Тон кожи: ${(charA.biology_override?.skin_color_tokens || []).join(', ') || 'natural skin tone'}
+• Текстура кожи: ${(charA.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin'}
+• Карта морщин: ${(charA.biology_override?.wrinkle_map_tokens || []).join(', ') || 'age-appropriate'}
 • Глаза: ${(charA.biology_override?.eye_tokens || []).join(', ') || '—'}
 • Волосы: ${(charA.biology_override?.hair_tokens || []).join(', ') || '—'}
+• Растительность на лице: ${(charA.biology_override?.facial_hair_tokens || []).join(', ') || 'none'}
 • Нос: ${(charA.biology_override?.nose_tokens || []).join(', ') || '—'}
 • Рот/зубы: ${(charA.biology_override?.mouth_tokens || []).join(', ') || '—'}
+• Уши: ${(charA.biology_override?.ear_tokens || []).join(', ') || 'natural ears'}
+• Шея: ${(charA.biology_override?.neck_tokens || []).join(', ') || 'age-appropriate neck'}
+• Форма тела: ${(charA.biology_override?.body_shape_tokens || []).join(', ') || '—'}
 • Руки: ${(charA.biology_override?.hands_tokens || []).join(', ') || '—'}
+• Шрамы/родинки/тату: ${(charA.biology_override?.scar_mark_tokens || []).join(', ') || 'none visible'}
 • Осанка/поза: ${(charA.biology_override?.posture_tokens || []).join(', ') || '—'}
+• Походка/движения: ${(charA.biology_override?.gait_tokens || []).join(', ') || 'natural movement'}
+• Лицо в покое: ${charA.biology_override?.facial_expression_default || 'neutral'}
+• Тембр голоса: ${(charA.biology_override?.voice_texture_tokens || []).join(', ') || 'natural voice'}
 
 ━━━ ГАРДЕРОБ A (НЕИЗМЕНЯЕМЫЙ — один и тот же в каждом видео) ━━━
 • Якорный гардероб: ${charA.identity_anchors?.wardrobe_anchor || wardrobeA}
 • Фирменный элемент: ${charA.identity_anchors?.signature_element || '—'}
+• Аксессуары: ${(charA.identity_anchors?.accessory_anchors || []).join(', ') || '—'}
+• Обувь: ${charA.identity_anchors?.footwear_anchor || '—'}
+• Головной убор: ${charA.identity_anchors?.headwear_anchor || 'none'}
+• Цветовая палитра: ${(charA.identity_anchors?.color_palette || []).join(', ') || '—'}
 
 ━━━ ПОВЕДЕНИЕ A (визуальные маркеры речи) ━━━
 • Внешность (RU): ${charA.appearance_ru || 'elderly Russian character'}
@@ -386,6 +406,10 @@ ${productBlock}
 • Микрожест (повторяемый): ${charA.identity_anchors?.micro_gesture || '—'}
 • Стиль хука (кадр 0): ${charA.modifiers?.hook_style || 'attention grab'}
 • Стиль смеха: ${charA.modifiers?.laugh_style || 'natural'}
+• Выражение злости: ${charA.modifiers?.anger_expression || 'natural anger'}
+• Выражение задумчивости: ${charA.modifiers?.thinking_expression || 'natural thinking'}
+• Выражение удивления: ${charA.modifiers?.surprise_expression || 'natural surprise'}
+• Контакт глазами: ${charA.modifiers?.eye_contact_style || 'direct'}
 • Фирменные слова: ${(charA.signature_words_ru || []).join(' / ') || '—'}
 
 ПЕРСОНАЖ B — ПАНЧЛАЙН (отвечает разрушительным ответом):
@@ -399,17 +423,31 @@ ${productBlock}
 • Полное визуальное описание (EN): ${charB.prompt_tokens?.character_en || '—'}
 • Силуэт лица: ${charB.identity_anchors?.face_silhouette || '—'}
 • Рост/телосложение: ${charB.biology_override?.height_build || '—'}
-• Кожа: ${(charB.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin with natural imperfections'}
+• Тон кожи: ${(charB.biology_override?.skin_color_tokens || []).join(', ') || 'natural skin tone'}
+• Текстура кожи: ${(charB.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin'}
+• Карта морщин: ${(charB.biology_override?.wrinkle_map_tokens || []).join(', ') || 'age-appropriate'}
 • Глаза: ${(charB.biology_override?.eye_tokens || []).join(', ') || '—'}
 • Волосы: ${(charB.biology_override?.hair_tokens || []).join(', ') || '—'}
+• Растительность на лице: ${(charB.biology_override?.facial_hair_tokens || []).join(', ') || 'none'}
 • Нос: ${(charB.biology_override?.nose_tokens || []).join(', ') || '—'}
 • Рот/зубы: ${(charB.biology_override?.mouth_tokens || []).join(', ') || '—'}
+• Уши: ${(charB.biology_override?.ear_tokens || []).join(', ') || 'natural ears'}
+• Шея: ${(charB.biology_override?.neck_tokens || []).join(', ') || 'age-appropriate neck'}
+• Форма тела: ${(charB.biology_override?.body_shape_tokens || []).join(', ') || '—'}
 • Руки: ${(charB.biology_override?.hands_tokens || []).join(', ') || '—'}
+• Шрамы/родинки/тату: ${(charB.biology_override?.scar_mark_tokens || []).join(', ') || 'none visible'}
 • Осанка/поза: ${(charB.biology_override?.posture_tokens || []).join(', ') || '—'}
+• Походка/движения: ${(charB.biology_override?.gait_tokens || []).join(', ') || 'natural movement'}
+• Лицо в покое: ${charB.biology_override?.facial_expression_default || 'neutral'}
+• Тембр голоса: ${(charB.biology_override?.voice_texture_tokens || []).join(', ') || 'natural voice'}
 
 ━━━ ГАРДЕРОБ B (НЕИЗМЕНЯЕМЫЙ — один и тот же в каждом видео) ━━━
 • Якорный гардероб: ${charB.identity_anchors?.wardrobe_anchor || wardrobeB}
 • Фирменный элемент: ${charB.identity_anchors?.signature_element || '—'}
+• Аксессуары: ${(charB.identity_anchors?.accessory_anchors || []).join(', ') || '—'}
+• Обувь: ${charB.identity_anchors?.footwear_anchor || '—'}
+• Головной убор: ${charB.identity_anchors?.headwear_anchor || 'none'}
+• Цветовая палитра: ${(charB.identity_anchors?.color_palette || []).join(', ') || '—'}
 
 ━━━ ПОВЕДЕНИЕ B (визуальные маркеры речи) ━━━
 • Внешность (RU): ${charB.appearance_ru || 'elderly Russian character'}
@@ -418,6 +456,10 @@ ${productBlock}
 • Микрожест (повторяемый): ${charB.identity_anchors?.micro_gesture || '—'}
 • Стиль хука (кадр 0): ${charB.modifiers?.hook_style || 'quiet entrance'}
 • Стиль смеха: ${charB.modifiers?.laugh_style || 'quiet chuckle'}
+• Выражение злости: ${charB.modifiers?.anger_expression || 'natural anger'}
+• Выражение задумчивости: ${charB.modifiers?.thinking_expression || 'natural thinking'}
+• Выражение удивления: ${charB.modifiers?.surprise_expression || 'natural surprise'}
+• Контакт глазами: ${charB.modifiers?.eye_contact_style || 'direct'}
 • Фирменные слова: ${(charB.signature_words_ru || []).join(' / ') || '—'}
 
 ════════════════════════════════════════════════════════════════

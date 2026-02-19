@@ -5169,18 +5169,42 @@ async function createCustomCharacter() {
     signature_element: appearance.split('.').find(s => /[А-ЯA-Z]{2,}/.test(s))?.trim() || 'distinctive feature',
     micro_gesture: 'natural expressive gestures',
     wardrobe_anchor: appearance.split('.').find(s => /одежд|платье|костюм|рубаш|куртк|свитер|пальто|шляп|очки|серьг|кольц|брасл|цеп|шарф|apron|coat|dress|shirt|jacket/i.test(s))?.trim() || 'casual clothing',
+    accessory_anchors: extractTokens(['очки', 'часы', 'кольц', 'серьг', 'брасл', 'цеп', 'кулон', 'брошь', 'трость', 'glasses', 'watch', 'ring', 'earring', 'bracelet', 'chain', 'pendant', 'brooch', 'cane']),
+    footwear_anchor: appearance.split('.').find(s => /туфл|ботинк|сапог|тапоч|кроссовк|shoes|boots|slippers|sneakers/i.test(s))?.trim() || 'worn comfortable footwear',
+    headwear_anchor: appearance.split('.').find(s => /шляп|кепк|берет|платок|шапк|капюш|hat|cap|beret|headscarf|beanie/i.test(s))?.trim() || 'none',
+    color_palette: extractTokens(['красн', 'синий', 'зелён', 'чёрн', 'бел', 'серый', 'коричн', 'золот', 'серебр', 'бордо', 'бежев', 'red', 'blue', 'green', 'black', 'white', 'grey', 'brown', 'gold', 'silver']),
   };
 
+  const isMale = /дед|пап|сын|мужч|man|male|boy/i.test(appearance + ' ' + group);
   const autoBiology = {
     age: (appearance.match(/(\d{1,3})\s*(лет|год|years?|yo\b)/i) || [])[1] || 'adult',
     height_build: appearance.split('.').find(s => /рост|высок|низк|худ|полн|строй|крупн|tall|short|slim|large|massive/i.test(s))?.trim() || 'average build',
     skin_tokens: extractTokens(['морщины', 'кожа', 'загар', 'бледн', 'веснушки', 'wrinkles', 'skin', 'freckles', 'tan', 'pale']),
+    skin_color_tokens: extractTokens(['смугл', 'бледн', 'загорел', 'фарфор', 'olive', 'pale', 'tanned', 'porcelain', 'dark skin', 'fair']),
+    wrinkle_map_tokens: extractTokens(['морщин', 'складк', 'гусин', 'wrinkle', 'crow', 'furrow', 'crease', 'lines']),
     eye_tokens: extractTokens(['глаза', 'взгляд', 'eyes', 'gaze']),
     hair_tokens: extractTokens(['волосы', 'причёска', 'стрижка', 'борода', 'усы', 'лысин', 'hair', 'beard', 'mustache', 'bald']),
+    facial_hair_tokens: isMale ? extractTokens(['борода', 'усы', 'щетин', 'бакенбард', 'beard', 'mustache', 'stubble', 'goatee']) : ['none'],
     nose_tokens: extractTokens(['нос', 'nose']),
     mouth_tokens: extractTokens(['губы', 'рот', 'зубы', 'улыбк', 'lips', 'mouth', 'teeth', 'smile']),
+    ear_tokens: extractTokens(['уш', 'серьг', 'ear', 'earring', 'lobe']),
+    neck_tokens: extractTokens(['шея', 'кадык', 'neck', 'throat', 'adam']),
+    body_shape_tokens: extractTokens(['плеч', 'груд', 'живот', 'торс', 'бёдр', 'shoulder', 'chest', 'belly', 'torso', 'hip']),
     hands_tokens: extractTokens(['руки', 'пальцы', 'кольц', 'браслет', 'hands', 'fingers', 'ring', 'bracelet']),
+    scar_mark_tokens: extractTokens(['шрам', 'родинк', 'тату', 'ожог', 'пирсинг', 'scar', 'birthmark', 'tattoo', 'mole', 'piercing']),
     posture_tokens: extractTokens(['осанк', 'поза', 'сутул', 'прям', 'posture', 'stance']),
+    gait_tokens: extractTokens(['походк', 'шагает', 'хромает', 'ковыляет', 'walk', 'shuffle', 'limp', 'stride']),
+    facial_expression_default: compat === 'chaotic' ? 'alert suspicious squint' : compat === 'conflict' ? 'stern disapproving frown' : compat === 'calm' ? 'calm knowing half-smile' : compat === 'meme' ? 'perpetually amused smirk' : 'neutral resting expression',
+    voice_texture_tokens: isMale ? [speech?.includes('бас') ? 'deep bass voice' : 'age-weathered male voice'] : [speech?.includes('тонк') ? 'thin high-pitched voice' : 'age-weathered female voice'],
+  };
+
+  const autoModifiers = {
+    hook_style: 'natural attention grab',
+    laugh_style: 'natural laugh',
+    anger_expression: compat === 'chaotic' ? 'explosive — arms flailing, voice rising' : compat === 'conflict' ? 'cold fury — jaw clenched, eyes drilling' : 'tight lips, narrowed eyes',
+    thinking_expression: compat === 'chaotic' ? 'rapid eye darting, finger tapping' : compat === 'calm' ? 'serene pause, eyes unfocused' : 'slight squint, looks up',
+    surprise_expression: compat === 'chaotic' ? 'explosive gasp, hands fly up' : compat === 'calm' ? 'slight eyebrow raise' : 'eyes widen, mouth opens slightly',
+    eye_contact_style: compat === 'chaotic' ? 'darting between camera and opponent' : compat === 'conflict' ? 'locked unblinking stare' : 'steady natural alternation',
   };
 
   const newChar = {
@@ -5201,7 +5225,7 @@ async function createCustomCharacter() {
     prompt_tokens: { character_en },
     identity_anchors: autoAnchors,
     biology_override: autoBiology,
-    modifiers: {},
+    modifiers: autoModifiers,
     _custom: true,
   };
 
