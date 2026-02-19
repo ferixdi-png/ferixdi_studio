@@ -5159,7 +5159,18 @@ function pickSmartLocationForPreset(preset, locations) {
   return (filtered.length ? filtered : locations)[Math.floor(Math.random() * (filtered.length || locations.length))];
 }
 
-// ─── SURPRISE BUTTON v2 (anti-repeat + hook/killer info) ─
+// Twist suffixes — make every topic unique even if same preset is picked
+const _SURPRISE_TWISTS = [
+  'и всё это на камеру', 'а B молча наблюдает', 'и ситуация выходит из-под контроля',
+  'но B знает правду', 'а B уже давно это знал(а)', 'и оба уверены что правы',
+  'а камера всё записывает', 'но B готовит ответный удар', 'и A даже не подозревает чем это кончится',
+  'и B еле сдерживает смех', 'а A входит в раж', 'но B невозмутимо ждёт момент',
+  'и оба забывают о камере', 'а зрители уже в истерике', 'и A заходит слишком далеко',
+  'но B приберёг(ла) козырь', 'а A упирается до конца', 'и B роняет killer word как бомбу',
+  'а ситуация становится абсурднее с каждой секундой', 'и всё переворачивается одним словом',
+];
+
+// ─── SURPRISE BUTTON v3 (full-cycle anti-repeat + unique topics) ─
 function initSurprise() {
   document.getElementById('btn-surprise')?.addEventListener('click', () => {
     if (!isPromoValid()) { showNotification('🔑 Нужен промо-код для генерации', 'error'); navigateTo('settings'); return; }
@@ -5167,22 +5178,40 @@ function initSurprise() {
     const chars = state.characters;
     if (!chars || chars.length < 2) { showNotification('⚠️ Персонажи не загружены', 'error'); return; }
 
-    // Anti-repeat: pick preset not used in last 20 clicks
+    // ── FULL-CYCLE ANTI-REPEAT: use ALL presets before ANY can repeat ──
+    if (_lastSurpriseIndices.length >= VIRAL_SURPRISE_PRESETS.length) {
+      _lastSurpriseIndices.length = 0; // Reset — all presets used, start new cycle
+      log('INFO', 'SURPRISE', 'Все пресеты использованы — новый цикл');
+    }
     let idx;
     let attempts = 0;
     do {
       idx = Math.floor(Math.random() * VIRAL_SURPRISE_PRESETS.length);
       attempts++;
-    } while (_lastSurpriseIndices.includes(idx) && attempts < 30);
+    } while (_lastSurpriseIndices.includes(idx) && attempts < 200);
     _lastSurpriseIndices.push(idx);
-    if (_lastSurpriseIndices.length > 20) _lastSurpriseIndices.shift();
 
     const preset = VIRAL_SURPRISE_PRESETS[idx];
 
-    const pair = pickSmartPairForPreset(preset, chars);
+    // ── SMART PAIR with anti-repeat for recent combos ──
+    let pair = null;
+    let pairAttempts = 0;
+    const recentPairKeys = (_lastSurprisePairs || []).slice(-15);
+    do {
+      pair = pickSmartPairForPreset(preset, chars);
+      pairAttempts++;
+      if (pair && recentPairKeys.includes(`${pair.A.id}+${pair.B.id}`)) {
+        pair = null; // try again — same combo was used recently
+      }
+    } while (!pair && pairAttempts < 10);
+    // Fallback if pair matching exhausted
+    if (!pair) pair = pickSmartPairForPreset(preset, chars);
     if (pair) {
       selectChar('A', pair.A.id);
       selectChar('B', pair.B.id);
+      if (!window._lastSurprisePairs) window._lastSurprisePairs = [];
+      window._lastSurprisePairs.push(`${pair.A.id}+${pair.B.id}`);
+      if (window._lastSurprisePairs.length > 30) window._lastSurprisePairs.shift();
     } else {
       autoSelectRandomPair();
     }
@@ -5199,10 +5228,16 @@ function initSurprise() {
     state.inputMode = 'suggested';
     selectGenerationMode?.('suggested');
 
-    // Build enriched topic with hook context for AI
-    let fullTopic = preset.topic;
-    if (preset.hook) fullTopic += ` [ХУК: ${preset.hook}]`;
+    // ── BUILD UNIQUE TOPIC — never the same string twice ──
+    const nameA = pair?.A?.name_ru || state.selectedA?.name_ru || '?';
+    const nameB = pair?.B?.name_ru || state.selectedB?.name_ru || '?';
+    const twist = _SURPRISE_TWISTS[Math.floor(Math.random() * _SURPRISE_TWISTS.length)].replace('A', nameA).replace('B', nameB);
+    const uid = Date.now().toString(36).slice(-4); // unique 4-char stamp
+    
+    let fullTopic = `${nameA} vs ${nameB}: ${preset.topic} — ${twist}`;
+    if (preset.hook) fullTopic += ` [ХУК: ${preset.hook.replace(/\bA\b/g, nameA).replace(/\bB\b/g, nameB)}]`;
     if (preset.killer) fullTopic += ` [KILLER WORD: "${preset.killer}"]`;
+    fullTopic += ` [uid:${uid}]`;
 
     const ideaInput = document.getElementById('idea-input');
     if (ideaInput) ideaInput.value = fullTopic;
@@ -5212,11 +5247,9 @@ function initSurprise() {
     navigateTo('generate');
     updateReadiness?.();
 
-    const nameA = pair?.A?.name_ru || state.selectedA?.name_ru || '?';
-    const nameB = pair?.B?.name_ru || state.selectedB?.name_ru || '?';
     const shareHint = preset.share ? ` | 📤 ${preset.share}` : '';
     showNotification(`🎯 ${nameA} × ${nameB}: "${preset.topic.slice(0, 50)}..."${shareHint}`, 'success');
-    log('OK', 'VIRAL_SURPRISE', `#${idx} "${preset.topic}" | ${nameA} × ${nameB} | 🎣${preset.hook || '-'} | 💀${preset.killer || '-'} | Кат: ${preset.cat}`);
+    log('OK', 'VIRAL_SURPRISE', `#${idx}/${VIRAL_SURPRISE_PRESETS.length} [${_lastSurpriseIndices.length}/${VIRAL_SURPRISE_PRESETS.length} used] uid:${uid} | "${preset.topic}" | ${nameA} × ${nameB} | Кат: ${preset.cat}`);
   });
 }
 
