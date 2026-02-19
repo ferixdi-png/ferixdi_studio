@@ -3195,7 +3195,8 @@
                                                        ],
                                  "footwear_anchor":  "worn comfortable footwear",
                                  "headwear_anchor":  "none",
-                                 "color_palette":  "SILVER"
+                                 "color_palette":  "SILVER",
+                                 "signature_element":  "thin white scar from left temple to ear + ice-blue eyes + silver wolf hair"
                              },
         "vibe_archetype":  "серебряный волк — шрам, тишина, взгляд видит всё",
         "world_aesthetic":  "нуар-минимализм",
@@ -17764,6 +17765,511 @@
                                                      "natural age-appropriate movement"
                                                  ],
                                  "facial_expression_default":  "stern disapproving frown"
+                             }
+    },
+    {
+        "id":  "devushka_milana",
+        "name_ru":  "Миланка",
+        "tagline_ru":  "Фитнес-блогерша с идеальным прессом и хвостом-фонтаном. Мотивация 24/7.",
+        "group":  "девушки",
+        "tags":  [
+                     "девушки",
+                     "chaotic",
+                     "fast"
+                 ],
+        "appearance_ru":  "26 лет, спортивная подтянутая фигура, загорелая кожа. ВЫСОКИЙ ХВОСТ-ФОНТАН — тёмно-каштановые волосы, всегда в движении. Большие КАРИЕ ГЛАЗА с длинными ресницами. Ровный нос, пухлые губы с нюдовым блеском. Белоснежная улыбка. Фитнес-браслет на запястье. Спортивный кроп-топ.",
+        "speech_style_ru":  "Энергично, быстро, с мотивационными хуками. Говорит как тренер.",
+        "behavior_ru":  "Хаотичная мотиваторша",
+        "speech_pace":  "fast",
+        "swear_level":  1,
+        "role_default":  "A",
+        "signature_words_ru":  [
+                                   "давай-давай!",
+                                   "без отмазок!",
+                                   "ты же можешь!"
+                               ],
+        "prompt_tokens":  {
+                              "character_en":  "26yo Russian woman, athletic toned figure visible abs, sun-kissed golden tan skin, HIGH PONYTAIL FOUNTAIN dark chestnut hair always bouncing with movement, large WARM BROWN EYES with long natural lashes, straight nose, full lips with nude gloss, bright white smile showing perfect teeth, fitness tracker on left wrist, cropped athletic top showing midriff, high-waisted leggings, clean minimal makeup with highlighted cheekbones, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
+                          },
+        "modifiers":  {
+                          "hook_style":  "claps hands together then points at camera",
+                          "laugh_style":  "bright infectious laugh throwing head back",
+                          "anger_expression":  "hands on hips, jaw set, rapid-fire lecture",
+                          "thinking_expression":  "bites lower lip, taps fitness tracker",
+                          "surprise_expression":  "both hands to mouth, eyes huge, gasps",
+                          "eye_contact_style":  "locked intense motivational stare into camera"
+                      },
+        "compatibility":  "chaotic",
+        "identity_anchors":  {
+                                 "face_silhouette":  "oval face, high cheekbones, athletic jawline, big brown eyes",
+                                 "signature_element":  "high ponytail fountain + fitness tracker + white smile",
+                                 "micro_gesture":  "tightens ponytail before making a point",
+                                 "wardrobe_anchor":  "cropped athletic top coral color, high-waisted black leggings, white sneakers, fitness tracker",
+                                 "accessory_anchors":  [
+                                                           "fitness tracker on left wrist",
+                                                           "small gold hoop earrings",
+                                                           "hair tie always on right wrist"
+                                                       ],
+                                 "footwear_anchor":  "white athletic sneakers",
+                                 "headwear_anchor":  "none",
+                                 "color_palette":  [
+                                                       "coral",
+                                                       "black",
+                                                       "white",
+                                                       "gold"
+                                                   ]
+                             },
+        "vibe_archetype":  "фитнес-мотиватор",
+        "world_aesthetic":  "спортивный лайфстайл",
+        "biology_override":  {
+                                 "age":  "26",
+                                 "height_build":  "athletic toned figure visible abs medium height",
+                                 "skin_tokens":  [
+                                                     "sun-kissed golden tan skin",
+                                                     "clean minimal makeup with highlighted cheekbones"
+                                                 ],
+                                 "skin_color_tokens":  [
+                                                           "sun-kissed golden tan",
+                                                           "warm bronze undertone"
+                                                       ],
+                                 "wrinkle_map_tokens":  [
+                                                            "smooth young skin",
+                                                            "smile lines beginning at eyes when laughing"
+                                                        ],
+                                 "eye_tokens":  [
+                                                    "large WARM BROWN EYES with long natural lashes",
+                                                    "bright alert gaze"
+                                                ],
+                                 "hair_tokens":  [
+                                                     "HIGH PONYTAIL FOUNTAIN dark chestnut hair always bouncing",
+                                                     "thick healthy shine"
+                                                 ],
+                                 "facial_hair_tokens":  [
+                                                            "none"
+                                                        ],
+                                 "nose_tokens":  [
+                                                     "straight proportional nose",
+                                                     "small nostrils"
+                                                 ],
+                                 "mouth_tokens":  [
+                                                      "full lips with nude gloss",
+                                                      "bright white smile showing perfect teeth"
+                                                  ],
+                                 "ear_tokens":  [
+                                                    "small gold hoop earrings",
+                                                    "delicate ears"
+                                                ],
+                                 "neck_tokens":  [
+                                                     "athletic neck",
+                                                     "visible collarbone definition"
+                                                 ],
+                                 "body_shape_tokens":  [
+                                                           "athletic toned figure",
+                                                           "visible abs",
+                                                           "defined shoulders"
+                                                       ],
+                                 "hands_tokens":  [
+                                                      "fitness tracker on left wrist",
+                                                      "strong toned hands",
+                                                      "short practical nails"
+                                                  ],
+                                 "scar_mark_tokens":  [
+                                                          "no visible scars",
+                                                          "small mole on left collarbone"
+                                                      ],
+                                 "posture_tokens":  [
+                                                        "upright athletic stance",
+                                                        "always in motion bouncing"
+                                                    ],
+                                 "gait_tokens":  [
+                                                     "energetic bouncy stride",
+                                                     "athlete movement"
+                                                 ],
+                                 "facial_expression_default":  "bright ready-to-go smile",
+                                 "voice_texture_tokens":  [
+                                                              "clear energetic young female voice",
+                                                              "projects well"
+                                                          ]
+                             }
+    },
+    {
+        "id":  "devushka_karina",
+        "name_ru":  "Каринка",
+        "tagline_ru":  "Готик-красотка с чёрной помадой и серебряными кольцами. Тьма с юмором.",
+        "group":  "девушки",
+        "tags":  [
+                     "девушки",
+                     "calm",
+                     "slow"
+                 ],
+        "appearance_ru":  "24 года, стройная высокая, бледная кожа как луна. ИССИНЯ-ЧЁРНЫЕ ВОЛОСЫ до лопаток, идеально прямые. Большие СЕРО-ЗЕЛЁНЫЕ ГЛАЗА с чёрной подводкой. Тонкий прямой нос с серебряным колечком. ЧЁРНАЯ МАТОВАЯ ПОМАДА. Серебряные кольца на каждом пальце.",
+        "speech_style_ru":  "Медленно, с иронией. Тихий голос. Саркастична но умна.",
+        "behavior_ru":  "Спокойная готик-ироничка",
+        "speech_pace":  "slow",
+        "swear_level":  0,
+        "role_default":  "B",
+        "signature_words_ru":  [
+                                   "ну допустим...",
+                                   "как предсказуемо",
+                                   "мне всё равно... но продолжай"
+                               ],
+        "prompt_tokens":  {
+                              "character_en":  "24yo Russian woman, tall slim figure, PORCELAIN PALE MOONLIGHT SKIN almost translucent, RAVEN BLACK HAIR perfectly straight to shoulder blades with blue sheen, large GREY-GREEN EYES with heavy black eyeliner winged, thin straight nose with TINY SILVER NOSE RING on left nostril, BLACK MATTE LIPSTICK always perfect, SILVER RINGS ON EVERY FINGER different designs skulls moons stars, high cheekbones casting shadows, delicate collarbones visible, black lace choker with silver crescent pendant, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
+                          },
+        "modifiers":  {
+                          "hook_style":  "slow head tilt, one eyebrow rises",
+                          "laugh_style":  "quiet dark chuckle barely showing teeth",
+                          "anger_expression":  "absolutely still, eyes narrow to slits, voice drops to whisper",
+                          "thinking_expression":  "twists silver ring slowly, stares into distance",
+                          "surprise_expression":  "one eyebrow lifts imperceptibly, slight hm",
+                          "eye_contact_style":  "steady unblinking gothic stare, rarely breaks first"
+                      },
+        "compatibility":  "calm",
+        "identity_anchors":  {
+                                 "face_silhouette":  "high cheekbones, pale skin, heavy black eyeliner, black lips, sharp jaw",
+                                 "signature_element":  "black matte lipstick + silver rings every finger + nose ring",
+                                 "micro_gesture":  "twists skull ring on index finger while listening",
+                                 "wardrobe_anchor":  "black oversized band tee tucked into black high-waisted jeans, black lace choker with crescent, combat boots",
+                                 "accessory_anchors":  [
+                                                           "silver rings on every finger skulls moons stars",
+                                                           "black lace choker with silver crescent pendant",
+                                                           "tiny silver nose ring left nostril"
+                                                       ],
+                                 "footwear_anchor":  "black leather combat boots with silver buckles",
+                                 "headwear_anchor":  "none",
+                                 "color_palette":  [
+                                                       "black",
+                                                       "silver",
+                                                       "deep purple",
+                                                       "moonlight white"
+                                                   ]
+                             },
+        "vibe_archetype":  "готик-красотка",
+        "world_aesthetic":  "лунный готик",
+        "biology_override":  {
+                                 "age":  "24",
+                                 "height_build":  "tall slim figure elegant proportions",
+                                 "skin_tokens":  [
+                                                     "PORCELAIN PALE MOONLIGHT SKIN almost translucent",
+                                                     "high cheekbones casting shadows"
+                                                 ],
+                                 "skin_color_tokens":  [
+                                                           "porcelain pale",
+                                                           "moonlight white undertone",
+                                                           "no visible tan"
+                                                       ],
+                                 "wrinkle_map_tokens":  [
+                                                            "smooth young skin",
+                                                            "no visible wrinkles"
+                                                        ],
+                                 "eye_tokens":  [
+                                                    "large GREY-GREEN EYES with heavy black eyeliner winged",
+                                                    "steady unblinking gaze"
+                                                ],
+                                 "hair_tokens":  [
+                                                     "RAVEN BLACK HAIR perfectly straight to shoulder blades",
+                                                     "blue sheen in light"
+                                                 ],
+                                 "facial_hair_tokens":  [
+                                                            "none"
+                                                        ],
+                                 "nose_tokens":  [
+                                                     "thin straight nose",
+                                                     "TINY SILVER NOSE RING on left nostril"
+                                                 ],
+                                 "mouth_tokens":  [
+                                                      "BLACK MATTE LIPSTICK always perfect",
+                                                      "naturally full lips under dark color"
+                                                  ],
+                                 "ear_tokens":  [
+                                                    "multiple silver ear cuffs on right ear",
+                                                    "small silver studs"
+                                                ],
+                                 "neck_tokens":  [
+                                                     "long elegant neck",
+                                                     "black lace choker with silver crescent pendant",
+                                                     "visible collarbones"
+                                                 ],
+                                 "body_shape_tokens":  [
+                                                           "tall slim figure",
+                                                           "delicate collarbones visible",
+                                                           "narrow waist"
+                                                       ],
+                                 "hands_tokens":  [
+                                                      "SILVER RINGS ON EVERY FINGER different designs",
+                                                      "long pale fingers",
+                                                      "black nail polish"
+                                                  ],
+                                 "scar_mark_tokens":  [
+                                                          "small crescent moon tattoo behind right ear"
+                                                      ],
+                                 "posture_tokens":  [
+                                                        "languid elegant lean",
+                                                        "minimal movement economy of motion"
+                                                    ],
+                                 "gait_tokens":  [
+                                                     "slow deliberate glide",
+                                                     "combat boots barely make sound"
+                                                 ],
+                                 "facial_expression_default":  "calm knowing half-smile with dark lips",
+                                 "voice_texture_tokens":  [
+                                                              "low quiet female voice",
+                                                              "slightly husky",
+                                                              "whisper-adjacent"
+                                                          ]
+                             }
+    },
+    {
+        "id":  "devushka_nika",
+        "name_ru":  "Ника",
+        "tagline_ru":  "Рыжая художница с веснушками и краской на руках. Хаос её стихия.",
+        "group":  "девушки",
+        "tags":  [
+                     "девушки",
+                     "meme",
+                     "normal"
+                 ],
+        "appearance_ru":  "23 года, среднего роста, мягкие формы. ЯРКО-РЫЖИЕ КУДРЯВЫЕ ВОЛОСЫ до плеч. РОССЫПЬ ВЕСНУШЕК по всему лицу. Большие ЗЕЛЁНЫЕ ГЛАЗА. Курносый нос. Широкая улыбка. ПЯТНА КРАСКИ на руках и лице.",
+        "speech_style_ru":  "Эмоционально, перескакивая с темы на тему. Руками рисует в воздухе.",
+        "behavior_ru":  "Мемная художница",
+        "speech_pace":  "normal",
+        "swear_level":  1,
+        "role_default":  "A",
+        "signature_words_ru":  [
+                                   "о боже, подожди!",
+                                   "это же гениально!",
+                                   "а что если..."
+                               ],
+        "prompt_tokens":  {
+                              "character_en":  "23yo Russian woman, medium height soft curves, BRIGHT FIERY RED CURLY HAIR untamed cloud to shoulders, DENSE CONSTELLATION OF FRECKLES covering entire face nose cheeks forehead shoulders, large BRIGHT GREEN EYES perpetually wide with wonder, small upturned freckled nose, wide sunny smile showing slight overbite, PAINT STAINS on hands and sometimes on face and clothes, round warm face, rosy cheeks natural blush, oversized paint-stained denim overalls over striped shirt, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
+                          },
+        "modifiers":  {
+                          "hook_style":  "grabs own cheeks in excitement",
+                          "laugh_style":  "bubbly snort-laugh covering mouth with paint-stained hand",
+                          "anger_expression":  "puffs cheeks, stamps foot, curls fists adorable rage",
+                          "thinking_expression":  "unconsciously draws circles in air with finger, eyes unfocused",
+                          "surprise_expression":  "mouth forms perfect O, hands fly to cheeks, eyes saucer-wide",
+                          "eye_contact_style":  "bouncing between everything, can barely focus on one thing"
+                      },
+        "compatibility":  "meme",
+        "identity_anchors":  {
+                                 "face_silhouette":  "round warm face, freckle constellation, wild red curls, wide green eyes",
+                                 "signature_element":  "red curly hair + freckles everywhere + paint stains on hands",
+                                 "micro_gesture":  "pushes wild curl behind ear, it immediately springs back",
+                                 "wardrobe_anchor":  "oversized paint-stained denim overalls, striped long-sleeve shirt, messy rolled sleeves",
+                                 "accessory_anchors":  [
+                                                           "paint-stained hands always",
+                                                           "friendship bracelets stack on left wrist",
+                                                           "pencil stuck in curls forgotten"
+                                                       ],
+                                 "footwear_anchor":  "worn red Converse with paint splatter",
+                                 "headwear_anchor":  "none but pencil stuck in curls",
+                                 "color_palette":  [
+                                                       "denim blue",
+                                                       "red",
+                                                       "green",
+                                                       "warm yellow"
+                                                   ]
+                             },
+        "vibe_archetype":  "рыжая художница",
+        "world_aesthetic":  "творческий хаос",
+        "biology_override":  {
+                                 "age":  "23",
+                                 "height_build":  "medium height soft curves",
+                                 "skin_tokens":  [
+                                                     "rosy cheeks natural blush",
+                                                     "warm skin tone with freckle base"
+                                                 ],
+                                 "skin_color_tokens":  [
+                                                           "warm fair skin with rosy undertone",
+                                                           "natural blush on cheeks and nose"
+                                                       ],
+                                 "wrinkle_map_tokens":  [
+                                                            "smooth young skin",
+                                                            "laugh crinkles at eye corners when smiling"
+                                                        ],
+                                 "eye_tokens":  [
+                                                    "large BRIGHT GREEN EYES perpetually wide with wonder",
+                                                    "thick red-blonde lashes"
+                                                ],
+                                 "hair_tokens":  [
+                                                     "BRIGHT FIERY RED CURLY HAIR untamed cloud to shoulders",
+                                                     "pencil stuck in curls forgotten"
+                                                 ],
+                                 "facial_hair_tokens":  [
+                                                            "none"
+                                                        ],
+                                 "nose_tokens":  [
+                                                     "small upturned freckled nose",
+                                                     "dusted with dense freckles"
+                                                 ],
+                                 "mouth_tokens":  [
+                                                      "wide sunny smile showing slight overbite",
+                                                      "naturally pink lips"
+                                                  ],
+                                 "ear_tokens":  [
+                                                    "small ears hidden in red curls",
+                                                    "tiny paint dot earrings"
+                                                ],
+                                 "neck_tokens":  [
+                                                     "freckled neck and shoulders",
+                                                     "collar of striped shirt visible"
+                                                 ],
+                                 "body_shape_tokens":  [
+                                                           "medium soft curves",
+                                                           "round warm proportions"
+                                                       ],
+                                 "hands_tokens":  [
+                                                      "PAINT STAINS on hands always",
+                                                      "short nails with paint underneath",
+                                                      "friendship bracelets stack"
+                                                  ],
+                                 "scar_mark_tokens":  [
+                                                          "DENSE CONSTELLATION OF FRECKLES covering face nose cheeks forehead shoulders",
+                                                          "occasional paint on face"
+                                                      ],
+                                 "posture_tokens":  [
+                                                        "animated gesturing",
+                                                        "leans forward with excitement"
+                                                    ],
+                                 "gait_tokens":  [
+                                                     "bouncy enthusiastic walk",
+                                                     "almost skipping"
+                                                 ],
+                                 "facial_expression_default":  "perpetually amused smirk with wonder-eyes",
+                                 "voice_texture_tokens":  [
+                                                              "bright animated young female voice",
+                                                              "goes up at ends of sentences"
+                                                          ]
+                             }
+    },
+    {
+        "id":  "devushka_diana",
+        "name_ru":  "Дианка",
+        "tagline_ru":  "Ледяная модель с платиновым каре и бровью-дугой. Один взгляд и ты замолчал.",
+        "group":  "девушки",
+        "tags":  [
+                     "девушки",
+                     "conflict",
+                     "slow"
+                 ],
+        "appearance_ru":  "27 лет, высокая модельная фигура. ПЛАТИНОВОЕ КАРЕ, холодный блонд, идеально ровный срез. ВЫСОКИЕ СКУЛЫ. Ледяные ГОЛУБЫЕ ГЛАЗА. ИДЕАЛЬНАЯ БРОВЬ-ДУГА — левая всегда чуть приподнята. Тонкий прямой нос. Бежево-розовая помада. Минималистичные серьги-капли.",
+        "speech_style_ru":  "Медленно, тихо, с убийственной точностью. Паузы длиннее слов.",
+        "behavior_ru":  "Конфликтная ледяная модель",
+        "speech_pace":  "slow",
+        "swear_level":  0,
+        "role_default":  "B",
+        "signature_words_ru":  [
+                                   "серьёзно?",
+                                   "ну-ну",
+                                   "я подожду пока ты закончишь"
+                               ],
+        "prompt_tokens":  {
+                              "character_en":  "27yo Russian woman, tall model figure long legs, PLATINUM BLONDE cold-toned chin-length bob perfectly straight cut, SCULPTED HIGH CHEEKBONES casting sharp shadows, ICY BLUE EYES that look through people not at them, LEFT EYEBROW PERPETUALLY SLIGHTLY RAISED signature expression, thin straight nose with narrow bridge, beige-pink lipstick immaculate, minimalist silver teardrop earrings, sharp defined jawline, porcelain clear skin, subtle contour makeup professional level, cream cashmere turtleneck, camel wool coat draped on shoulders, hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail"
+                          },
+        "modifiers":  {
+                          "hook_style":  "slow blink, left eyebrow rises devastating silence",
+                          "laugh_style":  "single quiet exhale through nose barely qualifies as laugh",
+                          "anger_expression":  "absolute stillness, temperature drops, eyes become glacier",
+                          "thinking_expression":  "slight head tilt, fingers touch jawline once",
+                          "surprise_expression":  "left eyebrow rises one millimeter higher maximum surprise",
+                          "eye_contact_style":  "unbreaking glacial stare looks through not at"
+                      },
+        "compatibility":  "conflict",
+        "identity_anchors":  {
+                                 "face_silhouette":  "sculpted cheekbones, sharp jaw, platinum bob, icy blue eyes, raised left brow",
+                                 "signature_element":  "platinum bob + perpetually raised left eyebrow + glacier eyes",
+                                 "micro_gesture":  "left eyebrow micro-raise before delivering verdict",
+                                 "wardrobe_anchor":  "cream cashmere turtleneck, camel wool coat draped on shoulders, minimalist silver teardrop earrings",
+                                 "accessory_anchors":  [
+                                                           "minimalist silver teardrop earrings",
+                                                           "single thin silver bracelet",
+                                                           "no rings hands clean"
+                                                       ],
+                                 "footwear_anchor":  "nude patent leather pointed stilettos",
+                                 "headwear_anchor":  "none",
+                                 "color_palette":  [
+                                                       "cream",
+                                                       "camel",
+                                                       "silver",
+                                                       "ice blue",
+                                                       "nude"
+                                                   ]
+                             },
+        "vibe_archetype":  "ледяная модель",
+        "world_aesthetic":  "скандинавский минимализм",
+        "biology_override":  {
+                                 "age":  "27",
+                                 "height_build":  "tall model figure long legs slim",
+                                 "skin_tokens":  [
+                                                     "porcelain clear skin",
+                                                     "subtle contour makeup professional level"
+                                                 ],
+                                 "skin_color_tokens":  [
+                                                           "porcelain fair",
+                                                           "cool pink undertone",
+                                                           "flawless clear complexion"
+                                                       ],
+                                 "wrinkle_map_tokens":  [
+                                                            "smooth young skin",
+                                                            "no visible wrinkles",
+                                                            "sharp bone structure visible"
+                                                        ],
+                                 "eye_tokens":  [
+                                                    "ICY BLUE EYES that look through people not at them",
+                                                    "LEFT EYEBROW PERPETUALLY SLIGHTLY RAISED"
+                                                ],
+                                 "hair_tokens":  [
+                                                     "PLATINUM BLONDE cold-toned chin-length bob perfectly straight cut",
+                                                     "not a hair out of place"
+                                                 ],
+                                 "facial_hair_tokens":  [
+                                                            "none"
+                                                        ],
+                                 "nose_tokens":  [
+                                                     "thin straight nose with narrow bridge",
+                                                     "refined proportions"
+                                                 ],
+                                 "mouth_tokens":  [
+                                                      "beige-pink lipstick immaculate",
+                                                      "lips slightly pursed default"
+                                                  ],
+                                 "ear_tokens":  [
+                                                    "minimalist silver teardrop earrings",
+                                                    "small elegant ears visible through bob"
+                                                ],
+                                 "neck_tokens":  [
+                                                     "long elegant model neck",
+                                                     "cream turtleneck framing jawline"
+                                                 ],
+                                 "body_shape_tokens":  [
+                                                           "tall model figure",
+                                                           "long legs slim proportions",
+                                                           "narrow shoulders"
+                                                       ],
+                                 "hands_tokens":  [
+                                                      "elegant bare hands",
+                                                      "single thin silver bracelet",
+                                                      "manicured nude nails"
+                                                  ],
+                                 "scar_mark_tokens":  [
+                                                          "no visible marks",
+                                                          "flawless skin"
+                                                      ],
+                                 "posture_tokens":  [
+                                                        "perfect model posture",
+                                                        "chin slightly elevated",
+                                                        "coat draped on shoulders never falls"
+                                                    ],
+                                 "gait_tokens":  [
+                                                     "slow deliberate runway walk",
+                                                     "heels click rhythmically"
+                                                 ],
+                                 "facial_expression_default":  "stern disapproving frown with raised left brow",
+                                 "voice_texture_tokens":  [
+                                                              "low quiet controlled female voice",
+                                                              "each word precisely placed"
+                                                          ]
                              }
     }
 ]
