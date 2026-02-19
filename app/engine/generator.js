@@ -821,11 +821,18 @@ function buildCastContract(charA, charB) {
   const buildBiology = (char, role) => {
     const bio = char.biology_override || {};
     const anchors = char.identity_anchors || {};
-    const defaultSkin = ['deep wrinkles with varying depth', 'age spots and sun damage', 'visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'micro-wrinkles around eyes (crow\'s feet)', 'nasolabial folds', 'uneven skin tone with natural redness on cheeks/nose', 'visible blood capillaries on nose bridge', 'skin texture like real phone photo NOT AI render'];
+    const ageNum = parseInt(String(bio.age || '').replace(/[^0-9]/g, ''), 10) || 65;
+    const isYoung = ageNum < 35;
+    const isMiddle = ageNum >= 35 && ageNum < 55;
+    const defaultSkinYoung = ['visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'natural skin texture with minor imperfections', 'uneven skin tone with natural redness on cheeks/nose', 'skin texture like real phone photo NOT AI render'];
+    const defaultSkinMiddle = ['visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'fine lines around eyes', 'early nasolabial folds', 'uneven skin tone with natural redness on cheeks/nose', 'visible blood capillaries on nose bridge', 'skin texture like real phone photo NOT AI render'];
+    const defaultSkinElderly = ['deep wrinkles with varying depth', 'age spots and sun damage', 'visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'micro-wrinkles around eyes (crow\'s feet)', 'nasolabial folds', 'uneven skin tone with natural redness on cheeks/nose', 'visible blood capillaries on nose bridge', 'skin texture like real phone photo NOT AI render'];
+    const defaultSkin = isYoung ? defaultSkinYoung : isMiddle ? defaultSkinMiddle : defaultSkinElderly;
     const defaultEyes = ['wet glint on cornea', 'slight sclera redness with visible micro-vessels', 'micro-saccades every 0.3-0.5s', 'natural iris detail with color variation', 'slight asymmetry between left and right eye', 'realistic eyelash detail (not perfect)', 'tear film moisture visible'];
+    const ageFallback = isYoung ? 'young adult' : isMiddle ? 'middle-aged' : 'elderly';
     return {
-      character_en: char.prompt_tokens?.character_en || 'elderly character, hyper-realistic detail, NEVER plastic or smooth',
-      age: bio.age || 'elderly',
+      character_en: char.prompt_tokens?.character_en || `${ageFallback} character, hyper-realistic detail, NEVER plastic or smooth`,
+      age: bio.age || ageFallback,
       skin: (bio.skin_tokens || defaultSkin).join(', '),
       eyes: (bio.eye_tokens || defaultEyes).join(', '),
       mouth: role === 'A'
@@ -863,7 +870,7 @@ function buildCameraPreset() {
       'micro motion blur on sharp gesture (finger/slap)',
       'realistic shadowing under nose/cheekbones/brow ridge',
     ],
-    ANTI_PLASTIC_MANDATE: 'CRITICAL: Faces must NEVER look plastic, waxy, smooth, or AI-generated. Every face MUST have: visible pores (especially nose/cheeks), fine wrinkles around eyes and mouth, age spots, uneven skin tone, slight oily sheen on T-zone, visible blood vessels on nose/cheeks, asymmetric features (one eye slightly different from other), natural skin imperfections (moles, scars, redness). Skin must look like REAL human skin photographed on a phone, not rendered by AI. If the face looks "too perfect" or "too smooth" — it is WRONG.',
+    ANTI_PLASTIC_MANDATE: 'CRITICAL: Faces must NEVER look plastic, waxy, smooth, or AI-generated. Every face MUST have: visible pores (especially nose/cheeks), age-appropriate skin texture (wrinkles and age spots for elderly, fine lines for middle-aged, natural imperfections for young), uneven skin tone, slight oily sheen on T-zone, asymmetric features (one eye slightly different from other), natural skin imperfections (moles, minor redness). Skin must look like REAL human skin photographed on a phone, not rendered by AI. If the face looks "too perfect" or "too smooth" — it is WRONG.',
     ANTI_ROBOT_MANDATE: 'CRITICAL: All movement must be ORGANIC and HUMAN. No robotic transitions, no mechanical head turns, no perfectly timed gestures. Every movement has: slight delay/anticipation before action, natural acceleration/deceleration curves, micro-tremor from muscles, weight and momentum (heavy body parts move slower). Facial expressions must flow naturally — eyebrows lead, then eyes, then mouth. Emotions build gradually, never snap on/off. Breathing affects ALL movement. Intonation rises and falls naturally with emotion, voice cracks on intense moments, slight hoarseness from shouting.',
   };
 }
@@ -1177,11 +1184,19 @@ function buildVeoPrompt(opts) {
   const dA2 = dialogueA2 ? veoPause(dialogueA2) : '';
 
   // Character descriptions — concise but vivid for Veo
-  const charDescA = charA.prompt_tokens?.character_en || cast.speaker_A?.character_en || 'elderly woman, hyper-realistic';
-  const charDescB = charB.prompt_tokens?.character_en || cast.speaker_B?.character_en || 'elderly man, hyper-realistic';
+  const charDescA = charA.prompt_tokens?.character_en || cast.speaker_A?.character_en || `${cast.speaker_A?.age || 'adult'} character, hyper-realistic`;
+  const charDescB = charB.prompt_tokens?.character_en || cast.speaker_B?.character_en || `${cast.speaker_B?.age || 'adult'} character, hyper-realistic`;
 
-  // Skin/face realism anchors (brief)
-  const skinAnchors = 'visible pores, deep wrinkles, age spots, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
+  // Skin/face realism anchors (age-aware)
+  const ageNumA = parseInt(String(charA.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
+  const ageNumB = parseInt(String(charB.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
+  const buildSkinAnchors = (ageN) => {
+    if (ageN < 35) return 'visible pores, natural skin texture, uneven skin tone, slight oily sheen on forehead, minor imperfections';
+    if (ageN < 55) return 'visible pores, fine lines around eyes, early nasolabial folds, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
+    return 'visible pores, deep wrinkles, age spots, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
+  };
+  const skinAnchorsA = buildSkinAnchors(ageNumA);
+  const skinAnchorsB = buildSkinAnchors(ageNumB);
 
   // Camera style
   const camStyle = 'Smartphone front camera selfie video, 9:16 vertical portrait, handheld with natural micro-jitter and breathing oscillation. Slight computational portrait-mode bokeh on background. Phone sensor noise in shadows.';
@@ -1201,12 +1216,15 @@ function buildVeoPrompt(opts) {
   // Build the single prompt
   const lines = [];
 
-  lines.push(`A hyper-realistic smartphone selfie video of two elderly characters in a heated comedic argument. ${camStyle}`);
+  const ageDescA = ageNumA < 35 ? 'young' : ageNumA < 55 ? 'middle-aged' : 'elderly';
+  const ageDescB = ageNumB < 35 ? 'young' : ageNumB < 55 ? 'middle-aged' : 'elderly';
+  const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
+  lines.push(`A hyper-realistic smartphone selfie video of ${pairAgeDesc} characters in a heated comedic argument. ${camStyle}`);
   lines.push('');
   lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
   lines.push('');
-  lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchors}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
-  lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchors}. Calm, composed, arms crossed, slight smirk.`);
+  lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchorsA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
+  lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchorsB}. Calm, composed, arms crossed, slight smirk.`);
   lines.push('');
 
   // Scene flow
@@ -1236,7 +1254,7 @@ function buildVeoPrompt(opts) {
   lines.push('');
 
   // Style/negative
-  lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, wrinkles, age marks. Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality — authentic raw phone video.`);
+  lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, age-appropriate skin detail (${ageDescA === 'elderly' || ageDescB === 'elderly' ? 'wrinkles, age marks for elderly' : ageDescA === 'young' && ageDescB === 'young' ? 'natural imperfections, minor blemishes for young skin' : 'fine lines, natural imperfections'}). Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality — authentic raw phone video.`);
   lines.push('');
   lines.push(`Absolutely no text overlays, no subtitles, no captions, no watermarks, no logos, no UI elements, no borders, no filters. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
 
@@ -1657,7 +1675,7 @@ export function generate(input) {
       ? 'bright even daylight, minimal color cast, accurate skin tones, clean and honest look, slight warmth from ground bounce'
       : 'soft neutral palette, slight blue undertone, gentle contrast, natural skin tones with minimal color cast',
     hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
-    style: 'Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, wrinkles, age marks, oily sheen VISIBLE and CELEBRATED. This is FRAME 0 of the video — the exact starting point. The video will be generated FROM this image via image-to-video AI. Poses and expressions must be the natural starting position for the 8-second video that follows.',
+    style: `Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, ${parseInt(String(charA.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) < 35 ? 'natural skin texture, minor imperfections' : 'wrinkles, age marks'}, oily sheen VISIBLE and CELEBRATED. This is FRAME 0 of the video — the exact starting point. The video will be generated FROM this image via image-to-video AI. Poses and expressions must be the natural starting position for the 8-second video that follows.`,
     negative: 'no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no graphic overlays, no title cards, no speech bubbles, no name tags, no phone/camera visible in frame, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
     ...(product_info?.description_en ? {
       product_placement: {
@@ -2109,7 +2127,7 @@ export function mergeGeminiResult(localResult, geminiData) {
 ═══════════════════════════════════════════
 📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}
 🤖 Сгенерировано FERIXDI AI — уникальный контент
-👥 Пара: ${charA.name_ru} (${cast.speaker_A?.age || 'elderly'}) × ${charB.name_ru} (${cast.speaker_B?.age || 'elderly'})
+👥 Пара: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) × ${charB.name_ru} (${cast.speaker_B?.age || charB.biology_override?.age || 'adult'})
 🎭 Динамика: ${pairDynamic}
 📍 Локация: ${ctx.location.split(',')[0]}
 💡 Освещение: ${ctx.lightingMood.mood}
