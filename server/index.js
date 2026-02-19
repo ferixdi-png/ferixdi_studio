@@ -2098,6 +2098,107 @@ ${contextBlock}
   }
 });
 
+// ─── POST /api/translate — adapt dialogue & insta pack to English ──
+const RL_TRANSLATE = { window: 60_000, max: 6 }; // 6 per min
+app.post('/api/translate', authMiddleware, async (req, res) => {
+  const uid = req.user?.hash || getClientIP(req);
+  if (!checkRateLimit(`tr:${uid}`, RL_TRANSLATE.window, RL_TRANSLATE.max)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+
+  const { dialogue_A_ru, dialogue_B_ru, dialogue_A2_ru, killer_word, viral_title, share_bait, pin_comment, first_comment, hashtags, veo_prompt } = req.body;
+  if (!dialogue_A_ru && !dialogue_B_ru) {
+    return res.status(400).json({ error: 'dialogue_A_ru or dialogue_B_ru required' });
+  }
+
+  const GEMINI_KEY = nextGeminiKey();
+  if (!GEMINI_KEY) {
+    return res.status(503).json({ error: 'AI-движок не настроен.' });
+  }
+
+  try {
+    const prompt = `You are a professional comedy translator specializing in short-form social media content (Reels, TikTok, Shorts).
+
+Your task: translate the following Russian AI-Reels dialogue and Instagram package to ENGLISH.
+
+RULES:
+1. PRESERVE the comedy timing, punchlines, and emotional energy. Do NOT make it "formal" — keep it punchy, viral, and natural for English-speaking TikTok/Reels audience.
+2. Killer word MUST stay as a single impactful word that lands as the punchline.
+3. Hashtags: translate to English equivalents that work for English-speaking audience. Keep #ferixdi.
+4. Viral title & share bait: adapt to English social media culture (hook + curiosity gap).
+5. If a joke relies on Russian wordplay that doesn't translate — find an equivalent English joke that hits the same comedic beat.
+6. Keep the same speaker dynamics: A = provocation/setup, B = punchline/response.
+7. The veo_prompt contains Russian dialogue embedded in an English cinematic prompt. Replace ONLY the Russian dialogue lines with English translations. Keep ALL other English cinematography instructions exactly as they are.
+
+INPUT (Russian):
+dialogue_A_ru: "${dialogue_A_ru || ''}"
+dialogue_B_ru: "${dialogue_B_ru || ''}"
+${dialogue_A2_ru ? `dialogue_A2_ru: "${dialogue_A2_ru}"` : ''}
+killer_word: "${killer_word || ''}"
+viral_title: "${viral_title || ''}"
+share_bait: "${share_bait || ''}"
+pin_comment: "${pin_comment || ''}"
+first_comment: "${first_comment || ''}"
+hashtags: ${JSON.stringify(hashtags || [])}
+${veo_prompt ? `\nveo_prompt (translate ONLY the Russian dialogue lines inside, keep everything else as-is):\n---\n${veo_prompt.slice(0, 3000)}\n---` : ''}
+
+Return ONLY valid JSON (no markdown, no \`\`\`):
+{
+  "dialogue_A_en": "...",
+  "dialogue_B_en": "...",
+  ${dialogue_A2_ru ? '"dialogue_A2_en": "...",' : ''}
+  "killer_word_en": "...",
+  "viral_title_en": "...",
+  "share_bait_en": "...",
+  "pin_comment_en": "...",
+  "first_comment_en": "...",
+  "hashtags_en": ["#tag1", "#tag2", ...]
+  ${veo_prompt ? ',"veo_prompt_en": "..."' : ''}
+}`;
+
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 4096,
+        responseMimeType: 'application/json',
+      },
+    };
+
+    const resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) {
+      const errMsg = data.error?.message || 'AI error';
+      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      return res.status(422).json({ error: 'AI не вернул перевод. Попробуйте снова.' });
+    }
+
+    let parsed;
+    try {
+      const cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+      parsed = JSON.parse(cleaned);
+    } catch {
+      return res.status(422).json({ error: 'Не удалось разобрать ответ AI. Попробуйте снова.' });
+    }
+
+    res.json(parsed);
+
+  } catch (e) {
+    console.error('Translate error:', e.message);
+    res.status(500).json({ error: `Ошибка перевода: ${e.message}` });
+  }
+});
+
 // ─── Health Check Endpoint ───────────────────────
 app.get('/health', (req, res) => {
   const health = {

@@ -2623,6 +2623,17 @@ function displayResult(result) {
     document.getElementById('ab-testing-panel')?.classList.remove('hidden');
   }
 
+  // Show English adaptation button
+  const translatePanel = document.getElementById('translate-panel');
+  if (translatePanel) {
+    translatePanel.classList.remove('hidden');
+    const btn = document.getElementById('btn-translate-en');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '🇬🇧 Адаптация на English';
+    }
+  }
+
   // Save series episode if generating from series
   if (state._currentSeries) {
     try {
@@ -3148,6 +3159,129 @@ function initGenerate() {
     if (document.getElementById('regen-feedback')) document.getElementById('regen-feedback').value = '';
     // Trigger generation
     document.getElementById('btn-generate')?.click();
+  });
+}
+
+// ─── ENGLISH ADAPTATION ─────────────────────
+function initTranslate() {
+  document.getElementById('btn-translate-en')?.addEventListener('click', async () => {
+    const result = state.lastResult;
+    if (!result) return;
+
+    const btn = document.getElementById('btn-translate-en');
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Переводим на English...';
+
+    // Extract current dialogue from blueprint or context
+    const segs = result.blueprint_json?.dialogue_segments || [];
+    const lineA = segs.find(s => s.speaker === 'A');
+    const lineB = segs.find(s => s.speaker === 'B');
+    const lineA2 = segs.find(s => s.speaker === 'A2');
+    const ctx = result._apiContext || {};
+    const dialogueA = lineA?.text_ru || ctx.dialogueA || '';
+    const dialogueB = lineB?.text_ru || ctx.dialogueB || '';
+    const dialogueA2 = lineA2?.text_ru || '';
+    const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || '';
+
+    // Extract insta pack
+    const engage = result.log?.engagement || {};
+
+    const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const token = localStorage.getItem('ferixdi_jwt');
+    if (!token) {
+      btn.innerHTML = '❌ Нет токена — введите промо-код';
+      setTimeout(() => { btn.innerHTML = '🇬🇧 Адаптация на English'; btn.disabled = false; }, 2500);
+      return;
+    }
+
+    try {
+      const resp = await fetch(`${apiUrl}/api/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({
+          dialogue_A_ru: dialogueA,
+          dialogue_B_ru: dialogueB,
+          dialogue_A2_ru: dialogueA2 || undefined,
+          killer_word: killerWord,
+          viral_title: engage.viral_title || '',
+          share_bait: engage.share_bait || '',
+          pin_comment: engage.pin_comment || '',
+          first_comment: engage.first_comment || '',
+          hashtags: engage.hashtags || [],
+          veo_prompt: result.veo_prompt || '',
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+        throw new Error(err.error || `API error ${resp.status}`);
+      }
+
+      const en = await resp.json();
+
+      // Update dialogue display
+      const dA = document.getElementById('gen-dialogue-a');
+      const dB = document.getElementById('gen-dialogue-b');
+      const kw = document.getElementById('gen-killer-word');
+      if (dA && en.dialogue_A_en) dA.textContent = `«${en.dialogue_A_en}»`;
+      if (dB && en.dialogue_B_en) dB.textContent = `«${en.dialogue_B_en}»`;
+      if (kw && en.killer_word_en) kw.textContent = `💥 Killer word: «${en.killer_word_en}»`;
+
+      // Update Veo prompt
+      if (en.veo_prompt_en) {
+        document.getElementById('veo-prompt-text').textContent = en.veo_prompt_en;
+      }
+
+      // Update video prompt JSON dialogue
+      if (result.video_prompt_en_json?.dialogue) {
+        if (en.dialogue_A_en) result.video_prompt_en_json.dialogue.final_A_ru = en.dialogue_A_en;
+        if (en.dialogue_B_en) result.video_prompt_en_json.dialogue.final_B_ru = en.dialogue_B_en;
+        if (en.killer_word_en) result.video_prompt_en_json.dialogue.killer_word = en.killer_word_en;
+        document.querySelector('#tab-video pre').textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
+      }
+
+      // Update blueprint dialogue segments
+      if (result.blueprint_json?.dialogue_segments) {
+        const segA = result.blueprint_json.dialogue_segments.find(s => s.speaker === 'A');
+        const segB = result.blueprint_json.dialogue_segments.find(s => s.speaker === 'B');
+        const segA2 = result.blueprint_json.dialogue_segments.find(s => s.speaker === 'A2');
+        if (segA && en.dialogue_A_en) segA.text_ru = en.dialogue_A_en;
+        if (segB && en.dialogue_B_en) segB.text_ru = en.dialogue_B_en;
+        if (segA2 && en.dialogue_A2_en) segA2.text_ru = en.dialogue_A2_en;
+        if (en.killer_word_en) result.blueprint_json.killer_word = en.killer_word_en;
+        document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
+      }
+
+      // Update insta tab with English content
+      if (en.viral_title_en || en.share_bait_en) {
+        // Store English engagement data and re-render insta tab
+        result.log = result.log || {};
+        result.log.engagement = result.log.engagement || {};
+        result.log.engagement.viral_title = en.viral_title_en || engage.viral_title;
+        result.log.engagement.share_bait = en.share_bait_en || engage.share_bait;
+        result.log.engagement.pin_comment = en.pin_comment_en || engage.pin_comment;
+        result.log.engagement.first_comment = en.first_comment_en || engage.first_comment;
+        result.log.engagement.hashtags = en.hashtags_en || engage.hashtags;
+        populateInstaTab(result);
+      }
+
+      // Update dialogue editor inputs
+      const edA = document.getElementById('editor-line-a');
+      const edB = document.getElementById('editor-line-b');
+      if (edA && en.dialogue_A_en) edA.value = en.dialogue_A_en;
+      if (edB && en.dialogue_B_en) edB.value = en.dialogue_B_en;
+
+      btn.innerHTML = '✅ English готово!';
+      log('OK', 'TRANSLATE', `Адаптация на English: A="${en.dialogue_A_en?.slice(0, 40)}..." B="${en.dialogue_B_en?.slice(0, 40)}..."`);
+      showNotification('🇬🇧 Контент адаптирован на английский! Все поля обновлены.', 'success');
+
+      setTimeout(() => { btn.innerHTML = '🇬🇧 Адаптация на English'; btn.disabled = false; }, 3000);
+
+    } catch (e) {
+      log('ERR', 'TRANSLATE', e.message);
+      btn.innerHTML = `❌ ${e.message?.slice(0, 40) || 'Ошибка'}`;
+      setTimeout(() => { btn.innerHTML = '🇬🇧 Адаптация на English'; btn.disabled = false; }, 3000);
+    }
   });
 }
 
@@ -6249,6 +6383,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSeries();
   initSurprise();
   initABTesting();
+  initTranslate();
   initCharConstructor();
   initLocConstructor();
   initEducation();
