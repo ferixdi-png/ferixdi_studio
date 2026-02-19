@@ -419,7 +419,12 @@ ${productBlock}
 
 ━━━ ПОВЕДЕНИЕ A (визуальные маркеры) ━━━
 • Внешность (RU): ${charA.appearance_ru || 'elderly Russian character'}
+• Характер (RU): ${charA.behavior_ru || '—'}
+• Слоган: ${charA.tagline_ru || '—'}
 • Микрожест (повторяемый): ${charA.identity_anchors?.micro_gesture || '—'}
+• Поведение при молчании: ${charA.modifiers?.listening_behavior || 'arms crossed, judgmental stare, occasional eye roll'}
+• Подача юмора: ${charA.modifiers?.humor_delivery || 'explosive — шутит громко и в лоб'}
+• Отношение к камере: ${charA.modifiers?.camera_relationship || 'breaks 4th wall — обращается прямо к зрителю'}
 • Стиль хука (кадр 0): ${charA.modifiers?.hook_style || 'attention grab'}
 • Стиль смеха: ${charA.modifiers?.laugh_style || 'natural'}
 • Выражение злости: ${charA.modifiers?.anger_expression || 'natural anger'}
@@ -503,7 +508,12 @@ ${productBlock}
 
 ━━━ ПОВЕДЕНИЕ B (визуальные маркеры) ━━━
 • Внешность (RU): ${charB.appearance_ru || 'elderly Russian character'}
+• Характер (RU): ${charB.behavior_ru || '—'}
+• Слоган: ${charB.tagline_ru || '—'}
 • Микрожест (повторяемый): ${charB.identity_anchors?.micro_gesture || '—'}
+• Поведение при молчании: ${charB.modifiers?.listening_behavior || 'stone-faced silence, arms crossed, slow disapproving nod'}
+• Подача юмора: ${charB.modifiers?.humor_delivery || 'deadpan — бьёт одной фразой без эмоций'}
+• Отношение к камере: ${charB.modifiers?.camera_relationship || 'occasional glance — изредка бросает взгляд в камеру'}
 • Стиль хука (кадр 0): ${charB.modifiers?.hook_style || 'quiet entrance'}
 • Стиль смеха: ${charB.modifiers?.laugh_style || 'quiet chuckle'}
 • Выражение злости: ${charB.modifiers?.anger_expression || 'natural anger'}

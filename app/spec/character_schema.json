@@ -27,7 +27,10 @@
       "required": ["hook_style", "laugh_style"],
       "properties": {
         "hook_style": { "type": "string" },
-        "laugh_style": { "type": "string" }
+        "laugh_style": { "type": "string" },
+        "listening_behavior": { "type": "string", "description": "Что делает когда молчит и слушает: eye rolls, arms crossed, nods, fidgets" },
+        "humor_delivery": { "type": "string", "description": "Как подаёт шутку: explosive/deadpan/slow burn/sarcastic" },
+        "camera_relationship": { "type": "string", "description": "Как взаимодействует с камерой: breaks 4th wall/ignores/occasional glance" }
       }
     },
     "compatibility": {
