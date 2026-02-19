@@ -5173,6 +5173,12 @@ async function createCustomCharacter() {
     footwear_anchor: appearance.split('.').find(s => /туфл|ботинк|сапог|тапоч|кроссовк|shoes|boots|slippers|sneakers/i.test(s))?.trim() || 'worn comfortable footwear',
     headwear_anchor: appearance.split('.').find(s => /шляп|кепк|берет|платок|шапк|капюш|hat|cap|beret|headscarf|beanie/i.test(s))?.trim() || 'none',
     color_palette: extractTokens(['красн', 'синий', 'зелён', 'чёрн', 'бел', 'серый', 'коричн', 'золот', 'серебр', 'бордо', 'бежев', 'red', 'blue', 'green', 'black', 'white', 'grey', 'brown', 'gold', 'silver']),
+    jewelry_anchors: appearance.split('.').find(s => /кольц|серьг|цеп|брасл|кулон|часы|ring|earring|chain|bracelet|pendant|watch/i.test(s))?.trim() || 'none visible',
+    glasses_anchor: /очк|линз|glass|spectacle|bifocal/i.test(appearance) ? appearance.split('.').find(s => /очк|линз|glass|spectacle/i.test(s))?.trim() || 'glasses' : 'none',
+    nail_style_anchor: isMale ? 'short trimmed nails' : 'neat manicured nails',
+    fabric_texture_anchor: /шёлк|silk/i.test(appearance) ? 'smooth silk' : /шерст|wool|knit/i.test(appearance) ? 'coarse wool' : /хлоп|cotton/i.test(appearance) ? 'soft cotton' : 'natural fabric',
+    pattern_anchor: /цветоч|floral/i.test(appearance) ? 'floral print' : /полос|stripe/i.test(appearance) ? 'striped' : /клет|plaid|check/i.test(appearance) ? 'plaid checkered' : 'solid color',
+    sleeve_style_anchor: /коротк.*рукав|short.?sleeve/i.test(appearance) ? 'short sleeves' : 'long sleeves',
   };
 
   const isMale = /дед|пап|сын|мужч|man|male|boy/i.test(appearance + ' ' + group);
@@ -5196,6 +5202,17 @@ async function createCustomCharacter() {
     gait_tokens: extractTokens(['походк', 'шагает', 'хромает', 'ковыляет', 'walk', 'shuffle', 'limp', 'stride']),
     facial_expression_default: compat === 'chaotic' ? 'alert suspicious squint' : compat === 'conflict' ? 'stern disapproving frown' : compat === 'calm' ? 'calm knowing half-smile' : compat === 'meme' ? 'perpetually amused smirk' : 'neutral resting expression',
     voice_texture_tokens: isMale ? [speech?.includes('бас') ? 'deep bass voice' : 'age-weathered male voice'] : [speech?.includes('тонк') ? 'thin high-pitched voice' : 'age-weathered female voice'],
+    jaw_tokens: extractTokens(['челюст', 'jaw', 'jawline']),
+    cheekbone_tokens: extractTokens(['скул', 'cheekbone']),
+    forehead_tokens: extractTokens(['лоб', 'forehead']),
+    eyebrow_tokens: extractTokens(['бров', 'eyebrow', 'brow']),
+    lip_texture_tokens: extractTokens(['губ', 'lip']),
+    chin_tokens: extractTokens(['подбород', 'chin']),
+    nasolabial_tokens: ['age-appropriate nasolabial folds'],
+    undereye_tokens: ['natural under-eye area'],
+    shoulder_tokens: extractTokens(['плеч', 'shoulder']),
+    teeth_tokens: extractTokens(['зуб', 'teeth', 'tooth']),
+    eyelash_tokens: isMale ? ['sparse natural lashes'] : ['medium natural lashes'],
   };
 
   const autoModifiers = {
@@ -5205,6 +5222,12 @@ async function createCustomCharacter() {
     thinking_expression: compat === 'chaotic' ? 'rapid eye darting, finger tapping' : compat === 'calm' ? 'serene pause, eyes unfocused' : 'slight squint, looks up',
     surprise_expression: compat === 'chaotic' ? 'explosive gasp, hands fly up' : compat === 'calm' ? 'slight eyebrow raise' : 'eyes widen, mouth opens slightly',
     eye_contact_style: compat === 'chaotic' ? 'darting between camera and opponent' : compat === 'conflict' ? 'locked unblinking stare' : 'steady natural alternation',
+    sad_expression: compat === 'chaotic' ? 'chin drops, eyes go distant and watery' : compat === 'calm' ? 'face goes still and blank, jaw tightens' : 'lower lip trembles slightly, eyes glisten',
+    contempt_expression: compat === 'chaotic' ? 'upper lip curls asymmetrically' : compat === 'conflict' ? 'chin lifts slightly, eyes narrow to slits' : 'one corner of mouth rises, nostril flares',
+    disgust_expression: compat === 'chaotic' ? 'whole face contracts toward center' : compat === 'calm' ? 'nose wrinkles sharply, upper lip retracts' : 'head pulls back, chin tucks in',
+    joy_expression: compat === 'chaotic' ? 'head throws back with open-mouth laugh' : compat === 'calm' ? 'eyes nearly shut from genuine smile, cheeks bunch up' : 'whole face crinkles, crow feet deepen, mouth wide open',
+    blink_pattern: compat === 'chaotic' ? 'rapid nervous blinking when agitated 2-3 per second' : compat === 'calm' ? 'slow deliberate blinks every 4-6 seconds' : 'normal blink pattern every 3-4 seconds',
+    fidget_style: compat === 'chaotic' ? 'taps fingers on nearest surface' : compat === 'conflict' ? 'shifts weight foot to foot' : 'minimal fidgeting',
   };
 
   const newChar = {
