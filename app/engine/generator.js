@@ -1173,9 +1173,11 @@ function buildVeoPrompt(opts) {
     hookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2,
     productInfo,
+    referenceStyle,
   } = opts;
 
   const hasProduct = !!(productInfo?.description_en);
+  const hasReference = !!(referenceStyle?.description_en);
 
   // Convert pipe pauses to natural ellipsis for Veo
   const veoPause = (text) => (text || '').replace(/\s*\|\s*/g, '... ').trim();
@@ -1270,6 +1272,12 @@ function buildVeoPrompt(opts) {
     lines.push(`PRODUCT IN FRAME (must match the reference photo EXACTLY): ${productInfo.description_en}. Character A holds this product while arguing — it is clearly visible throughout the video, rendered with photorealistic accuracy. The product's colors, shape, branding, and materials must be identical to the original reference photo. The product is a natural part of the argument — A gestures with it, shows it to camera, uses it as a prop.`);
   }
 
+  // Visual reference style
+  if (hasReference) {
+    lines.push('');
+    lines.push(`VISUAL REFERENCE — match this aesthetic: ${referenceStyle.description_en}. Replicate the lighting direction, color palette, mood, contrast, and composition style from this reference as closely as possible while keeping the characters, dialogue, and selfie format intact.`);
+  }
+
   return lines.join('\n');
 }
 
@@ -1285,6 +1293,7 @@ export function generate(input) {
     context_ru, script_ru, scene_hint_ru,
     category, thread_memory, video_meta,
     product_info,
+    reference_style,
     options = {}, seed = Date.now().toString(),
     characters = [],
     locations = [],
@@ -1685,6 +1694,12 @@ export function generate(input) {
         lighting_on_product: 'Same environmental lighting as scene. Natural specular highlights on product surface consistent with the light source direction described above. No studio product lighting.',
       }
     } : {}),
+    ...(reference_style?.description_en ? {
+      visual_reference: {
+        instruction: 'Match the visual aesthetic described below as closely as possible — lighting direction, color palette, mood, contrast, composition style. Keep the characters, selfie format, and dialogue intact.',
+        style_description: reference_style.description_en,
+      }
+    } : {}),
   };
 
   // ── VIDEO PROMPT (EN) ──
@@ -1789,6 +1804,12 @@ export function generate(input) {
         rendering: 'Photorealistic fidelity — every label, color gradient, texture, material must match the uploaded reference photo. Environmental lighting on product consistent with scene. No studio product lighting.',
       }
     } : {}),
+    ...(reference_style?.description_en ? {
+      visual_reference: {
+        instruction: 'Match the visual aesthetic described below — lighting, color palette, mood, contrast, composition. Keep characters and dialogue intact.',
+        style_description: reference_style.description_en,
+      }
+    } : {}),
   };
 
   // ── VEO 3.1 PROMPT (single text for Google Flow) ──
@@ -1797,6 +1818,7 @@ export function generate(input) {
     hookObj: mergedHookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2: null,
     productInfo: product_info,
+    referenceStyle: reference_style,
   });
 
   // ── ENGAGEMENT (smart hashtags + viral bait) ──
@@ -1909,7 +1931,13 @@ ${engage.firstComment}
 ⚠️ ВАЖНО: Товар должен быть в кадре точно как на исходном фото!
 • Персонаж A держит/показывает товар во время своей реплики
 • Товар остаётся видимым на протяжении всего ролика
-• Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
+• Цвета, форма, бренд — строго как на оригинальном фото` : ''}${reference_style?.description_en ? `
+
+🎨 ВИЗУАЛЬНЫЙ РЕФЕРЕНС:
+═══════════════════════════════════════════
+Описание стиля (EN, для промпта): ${reference_style.description_en.slice(0, 300)}${reference_style.description_en.length > 300 ? '...' : ''}
+
+💡 Повтори освещение, цветовую палитру и настроение с загруженного референса!` : ''}`;
 
   // ── BLUEPRINT JSON ──
   const blueprint_json = {
@@ -2003,7 +2031,7 @@ ${engage.firstComment}
     // Context for API mode — sent to server for Gemini refinement
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
-      input_mode, video_meta, product_info, location, wardrobeA, wardrobeB,
+      input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB,
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue

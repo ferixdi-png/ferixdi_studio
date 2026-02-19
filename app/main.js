@@ -21,6 +21,7 @@ const state = {
   category: null,
   videoMeta: null,
   productInfo: null, // { image_base64, mime_type, description_en }
+  referenceStyle: null, // { description_en } — visual style from reference photo
   options: { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false },
   lastResult: null,
   settingsMode: 'api',
@@ -2283,8 +2284,11 @@ function applyPostGenPhoto() {
       ruEl.textContent = (ruEl.textContent || '') + `\n\n🎨 ВИЗУАЛЬНЫЙ РЕФЕРЕНС (добавлено по фото):\n${desc}\n💡 Повтори освещение, цветовую палитру и настроение с загруженного фото`;
     }
 
+    // Save reference style to state for future regenerations
+    state.referenceStyle = { description_en: desc };
+
     showPostPhotoStatus('Референс добавлен во все промпты!', 'text-violet-400');
-    log('OK', 'POST-PHOTO', 'Референс применён к промптам');
+    log('OK', 'POST-PHOTO', 'Референс применён к промптам и сохранён в state');
   }
 
   // Flash apply button for feedback
@@ -2297,6 +2301,8 @@ function applyPostGenPhoto() {
 }
 
 function clearPostGenPhoto() {
+  // If clearing reference mode, also clear the saved reference style
+  if (_postPhotoMode === 'reference') state.referenceStyle = null;
   state._postGenPhoto = null;
   _postPhotoMode = null;
   document.getElementById('post-photo-preview')?.classList.add('hidden');
@@ -2523,6 +2529,40 @@ function displayResult(result) {
 
   // Show post-generation photo enhancement panel
   document.getElementById('post-gen-photo')?.classList.remove('hidden');
+
+  // ── Reminder: upload product/reference photos for better results ──
+  const hasProduct = !!(state.productInfo?.description_en);
+  const hasRef = !!(state.referenceStyle?.description_en);
+  if (!hasProduct && !hasRef) {
+    // No photos loaded — show prominent reminder
+    showNotification('💡 Загрузи фото товара 📦 или референс фона 🎨 ниже — AI встроит их в промпт!', 'info');
+  } else if (hasProduct && !hasRef) {
+    showNotification('📦 Товар в промпте ✓ | 💡 Можешь добавить ещё референс фона 🎨', 'success');
+  } else if (!hasProduct && hasRef) {
+    showNotification('🎨 Референс в промпте ✓ | 💡 Можешь добавить ещё фото товара 📦', 'success');
+  } else {
+    showNotification('📦 Товар ✓ 🎨 Референс ✓ — промпты обогащены по максимуму!', 'success');
+  }
+
+  // Reference badge in Veo tab
+  const veoRefBadge = document.getElementById('veo-ref-badge');
+  if (veoRefBadge) {
+    if (hasRef) {
+      const refDesc = state.referenceStyle.description_en;
+      const refShort = refDesc.length > 120 ? refDesc.slice(0, 120) + '...' : refDesc;
+      veoRefBadge.classList.remove('hidden');
+      veoRefBadge.innerHTML = `
+        <div class="flex items-start gap-2">
+          <div class="text-2xl flex-shrink-0">🎨</div>
+          <div class="min-w-0">
+            <div class="text-[10px] font-bold text-violet-400">🎨 Референс стиля в промпте ✓</div>
+            <div class="text-[9px] text-gray-400 leading-tight mt-0.5">${escapeHtml(refShort)}</div>
+          </div>
+        </div>`;
+    } else {
+      veoRefBadge.classList.add('hidden');
+    }
+  }
 
   document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -2925,6 +2965,7 @@ function initGenerate() {
       thread_memory: getThreadMemory(),
       video_meta: state.videoMeta,
       product_info: state.productInfo,
+      reference_style: state.referenceStyle,
       options: state.options,
       seed: Date.now().toString(),
       characters: state.characters,
