@@ -3660,10 +3660,22 @@ async function fetchTrends() {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
       body: JSON.stringify({ niche }),
     });
-    const data = await resp.json();
+
+    // Safe JSON parse — server may return empty body or non-JSON on error
+    let data;
+    try {
+      const text = await resp.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (parseErr) {
+      st.innerHTML = `<span class="text-red-400">❌ Сервер вернул некорректный ответ (${resp.status}). Попробуй ещё раз.</span>`;
+      log('ERR', 'ТРЕНДЫ', `JSON parse error: ${parseErr.message}, status: ${resp.status}`);
+      btn.disabled = false;
+      btn.innerHTML = '<span>🔍</span> Попробовать ещё раз';
+      return;
+    }
 
     if (!resp.ok) {
-      st.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(data.error || 'Ошибка')}</span>`;
+      st.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(data.error || `Ошибка сервера (${resp.status})`)}</span>`;
       btn.disabled = false;
       btn.innerHTML = '<span>🔍</span> Попробовать ещё раз';
       return;
