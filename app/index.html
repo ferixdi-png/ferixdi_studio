@@ -365,14 +365,17 @@
           <!-- MODE: suggested -->
           <div id="remix-suggested" class="glass-panel p-4 space-y-3 hidden">
             <div class="text-xs text-gray-400 font-medium mb-2">📚 Готовые идеи — AI подберёт тему</div>
+            <div class="text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
+              💡 <strong>Готовые идеи</strong> находятся в разделе <button onclick="navigateTo('trends')" class="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 font-medium transition-colors">🔍 Поиск идей</button> в боковом меню. Найдите подходящую тему там и вставьте её в поле ниже, или оставьте пустым — AI сам подберёт актуальную тему.
+            </div>
             <div id="trending-ideas-main" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[180px] overflow-y-auto">
               <div class="text-xs text-gray-500 text-center py-3">🔍 Загружаем популярные темы...</div>
             </div>
             <div class="border-t border-gray-800/50 pt-3 mt-1">
               <div class="text-[10px] text-gray-500 mb-1.5">Или напишите свою тему (необязательно):</div>
-              <textarea id="idea-input-suggested" class="input-field h-12 resize-none text-sm" placeholder="Уточнить тему или оставить пустым — AI сам подберёт"></textarea>
+              <textarea id="idea-input-suggested" class="input-field h-12 resize-none text-sm" placeholder="Вставьте тему из «Поиск идей» или напишите свою — AI сам подберёт"></textarea>
             </div>
-            <div class="text-[10px] text-gray-600">🔥 Выберите тему из трендов или оставьте пустым — AI найдёт актуальную тему сам</div>
+            <div class="text-[10px] text-gray-600">🔥 Выберите тему из раздела «Поиск идей» или оставьте пустым — AI найдёт актуальную тему сам</div>
           </div>
 
           <!-- MODE: script -->
