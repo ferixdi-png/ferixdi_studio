@@ -833,8 +833,8 @@ function buildCastContract(charA, charB) {
     return {
       character_en: char.prompt_tokens?.character_en || `${ageFallback} character, hyper-realistic detail, NEVER plastic or smooth`,
       age: bio.age || ageFallback,
-      skin: (bio.skin_tokens || defaultSkin).join(', '),
-      eyes: (bio.eye_tokens || defaultEyes).join(', '),
+      skin: (Array.isArray(bio.skin_tokens) ? bio.skin_tokens : (typeof bio.skin_tokens === 'string' ? [bio.skin_tokens] : defaultSkin)).join(', '),
+      eyes: (Array.isArray(bio.eye_tokens) ? bio.eye_tokens : (typeof bio.eye_tokens === 'string' ? [bio.eye_tokens] : defaultEyes)).join(', '),
       mouth: role === 'A'
         ? 'realistic teeth/gums, lip moisture, lip-bite as comedic pafos-anchor (sparingly), micro saliva glints'
         : 'realistic teeth/gums, lip moisture, mouth SEALED when not speaking, jaw still',
