@@ -1938,7 +1938,30 @@ export function generate(input) {
     : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
     : '⚖️ Сбалансированная пара';
 
-  const ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
+  const ru_package = soloMode ? `🎬 МОНОЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
+═══════════════════════════════════════════
+📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
+👤 Персонаж: ${charA.name_ru} (${cast.speaker_A.age}) — СОЛО
+🎭 Динамика: ${pairDynamic}
+📍 Локация: ${location.split(',')[0]}
+💡 Освещение: ${lightingMood.mood}
+👗 Гардероб: ${wardrobeA}
+🪑 Реквизит: ${propAnchor}
+
+[0.00–0.60] 🎣 ХУК: ${mergedHookObj.action_ru}
+  🔊 Звук: ${mergedHookObj.audio}
+  🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
+
+[0.60–7.00] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
+  «${dialogueA}»
+  💬 Темп: ${charA.speech_pace} | Слов: 15-30 | Окно: 6.4с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая эмоция'}
+  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
+  💥 KILLER WORD «${killerWord}» → ближе к 6.8s
+
+[7.00–8.00] 😏 RELEASE: реакция/пауза/усмешка
+  🎭 Финал: ${charA.modifiers?.laugh_style || 'усмешка в камеру'}`
+  : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
 📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
 � Пара: ${charA.name_ru} (${cast.speaker_A.age}) × ${charB.name_ru} (${cast.speaker_B.age})

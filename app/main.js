@@ -349,7 +349,7 @@ function initLocationPicker() {
   });
   
   // Update progress when inputs change
-  ['idea-input', 'idea-input-custom', 'script-a', 'script-b'].forEach(id => {
+  ['idea-input', 'idea-input-custom', 'idea-input-suggested', 'script-a', 'script-b', 'scene-hint-main'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', () => {
       setTimeout(updateProgress, 100); // Debounce
     });
@@ -2864,11 +2864,8 @@ async function callAIEngine(apiContext) {
   // Build payload with optional multimodal attachments
   const payload = { 
     context: apiContext,
-    // Ensure all critical data is transmitted
     generation_mode: state.generationMode || state.inputMode,
     selected_location_id: state.selectedLocation,
-    characters: state.characters,
-    locations: state.locations,
     thread_memory: getThreadMemory()
   };
 
@@ -2966,7 +2963,9 @@ function initGenerate() {
       }
       
       // Additional validation for script mode (per-speaker limits)
-      const maxWordsA = 15;
+      // Solo monologue (only A filled) allows up to 30 words; duo keeps 15/18
+      const isSoloScript = scriptA && !scriptB;
+      const maxWordsA = isSoloScript ? 30 : 15;
       const maxWordsB = 18;
       if (scriptA && scriptA.split(/\s+/).length > maxWordsA) {
         showGenStatus(`⚠️ Реплика A слишком длинная (${scriptA.split(/\s+/).length} слов). Максимум: ${maxWordsA} слов`, 'text-orange-400');
@@ -4665,18 +4664,23 @@ function updateProgress() {
   let hasContent = false;
   let contentText = 'не указан';
   
-  if (state.generationMode === 'idea' || state.generationMode === 'suggested') {
+  if (state.generationMode === 'idea') {
     const ideaInput = document.getElementById('idea-input')?.value || document.getElementById('idea-input-custom')?.value;
     if (ideaInput && ideaInput.trim()) {
       hasContent = true;
       contentText = ideaInput.slice(0, 25) + (ideaInput.length > 25 ? '...' : '');
     }
+  } else if (state.generationMode === 'suggested') {
+    // Suggested mode always has content — AI picks trending ideas; user text is optional
+    hasContent = true;
+    const suggestedInput = document.getElementById('idea-input-suggested')?.value || document.getElementById('idea-input')?.value || '';
+    contentText = suggestedInput.trim() ? suggestedInput.slice(0, 25) + (suggestedInput.length > 25 ? '...' : '') : '✓ AI подберёт тему';
   } else if (state.generationMode === 'script') {
-    const scriptA = document.getElementById('script-a')?.value;
-    const scriptB = document.getElementById('script-b')?.value;
-    if (scriptA && scriptB) {
+    const scriptA = document.getElementById('script-a')?.value?.trim();
+    const scriptB = document.getElementById('script-b')?.value?.trim();
+    if (scriptA || scriptB) {
       hasContent = true;
-      contentText = '✓ Диалог готов';
+      contentText = scriptB ? '✓ Диалог готов' : '✓ Монолог (соло)';
     }
   } else if (state.generationMode === 'video') {
     if (state.videoMeta) {
