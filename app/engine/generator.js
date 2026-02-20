@@ -740,6 +740,65 @@ function pickN(arr, n, rng) {
   return result;
 }
 
+// ─── RUSSIAN → ENGLISH HELPERS (for video_prompt_en_json) ───
+function _vibeToEn(vibe, fallback) {
+  if (!vibe) return fallback || 'distinctive personality';
+  if (!/[\u0400-\u04FF]/.test(vibe)) return vibe;
+  const l = vibe.toLowerCase();
+  if (l.includes('провокатор')) return 'provocateur';
+  if (l.includes('база') || l.includes('основ')) return 'grounded responder';
+  if (l.includes('инфлюенс') || l.includes('блогер') || l.includes('кольцев')) return 'influencer 24/7 — ring light and endless content';
+  if (l.includes('меланхол') || l.includes('театр')) return 'theatrical melancholic — every word deliberate';
+  if (l.includes('профессор') || l.includes('учёный') || l.includes('учит')) return 'professorial authority';
+  if (l.includes('хаот') || l.includes('взрыв')) return 'chaotic explosive energy';
+  if (l.includes('спокой') || l.includes('дзен')) return 'zen-like calm — devastating quiet power';
+  if (l.includes('хипст') || l.includes('модн')) return 'hipster trendsetter — ironic detachment';
+  if (l.includes('силач') || l.includes('брут')) return 'brute force simplicity';
+  if (l.includes('солд') || l.includes('воен') || l.includes('полковн')) return 'military precision and discipline';
+  if (l.includes('торгов') || l.includes('бизнес')) return 'street-smart hustler energy';
+  if (l.includes('бабк') || l.includes('бабуш')) return 'grandma wisdom with sharp tongue';
+  if (l.includes('дед')) return 'grumpy grandpa authority';
+  if (l.includes('мам') || l.includes('домохоз')) return 'protective mother energy';
+  if (l.includes('царств') || l.includes('короле')) return 'regal commanding presence';
+  if (l.includes('босс') || l.includes('директ')) return 'CEO power and authority';
+  if (l.includes('гик') || l.includes('нерд')) return 'geek culture obsessive energy';
+  if (l.includes('дач') || l.includes('огород')) return 'suburban gardener passion';
+  if (l.includes('фермер') || l.includes('деревен')) return 'village farmer pragmatism';
+  return fallback || 'distinctive personality';
+}
+
+function _aestheticToEn(aes) {
+  if (!aes) return 'authentic domestic realism';
+  if (!/[\u0400-\u04FF]/.test(aes)) return aes;
+  const l = aes.toLowerCase();
+  if (l.includes('инстаграм') || l.includes('instagram')) return 'instagram-reality';
+  if (l.includes('деревен') || l.includes('уют')) return 'cozy-village-VIP';
+  if (l.includes('совет') || l.includes('ностальг')) return 'soviet-nostalgia';
+  if (l.includes('гламур') || l.includes('роскош')) return 'glamorous-excess';
+  if (l.includes('панк') || l.includes('неон')) return 'neon-punk';
+  if (l.includes('минимал')) return 'urban-minimalism';
+  if (l.includes('ретро')) return 'retro-charm';
+  if (l.includes('домашн')) return 'domestic-intimacy';
+  if (l.includes('военн') || l.includes('армей')) return 'military-order';
+  if (l.includes('хипстер')) return 'hipster-casual';
+  if (l.includes('базар') || l.includes('рынок')) return 'bazaar-chaos';
+  if (l.includes('дач')) return 'dacha-rustic';
+  return 'authentic domestic realism';
+}
+
+function _speechStyleToEn(styleRu, pace, compat) {
+  if (styleRu && !/[\u0400-\u04FF]/.test(styleRu)) return styleRu;
+  const p = pace === 'fast' ? 'Rapid-fire delivery, excitable, sentences overlap with enthusiasm'
+    : pace === 'slow' ? 'Slow deliberate delivery, every word weighted, dramatic pauses'
+    : 'Medium pace, natural rhythm with emotional peaks';
+  const c = compat === 'chaotic' ? 'explosive unpredictable energy'
+    : compat === 'calm' ? 'measured composure, quiet devastating authority'
+    : compat === 'conflict' ? 'confrontational edge, challenging tone'
+    : compat === 'meme' ? 'ironic detached humor'
+    : 'balanced emotional range';
+  return `${p}. ${c}. Authentic Russian speech with age-appropriate patterns.`;
+}
+
 // ─── ENGAGEMENT BUILDER ─────────────────────
 function buildEngagement(catRu, charA, charB, rng) {
   const nameA = charA.name_ru;
@@ -842,7 +901,7 @@ function buildCastContract(charA, charB) {
       signature_element: anchors.signature_element || 'notable accessory',
       micro_gesture: anchors.micro_gesture || 'subtle expression change',
       wardrobe_anchor: anchors.wardrobe_anchor || 'distinctive clothing piece',
-      vibe: char.vibe_archetype || (role === 'A' ? 'провокатор' : 'база'),
+      vibe: _vibeToEn(char.vibe_archetype, role === 'A' ? 'provocateur' : 'grounded responder'),
     };
   };
   return {
@@ -940,7 +999,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       head_rotation_limit: 'Maximum 25° yaw from camera at any time. During active speech: keep within 15° of front-facing. Beyond 25°: far-side lips invisible → lip-sync catastrophe.',
       head_tilt_limit: 'Maximum 10° roll (head tilt). Maximum 15° pitch (nod). Combined rotation budget: sqrt(yaw² + roll² + pitch²) < 30°. Head must feel MOBILE but never turn away.',
       hair_and_accessories: 'No bangs/fringe over lips. No thick mustache obscuring lip line (if character has mustache: trimmed clear of lip edge). No sunglasses blocking eye area. Glasses: clear lenses only, frame above mouth.',
-      jaw_tracking: 'Every Russian syllable = visible jaw movement. Consonants т/д/п/б/м/н = clear lip closure/contact. Vowels а/о/у = proportional jaw opening (а = wide, у = pursed). Speed matches speech pace. Jaw moves DOWN, not just lips moving.',
+      jaw_tracking: 'Every Russian syllable = visible jaw movement. Consonants t/d/p/b/m/n (Russian equivalents) = clear lip closure/contact. Vowels a/o/u = proportional jaw opening (a = wide, u = pursed). Speed matches speech pace. Jaw moves DOWN, not just lips moving.',
       non_speaking_mouth: 'NOT speaking = mouth FIRMLY SEALED. Jaw immobile. Lips softly pressed. NO phantom movements, NO mouthing along, NO chewing, NO lip-licking (unless character-motivated brief moment). ONLY subtle lip-pressure changes from emotion.',
       front_camera_face_lock: 'Phone front camera has face-tracking AF. Face should always be the sharpest element. If head moves, focus follows with 50-100ms lag (realistic AF tracking delay).',
     },
@@ -1000,12 +1059,12 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       directive: 'Sound is what makes the BRAIN believe the IMAGE is real. Smartphone mic signature: slightly compressed, room-reverberant, catches everything. This is NOT a studio recording.',
       room_tone: 'MANDATORY: continuous ambient sound matching location. Runs UNDER dialogue at -20 to -30dB. Real rooms NEVER have silence — there is always hum, wind, distant traffic, appliance drone. This is the bed everything sits on.',
       voice_volume: 'Dialogue: -6dB to -3dB peak. NATURAL dynamic range — louder on shouts, softer on asides, voice cracks on emotion. NO compression, NO limiter. Real speech volume varies ±6dB within a sentence.',
-      voice_proximity: 'Phone mic is 35-60cm from mouths. Voice has slight room coloring — NOT dry studio sound. Plosives (п, б) may cause brief mic pop. Sibilants (с, ш) slightly harsh. This is PHONE MIC character.',
+      voice_proximity: 'Phone mic is 35-60cm from mouths. Voice has slight room coloring — NOT dry studio sound. Plosives (p, b — Russian equivalents) may cause brief mic pop. Sibilants (s, sh) slightly harsh. This is PHONE MIC character.',
       voice_room_match: 'Reverb MUST match space size. Kitchen: 0.3-0.5s RT60, hard reflections. Outdoors: <0.1s, almost dry. Stairwell: 1.0-1.5s echo. Small room: 0.2-0.3s tight reflection. Mismatch = instant fake detection.',
       breathing_sounds: 'Audible inhale before each speaking turn (0.15-0.25s). Phone mic picks up breathing. Nose exhale from listener. Sharp inhale of surprise from A when B delivers killer word.',
       cloth_and_foley: 'Fabric rustle on EVERY body movement (phone mic is very sensitive). Chair/surface creak. Prop interaction sounds. Footstep shuffle on weight shift. These environmental sounds anchor the reality.',
       laugh_audio: 'Release laughter: 20-30% louder than dialogue. Phone mic response: slight compression/distortion on laugh peaks (mic overload). Breathy, raspy, bodies shaking. Camera mic picks up hand-grip rustle from holder shaking.',
-      mouth_sounds: 'Subtle: saliva clicks on hard consonants (т, к, п, д), lip smack at sentence start, tongue contact on л/н. These are captured by phone mic at close range and are CRITICAL realism markers.',
+      mouth_sounds: 'Subtle: saliva clicks on hard consonants (t, k, p, d — Russian plosives), lip smack at sentence start, tongue contact on l/n. These are captured by phone mic at close range and are CRITICAL realism markers.',
       forbidden: 'No dead silence (even 0.1s of pure silence is wrong — room tone fills everything). No studio-clean voice. No uniform volume. No reverb mismatch. No music unless explicitly in scene.',
     },
 
@@ -1614,7 +1673,11 @@ export function generate(input) {
   const cameraPreset = buildCameraPreset();
   const timingGrid = buildTimingGridV2(mergedHookObj, releaseObj);
   const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, mergedHookObj, releaseObj, propAnchor);
-  const aesthetic = charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют';
+  const aesthetic = _aestheticToEn(charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют');
+  const nameEnA = charA.name_en || charA.id || 'Character A';
+  const nameEnB = charB.name_en || charB.id || 'Character B';
+  const vibeEnA = _vibeToEn(charA.vibe_archetype, 'provocateur');
+  const vibeEnB = _vibeToEn(charB.vibe_archetype, 'grounded responder');
 
   // ── Location-specific overrides from catalog ──
   const locAudioHints = locationObj?.audio_hints || null;
@@ -1731,12 +1794,12 @@ export function generate(input) {
         note: 'THIS IS JUST A FORMAT EXAMPLE. You MUST write your own lines that are funnier and more fitting for the characters above.',
       },
       language: 'CRITICAL: All dialogue MUST be spoken in Russian (русский язык). Characters speak naturally with authentic Russian intonation, regional accent variations, and age-appropriate speech patterns. NO English speech allowed.',
-      speech_style_A: charA.speech_style_ru || 'Характерная эмоциональная русская речь',
-      speech_style_B: charB.speech_style_ru || 'Характерная русская речь с паузами',
+      speech_style_A: _speechStyleToEn(charA.speech_style_ru, charA.speech_pace, charA.compatibility),
+      speech_style_B: _speechStyleToEn(charB.speech_style_ru, charB.speech_pace, charB.compatibility),
       lip_sync: 'CRITICAL: mouth movements must match Russian phonemes precisely. Each syllable produces visible jaw/lip movement. Consonants: visible tongue/teeth contact. Vowels: proportional mouth opening.',
-      delivery_A: `${charA.speech_pace} pace, ${charA.vibe_archetype || 'provocative'} energy, ${charA.swear_level > 1 ? 'occasional expressive profanity as accent' : 'controlled passionate delivery'}`,
+      delivery_A: `${charA.speech_pace} pace, ${vibeEnA} energy, ${charA.swear_level > 1 ? 'occasional expressive profanity as accent' : 'controlled passionate delivery'}`,
       voice_timbre_A: `${charA.speech_pace === 'fast' ? 'high-energy, slightly shrill when agitated, voice cracks on emphasis words' : charA.speech_pace === 'slow' ? 'deep gravelly rasp, deliberate enunciation, resonant chest voice' : 'mid-range natural voice, rises in pitch with indignation'}. Age-appropriate ${cast.speaker_A.age} voice — ${charA.swear_level > 1 ? 'rough edges, lived-in vocal texture, hoarse undertone' : 'clear but weathered, slight tremor on emotional peaks'}`,
-      delivery_B: `${charB.speech_pace} pace, ${charB.vibe_archetype || 'grounded'} energy, measured buildup to killer word, voice drops for contrast`,
+      delivery_B: `${charB.speech_pace} pace, ${vibeEnB} energy, measured buildup to killer word, voice drops for contrast`,
       voice_timbre_B: `${charB.speech_pace === 'slow' ? 'low deliberate rumble, pauses filled with audible nose-exhale, words land like stones' : charB.speech_pace === 'fast' ? 'sharp staccato delivery, clipped consonants, rapid-fire with sudden stops for effect' : 'steady measured mid-tone, controlled volume that drops to near-whisper on killer word for devastating contrast'}. Age-appropriate ${cast.speaker_B.age} voice — worn but commanding`,
     },
     spatial: {
@@ -1745,15 +1808,15 @@ export function generate(input) {
       environment_interaction: `Characters naturally inhabit ${location.split(',')[0]}. Ambient environment detail reinforces ${cat.en.toLowerCase()} theme.`,
     },
     emotion_arc: {
-      hook: `tension spike — ${mergedHookObj.action_en}, ${charA.vibe_archetype || 'provocateur'} initiates with signature energy`,
-      act_A: `escalation — ${charA.name_ru} builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${charB.name_ru} simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
-      act_B: `reversal — ${charB.name_ru} delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${charA.name_ru}. ${charA.name_ru} freezes mid-gesture.`,
-      release: `catharsis — ${releaseObj.action_ru}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`,
+      hook: `tension spike — ${mergedHookObj.action_en}, ${vibeEnA} initiates with signature energy`,
+      act_A: `escalation — ${nameEnA} (A) builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${nameEnB} (B) simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
+      act_B: `reversal — ${nameEnB} (B) delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${nameEnA} (A). ${nameEnA} freezes mid-gesture.`,
+      release: `catharsis — ${releaseObj.action_en}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`,
     },
     vibe: {
-      dynamic: `${charA.name_ru} (A, ${charA.vibe_archetype || 'провокатор'}) → ${charB.name_ru} (B, ${charB.vibe_archetype || 'база'})`,
+      dynamic: `${nameEnA} (A, ${vibeEnA}) → ${nameEnB} (B, ${vibeEnB})`,
       hook: mergedHookObj.action_en,
-      conflict: `Comedic tension about ${cat.en.toLowerCase()}${topicRu ? ': ' + topicRu : ''}, no personal insults, rage directed at situation only`,
+      conflict: `Comedic tension about ${cat.en.toLowerCase()}${topicRu ? ' (see topic_context above for details)' : ''}, no personal insults, rage directed at situation only`,
       punchline: `Killer word "${killerWord}" lands near 7.1s mark, followed by ${releaseObj.action_en}`,
       tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy — physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension — understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull — both characters committed, natural escalation to punchline'}`,
     },
@@ -1790,7 +1853,7 @@ export function generate(input) {
         ? 'roof rain patter or wind howl, creaking rafters, moth flutter, dust settling whisper'
         : 'subtle ambient room sound — quiet hum, occasional creak, authentic space acoustics matching location'),
       cloth_rustle: `on every major body movement: A wears ${wardrobeA.split(',')[0]} — ${wardrobeA.includes('silk') || wardrobeA.includes('chiffon') ? 'soft whisper swish' : wardrobeA.includes('leather') ? 'stiff leather creak' : wardrobeA.includes('knit') || wardrobeA.includes('mohair') || wardrobeA.includes('wool') ? 'soft fibrous drag' : 'medium fabric rustle'}; B wears ${wardrobeB.split(',')[0]} — ${wardrobeB.includes('telnyashka') || wardrobeB.includes('cotton') ? 'cotton stretch snap' : wardrobeB.includes('corduroy') ? 'corduroy ridge whisper' : wardrobeB.includes('quilted') || wardrobeB.includes('fufaika') ? 'padded fabric thump' : 'natural fabric rustle'}`,
-      saliva_clicks: 'subtle mouth sounds on hard consonants (т, к, п, д)',
+      saliva_clicks: 'subtle mouth sounds on hard consonants (t, k, p, d — Russian plosives)',
       breathing: 'audible inhale before each speaking turn, exhale on emphasis words',
       overlap_policy: 'STRICTLY FORBIDDEN. Gap 0.15-0.25s silence stitch between speakers. No simultaneous speech ever.',
       mouth_rule: 'Non-speaking character: sealed lips, jaw completely still, NO micro-movements of mouth. Eye tracking and subtle facial micro-expressions ONLY.',
