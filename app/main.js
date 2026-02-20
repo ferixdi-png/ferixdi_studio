@@ -3644,48 +3644,65 @@ function updateCacheStats() {
 // ─── SHARED: Apply dialogue changes to all prompts ──
 function applyDialogueUpdate(newA, newB) {
   if (!state.lastResult) return;
+  const ctx = state.lastResult._apiContext || {};
+  const isSolo = ctx.soloMode || (!state.selectedB || state.selectedA?.id === state.selectedB?.id);
 
   // Update blueprint
   const bp = state.lastResult.blueprint_json;
   if (bp?.dialogue_segments) {
     const segA = bp.dialogue_segments.find(s => s.speaker === 'A');
-    const segB = bp.dialogue_segments.find(s => s.speaker === 'B');
     if (segA) segA.text_ru = newA;
-    if (segB) segB.text_ru = newB;
+    if (!isSolo) {
+      const segB = bp.dialogue_segments.find(s => s.speaker === 'B');
+      if (segB) segB.text_ru = newB;
+    }
   }
   if (bp?.scenes) {
-    const sceneA = bp.scenes.find(s => s.segment === 'act_A');
-    const sceneB = bp.scenes.find(s => s.segment === 'act_B');
+    const sceneA = bp.scenes.find(s => s.segment === 'act_A' || s.segment === 'monologue');
     if (sceneA) sceneA.dialogue_ru = newA;
-    if (sceneB) sceneB.dialogue_ru = newB;
+    if (!isSolo) {
+      const sceneB = bp.scenes.find(s => s.segment === 'act_B');
+      if (sceneB) sceneB.dialogue_ru = newB;
+    }
   }
 
   // Update video prompt
   const vp = state.lastResult.video_prompt_en_json;
   if (vp?.dialogue) {
     vp.dialogue.final_A_ru = newA;
-    vp.dialogue.final_B_ru = newB;
-    const lastWord = newB.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
-    vp.dialogue.killer_word = lastWord;
+    if (isSolo) {
+      vp.dialogue.final_B_ru = null;
+      const lastWord = newA.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
+      vp.dialogue.killer_word = lastWord;
+    } else {
+      vp.dialogue.final_B_ru = newB;
+      const lastWord = newB.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || 'панч';
+      vp.dialogue.killer_word = lastWord;
+    }
   }
 
   // Rebuild ru_package — replace dialogue lines in the text
   if (state.lastResult.ru_package) {
     let pkg = state.lastResult.ru_package;
-    // Replace A line: «old text» → «new text»
-    pkg = pkg.replace(/(🅰️[^\n]*\n\s*«)[^»]*(»)/, `$1${newA}$2`);
-    // Replace B line: «old text» → «new text»
-    pkg = pkg.replace(/(🅱️[^\n]*\n\s*«)[^»]*(»)/, `$1${newB}$2`);
+    if (isSolo) {
+      // Solo: replace monologue line «old text» → «new text» (after 🎤 section)
+      pkg = pkg.replace(/(🎤[^\n]*\n\s*«)[^»]*(»)/, `$1${newA}$2`);
+    } else {
+      pkg = pkg.replace(/(🅰️[^\n]*\n\s*«)[^»]*(»)/, `$1${newA}$2`);
+      pkg = pkg.replace(/(🅱️[^\n]*\n\s*«)[^»]*(»)/, `$1${newB}$2`);
+    }
     state.lastResult.ru_package = pkg;
     const ruPre = document.querySelector('#tab-ru pre');
     if (ruPre) ruPre.textContent = pkg;
   }
 
   // Re-estimate timing
-  const lines = [
-    { speaker: 'A', text: newA, pace: state.selectedA?.speech_pace || 'normal' },
-    { speaker: 'B', text: newB, pace: state.selectedB?.speech_pace || 'normal' },
-  ];
+  const lines = isSolo
+    ? [{ speaker: 'A', text: newA, pace: state.selectedA?.speech_pace || 'normal' }]
+    : [
+        { speaker: 'A', text: newA, pace: state.selectedA?.speech_pace || 'normal' },
+        { speaker: 'B', text: newB, pace: state.selectedB?.speech_pace || 'normal' },
+      ];
   state.lastResult.duration_estimate = estimateDialogue(lines);
 
   // Re-render tabs
@@ -3695,10 +3712,13 @@ function applyDialogueUpdate(newA, newB) {
   // Re-render Veo prompt if dialogue changed (replace old dialogue lines)
   if (state.lastResult.veo_prompt) {
     let veo = state.lastResult.veo_prompt;
-    // Replace A speaks line
-    veo = veo.replace(/(A speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
-    // Replace B responds line
-    veo = veo.replace(/(B responds in Russian: ")[^"]*(")/, `$1${newB.replace(/\s*\|\s*/g, '... ')}$2`);
+    if (isSolo) {
+      // Solo: replace "Character speaks in Russian to the camera: ..." line
+      veo = veo.replace(/(Character speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
+    } else {
+      veo = veo.replace(/(A speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
+      veo = veo.replace(/(B responds in Russian: ")[^"]*(")/, `$1${newB.replace(/\s*\|\s*/g, '... ')}$2`);
+    }
     state.lastResult.veo_prompt = veo;
     const veoEl = document.getElementById('veo-prompt-text');
     if (veoEl) veoEl.textContent = veo;
@@ -3708,7 +3728,7 @@ function applyDialogueUpdate(newA, newB) {
   const edA = document.getElementById('editor-line-a');
   const edB = document.getElementById('editor-line-b');
   if (edA) edA.value = newA;
-  if (edB) edB.value = newB;
+  if (edB && !isSolo) edB.value = newB;
   updateEditorEstimates();
 }
 
@@ -3716,31 +3736,57 @@ function applyDialogueUpdate(newA, newB) {
 function updateEditorEstimates() {
   const inputA = document.getElementById('editor-line-a');
   const inputB = document.getElementById('editor-line-b');
-  if (!inputA || !inputB) return;
+  if (!inputA) return;
+
+  const ctx = state.lastResult?._apiContext || {};
+  const isSolo = ctx.soloMode || (!state.selectedB || state.selectedA?.id === state.selectedB?.id);
 
   const paceA = state.selectedA?.speech_pace || 'normal';
-  const paceB = state.selectedB?.speech_pace || 'normal';
   const estA = estimateLineDuration(inputA.value, paceA);
-  const estB = estimateLineDuration(inputB.value, paceB);
-  const total = estA.duration + estB.duration;
   const wordsA = inputA.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
-  const wordsB = inputB.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
 
-  const overA = estA.duration > 4.7; // 3.5s window + 1.2s tolerance (speech flex)
-  const overB = estB.duration > 5.2; // 4.0s window + 1.2s tolerance
-  const risk = total > 8.5 || overA || overB ? 'high' : total > 7.0 ? 'medium' : 'low';
+  if (isSolo) {
+    // Solo mode: monologue uses 6.4s window (0.6–7.0)
+    const overA = estA.duration > 7.6; // 6.4s window + 1.2s tolerance
+    const risk = overA ? 'high' : estA.duration > 5.5 ? 'medium' : 'low';
 
-  document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 15 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 4.7с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 15 ? ' — много' : ''}</span>`;
-  document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 18 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 5.2с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 18 ? ' — много' : ''}</span>`;
+    document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 30 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 7.6с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 30 ? ' — много' : ''}</span>`;
+    const estBEl = document.getElementById('editor-est-b');
+    if (estBEl) estBEl.innerHTML = '<span class="text-gray-600">— соло —</span>';
 
-  const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
-  const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
-  document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 7.5с ${riskLabel}</span>`;
+    const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
+    const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
+    document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Монолог: ${estA.duration.toFixed(2)}с / 6.4с ${riskLabel}</span>`;
 
-  const badge = document.getElementById('editor-timing-badge');
-  if (badge) {
-    badge.textContent = `${total.toFixed(1)}с`;
-    badge.className = `tag text-[10px] ${risk === 'high' ? 'tag-pink' : risk === 'medium' ? 'tag-orange' : 'tag-green'}`;
+    const badge = document.getElementById('editor-timing-badge');
+    if (badge) {
+      badge.textContent = `${estA.duration.toFixed(1)}с`;
+      badge.className = `tag text-[10px] ${risk === 'high' ? 'tag-pink' : risk === 'medium' ? 'tag-orange' : 'tag-green'}`;
+    }
+  } else {
+    // Duo mode
+    if (!inputB) return;
+    const paceB = state.selectedB?.speech_pace || 'normal';
+    const estB = estimateLineDuration(inputB.value, paceB);
+    const total = estA.duration + estB.duration;
+    const wordsB = inputB.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
+
+    const overA = estA.duration > 4.7; // 3.5s window + 1.2s tolerance (speech flex)
+    const overB = estB.duration > 5.2; // 4.0s window + 1.2s tolerance
+    const risk = total > 8.5 || overA || overB ? 'high' : total > 7.0 ? 'medium' : 'low';
+
+    document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 15 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 4.7с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 15 ? ' — много' : ''}</span>`;
+    document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 18 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 5.2с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 18 ? ' — много' : ''}</span>`;
+
+    const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
+    const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
+    document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 7.5с ${riskLabel}</span>`;
+
+    const badge = document.getElementById('editor-timing-badge');
+    if (badge) {
+      badge.textContent = `${total.toFixed(1)}с`;
+      badge.className = `tag text-[10px] ${risk === 'high' ? 'tag-pink' : risk === 'medium' ? 'tag-orange' : 'tag-green'}`;
+    }
   }
 }
 
@@ -3753,19 +3799,24 @@ function initDialogueEditor() {
   document.getElementById('editor-auto-trim')?.addEventListener('click', () => {
     const inputA = document.getElementById('editor-line-a');
     const inputB = document.getElementById('editor-line-b');
-    if (!inputA || !inputB) return;
+    if (!inputA) return;
 
-    const lines = [
-      { speaker: 'A', text: inputA.value, pace: state.selectedA?.speech_pace || 'normal' },
-      { speaker: 'B', text: inputB.value, pace: state.selectedB?.speech_pace || 'normal' },
-    ];
+    const ctx = state.lastResult?._apiContext || {};
+    const isSolo = ctx.soloMode || (!state.selectedB || state.selectedA?.id === state.selectedB?.id);
+
+    const lines = isSolo
+      ? [{ speaker: 'A', text: inputA.value, pace: state.selectedA?.speech_pace || 'normal' }]
+      : [
+          { speaker: 'A', text: inputA.value, pace: state.selectedA?.speech_pace || 'normal' },
+          { speaker: 'B', text: inputB?.value || '', pace: state.selectedB?.speech_pace || 'normal' },
+        ];
 
     const result = autoTrim(lines);
     if (result.trimmed) {
       const newA = result.lines.find(l => l.speaker === 'A');
       const newB = result.lines.find(l => l.speaker === 'B');
       if (newA) inputA.value = newA.text;
-      if (newB) inputB.value = newB.text;
+      if (newB && inputB && !isSolo) inputB.value = newB.text;
       updateEditorEstimates();
 
       const fixesEl = document.getElementById('editor-fixes');
@@ -3787,9 +3838,11 @@ function initDialogueEditor() {
     if (!state.lastResult) return;
     const inputA = document.getElementById('editor-line-a');
     const inputB = document.getElementById('editor-line-b');
-    if (!inputA || !inputB) return;
+    if (!inputA) return;
 
-    applyDialogueUpdate(inputA.value.trim(), inputB.value.trim());
+    const ctx = state.lastResult._apiContext || {};
+    const isSoloApply = ctx.soloMode || (!state.selectedB || state.selectedA?.id === state.selectedB?.id);
+    applyDialogueUpdate(inputA.value.trim(), isSoloApply ? '' : (inputB?.value?.trim() || ''));
 
     // Visual feedback
     const applyBtn = document.getElementById('editor-apply');
@@ -4414,8 +4467,8 @@ document.addEventListener('keydown', (e) => {
     saveCurrentState();
   }
   
-  // Ctrl/Cmd + R to reset to default
-  if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+  // Ctrl/Cmd + Shift + R to reset to default (Shift added to avoid hijacking browser refresh)
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'R') {
     e.preventDefault();
     if (confirm('Сбросить все настройки и начать заново?')) {
       resetToDefaults();
@@ -5458,7 +5511,7 @@ function initSurprise() {
     // ── SMART PAIR with anti-repeat for recent combos ──
     let pair = null;
     let pairAttempts = 0;
-    const recentPairKeys = (_lastSurprisePairs || []).slice(-15);
+    const recentPairKeys = (window._lastSurprisePairs || []).slice(-15);
     do {
       pair = pickSmartPairForPreset(preset, chars);
       pairAttempts++;
@@ -5598,11 +5651,12 @@ async function generateABVariants() {
     }
 
     // Extra variants from ab_variants array (variant C, D...)
+    const abSolo = ctx.soloMode || (!ctx.charB || ctx.charA?.id === ctx.charB?.id);
     const labels = ['Вариант C', 'Вариант D', 'Вариант E'];
     if (Array.isArray(ai.ab_variants)) {
       ai.ab_variants.forEach((v, i) => {
-        if (v?.dialogue_A_ru && v?.dialogue_B_ru) {
-          variants.push({ label: labels[i] || `Вариант ${i + 3}`, a: v.dialogue_A_ru, b: v.dialogue_B_ru, killer: v.killer_word || '' });
+        if (v?.dialogue_A_ru && (abSolo || v?.dialogue_B_ru)) {
+          variants.push({ label: labels[i] || `Вариант ${i + 3}`, a: v.dialogue_A_ru, b: abSolo ? '—' : (v.dialogue_B_ru || '—'), killer: v.killer_word || '' });
         }
       });
     }
@@ -5613,8 +5667,8 @@ async function generateABVariants() {
           <span class="text-[10px] font-bold ${v.active ? 'text-emerald-400' : 'text-amber-400'}">${v.label} ${v.active ? '✓' : ''}</span>
           ${v.killer ? `<span class="text-[9px] text-pink-400">💥 ${escapeHtml(v.killer)}</span>` : ''}
         </div>
-        <div class="text-[11px] text-cyan-300 mb-0.5">A: ${escapeHtml(v.a)}</div>
-        <div class="text-[11px] text-violet-300">B: ${escapeHtml(v.b)}</div>
+        <div class="text-[11px] text-cyan-300 mb-0.5">${abSolo ? '🎤' : 'A:'} ${escapeHtml(v.a)}</div>
+        ${!abSolo ? `<div class="text-[11px] text-violet-300">B: ${escapeHtml(v.b)}</div>` : ''}
         ${!v.active ? `<button class="ab-select-btn mt-1.5 text-[9px] px-2 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors" data-idx="${i}">✓ Выбрать этот</button>` : ''}
       </div>
     `).join('');
@@ -6477,45 +6531,36 @@ function initEducation() {
 }
 
 // ─── INIT ────────────────────────────────
+console.log('[FERIXDI] module loaded');
 document.addEventListener('DOMContentLoaded', () => {
-  loadSavedState(); // Load saved state first
-  initApp();
-  initPromoCode();
-  initNavigation();
-  initProgressTracker(); // NEW: Progress tracker with reset
-  initGenerationMode(); // New: generation mode selection
-  initModeSwitcher();
-  initToggles();
-  initVideoUpload();
-  initVideoUrlFetch();
-  initProductUpload();
-  initPostGenPhoto();
-  initGenerate();
-  initDialogueEditor();
-  initSettings();
-  initCharFilters();
-  initRandomPair();
-  initCopyButtons();
-  initHeaderSettings();
-  initLogPanel();
-  initLocationPicker();
-  initTrends();
-  initConsultation();
+  console.log('[FERIXDI] DOMContentLoaded');
+  const _s = [
+    ['loadSavedState',loadSavedState],['initApp',initApp],['initPromoCode',initPromoCode],
+    ['initNavigation',initNavigation],['initProgressTracker',initProgressTracker],
+    ['initGenerationMode',initGenerationMode],['initModeSwitcher',initModeSwitcher],
+    ['initToggles',initToggles],['initVideoUpload',initVideoUpload],
+    ['initVideoUrlFetch',initVideoUrlFetch],['initProductUpload',initProductUpload],
+    ['initPostGenPhoto',initPostGenPhoto],['initGenerate',initGenerate],
+    ['initDialogueEditor',initDialogueEditor],['initSettings',initSettings],
+    ['initCharFilters',initCharFilters],['initRandomPair',initRandomPair],
+    ['initCopyButtons',initCopyButtons],['initHeaderSettings',initHeaderSettings],
+    ['initLogPanel',initLogPanel],['initLocationPicker',initLocationPicker],
+    ['initTrends',initTrends],['initConsultation',initConsultation],
+  ];
+  for (const [n,f] of _s) { try { f(); } catch(e) { console.error(`[FERIXDI] FAIL ${n}:`,e); } }
   loadLocations().then(() => {
-    loadCustomLocations();
-    renderLocations();
-    renderLocationsBrowse();
-    initLocationsBrowse();
+    try { loadCustomLocations(); renderLocations(); renderLocationsBrowse(); initLocationsBrowse(); }
+    catch(e) { console.error('[FERIXDI] FAIL locations:', e); }
   });
-  initJokesLibrary();
-  initSeries();
-  initSurprise();
-  initABTesting();
-  initTranslate();
-  initCharConstructor();
-  initLocConstructor();
-  initEducation();
-  initMatrixRain();
+  const _s2 = [
+    ['initJokesLibrary',initJokesLibrary],['initSeries',initSeries],
+    ['initSurprise',initSurprise],['initABTesting',initABTesting],
+    ['initTranslate',initTranslate],['initCharConstructor',initCharConstructor],
+    ['initLocConstructor',initLocConstructor],['initEducation',initEducation],
+    ['initMatrixRain',initMatrixRain],
+  ];
+  for (const [n,f] of _s2) { try { f(); } catch(e) { console.error(`[FERIXDI] FAIL ${n}:`,e); } }
+  console.log('[FERIXDI] all init done');
   // Initial readiness check after all components loaded
   setTimeout(() => {
     updateReadiness();

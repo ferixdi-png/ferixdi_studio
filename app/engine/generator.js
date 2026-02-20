@@ -1717,9 +1717,25 @@ export function generate(input) {
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
-    scene: `Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) — the first frame from which the video will begin. This is NOT a random mid-argument shot — this is the PRECISE starting position. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
+    scene: soloMode
+      ? `Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) — the first frame from which the video will begin. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Single character delivering a passionate comedic monologue directly to camera, face 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character is mid-hook-action with intense direct eye contact at camera lens. The video will be generated FROM this photo.${product_info?.description_en ? ` Character is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`
+      : `Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) — the first frame from which the video will begin. This is NOT a random mid-argument shot — this is the PRECISE starting position. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation, faces 35-55cm from phone front camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
-    characters: [
+    characters: soloMode ? [
+      {
+        role: 'Solo performer (speaking)',
+        appearance: charA.prompt_tokens?.character_en || cast.speaker_A.character_en,
+        face_anchor: anchorA.face_silhouette || 'distinctive face',
+        signature: anchorA.signature_element || 'notable accessory',
+        skin_detail: cast.speaker_A.skin,
+        eyes_detail: cast.speaker_A.eyes,
+        mouth_detail: 'mouth open mid-word, realistic teeth/gums visible, lip moisture, micro saliva glint on lower lip',
+        expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
+        body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
+        wardrobe: wardrobeA,
+        spatial: 'centered in frame, facing camera directly',
+      },
+    ] : [
       {
         role: 'A — provocateur (speaking)',
         appearance: charA.prompt_tokens?.character_en || cast.speaker_A.character_en,
@@ -2233,14 +2249,17 @@ export function mergeGeminiResult(localResult, geminiData) {
     r.video_prompt_en_json.spatial.environment_interaction = g.video_atmosphere_en;
   }
 
-  // ── 5. Blueprint: replace dialogue in scenes ──
+  // ── 5. Blueprint: replace dialogue in scenes (solo-aware) ──
+  const isSoloMerge = ctx.soloMode || (ctx.charA && ctx.charB && ctx.charA.id === ctx.charB.id);
   if (g.dialogue_A_ru) {
+    // In solo mode, scene[1] is 'monologue'; in duo mode, scene[1] is 'act_A'
     if (r.blueprint_json.scenes[1]) r.blueprint_json.scenes[1].dialogue_ru = g.dialogue_A_ru;
-    if (r.blueprint_json.dialogue_segments[0]) r.blueprint_json.dialogue_segments[0].text_ru = g.dialogue_A_ru;
+    if (r.blueprint_json.dialogue_segments?.[0]) r.blueprint_json.dialogue_segments[0].text_ru = g.dialogue_A_ru;
   }
-  if (g.dialogue_B_ru) {
+  if (g.dialogue_B_ru && !isSoloMerge) {
+    // Only update B in duo mode — in solo mode there is no scene[2] 'act_B' or dialogue_segments[1]
     if (r.blueprint_json.scenes[2]) r.blueprint_json.scenes[2].dialogue_ru = g.dialogue_B_ru;
-    if (r.blueprint_json.dialogue_segments[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
+    if (r.blueprint_json.dialogue_segments?.[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
   }
 
   // ── 5b. Blueprint: add добивка if present ──
