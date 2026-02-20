@@ -219,6 +219,13 @@ app.post('/api/fun/category', authMiddleware, (req, res) => {
   res.json(cat);
 });
 
+// ─── Safe Join (handles string/array/undefined) ──────
+function safeJoin(val, sep = ', ') {
+  if (Array.isArray(val)) return val.join(sep);
+  if (typeof val === 'string' && val.length > 0) return val;
+  return '';
+}
+
 // ─── AI Production Contract Builder ──────
 function buildAIPrompt(ctx) {
   const { charA, charB, category, topic_ru, scene_hint, input_mode, video_meta,
@@ -369,42 +376,42 @@ ${productBlock}
 • Полное визуальное описание (EN): ${charA.prompt_tokens?.character_en || '—'}
 • Силуэт лица: ${charA.identity_anchors?.face_silhouette || '—'}
 • Рост/телосложение: ${charA.biology_override?.height_build || '—'}
-• Тон кожи: ${(charA.biology_override?.skin_color_tokens || []).join(', ') || 'natural skin tone'}
-• Текстура кожи: ${(charA.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin'}
-• Карта морщин: ${(charA.biology_override?.wrinkle_map_tokens || []).join(', ') || 'age-appropriate'}
-• Глаза: ${(charA.biology_override?.eye_tokens || []).join(', ') || '—'}
-• Волосы: ${(charA.biology_override?.hair_tokens || []).join(', ') || '—'}
-• Растительность на лице: ${(charA.biology_override?.facial_hair_tokens || []).join(', ') || 'none'}
-• Нос: ${(charA.biology_override?.nose_tokens || []).join(', ') || '—'}
-• Рот/зубы: ${(charA.biology_override?.mouth_tokens || []).join(', ') || '—'}
-• Уши: ${(charA.biology_override?.ear_tokens || []).join(', ') || 'natural ears'}
-• Шея: ${(charA.biology_override?.neck_tokens || []).join(', ') || 'age-appropriate neck'}
-• Форма тела: ${(charA.biology_override?.body_shape_tokens || []).join(', ') || '—'}
-• Руки: ${(charA.biology_override?.hands_tokens || []).join(', ') || '—'}
-• Шрамы/родинки/тату: ${(charA.biology_override?.scar_mark_tokens || []).join(', ') || 'none visible'}
-• Осанка/поза: ${(charA.biology_override?.posture_tokens || []).join(', ') || '—'}
-• Походка/движения: ${(charA.biology_override?.gait_tokens || []).join(', ') || 'natural movement'}
+• Тон кожи: ${safeJoin(charA.biology_override?.skin_color_tokens) || 'natural skin tone'}
+• Текстура кожи: ${safeJoin(charA.biology_override?.skin_tokens) || 'age-appropriate skin'}
+• Карта морщин: ${safeJoin(charA.biology_override?.wrinkle_map_tokens) || 'age-appropriate'}
+• Глаза: ${safeJoin(charA.biology_override?.eye_tokens) || '—'}
+• Волосы: ${safeJoin(charA.biology_override?.hair_tokens) || '—'}
+• Растительность на лице: ${safeJoin(charA.biology_override?.facial_hair_tokens) || 'none'}
+• Нос: ${safeJoin(charA.biology_override?.nose_tokens) || '—'}
+• Рот/зубы: ${safeJoin(charA.biology_override?.mouth_tokens) || '—'}
+• Уши: ${safeJoin(charA.biology_override?.ear_tokens) || 'natural ears'}
+• Шея: ${safeJoin(charA.biology_override?.neck_tokens) || 'age-appropriate neck'}
+• Форма тела: ${safeJoin(charA.biology_override?.body_shape_tokens) || '—'}
+• Руки: ${safeJoin(charA.biology_override?.hands_tokens) || '—'}
+• Шрамы/родинки/тату: ${safeJoin(charA.biology_override?.scar_mark_tokens) || 'none visible'}
+• Осанка/поза: ${safeJoin(charA.biology_override?.posture_tokens) || '—'}
+• Походка/движения: ${safeJoin(charA.biology_override?.gait_tokens) || 'natural movement'}
 • Лицо в покое: ${charA.biology_override?.facial_expression_default || 'neutral'}
-• Тембр голоса: ${(charA.biology_override?.voice_texture_tokens || []).join(', ') || 'natural voice'}
-• Челюсть: ${(charA.biology_override?.jaw_tokens || []).join(', ') || 'age-appropriate jaw'}
-• Скулы: ${(charA.biology_override?.cheekbone_tokens || []).join(', ') || 'natural cheekbones'}
-• Лоб: ${(charA.biology_override?.forehead_tokens || []).join(', ') || 'age-appropriate forehead'}
-• Брови: ${(charA.biology_override?.eyebrow_tokens || []).join(', ') || 'natural eyebrows'}
-• Текстура губ: ${(charA.biology_override?.lip_texture_tokens || []).join(', ') || 'age-appropriate lips'}
-• Подбородок: ${(charA.biology_override?.chin_tokens || []).join(', ') || 'natural chin'}
-• Носогубные складки: ${(charA.biology_override?.nasolabial_tokens || []).join(', ') || 'age-appropriate'}
-• Под глазами: ${(charA.biology_override?.undereye_tokens || []).join(', ') || 'natural under-eye'}
-• Плечи: ${(charA.biology_override?.shoulder_tokens || []).join(', ') || 'natural shoulders'}
-• Зубы: ${(charA.biology_override?.teeth_tokens || []).join(', ') || 'age-appropriate teeth'}
-• Ресницы: ${(charA.biology_override?.eyelash_tokens || []).join(', ') || 'natural lashes'}
+• Тембр голоса: ${safeJoin(charA.biology_override?.voice_texture_tokens) || 'natural voice'}
+• Челюсть: ${safeJoin(charA.biology_override?.jaw_tokens) || 'age-appropriate jaw'}
+• Скулы: ${safeJoin(charA.biology_override?.cheekbone_tokens) || 'natural cheekbones'}
+• Лоб: ${safeJoin(charA.biology_override?.forehead_tokens) || 'age-appropriate forehead'}
+• Брови: ${safeJoin(charA.biology_override?.eyebrow_tokens) || 'natural eyebrows'}
+• Текстура губ: ${safeJoin(charA.biology_override?.lip_texture_tokens) || 'age-appropriate lips'}
+• Подбородок: ${safeJoin(charA.biology_override?.chin_tokens) || 'natural chin'}
+• Носогубные складки: ${safeJoin(charA.biology_override?.nasolabial_tokens) || 'age-appropriate'}
+• Под глазами: ${safeJoin(charA.biology_override?.undereye_tokens) || 'natural under-eye'}
+• Плечи: ${safeJoin(charA.biology_override?.shoulder_tokens) || 'natural shoulders'}
+• Зубы: ${safeJoin(charA.biology_override?.teeth_tokens) || 'age-appropriate teeth'}
+• Ресницы: ${safeJoin(charA.biology_override?.eyelash_tokens) || 'natural lashes'}
 
 ━━━ ГАРДЕРОБ A (НЕИЗМЕНЯЕМЫЙ — один и тот же в каждом видео) ━━━
 • Якорный гардероб: ${charA.identity_anchors?.wardrobe_anchor || wardrobeA}
 • Фирменный элемент: ${charA.identity_anchors?.signature_element || '—'}
-• Аксессуары: ${(charA.identity_anchors?.accessory_anchors || []).join(', ') || '—'}
+• Аксессуары: ${safeJoin(charA.identity_anchors?.accessory_anchors) || '—'}
 • Обувь: ${charA.identity_anchors?.footwear_anchor || '—'}
 • Головной убор: ${charA.identity_anchors?.headwear_anchor || 'none'}
-• Цветовая палитра: ${(charA.identity_anchors?.color_palette || []).join(', ') || '—'}
+• Цветовая палитра: ${safeJoin(charA.identity_anchors?.color_palette) || '—'}
 • Украшения: ${charA.identity_anchors?.jewelry_anchors || 'none'}
 • Очки: ${charA.identity_anchors?.glasses_anchor || 'none'}
 • Ногти: ${charA.identity_anchors?.nail_style_anchor || 'natural'}
@@ -436,11 +443,11 @@ ${productBlock}
 ━━━ РЕЧЬ A (НЕИЗМЕНЯЕМАЯ — каждая реплика ОБЯЗАНА звучать как ЭТОТ персонаж) ━━━
 • Стиль речи: ${charA.speech_style_ru || 'expressive'}
 • Темп: ${charA.speech_pace || 'normal'} | Мат: ${charA.swear_level || 0}/3
-• Фирменные слова: ${(charA.signature_words_ru || []).join(' / ') || '—'}
+• Фирменные слова: ${safeJoin(charA.signature_words_ru, ' / ') || '—'}
 • Уровень лексики: ${charA.speech_identity?.vocabulary_level || 'простой бытовой'}
 • Структура предложений: ${charA.speech_identity?.sentence_structure || 'короткие рубленые фразы'}
-• Слова-паразиты: ${(charA.speech_identity?.filler_words || []).join(', ') || 'нет'}
-• Реакционные звуки: ${(charA.speech_identity?.reaction_sounds || []).join(', ') || 'естественные'}
+• Слова-паразиты: ${safeJoin(charA.speech_identity?.filler_words) || 'нет'}
+• Реакционные звуки: ${safeJoin(charA.speech_identity?.reaction_sounds) || 'естественные'}
 • Акцентирование: ${charA.speech_identity?.emphasis_pattern || 'повтор ключевого слова'}
 • Стиль вопросов: ${charA.speech_identity?.question_style || 'риторические обвинительные'}
 • Стиль перебивания: ${charA.speech_identity?.interruption_style || 'врывается не дослушав'}
@@ -458,42 +465,42 @@ ${productBlock}
 • Полное визуальное описание (EN): ${charB.prompt_tokens?.character_en || '—'}
 • Силуэт лица: ${charB.identity_anchors?.face_silhouette || '—'}
 • Рост/телосложение: ${charB.biology_override?.height_build || '—'}
-• Тон кожи: ${(charB.biology_override?.skin_color_tokens || []).join(', ') || 'natural skin tone'}
-• Текстура кожи: ${(charB.biology_override?.skin_tokens || []).join(', ') || 'age-appropriate skin'}
-• Карта морщин: ${(charB.biology_override?.wrinkle_map_tokens || []).join(', ') || 'age-appropriate'}
-• Глаза: ${(charB.biology_override?.eye_tokens || []).join(', ') || '—'}
-• Волосы: ${(charB.biology_override?.hair_tokens || []).join(', ') || '—'}
-• Растительность на лице: ${(charB.biology_override?.facial_hair_tokens || []).join(', ') || 'none'}
-• Нос: ${(charB.biology_override?.nose_tokens || []).join(', ') || '—'}
-• Рот/зубы: ${(charB.biology_override?.mouth_tokens || []).join(', ') || '—'}
-• Уши: ${(charB.biology_override?.ear_tokens || []).join(', ') || 'natural ears'}
-• Шея: ${(charB.biology_override?.neck_tokens || []).join(', ') || 'age-appropriate neck'}
-• Форма тела: ${(charB.biology_override?.body_shape_tokens || []).join(', ') || '—'}
-• Руки: ${(charB.biology_override?.hands_tokens || []).join(', ') || '—'}
-• Шрамы/родинки/тату: ${(charB.biology_override?.scar_mark_tokens || []).join(', ') || 'none visible'}
-• Осанка/поза: ${(charB.biology_override?.posture_tokens || []).join(', ') || '—'}
-• Походка/движения: ${(charB.biology_override?.gait_tokens || []).join(', ') || 'natural movement'}
+• Тон кожи: ${safeJoin(charB.biology_override?.skin_color_tokens) || 'natural skin tone'}
+• Текстура кожи: ${safeJoin(charB.biology_override?.skin_tokens) || 'age-appropriate skin'}
+• Карта морщин: ${safeJoin(charB.biology_override?.wrinkle_map_tokens) || 'age-appropriate'}
+• Глаза: ${safeJoin(charB.biology_override?.eye_tokens) || '—'}
+• Волосы: ${safeJoin(charB.biology_override?.hair_tokens) || '—'}
+• Растительность на лице: ${safeJoin(charB.biology_override?.facial_hair_tokens) || 'none'}
+• Нос: ${safeJoin(charB.biology_override?.nose_tokens) || '—'}
+• Рот/зубы: ${safeJoin(charB.biology_override?.mouth_tokens) || '—'}
+• Уши: ${safeJoin(charB.biology_override?.ear_tokens) || 'natural ears'}
+• Шея: ${safeJoin(charB.biology_override?.neck_tokens) || 'age-appropriate neck'}
+• Форма тела: ${safeJoin(charB.biology_override?.body_shape_tokens) || '—'}
+• Руки: ${safeJoin(charB.biology_override?.hands_tokens) || '—'}
+• Шрамы/родинки/тату: ${safeJoin(charB.biology_override?.scar_mark_tokens) || 'none visible'}
+• Осанка/поза: ${safeJoin(charB.biology_override?.posture_tokens) || '—'}
+• Походка/движения: ${safeJoin(charB.biology_override?.gait_tokens) || 'natural movement'}
 • Лицо в покое: ${charB.biology_override?.facial_expression_default || 'neutral'}
-• Тембр голоса: ${(charB.biology_override?.voice_texture_tokens || []).join(', ') || 'natural voice'}
-• Челюсть: ${(charB.biology_override?.jaw_tokens || []).join(', ') || 'age-appropriate jaw'}
-• Скулы: ${(charB.biology_override?.cheekbone_tokens || []).join(', ') || 'natural cheekbones'}
-• Лоб: ${(charB.biology_override?.forehead_tokens || []).join(', ') || 'age-appropriate forehead'}
-• Брови: ${(charB.biology_override?.eyebrow_tokens || []).join(', ') || 'natural eyebrows'}
-• Текстура губ: ${(charB.biology_override?.lip_texture_tokens || []).join(', ') || 'age-appropriate lips'}
-• Подбородок: ${(charB.biology_override?.chin_tokens || []).join(', ') || 'natural chin'}
-• Носогубные складки: ${(charB.biology_override?.nasolabial_tokens || []).join(', ') || 'age-appropriate'}
-• Под глазами: ${(charB.biology_override?.undereye_tokens || []).join(', ') || 'natural under-eye'}
-• Плечи: ${(charB.biology_override?.shoulder_tokens || []).join(', ') || 'natural shoulders'}
-• Зубы: ${(charB.biology_override?.teeth_tokens || []).join(', ') || 'age-appropriate teeth'}
-• Ресницы: ${(charB.biology_override?.eyelash_tokens || []).join(', ') || 'natural lashes'}
+• Тембр голоса: ${safeJoin(charB.biology_override?.voice_texture_tokens) || 'natural voice'}
+• Челюсть: ${safeJoin(charB.biology_override?.jaw_tokens) || 'age-appropriate jaw'}
+• Скулы: ${safeJoin(charB.biology_override?.cheekbone_tokens) || 'natural cheekbones'}
+• Лоб: ${safeJoin(charB.biology_override?.forehead_tokens) || 'age-appropriate forehead'}
+• Брови: ${safeJoin(charB.biology_override?.eyebrow_tokens) || 'natural eyebrows'}
+• Текстура губ: ${safeJoin(charB.biology_override?.lip_texture_tokens) || 'age-appropriate lips'}
+• Подбородок: ${safeJoin(charB.biology_override?.chin_tokens) || 'natural chin'}
+• Носогубные складки: ${safeJoin(charB.biology_override?.nasolabial_tokens) || 'age-appropriate'}
+• Под глазами: ${safeJoin(charB.biology_override?.undereye_tokens) || 'natural under-eye'}
+• Плечи: ${safeJoin(charB.biology_override?.shoulder_tokens) || 'natural shoulders'}
+• Зубы: ${safeJoin(charB.biology_override?.teeth_tokens) || 'age-appropriate teeth'}
+• Ресницы: ${safeJoin(charB.biology_override?.eyelash_tokens) || 'natural lashes'}
 
 ━━━ ГАРДЕРОБ B (НЕИЗМЕНЯЕМЫЙ — один и тот же в каждом видео) ━━━
 • Якорный гардероб: ${charB.identity_anchors?.wardrobe_anchor || wardrobeB}
 • Фирменный элемент: ${charB.identity_anchors?.signature_element || '—'}
-• Аксессуары: ${(charB.identity_anchors?.accessory_anchors || []).join(', ') || '—'}
+• Аксессуары: ${safeJoin(charB.identity_anchors?.accessory_anchors) || '—'}
 • Обувь: ${charB.identity_anchors?.footwear_anchor || '—'}
 • Головной убор: ${charB.identity_anchors?.headwear_anchor || 'none'}
-• Цветовая палитра: ${(charB.identity_anchors?.color_palette || []).join(', ') || '—'}
+• Цветовая палитра: ${safeJoin(charB.identity_anchors?.color_palette) || '—'}
 • Украшения: ${charB.identity_anchors?.jewelry_anchors || 'none'}
 • Очки: ${charB.identity_anchors?.glasses_anchor || 'none'}
 • Ногти: ${charB.identity_anchors?.nail_style_anchor || 'natural'}
@@ -525,11 +532,11 @@ ${productBlock}
 ━━━ РЕЧЬ B (НЕИЗМЕНЯЕМАЯ — каждая реплика ОБЯЗАНА звучать как ЭТОТ персонаж) ━━━
 • Стиль речи: ${charB.speech_style_ru || 'measured'}
 • Темп: ${charB.speech_pace || 'normal'} | Мат: ${charB.swear_level || 0}/3
-• Фирменные слова: ${(charB.signature_words_ru || []).join(' / ') || '—'}
+• Фирменные слова: ${safeJoin(charB.signature_words_ru, ' / ') || '—'}
 • Уровень лексики: ${charB.speech_identity?.vocabulary_level || 'простой бытовой'}
 • Структура предложений: ${charB.speech_identity?.sentence_structure || 'короткие весомые фразы с паузой перед ударным словом'}
-• Слова-паразиты: ${(charB.speech_identity?.filler_words || []).join(', ') || 'нет'}
-• Реакционные звуки: ${(charB.speech_identity?.reaction_sounds || []).join(', ') || 'естественные'}
+• Слова-паразиты: ${safeJoin(charB.speech_identity?.filler_words) || 'нет'}
+• Реакционные звуки: ${safeJoin(charB.speech_identity?.reaction_sounds) || 'естественные'}
 • Акцентирование: ${charB.speech_identity?.emphasis_pattern || 'пауза перед ключевым словом'}
 • Стиль вопросов: ${charB.speech_identity?.question_style || 'утвердительные с подтекстом'}
 • Стиль перебивания: ${charB.speech_identity?.interruption_style || 'ждёт конца, потом бьёт одной фразой'}
