@@ -1247,41 +1247,116 @@ function buildVeoPrompt(opts) {
   const dB = veoPause(dialogueB);
   const dA2 = dialogueA2 ? veoPause(dialogueA2) : '';
 
-  // Character descriptions — rich identity-anchored for Veo
-  const charDescA = charA.prompt_tokens?.character_en || cast.speaker_A?.character_en || `${cast.speaker_A?.age || 'adult'} character, hyper-realistic`;
-  const charDescB = charB.prompt_tokens?.character_en || cast.speaker_B?.character_en || `${cast.speaker_B?.age || 'adult'} character, hyper-realistic`;
+  // ── FULL CHARACTER BLOCK BUILDER ──
+  // Includes ALL 50+ params from biology_override, identity_anchors, modifiers
+  const safeArr = (v) => Array.isArray(v) ? v.join(', ') : (v || '');
+  const buildVeoCharBlock = (char, wardrobe, castEntry) => {
+    const bio = char.biology_override || {};
+    const id = char.identity_anchors || {};
+    const mod = char.modifiers || {};
+    const si = char.speech_identity || {};
+    const baseDesc = char.prompt_tokens?.character_en || castEntry?.character_en || '';
 
-  // Identity anchors for richer character rendering
-  const idA = charA.identity_anchors || {};
-  const idB = charB.identity_anchors || {};
-  const buildWardrobeDetail = (char, wardrobe, id) => {
-    const parts = [wardrobe];
-    if (id.signature_element) parts.push(id.signature_element);
-    if (id.accessory_anchors?.length) parts.push(Array.isArray(id.accessory_anchors) ? id.accessory_anchors.join(', ') : id.accessory_anchors);
-    if (id.glasses_anchor && id.glasses_anchor !== 'none') parts.push(id.glasses_anchor);
-    if (id.headwear_anchor && id.headwear_anchor !== 'none') parts.push(id.headwear_anchor);
-    return parts.filter(Boolean).join(', ');
+    // ── BODY & FACE ──
+    const body = [
+      baseDesc,
+      bio.height_build ? `Build: ${bio.height_build}` : null,
+      bio.body_shape_tokens ? `Body: ${safeArr(bio.body_shape_tokens)}` : null,
+      bio.posture_tokens ? `Posture: ${safeArr(bio.posture_tokens)}` : null,
+      bio.shoulder_tokens ? `Shoulders: ${safeArr(bio.shoulder_tokens)}` : null,
+      bio.gait_tokens ? `Movement: ${safeArr(bio.gait_tokens)}` : null,
+    ].filter(Boolean);
+
+    // ── FACE DETAIL ──
+    const face = [
+      id.face_silhouette ? `Face shape: ${id.face_silhouette}` : null,
+      bio.skin_color_tokens ? `Skin tone: ${safeArr(bio.skin_color_tokens)}` : null,
+      bio.skin_tokens ? `Skin texture: ${safeArr(bio.skin_tokens)}` : null,
+      bio.wrinkle_map_tokens ? `Wrinkles: ${safeArr(bio.wrinkle_map_tokens)}` : null,
+      bio.nasolabial_tokens ? `Nasolabial: ${safeArr(bio.nasolabial_tokens)}` : null,
+      bio.forehead_tokens ? `Forehead: ${safeArr(bio.forehead_tokens)}` : null,
+      bio.jaw_tokens ? `Jaw: ${safeArr(bio.jaw_tokens)}` : null,
+      bio.cheekbone_tokens ? `Cheekbones: ${safeArr(bio.cheekbone_tokens)}` : null,
+      bio.chin_tokens ? `Chin: ${safeArr(bio.chin_tokens)}` : null,
+      bio.undereye_tokens ? `Under eyes: ${safeArr(bio.undereye_tokens)}` : null,
+      bio.eye_tokens ? `Eyes: ${safeArr(bio.eye_tokens)}` : null,
+      bio.eyebrow_tokens ? `Eyebrows: ${safeArr(bio.eyebrow_tokens)}` : null,
+      bio.eyelash_tokens ? `Eyelashes: ${safeArr(bio.eyelash_tokens)}` : null,
+      bio.nose_tokens ? `Nose: ${safeArr(bio.nose_tokens)}` : null,
+      bio.mouth_tokens ? `Mouth: ${safeArr(bio.mouth_tokens)}` : null,
+      bio.lip_texture_tokens ? `Lips: ${safeArr(bio.lip_texture_tokens)}` : null,
+      bio.teeth_tokens ? `Teeth: ${safeArr(bio.teeth_tokens)}` : null,
+      bio.hair_tokens ? `Hair: ${safeArr(bio.hair_tokens)}` : null,
+      bio.facial_hair_tokens ? `Facial hair: ${safeArr(bio.facial_hair_tokens)}` : null,
+      bio.ear_tokens ? `Ears: ${safeArr(bio.ear_tokens)}` : null,
+      bio.neck_tokens ? `Neck: ${safeArr(bio.neck_tokens)}` : null,
+      bio.hands_tokens ? `Hands: ${safeArr(bio.hands_tokens)}` : null,
+      bio.scar_mark_tokens ? `Marks: ${safeArr(bio.scar_mark_tokens)}` : null,
+    ].filter(Boolean);
+
+    // ── WARDROBE ──
+    const wardrobeParts = [
+      id.wardrobe_anchor || wardrobe,
+      id.signature_element ? `Signature: ${id.signature_element}` : null,
+      id.accessory_anchors?.length ? `Accessories: ${safeArr(id.accessory_anchors)}` : null,
+      id.glasses_anchor && id.glasses_anchor !== 'none' ? `Glasses: ${id.glasses_anchor}` : null,
+      id.headwear_anchor && id.headwear_anchor !== 'none' ? `Headwear: ${id.headwear_anchor}` : null,
+      id.footwear_anchor ? `Footwear: ${id.footwear_anchor}` : null,
+      id.jewelry_anchors && id.jewelry_anchors !== 'none' ? `Jewelry: ${id.jewelry_anchors}` : null,
+      id.nail_style_anchor && id.nail_style_anchor !== 'natural' ? `Nails: ${id.nail_style_anchor}` : null,
+      id.color_palette?.length ? `Color palette: ${safeArr(id.color_palette)}` : null,
+      id.fabric_texture_anchor ? `Fabric: ${id.fabric_texture_anchor}` : null,
+      id.pattern_anchor && id.pattern_anchor !== 'solid color' ? `Pattern: ${id.pattern_anchor}` : null,
+      id.sleeve_style_anchor ? `Sleeves: ${id.sleeve_style_anchor}` : null,
+    ].filter(Boolean);
+
+    // ── EXPRESSION & BEHAVIOR ──
+    const behavior = [
+      bio.facial_expression_default ? `Resting face: ${bio.facial_expression_default}` : null,
+      bio.voice_texture_tokens ? `Voice: ${safeArr(bio.voice_texture_tokens)}` : null,
+      id.micro_gesture ? `Micro-gesture: ${id.micro_gesture}` : null,
+      mod.listening_behavior ? `When listening: ${mod.listening_behavior}` : null,
+      mod.humor_delivery ? `Humor delivery: ${mod.humor_delivery}` : null,
+      mod.camera_relationship ? `Camera: ${mod.camera_relationship}` : null,
+      mod.anger_expression ? `Anger: ${mod.anger_expression}` : null,
+      mod.surprise_expression ? `Surprise: ${mod.surprise_expression}` : null,
+      mod.contempt_expression ? `Contempt: ${mod.contempt_expression}` : null,
+      mod.disgust_expression ? `Disgust: ${mod.disgust_expression}` : null,
+      mod.joy_expression ? `Joy: ${mod.joy_expression}` : null,
+      mod.blink_pattern ? `Blink: ${mod.blink_pattern}` : null,
+      mod.fidget_style ? `Fidget: ${mod.fidget_style}` : null,
+    ].filter(Boolean);
+
+    // ── SPEECH IDENTITY ──
+    const speech = [
+      si.vocabulary_level ? `Vocabulary: ${si.vocabulary_level}` : null,
+      si.sentence_structure ? `Sentences: ${si.sentence_structure}` : null,
+      si.filler_words?.length ? `Filler words: ${safeArr(si.filler_words)}` : null,
+      si.reaction_sounds?.length ? `Reactions: ${safeArr(si.reaction_sounds)}` : null,
+      si.emphasis_pattern ? `Emphasis: ${si.emphasis_pattern}` : null,
+      si.question_style ? `Questions: ${si.question_style}` : null,
+      si.interruption_style ? `Interruption: ${si.interruption_style}` : null,
+      si.dialect_markers ? `Dialect: ${si.dialect_markers}` : null,
+      si.emotional_escalation ? `Escalation: ${si.emotional_escalation}` : null,
+    ].filter(Boolean);
+
+    // Combine all sections into rich description
+    const sections = [];
+    if (body.length) sections.push(body.join('. '));
+    if (face.length) sections.push(face.join('. '));
+    if (wardrobeParts.length) sections.push('Wearing: ' + wardrobeParts.join('. '));
+    if (behavior.length) sections.push(behavior.join('. '));
+    if (speech.length) sections.push(speech.join('. '));
+    sections.push('hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail');
+    return sections.join('. ');
   };
-  const fullWardrobeA = buildWardrobeDetail(charA, wardrobeA, idA);
-  const fullWardrobeB = buildWardrobeDetail(charB, wardrobeB, idB);
 
-  // Skin/face realism anchors (age-aware)
+  const fullCharA = buildVeoCharBlock(charA, wardrobeA, cast.speaker_A);
+  const fullCharB = buildVeoCharBlock(charB, wardrobeB, cast.speaker_B);
+
+  // Age numbers for style/negative prompt
   const ageNumA = parseInt(String(charA.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
   const ageNumB = parseInt(String(charB.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
-  const buildSkinAnchors = (ageN) => {
-    if (ageN < 35) return 'hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
-    if (ageN < 55) return 'hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
-    return 'hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
-  };
-  const buildSkinDetail = (ageN) => {
-    if (ageN < 35) return 'visible pores, natural skin texture, uneven skin tone, slight oily sheen on forehead, minor imperfections';
-    if (ageN < 55) return 'visible pores, fine lines around eyes, early nasolabial folds, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
-    return 'visible pores, deep wrinkles, age spots, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
-  };
-  const skinAnchorsA = buildSkinAnchors(ageNumA);
-  const skinAnchorsB = buildSkinAnchors(ageNumB);
-  const skinDetailA = buildSkinDetail(ageNumA);
-  const skinDetailB = buildSkinDetail(ageNumB);
 
   // Camera style
   const camStyle = 'Smartphone front camera selfie video, 9:16 vertical portrait, handheld with natural micro-jitter and breathing oscillation. Slight computational portrait-mode bokeh on background. Phone sensor noise in shadows.';
@@ -1346,7 +1421,7 @@ function buildVeoPrompt(opts) {
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
-    lines.push(`Character (center of frame): ${charDescA}, ${skinAnchorsA}. Wearing ${fullWardrobeA}. ${skinDetailA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character (center of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
     lines.push('');
     lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
@@ -1365,8 +1440,8 @@ function buildVeoPrompt(opts) {
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
-    lines.push(`Character A (left of frame): ${charDescA}, ${skinAnchorsA}. Wearing ${fullWardrobeA}. ${skinDetailA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
-    lines.push(`Character B (right of frame): ${charDescB}, ${skinAnchorsB}. Wearing ${fullWardrobeB}. ${skinDetailB}. Calm, composed, ${bListeningPose}.`);
+    lines.push(`Character A (left of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character B (right of frame): ${fullCharB}. Calm, composed, ${bListeningPose}.`);
     lines.push('');
 
     // Scene flow
