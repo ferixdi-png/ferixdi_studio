@@ -1498,7 +1498,7 @@ function buildVeoPrompt(opts) {
   // Style/negative
   lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, age-appropriate skin detail (${ageDescA === 'elderly' || ageDescB === 'elderly' ? 'wrinkles, age marks for elderly' : ageDescA === 'young' && ageDescB === 'young' ? 'natural imperfections, minor blemishes for young skin' : 'fine lines, natural imperfections'}). Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality — authentic raw phone video.`);
   lines.push('');
-  lines.push(`Absolutely no text overlays, no subtitles, no captions, no watermarks, no logos, no UI elements, no borders, no filters. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
+  lines.push(`CRITICAL — ZERO TEXT IN VIDEO: Absolutely no text overlays, no subtitles, no captions, no speech bubbles, no name tags, no title cards, no watermarks, no logos, no UI elements, no borders, no filters, no REC badge, no timestamp, no timecode. The video frame must contain ONLY the scene with characters — not a single letter, digit, or graphic overlay of any kind. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
 
   // Topic context
   if (topicRu) {
