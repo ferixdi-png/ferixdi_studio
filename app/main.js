@@ -2965,7 +2965,8 @@ function initGenerate() {
     btn.textContent = '⏳ Анализирую контекст...';
     showGenStatus('🔍 Анализирую тему и подбираю параметры...', 'text-cyan-400');
 
-    // Reset previous results and preflight status
+    // Reset previous results, error overlay, and preflight status
+    document.getElementById('gen-error-overlay')?.remove();
     document.getElementById('gen-results')?.classList.add('hidden');
     const pfEl = document.getElementById('gen-preflight');
     if (pfEl) { pfEl.classList.add('hidden'); pfEl.innerHTML = ''; }
@@ -3066,31 +3067,38 @@ function initGenerate() {
           errorAction = 'Лимит сбросится через 1 минуту';
           errorIcon = '⏱️';
           errorButtons = `
-            <button onclick="location.reload()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
-              🔄 Обновить через минуту
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
+              🔄 Попробовать снова
             </button>
           `;
         } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized')) {
           errorTitle = 'Ошибка авторизации';
           errorDesc = 'Промо-код истёк или недействителен. Проверьте настройки.';
-          errorAction = 'Введите новый промо-код в разделе "Настройки"';
+          errorAction = 'Введите новый промо-код в разделе «Настройки»';
           errorIcon = '🔑';
           errorButtons = `
-            <button onclick="navigateTo('settings')" class="px-4 py-2 bg-violet-500/20 text-violet-400 rounded-lg hover:bg-violet-500/30 transition-colors text-sm">
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();navigateTo('settings')" class="px-4 py-2 bg-violet-500/20 text-violet-400 rounded-lg hover:bg-violet-500/30 transition-colors text-sm">
               🔑 Перейти к настройкам
             </button>
           `;
-        } else if (apiErr.message?.includes('timeout') || apiErr.message?.includes('network')) {
+        } else if (apiErr.message?.includes('502') || apiErr.message?.includes('503') || apiErr.message?.includes('504')) {
+          errorTitle = 'Сервер перезагружается';
+          errorDesc = 'AI-движок обновляется или перезапускается. Это занимает 30–60 секунд.';
+          errorAction = 'Нажмите «Сгенерировать» повторно через минуту';
+          errorIcon = '🔄';
+          errorButtons = `
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
+              🚀 Сгенерировать снова
+            </button>
+          `;
+        } else if (apiErr.message?.includes('timeout') || apiErr.message?.includes('network') || apiErr.message?.includes('Failed to fetch')) {
           errorTitle = 'Проблемы с соединением';
           errorDesc = 'Не удалось подключиться к AI. Проверьте интернет-соединение.';
           errorAction = 'Попробуйте снова или проверьте подключение';
           errorIcon = '🌐';
           errorButtons = `
-            <button onclick="location.reload()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
-              🔄 Обновить страницу
-            </button>
-            <button onclick="navigateTo('settings')" class="px-4 py-2 bg-gray-500/20 text-gray-400 rounded-lg hover:bg-gray-500/30 transition-colors text-sm ml-2">
-              ⚙️ Проверить настройки
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
+              🔄 Попробовать снова
             </button>
           `;
         } else if (apiErr.message?.includes('quota') || apiErr.message?.includes('exceeded')) {
@@ -3099,34 +3107,40 @@ function initGenerate() {
           errorAction = 'Попробуйте другой промо-код или обновите тариф';
           errorIcon = '📊';
           errorButtons = `
-            <button onclick="navigateTo('settings')" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();navigateTo('settings')" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
               📊 Обновить тариф
             </button>
           `;
         } else {
-          errorTitle = 'Неизвестная ошибка';
-          errorDesc = 'Произошла непредвиденная ошибка. Мы уже работаем над её исправлением.';
-          errorAction = 'Попробуйте снова через несколько минут';
-          errorIcon = '❌';
+          errorTitle = 'Ошибка генерации';
+          errorDesc = escapeHtml(apiErr.message || 'Непредвиденная ошибка');
+          errorAction = 'Попробуйте снова через несколько секунд';
+          errorIcon = '⚠️';
           errorButtons = `
-            <button onclick="location.reload()" class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
-              🔄 Обновить страницу
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
+              🔄 Попробовать снова
             </button>
-            <button onclick="window.open('https://t.me/ferixdiii', '_blank')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm ml-2">
+            <button onclick="window.open('https://t.me/ferixdiii', '_blank')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
               💬 Поддержка
             </button>
           `;
         }
 
-        document.getElementById('gen-results').innerHTML = `
+        // Show error as overlay INSIDE gen-results without destroying existing DOM
+        document.getElementById('gen-error-overlay')?.remove();
+        const errDiv = document.createElement('div');
+        errDiv.id = 'gen-error-overlay';
+        errDiv.innerHTML = `
           <div class="glass-panel p-6 text-center space-y-4">
             <div class="text-4xl">${errorIcon}</div>
             <div class="text-lg text-red-400 font-semibold">${errorTitle}</div>
-            <div class="text-sm text-gray-400 max-w-md">${errorDesc}</div>
+            <div class="text-sm text-gray-400 max-w-md mx-auto">${errorDesc}</div>
             <div class="text-xs text-gray-500 mt-2">${errorAction}</div>
-            ${errorButtons ? `<div class="flex gap-3 justify-center mt-4">${errorButtons}</div>` : ''}
+            ${errorButtons ? `<div class="flex gap-3 justify-center flex-wrap mt-4">${errorButtons}</div>` : ''}
           </div>
         `;
+        const genResults = document.getElementById('gen-results');
+        genResults.prepend(errDiv);
       }
     } else {
       // Demo mode or API without _apiContext — show local result with better UX
