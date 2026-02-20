@@ -2407,6 +2407,11 @@ export function mergeGeminiResult(localResult, geminiData) {
     if (r.blueprint_json.dialogue_segments?.[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
   }
 
+  // ── 5a. Blueprint: sync killer_word ──
+  if (g.killer_word) {
+    r.blueprint_json.killer_word = g.killer_word;
+  }
+
   // ── 5b. Blueprint: add добивка if present ──
   const dA2 = g.dialogue_A2_ru || null;
   if (dA2 && r.blueprint_json.dialogue_segments) {
@@ -2443,6 +2448,11 @@ export function mergeGeminiResult(localResult, geminiData) {
   const seriesTag = isSolo
     ? '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'solo'
     : '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
+
+  // ── Merge Gemini's product_in_frame_en if available (richer than local description) ──
+  if (g.product_in_frame_en && ctx.product_info) {
+    ctx.product_info.description_en = g.product_in_frame_en;
+  }
 
   // Instagram Pack from Gemini
   const instaAnalysis = g.insta_analysis_ru || (isSolo ? {
@@ -2636,6 +2646,7 @@ ${firstComment}
     r.log.engagement.hashtags = hashtags;
     r.log.engagement.hashtag_count = hashtags.length;
   }
+  r.log.engagement.series_tag = seriesTag;
 
   // Instagram Pack in log for UI access
   r.log.instagram_pack = {

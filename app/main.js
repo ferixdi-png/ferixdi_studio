@@ -2760,6 +2760,10 @@ function populateInstaTab(result) {
   const firstComment = engage.first_comment || '—';
   const hashtags = engage.hashtags || [];
   const seriesTag = engage.series_tag || '';
+  const instaPack = result.log?.instagram_pack || {};
+  const instaCaption = instaPack.caption || '';
+  const instaHookTexts = instaPack.hook_texts || [];
+  const instaEngagementTip = instaPack.engagement_tip || '';
   const copyLabel = isEN ? 'Copy' : 'Копировать';
   const copiedLabel = isEN ? '✓ Copied' : '✓ Скопировано';
 
@@ -2782,6 +2786,24 @@ function populateInstaTab(result) {
       <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(shareBait)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Send to a friend with this line — bait for shares' : 'Скинь другу с этой фразой — байт на пересылку в контексте видео'}</div>
     </div>
+
+    <!-- Instagram Caption (full post text) -->
+    ${instaCaption ? `<div class="glass-panel p-4 relative border-l-2 border-pink-400/40">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-pink-400 font-semibold uppercase tracking-wider mb-2">📝 ${isEN ? 'Full Caption (description)' : 'Полный текст описания (caption)'}</div>
+      <div class="copy-target text-sm text-gray-100 leading-relaxed">${escapeHtml(instaCaption)}</div>
+      <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Paste as Reels description — includes CTA' : 'Вставь в описание Reels — уже с CTA и эмодзи'}</div>
+    </div>` : ''}
+
+    <!-- Hook Texts (for video overlay) -->
+    ${instaHookTexts.length > 0 ? `<div class="glass-panel p-4 relative">
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').innerText.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
+      <div class="text-[10px] text-rose-400 font-semibold uppercase tracking-wider mb-2">🎬 ${isEN ? 'Hook Texts (on-screen)' : 'Тексты-хуки (на экран в начало)'}</div>
+      <div class="copy-target space-y-1.5">
+        ${instaHookTexts.map((h, i) => `<div class="text-sm text-gray-200 bg-black/30 rounded px-3 py-1.5">«${escapeHtml(h)}»</div>`).join('')}
+      </div>
+      <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Place one of these as text overlay in the first 0.5s' : 'Наложи одну из этих фраз текстом в первые 0.5 сек видео'}</div>
+    </div>` : ''}
 
     <!-- Hashtags -->
     <div class="glass-panel p-4 relative">
@@ -2807,6 +2829,12 @@ function populateInstaTab(result) {
       <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(firstComment)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Post right after publishing — sparks discussion' : 'Напиши сразу после публикации — запускает обсуждение'}</div>
     </div>
+
+    <!-- Engagement Tip -->
+    ${instaEngagementTip ? `<div class="glass-panel p-4 relative border-l-2 border-teal-400/40">
+      <div class="text-[10px] text-teal-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Engagement Tip' : 'Лайфхак для охватов'}</div>
+      <div class="text-sm text-gray-200 leading-relaxed whitespace-pre-line">${escapeHtml(instaEngagementTip)}</div>
+    </div>` : ''}
 
     <!-- Share bait tip -->
     <div class="bg-gradient-to-r from-violet-500/8 to-cyan-500/8 rounded-lg p-4 border border-violet-500/15">
