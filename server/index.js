@@ -1162,6 +1162,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     }
 
     // ── Post-parse validation: ensure critical fields exist ──
+    const soloMode = context.soloMode;
     if (!geminiResult.dialogue_A_ru) {
       console.warn('Gemini response missing dialogue_A_ru:', Object.keys(geminiResult));
     }
@@ -1199,8 +1200,6 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
         console.log('Sanitized dialogue_A_ru:', { before: orig.slice(0, 100), after: geminiResult.dialogue_A_ru.slice(0, 100) });
       }
     }
-
-    const soloMode = context.soloMode;
 
     if (geminiResult.dialogue_B_ru && !soloMode) {
       let bLine = sanitizeLine(geminiResult.dialogue_B_ru);
