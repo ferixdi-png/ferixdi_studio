@@ -1444,53 +1444,8 @@ export function generate(input) {
   const topicRu = context_ru?.trim() || '';
   const sceneHint = scene_hint_ru?.trim() || '';
 
-  // Auto-detect category from user topic if not manually selected
-  let cat = category;
-  if (!cat && topicRu) {
-    const topicLower = topicRu.toLowerCase();
-    if (topicLower.includes('жкх') || topicLower.includes('коммуналка') || topicLower.includes('отопление') || 
-        topicLower.includes('счёт') || topicLower.includes('счет') || topicLower.includes('квартира') || 
-        topicLower.includes('соседи') || topicLower.includes('батарея') || topicLower.includes('тариф') ||
-        topicLower.includes('ремонт') || topicLower.includes('подъезд') || topicLower.includes('управляющ')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'ЖКХ и коммуналка');
-    } else if (topicLower.includes('цена') || topicLower.includes('дорого') || topicLower.includes('инфляция') || 
-               topicLower.includes('магазин') || topicLower.includes('продукт') || topicLower.includes('бензин') ||
-               topicLower.includes('подорожа') || topicLower.includes('рубл') || topicLower.includes('касс')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Цены и инфляция');
-    } else if (topicLower.includes('бабк') || topicLower.includes('дед') || topicLower.includes('внук') || 
-               topicLower.includes('поколен') || topicLower.includes('зумер') || topicLower.includes('бумер') ||
-               topicLower.includes('молодёж') || topicLower.includes('молодеж') || topicLower.includes('старш')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Разрыв поколений');
-    } else if (topicLower.includes('больниц') || topicLower.includes('врач') || topicLower.includes('медицин') || 
-               topicLower.includes('здоровье') || topicLower.includes('лекарств') || topicLower.includes('поликлиник') ||
-               topicLower.includes('диагноз') || topicLower.includes('рецепт') || topicLower.includes('анализ') ||
-               topicLower.includes('залечи') || topicLower.includes('печен') || topicLower.includes('давлен')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Здоровье и поликлиника');
-    } else if (topicLower.includes('дач') || topicLower.includes('огород') || topicLower.includes('помидор') || 
-               topicLower.includes('урожай') || topicLower.includes('сад') || topicLower.includes('грядк') ||
-               topicLower.includes('теплиц') || topicLower.includes('рассад')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Дача и огород');
-    } else if (topicLower.includes('машин') || topicLower.includes('пробк') || topicLower.includes('транспорт') || 
-               topicLower.includes('метро') || topicLower.includes('самокат') || topicLower.includes('такси') ||
-               topicLower.includes('маршрутк') || topicLower.includes('парковк')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Транспорт и пробки');
-    } else if (topicLower.includes('нейросет') || topicLower.includes('ai') || topicLower.includes('технолог') || 
-               topicLower.includes('робот') || topicLower.includes('интернет') || topicLower.includes('chatgpt') ||
-               topicLower.includes('компьютер') || topicLower.includes('телефон') || topicLower.includes('вайбкод')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'AI и технологии');
-    } else if (topicLower.includes('тренд') || topicLower.includes('блогер') || topicLower.includes('тикток') || 
-               topicLower.includes('инстаграм') || topicLower.includes('подписчик') || topicLower.includes('рилс') ||
-               topicLower.includes('соцсет') || topicLower.includes('лайк')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Соцсети и тренды');
-    } else if (topicLower.includes('муж') || topicLower.includes('жен') || topicLower.includes('отношен') || 
-               topicLower.includes('любовь') || topicLower.includes('свидан') || topicLower.includes('свадьб') ||
-               topicLower.includes('развод')) {
-      cat = HUMOR_CATEGORIES.find(c => c.ru === 'Отношения');
-    } else {
-      cat = pickRandom(HUMOR_CATEGORIES, rng);
-    }
-  }
-  if (!cat) cat = pickRandom(HUMOR_CATEGORIES, rng);
+  // Category: random structural hint for location/props — Gemini picks the real one
+  let cat = category || pickRandom(HUMOR_CATEGORIES, rng);
 
   // topicRu and sceneHint already declared above (before category detection)
   const topicEn = topicRu ? `The comedic argument is specifically about: "${topicRu}".` : '';
