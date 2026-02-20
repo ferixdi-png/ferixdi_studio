@@ -829,19 +829,24 @@ function buildEngagement(catRu, charA, charB, rng, soloMode = false) {
 
   // ── Viral title ──
   const titlePool = VIRAL_TITLES[catRu] || VIRAL_TITLES['Бытовой абсурд'];
-  const viralTitle = fill(pickRandom(titlePool, rng));
+  // In solo mode, filter out titles that reference {B} as a separate character
+  const soloSafeTitles = soloMode ? titlePool.filter(t => !t.includes('{B}')) : titlePool;
+  const viralTitle = fill(pickRandom(soloSafeTitles.length ? soloSafeTitles : titlePool, rng));
 
   // ── Pin comment ──
   const pinPool = PIN_COMMENTS[catRu] || PIN_COMMENTS['Бытовой абсурд'];
-  const pinComment = fill(pickRandom(pinPool, rng));
+  const soloSafePins = soloMode ? pinPool.filter(t => !t.includes('{B}')) : pinPool;
+  const pinComment = fill(pickRandom(soloSafePins.length ? soloSafePins : pinPool, rng));
 
   // ── First comment (для вовлечения) ──
   const fcPool = FIRST_COMMENTS[catRu] || FIRST_COMMENTS['Бытовой абсурд'];
-  const firstComment = fill(pickRandom(fcPool, rng));
+  const soloSafeFc = soloMode ? fcPool.filter(t => !t.includes('{B}')) : fcPool;
+  const firstComment = fill(pickRandom(soloSafeFc.length ? soloSafeFc : fcPool, rng));
 
   // ── Share bait (описание видео для пересылки) ──
   const sbPool = SHARE_BAITS[catRu] || SHARE_BAITS['Бытовой абсурд'];
-  const shareBait = fill(pickRandom(sbPool, rng));
+  const soloSafeSb = soloMode ? sbPool.filter(t => !t.includes('{B}')) : sbPool;
+  const shareBait = fill(pickRandom(soloSafeSb.length ? soloSafeSb : sbPool, rng));
 
   return { hashtags, viralTitle, pinComment, firstComment, shareBait, seriesTag };
 }
@@ -1425,12 +1430,8 @@ function buildVeoPrompt(opts) {
     lines.push('');
     lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}.`);
+    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end of the monologue.`);
     lines.push('');
-    if (dB && dB !== dA) {
-      lines.push(`Character continues: "${dB}" — shifts tone, ${responseStyleB}. The word "${killerWord}" is the punchline.`);
-      lines.push('');
-    }
     const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
     lines.push(`Character bursts into genuine laughter — ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
   } else {
@@ -1637,8 +1638,8 @@ export function generate(input) {
   // Indoor locations get indoor-compatible lighting; outdoor get outdoor-compatible
   // Check explicit indoor keywords FIRST to prevent false-positive from outdoor regex
   // (e.g. marshrutka description may mention "street" but it's indoor)
-  const isExplicitIndoor = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge/i.test(location);
-  const isOutdoor = !isExplicitIndoor && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(location);
+  const isExplicitIndoor = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge|garage|bathroom|sauna|gym|cafe|restaurant|shop|store|classroom|library|closet|studio/i.test(location);
+  const isOutdoor = !isExplicitIndoor && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley|balcony/i.test(location);
   const indoorMoods = LIGHTING_MOODS.filter(m => !['organic chaos', 'golden confrontation', 'exposed clarity'].includes(m.mood));
   const outdoorMoods = LIGHTING_MOODS.filter(m => ['organic chaos', 'golden confrontation', 'exposed clarity', 'calm before storm'].includes(m.mood));
   const lightingPool = isOutdoor ? (outdoorMoods.length ? outdoorMoods : LIGHTING_MOODS) : (indoorMoods.length ? indoorMoods : LIGHTING_MOODS);
@@ -1842,6 +1843,9 @@ export function generate(input) {
         signature: anchorA.signature_element || 'notable accessory',
         skin_detail: cast.speaker_A.skin,
         eyes_detail: cast.speaker_A.eyes,
+        hair_detail: safeArr(charA.biology_override?.hair_tokens) || 'distinctive hair',
+        nose_detail: safeArr(charA.biology_override?.nose_tokens) || 'natural nose',
+        build_detail: charA.biology_override?.height_build || 'medium build',
         mouth_detail: 'mouth open mid-word, realistic teeth/gums visible, lip moisture, micro saliva glint on lower lip',
         expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
         body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
@@ -1856,6 +1860,9 @@ export function generate(input) {
         signature: anchorA.signature_element || 'notable accessory',
         skin_detail: cast.speaker_A.skin,
         eyes_detail: cast.speaker_A.eyes,
+        hair_detail: safeArr(charA.biology_override?.hair_tokens) || 'distinctive hair',
+        nose_detail: safeArr(charA.biology_override?.nose_tokens) || 'natural nose',
+        build_detail: charA.biology_override?.height_build || 'medium build',
         mouth_detail: 'mouth open mid-word, realistic teeth/gums visible, lip moisture, micro saliva glint on lower lip',
         expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
         body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
@@ -1869,6 +1876,9 @@ export function generate(input) {
         signature: anchorB.signature_element || 'notable accessory',
         skin_detail: cast.speaker_B.skin,
         eyes_detail: cast.speaker_B.eyes,
+        hair_detail: safeArr(charB.biology_override?.hair_tokens) || 'distinctive hair',
+        nose_detail: safeArr(charB.biology_override?.nose_tokens) || 'natural nose',
+        build_detail: charB.biology_override?.height_build || 'medium build',
         mouth_detail: 'mouth FIRMLY SEALED, jaw still, lips pressed together, slight contemptuous curl at corner',
         expression: `${charB.compatibility === 'calm' ? 'zen-like stillness, barely contained superiority' : charB.compatibility === 'chaotic' ? 'simmering barely-restrained energy, jaw tight, eyes burning' : charB.compatibility === 'conflict' ? 'cold calculating stare, measuring every word A says' : 'amused skepticism, one corner of mouth fighting a smirk'}, ${anchorB.micro_gesture || 'raised eyebrow'}, eyes tracking A with ${charB.speech_pace === 'slow' ? 'patient devastating certainty' : 'sharp analytical intensity'}, one eyebrow 2mm higher than the other`,
         body: `${charB.compatibility === 'calm' ? 'perfectly still, arms loosely crossed, weight centered, radiating quiet authority' : charB.compatibility === 'chaotic' ? 'restless energy contained in stillness, fingers tapping on crossed arms, weight shifting' : 'arms crossed or hands on hips, leaning back slightly, weight on back foot, chin slightly raised'}`,
@@ -1944,7 +1954,11 @@ export function generate(input) {
     ...(topicEn ? { topic_context: topicEn } : {}),
     ...(sceneHint ? { scene_reference: `Visual/structural reference from source video: "${sceneHint}". Adapt the energy and pacing but keep original characters and dialogue.` } : {}),
     dialogue: {
-      CRITICAL_INSTRUCTION: 'Gemini MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
+      CRITICAL_INSTRUCTION: input_mode === 'script'
+        ? 'The user provided their OWN dialogue below. Gemini MUST USE the user\'s lines as-is (dialogue_A_ru / dialogue_B_ru). You may ONLY adjust 1-2 words for timing fit. Do NOT rewrite or replace the user\'s script. Generate killer_word from the last impactful word of B\'s line.'
+        : input_mode === 'video'
+        ? 'This is REMAKE MODE — the dialogue below is from the ORIGINAL VIDEO. Gemini MUST preserve it VERBATIM (90-95% of words). Only change character names/pronouns to fit our cast. Do NOT invent a new dialogue. killer_word = last impactful word from B\'s original line.'
+        : 'Gemini MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
       example_format_only: {
         example_A_ru: dialogueA,
         example_B_ru: dialogueB,
@@ -2081,14 +2095,14 @@ export function generate(input) {
   🔊 Звук: ${mergedHookObj.audio}
   🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
 
-[0.60–7.00] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
+[0.60–7.30] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
   «${dialogueA}»
-  💬 Темп: ${charA.speech_pace} | Слов: 15-30 | Окно: 6.4с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  💬 Темп: ${charA.speech_pace} | Слов: 15-30 | Окно: 6.7с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая эмоция'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
-  💥 KILLER WORD «${killerWord}» → ближе к 6.8s
+  💥 KILLER WORD «${killerWord}» → ближе к 7.1s
 
-[7.00–8.00] 😏 RELEASE: реакция/пауза/усмешка
+[7.30–8.00] 😏 RELEASE: реакция/пауза/усмешка
   🎭 Финал: ${charA.modifiers?.laugh_style || 'усмешка в камеру'}`
   : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
@@ -2448,14 +2462,14 @@ export function mergeGeminiResult(localResult, geminiData) {
   🔊 Звук: ${ctx.hookAction.audio}
   🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
 
-[0.60–7.00] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
+[0.60–7.30] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
   «${dA}»
   💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая эмоция'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
-  💥 KILLER WORD «${kw}» → ближе к 6.8s
+  💥 KILLER WORD «${kw}» → ближе к 7.1s
 
-[7.00–8.00] 😏 RELEASE: реакция/пауза/усмешка
+[7.30–8.00] 😏 RELEASE: реакция/пауза/усмешка
   🎭 Финал: ${charA.modifiers?.laugh_style || 'усмешка в камеру'}`
 
   : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (FERIXDI AI Production)
@@ -2560,8 +2574,8 @@ ${firstComment}
 • Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
 
   // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
-  const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge/i.test(ctx.location || '');
-  const isOutdoorMerge = !isExplicitIndoorMerge && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(ctx.location || '');
+  const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge|garage|bathroom|sauna|gym|cafe|restaurant|shop|store|classroom|library|closet|studio/i.test(ctx.location || '');
+  const isOutdoorMerge = !isExplicitIndoorMerge && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley|balcony/i.test(ctx.location || '');
   r.veo_prompt = buildVeoPrompt({
     charA, charB, cast: r.video_prompt_en_json.cast || {},
     location: ctx.location, lightingMood: ctx.lightingMood,
@@ -2572,6 +2586,7 @@ ${firstComment}
     aesthetic: ctx.aesthetic, cinematography: ctx.cinematography,
     isOutdoor: isOutdoorMerge, dialogueA2: dA2,
     productInfo: ctx.product_info,
+    referenceStyle: ctx.reference_style,
     soloMode: ctx.soloMode || false,
   });
 
