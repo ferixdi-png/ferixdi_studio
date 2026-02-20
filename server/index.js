@@ -1141,8 +1141,11 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     }
 
     // ── Post-parse validation: ensure critical fields exist ──
-    if (!geminiResult.dialogue_A_ru || !geminiResult.dialogue_B_ru) {
-      console.warn('Gemini response missing dialogue fields:', Object.keys(geminiResult));
+    if (!geminiResult.dialogue_A_ru) {
+      console.warn('Gemini response missing dialogue_A_ru:', Object.keys(geminiResult));
+    }
+    if (!soloMode && !geminiResult.dialogue_B_ru) {
+      console.warn('Gemini response missing dialogue_B_ru (duo mode):', Object.keys(geminiResult));
     }
     if (!geminiResult.photo_scene_en) {
       console.warn('Gemini response missing photo_scene_en');

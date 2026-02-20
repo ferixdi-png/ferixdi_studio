@@ -2731,6 +2731,7 @@ function populateContextBlock(result) {
   const lineB = segs.find(s => s.speaker === 'B');
   const lineA2 = segs.find(s => s.speaker === 'A2');
   const ctx = result._apiContext || {};
+  const isSolo = ctx.soloMode || (ctx.charA && ctx.charB && ctx.charA.id === ctx.charB.id);
   const dialogueA = lineA?.text_ru || ctx.dialogueA || '—';
   const dialogueB = lineB?.text_ru || ctx.dialogueB || '—';
   const dialogueA2 = lineA2?.text_ru || '';
@@ -2739,8 +2740,19 @@ function populateContextBlock(result) {
   const est = result.duration_estimate || {};
   const engage = result.log?.engagement || {};
 
+  // Update labels for solo vs duo mode
+  const labelA = dA?.closest('.bg-black\\/30')?.querySelector('.text-cyan-400');
+  const bBlock = dB?.closest('.bg-black\\/30');
+  if (isSolo) {
+    if (labelA) labelA.textContent = '🎤 Монолог:';
+    if (bBlock) bBlock.classList.add('hidden');
+  } else {
+    if (labelA) labelA.textContent = '🅰️ Реплика A (провокация):';
+    if (bBlock) bBlock.classList.remove('hidden');
+  }
+
   if (dA) dA.textContent = `«${dialogueA}»`;
-  if (dB) dB.textContent = `«${dialogueB}»${dialogueA2 ? ` → A: «${dialogueA2}»` : ''}`;
+  if (dB && !isSolo) dB.textContent = `«${dialogueB}»${dialogueA2 ? ` → A: «${dialogueA2}»` : ''}`;
   if (kw && killerWord) kw.textContent = `💥 Killer word: «${killerWord}»`;
 
   // Meta grid
@@ -2847,11 +2859,24 @@ function populateDialogueEditor(result) {
   const segs = result.blueprint_json.dialogue_segments;
   const lineA = segs.find(s => s.speaker === 'A');
   const lineB = segs.find(s => s.speaker === 'B');
+  const ctx = result._apiContext || {};
+  const isSolo = ctx.soloMode || (ctx.charA && ctx.charB && ctx.charA.id === ctx.charB.id);
 
   const inputA = document.getElementById('editor-line-a');
   const inputB = document.getElementById('editor-line-b');
   if (inputA && lineA) inputA.value = lineA.text_ru;
   if (inputB && lineB) inputB.value = lineB.text_ru;
+
+  // Hide B editor row in solo mode
+  const bRow = inputB?.closest('.space-y-2, .flex, div')?.parentElement;
+  const labelA = inputA?.previousElementSibling || inputA?.closest('div')?.querySelector('label');
+  if (isSolo) {
+    if (bRow && inputB) inputB.closest('.bg-black\\/30, div[class*=editor]')?.classList.add('hidden');
+    if (labelA) labelA.textContent = '🎤 Монолог';
+  } else {
+    if (bRow && inputB) inputB.closest('.bg-black\\/30, div[class*=editor]')?.classList.remove('hidden');
+    if (labelA) labelA.textContent = '🅰️ Реплика A';
+  }
 
   updateEditorEstimates();
 }
