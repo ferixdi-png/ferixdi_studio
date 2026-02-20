@@ -37,6 +37,26 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function showNotification(message, type = 'info') {
+  const colors = {
+    success: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+    error: 'bg-red-500/15 text-red-400 border-red-500/30',
+    info: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
+    warning: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+  };
+  const cls = colors[type] || colors.info;
+  const el = document.createElement('div');
+  el.className = `fixed top-4 right-4 z-[999] px-4 py-3 rounded-xl border text-sm font-medium shadow-lg backdrop-blur-md transition-all duration-300 ${cls}`;
+  el.style.transform = 'translateX(120%)';
+  el.textContent = message;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => { el.style.transform = 'translateX(0)'; });
+  setTimeout(() => {
+    el.style.transform = 'translateX(120%)';
+    setTimeout(() => el.remove(), 300);
+  }, 3000);
+}
+
 function log(level, module, msg) {
   const el = document.getElementById('log-output');
   if (!el) return;
@@ -5636,6 +5656,7 @@ async function createCustomCharacter() {
   const character_en = `${appearance.replace(/\.$/, '')}. ${speech ? speech.replace(/\.$/, '') + '.' : ''} Expressive facial reactions, natural micro-gestures, cinematic realism.`;
 
   // Auto-extract identity anchors from appearance description
+  const _isMale = /дед|пап|сын|мужч|man|male|boy/i.test(appearance + ' ' + group);
   const appearanceLower = appearance.toLowerCase();
   const extractTokens = (keywords) => {
     const found = [];
@@ -5654,13 +5675,13 @@ async function createCustomCharacter() {
     color_palette: extractTokens(['красн', 'синий', 'зелён', 'чёрн', 'бел', 'серый', 'коричн', 'золот', 'серебр', 'бордо', 'бежев', 'red', 'blue', 'green', 'black', 'white', 'grey', 'brown', 'gold', 'silver']),
     jewelry_anchors: appearance.split('.').find(s => /кольц|серьг|цеп|брасл|кулон|часы|ring|earring|chain|bracelet|pendant|watch/i.test(s))?.trim() || 'none visible',
     glasses_anchor: /очк|линз|glass|spectacle|bifocal/i.test(appearance) ? appearance.split('.').find(s => /очк|линз|glass|spectacle/i.test(s))?.trim() || 'glasses' : 'none',
-    nail_style_anchor: isMale ? 'short trimmed nails' : 'neat manicured nails',
+    nail_style_anchor: _isMale ? 'short trimmed nails' : 'neat manicured nails',
     fabric_texture_anchor: /шёлк|silk/i.test(appearance) ? 'smooth silk' : /шерст|wool|knit/i.test(appearance) ? 'coarse wool' : /хлоп|cotton/i.test(appearance) ? 'soft cotton' : 'natural fabric',
     pattern_anchor: /цветоч|floral/i.test(appearance) ? 'floral print' : /полос|stripe/i.test(appearance) ? 'striped' : /клет|plaid|check/i.test(appearance) ? 'plaid checkered' : 'solid color',
     sleeve_style_anchor: /коротк.*рукав|short.?sleeve/i.test(appearance) ? 'short sleeves' : 'long sleeves',
   };
 
-  const isMale = /дед|пап|сын|мужч|man|male|boy/i.test(appearance + ' ' + group);
+  const isMale = _isMale;
   const autoBiology = {
     age: (appearance.match(/(\d{1,3})\s*(лет|год|years?|yo\b)/i) || [])[1] || 'adult',
     height_build: appearance.split('.').find(s => /рост|высок|низк|худ|полн|строй|крупн|tall|short|slim|large|massive/i.test(s))?.trim() || 'average build',
