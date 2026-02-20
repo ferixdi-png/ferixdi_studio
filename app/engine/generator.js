@@ -1757,10 +1757,12 @@ export function generate(input) {
   }
 
   // ── Estimate duration ──
-  const lines = [
-    { speaker: 'A', text: dialogueA, pace: charA.speech_pace },
-    { speaker: 'B', text: dialogueB, pace: charB.speech_pace },
-  ];
+  const lines = soloMode
+    ? [{ speaker: 'A', text: dialogueA, pace: charA.speech_pace }]
+    : [
+        { speaker: 'A', text: dialogueA, pace: charA.speech_pace },
+        { speaker: 'B', text: dialogueB, pace: charB.speech_pace },
+      ];
 
   let estimate = estimateDialogue(lines, { enforce8s: options.enforce8s !== false });
   let autoFixes = [];

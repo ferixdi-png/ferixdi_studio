@@ -67,10 +67,16 @@ export function estimateDialogue(lines, options = {}) {
   const perLine = [];
   let total = 0;
 
+  // Solo mode detection: single line with speaker A
+  const isSolo = lines.length === 1 && lines[0]?.speaker === 'A';
+  // Solo monologue window: 0.6-7.3s = 6.7s
+  const SOLO_WINDOW_A = 6.7;
+  const SOLO_SPEECH_BUDGET = 6.7;
+
   for (const line of lines) {
     const est = estimateLineDuration(line.text, line.pace || 'normal');
     const speaker = line.speaker || '?';
-    const window = SPEAKER_WINDOW[speaker] || 3.0;
+    const window = (isSolo && speaker === 'A') ? SOLO_WINDOW_A : (SPEAKER_WINDOW[speaker] || 3.0);
     const overWindow = est.duration > window + WINDOW_TOLERANCE;
     const entry = {
       speaker,
@@ -88,10 +94,11 @@ export function estimateDialogue(lines, options = {}) {
   total = Math.round(total * 100) / 100;
 
   // v2 risk: check total speech budget AND per-speaker windows with tolerance
+  const speechBudget = isSolo ? SOLO_SPEECH_BUDGET : TOTAL_SPEECH_BUDGET;
   let risk = 'low';
   const anyOverWindow = perLine.some(l => l.overWindow);
-  if (total > TOTAL_SPEECH_BUDGET || anyOverWindow) risk = 'high';
-  else if (total > TOTAL_SPEECH_BUDGET - 0.5) risk = 'medium';
+  if (total > speechBudget || anyOverWindow) risk = 'high';
+  else if (total > speechBudget - 0.5) risk = 'medium';
 
   const notes = [];
   const trimmingSuggestions = [];

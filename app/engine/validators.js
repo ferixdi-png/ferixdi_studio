@@ -112,10 +112,13 @@ export function validateWordCount(blueprint) {
   const warnings = [];
   if (!blueprint || !blueprint.dialogue_segments) return { valid: true, warnings };
 
+  const isSolo = blueprint.cast_summary?.mode === 'solo' || blueprint.scenes?.some(s => s.segment === 'monologue');
+
   for (const seg of blueprint.dialogue_segments) {
     if (!seg.text_ru) continue;
     const words = seg.text_ru.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0);
-    const limit = WORD_LIMITS[seg.speaker];
+    // Solo mode: speaker A gets monologue window (15-30 words), no B expected
+    const limit = (isSolo && seg.speaker === 'A') ? { min: 8, max: 30 } : WORD_LIMITS[seg.speaker];
     if (!limit) continue;
     if (words.length < limit.min) {
       warnings.push(`${seg.speaker}: ${words.length} слов (мин. ${limit.min}) — слишком коротко`);

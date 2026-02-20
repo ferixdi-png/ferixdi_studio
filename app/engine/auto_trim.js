@@ -16,8 +16,10 @@ const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[
 
 // Speaker windows (must match estimator.js)
 const SPEAKER_WINDOW = { A: 3.5, B: 4.0 };
+const SOLO_WINDOW_A = 6.7; // solo monologue: 0.6-7.3s
 const WINDOW_TOLERANCE = 1.2; // must match estimator.js
 const WORD_LIMITS = { A: 15, B: 18 };
+const SOLO_WORD_LIMIT_A = 30;
 
 // ─── STEP 0: Remove excess pause markers ────
 function removePauses(text) {
@@ -69,10 +71,10 @@ function shortenLongWords(text) {
 }
 
 // ─── STEP 3: Truncate words to fit window ───
-function truncateToFit(text, speaker, pace) {
-  const speakerWindow = SPEAKER_WINDOW[speaker] || 3.0;
-  const windowWithTolerance = speakerWindow + WINDOW_TOLERANCE; // 4.2 for A, 4.5 for B
-  const maxWords = WORD_LIMITS[speaker] || 8;
+function truncateToFit(text, speaker, pace, isSolo = false) {
+  const speakerWindow = (isSolo && speaker === 'A') ? SOLO_WINDOW_A : (SPEAKER_WINDOW[speaker] || 3.0);
+  const windowWithTolerance = speakerWindow + WINDOW_TOLERANCE;
+  const maxWords = (isSolo && speaker === 'A') ? SOLO_WORD_LIMIT_A : (WORD_LIMITS[speaker] || 8);
   const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0);
   
   if (words.length <= maxWords) return { text, changed: false, fix: null };
@@ -138,11 +140,12 @@ export function autoTrim(lines, options = {}) {
     if (anyChange) continue;
 
     // Step 3: Truncate words for speakers that are over window
+    const isSolo = currentLines.length === 1 && currentLines[0]?.speaker === 'A';
     for (const entry of est.perLine) {
       if (entry.overWindow) {
         const idx = currentLines.findIndex(l => l.speaker === entry.speaker);
         if (idx >= 0) {
-          const r = truncateToFit(currentLines[idx].text, entry.speaker, currentLines[idx].pace);
+          const r = truncateToFit(currentLines[idx].text, entry.speaker, currentLines[idx].pace, isSolo);
           if (r.changed) { anyChange = true; currentLines[idx] = { ...currentLines[idx], text: r.text }; fixes.push(`${entry.speaker}: ${r.fix}`); }
         }
       }

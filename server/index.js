@@ -1299,7 +1299,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     // ── Sanitize A/B variants if present ──
     if (Array.isArray(geminiResult.ab_variants)) {
       geminiResult.ab_variants = geminiResult.ab_variants.filter(v => v && v.dialogue_A_ru && (soloMode || v.dialogue_B_ru)).map(v => {
-        v.dialogue_A_ru = sanitizeLine(v.dialogue_A_ru);
+        v.dialogue_A_ru = sanitizeLine(v.dialogue_A_ru, soloMode ? 2 : 1);
         if (soloMode) {
           v.dialogue_B_ru = null;
           v.dialogue_A2_ru = null;
