@@ -1219,7 +1219,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     res.json({
       ai: geminiResult,
       model: 'ferixdi-ai-v2',
-      tokens: data.usageMetadata?.totalTokenCount || 0,
+      tokens: data?.usageMetadata?.totalTokenCount || 0,
     });
 
   } catch (e) {
@@ -1227,14 +1227,13 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     const timestamp = new Date().toISOString();
     const userId = req.user?.hash || getClientIP(req);
     
-    // Enhanced error logging
+    // Enhanced error logging (defensive — data may not exist if prompt building crashed)
     console.error(`[${timestamp}] Generate error [${errorId}] [${userId}]:`, {
       message: e.message,
-      stack: e.stack,
+      stack: e.stack?.split('\n').slice(0, 5).join('\n'),
       generationMode: context?.input_mode,
       hasVideo: !!video_file,
       hasProduct: !!product_image,
-      tokenCount: data?.usageMetadata?.totalTokenCount
     });
     
     // User-friendly error response
