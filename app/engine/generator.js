@@ -1247,58 +1247,117 @@ function buildVeoPrompt(opts) {
   const dB = veoPause(dialogueB);
   const dA2 = dialogueA2 ? veoPause(dialogueA2) : '';
 
-  // Character descriptions — concise but vivid for Veo
+  // Character descriptions — rich identity-anchored for Veo
   const charDescA = charA.prompt_tokens?.character_en || cast.speaker_A?.character_en || `${cast.speaker_A?.age || 'adult'} character, hyper-realistic`;
   const charDescB = charB.prompt_tokens?.character_en || cast.speaker_B?.character_en || `${cast.speaker_B?.age || 'adult'} character, hyper-realistic`;
+
+  // Identity anchors for richer character rendering
+  const idA = charA.identity_anchors || {};
+  const idB = charB.identity_anchors || {};
+  const buildWardrobeDetail = (char, wardrobe, id) => {
+    const parts = [wardrobe];
+    if (id.signature_element) parts.push(id.signature_element);
+    if (id.accessory_anchors?.length) parts.push(Array.isArray(id.accessory_anchors) ? id.accessory_anchors.join(', ') : id.accessory_anchors);
+    if (id.glasses_anchor && id.glasses_anchor !== 'none') parts.push(id.glasses_anchor);
+    if (id.headwear_anchor && id.headwear_anchor !== 'none') parts.push(id.headwear_anchor);
+    return parts.filter(Boolean).join(', ');
+  };
+  const fullWardrobeA = buildWardrobeDetail(charA, wardrobeA, idA);
+  const fullWardrobeB = buildWardrobeDetail(charB, wardrobeB, idB);
 
   // Skin/face realism anchors (age-aware)
   const ageNumA = parseInt(String(charA.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
   const ageNumB = parseInt(String(charB.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
   const buildSkinAnchors = (ageN) => {
+    if (ageN < 35) return 'hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
+    if (ageN < 55) return 'hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
+    return 'hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
+  };
+  const buildSkinDetail = (ageN) => {
     if (ageN < 35) return 'visible pores, natural skin texture, uneven skin tone, slight oily sheen on forehead, minor imperfections';
     if (ageN < 55) return 'visible pores, fine lines around eyes, early nasolabial folds, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
     return 'visible pores, deep wrinkles, age spots, uneven skin tone, slight oily sheen on forehead, natural blood capillaries on nose';
   };
   const skinAnchorsA = buildSkinAnchors(ageNumA);
   const skinAnchorsB = buildSkinAnchors(ageNumB);
+  const skinDetailA = buildSkinDetail(ageNumA);
+  const skinDetailB = buildSkinDetail(ageNumB);
 
   // Camera style
   const camStyle = 'Smartphone front camera selfie video, 9:16 vertical portrait, handheld with natural micro-jitter and breathing oscillation. Slight computational portrait-mode bokeh on background. Phone sensor noise in shadows.';
 
-  // Location brief
-  const locBrief = location.split(',').slice(0, 2).join(',').trim();
+  // Location brief — use full location for richer setting
+  const locBrief = location.split(',').slice(0, 3).join(',').trim();
 
-  // Lighting brief
-  const lightBrief = lightingMood.style.split(',').slice(0, 2).join(',').trim();
+  // Lighting — richer description with color temp and quality
+  const lightBrief = [
+    lightingMood.style.split(',').slice(0, 2).join(',').trim(),
+    lightingMood.color_temp ? lightingMood.color_temp : null,
+    lightingMood.shadow_softness ? lightingMood.shadow_softness : null,
+  ].filter(Boolean).join('. ');
 
-  // Hook action brief
-  const hookBrief = hookObj.action_en.split(',').slice(0, 2).join(',').trim();
+  // Hook action with character-specific style
+  const hookStyle = charA.modifiers?.hook_style || '';
+  const hookBrief = hookStyle || hookObj.action_en.split(',').slice(0, 2).join(',').trim();
 
-  // Release brief
+  // Release with character-specific laugh styles
   const releaseBrief = releaseObj.action_en.split(',').slice(0, 2).join(',').trim();
+
+  // Voice quality descriptions from speech_identity
+  const buildVoiceDesc = (char) => {
+    const si = char.speech_identity || {};
+    const pace = char.speech_pace || 'normal';
+    const base = pace === 'fast' ? 'rapid and emotional, voice cracking with indignation'
+      : pace === 'slow' ? 'deep gravelly voice, slow deliberate fury'
+      : 'passionate rising intonation';
+    const extras = [];
+    if (si.emphasis_pattern) extras.push(si.emphasis_pattern);
+    if (si.emotional_escalation) extras.push(si.emotional_escalation);
+    return extras.length ? `${base}, ${extras.join(', ')}` : base;
+  };
+  const voiceA = buildVoiceDesc(charA);
+  const voiceB = buildVoiceDesc(charB);
+
+  // B's response delivery style
+  const buildResponseStyle = (char) => {
+    const pace = char.speech_pace || 'normal';
+    const si = char.speech_identity || {};
+    const base = pace === 'slow' ? 'measured devastating delivery, each word landing like a stone'
+      : pace === 'fast' ? 'sharp rapid-fire comeback'
+      : 'controlled buildup';
+    const extras = [];
+    if (si.emphasis_pattern) extras.push(si.emphasis_pattern);
+    if (si.interruption_style) extras.push(si.interruption_style);
+    return extras.length ? `${base}, ${extras.join(', ')}` : base;
+  };
+  const responseStyleB = buildResponseStyle(charB);
 
   // Build the single prompt
   const lines = [];
 
   const ageDescA = ageNumA < 35 ? 'young' : ageNumA < 55 ? 'middle-aged' : 'elderly';
   const ageDescB = ageNumB < 35 ? 'young' : ageNumB < 55 ? 'middle-aged' : 'elderly';
+  // Character B default pose from modifiers
+  const bListeningPose = charB.modifiers?.listening_behavior || 'arms crossed, slight smirk';
+
   if (soloMode) {
     // ── SOLO MODE: single character monologue ──
     lines.push(`A hyper-realistic smartphone selfie video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. ${camStyle}`);
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
-    lines.push(`Character (center of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchorsA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character (center of frame): ${charDescA}, ${skinAnchorsA}. Wearing ${fullWardrobeA}. ${skinDetailA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
     lines.push('');
-    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion.`);
+    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}.`);
+    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}.`);
     lines.push('');
     if (dB && dB !== dA) {
-      lines.push(`Character continues: "${dB}" — shifts tone, ${charA.speech_pace === 'slow' ? 'measured devastating delivery' : charA.speech_pace === 'fast' ? 'rapid-fire escalation' : 'controlled buildup to punchline'}. The word "${killerWord}" is the punchline.`);
+      lines.push(`Character continues: "${dB}" — shifts tone, ${responseStyleB}. The word "${killerWord}" is the punchline.`);
       lines.push('');
     }
-    lines.push(`Character bursts into self-satisfied laughter — ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
+    const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
+    lines.push(`Character bursts into genuine laughter — ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
   } else {
     // ── DUO MODE: two characters dialogue ──
     const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
@@ -1306,41 +1365,55 @@ function buildVeoPrompt(opts) {
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
-    lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchorsA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
-    lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchorsB}. Calm, composed, arms crossed, slight smirk.`);
+    lines.push(`Character A (left of frame): ${charDescA}, ${skinAnchorsA}. Wearing ${fullWardrobeA}. ${skinDetailA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character B (right of frame): ${charDescB}, ${skinAnchorsB}. Wearing ${fullWardrobeB}. ${skinDetailB}. Calm, composed, ${bListeningPose}.`);
     lines.push('');
 
     // Scene flow
     lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}. B listens silently with sealed lips, only eyes reacting.`);
+    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. B listens silently with sealed lips, only eyes reacting.`);
     lines.push('');
 
     if (dA2) {
-      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
       lines.push('');
       lines.push(`A fires back a short follow-up in Russian: "${dA2}" — quick 1-4 word reaction.`);
     } else {
-      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
     }
     lines.push('');
-    lines.push(`Both burst into genuine laughter — ${releaseBrief}. Camera shakes from their body tremor. Warm shared moment.`);
+    const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
+    const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
+    lines.push(`Both burst into genuine laughter — both lean into each other laughing, brief embrace. ${laughA} from A, ${laughB} from B. Camera shakes from their body tremor. Warm shared moment.`);
   }
   lines.push('');
 
-  // Sound design — synced with detailed audio section (lines 1762-1781)
+  // Sound design — location-aware ambient audio
   const locLower = location.toLowerCase();
   const roomTone = isOutdoor
-    ? 'birds chirping, wind through foliage, distant ambient sounds'
-    : locLower.includes('kitchen') || locLower.includes('fridge') ? 'humming fridge, wall clock tick, distant plumbing'
-    : locLower.includes('stairwell') || locLower.includes('mailbox') ? 'fluorescent buzz, distant elevator, echo in concrete space'
+    ? locLower.includes('garden') || locLower.includes('dacha') || locLower.includes('огород') ? 'birdsong, wind rustling garden foliage, distant lawnmower, insects buzzing, gate creak'
+    : locLower.includes('bench') || locLower.includes('park') ? 'distant children playing, wind through trees, pigeon cooing, jogger footsteps, dog barking'
+    : locLower.includes('courtyard') || locLower.includes('двор') ? 'car engine starting, children shouting, ball bouncing, distant music from window, pigeon wings flapping'
+    : locLower.includes('bus') || locLower.includes('stop') || locLower.includes('остановк') ? 'traffic noise, bus diesel idle, pneumatic door hiss, crowd murmur, phone ringtone'
+    : locLower.includes('market') || locLower.includes('bazaar') || locLower.includes('watermelon') ? 'crowd murmur, vendor calls, plastic bag rustle, distant radio, scale clinking'
+    : locLower.includes('roof') || locLower.includes('крыш') ? 'wind gusts, distant city hum, helicopter far away, metal sheet rattle, pigeon cooing'
+    : 'birds chirping, wind through foliage, distant ambient sounds, occasional car horn'
+    : locLower.includes('kitchen') || locLower.includes('fridge') ? 'humming fridge, wall clock tick, distant plumbing, kettle whistle starting, cup clink'
+    : locLower.includes('stairwell') || locLower.includes('mailbox') || locLower.includes('подъезд') ? 'fluorescent buzz, distant elevator, echo in concrete space, door slam two floors up'
     : locLower.includes('marshrutka') || locLower.includes('vinyl seat') ? 'diesel engine vibration, vinyl seat squeak, muffled traffic outside, door pneumatics hiss'
-    : locLower.includes('balcony') || locLower.includes('laundry') ? 'distant city hum, car horns, pigeon cooing, clothesline wire creak'
-    : locLower.includes('bazaar') || locLower.includes('watermelon') ? 'crowd murmur, vendor calls, plastic bag rustle, distant radio'
-    : locLower.includes('polyclinic') || locLower.includes('mint-green') ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA'
-    : locLower.includes('barn') || locLower.includes('hay') ? 'creaking wood, wind through plank gaps, distant animal sounds'
-    : locLower.includes('attic') || locLower.includes('rafter') ? 'roof rain patter, creaking rafters, dust settling whisper'
-    : 'subtle room ambiance, quiet hum, occasional creak';
+    : locLower.includes('balcony') || locLower.includes('laundry') || locLower.includes('балкон') ? 'distant city hum, car horns, pigeon cooing, clothesline wire creak'
+    : locLower.includes('polyclinic') || locLower.includes('mint-green') || locLower.includes('больниц') ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA, coughing in corridor'
+    : locLower.includes('barn') || locLower.includes('hay') || locLower.includes('сарай') ? 'creaking wood, wind through plank gaps, distant rooster, hay rustle'
+    : locLower.includes('attic') || locLower.includes('rafter') || locLower.includes('чердак') ? 'roof rain patter, creaking rafters, dust settling whisper, mouse scurrying'
+    : locLower.includes('garage') || locLower.includes('гараж') ? 'metal tool clink, oil drip, distant car engine, fluorescent tube buzz, radio static'
+    : locLower.includes('elevator') || locLower.includes('лифт') ? 'motor hum, cable tension, metal creak, distant floor ding, muffled voices through walls'
+    : locLower.includes('bathroom') || locLower.includes('ванн') ? 'dripping tap, pipe gurgle, tile echo, extractor fan hum'
+    : locLower.includes('bedroom') || locLower.includes('спальн') ? 'wall clock tick, muffled TV from neighbors, fabric rustle, radiator click'
+    : locLower.includes('office') || locLower.includes('офис') ? 'keyboard clicking, air conditioning hum, printer whirring, muffled phone ringing'
+    : locLower.includes('store') || locLower.includes('магазин') || locLower.includes('shop') ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
+    : locLower.includes('corridor') || locLower.includes('коридор') || locLower.includes('hallway') ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
+    : 'subtle room ambiance, quiet hum, occasional creak, distant muffled sounds';
   lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Fabric rustle on every movement. Audible breathing between speaking turns. Saliva clicks on hard consonants. Laughter 20-30% louder than dialogue. No music.`);
   lines.push('');
 
