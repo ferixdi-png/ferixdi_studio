@@ -6531,10 +6531,8 @@ function initEducation() {
 }
 
 // ─── INIT ────────────────────────────────
-console.log('[FERIXDI] module loaded');
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('[FERIXDI] DOMContentLoaded');
-  const _s = [
+  const _init = [
     ['loadSavedState',loadSavedState],['initApp',initApp],['initPromoCode',initPromoCode],
     ['initNavigation',initNavigation],['initProgressTracker',initProgressTracker],
     ['initGenerationMode',initGenerationMode],['initModeSwitcher',initModeSwitcher],
@@ -6546,21 +6544,17 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initCopyButtons',initCopyButtons],['initHeaderSettings',initHeaderSettings],
     ['initLogPanel',initLogPanel],['initLocationPicker',initLocationPicker],
     ['initTrends',initTrends],['initConsultation',initConsultation],
-  ];
-  for (const [n,f] of _s) { try { f(); } catch(e) { console.error(`[FERIXDI] FAIL ${n}:`,e); } }
-  loadLocations().then(() => {
-    try { loadCustomLocations(); renderLocations(); renderLocationsBrowse(); initLocationsBrowse(); }
-    catch(e) { console.error('[FERIXDI] FAIL locations:', e); }
-  });
-  const _s2 = [
     ['initJokesLibrary',initJokesLibrary],['initSeries',initSeries],
     ['initSurprise',initSurprise],['initABTesting',initABTesting],
     ['initTranslate',initTranslate],['initCharConstructor',initCharConstructor],
     ['initLocConstructor',initLocConstructor],['initEducation',initEducation],
     ['initMatrixRain',initMatrixRain],
   ];
-  for (const [n,f] of _s2) { try { f(); } catch(e) { console.error(`[FERIXDI] FAIL ${n}:`,e); } }
-  console.log('[FERIXDI] all init done');
+  for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
+  loadLocations().then(() => {
+    try { loadCustomLocations(); renderLocations(); renderLocationsBrowse(); initLocationsBrowse(); }
+    catch(e) { console.error('[FERIXDI] locations:', e); }
+  });
   // Initial readiness check after all components loaded
   setTimeout(() => {
     updateReadiness();
