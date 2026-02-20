@@ -699,7 +699,7 @@ function updateCharDisplay() {
     if (state.selectedB) {
       charBName.innerHTML = `<span class="text-white">${escapeHtml(state.selectedB.name_ru)} • ${escapeHtml(state.selectedB.group)}</span> <button onclick="deselectChar('B')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить B">✕</button>`;
     } else {
-      charBName.innerHTML = '<span class="text-gray-400">Нажми на второго ↓</span>';
+      charBName.innerHTML = '<span class="text-gray-400">Нажми на второго или пропусти ↓</span>';
     }
   }
 
@@ -722,11 +722,12 @@ function updateCharDisplay() {
     if (badge) badge.classList.add('hidden');
   }
 
-  // Show/hide "Далее" button
+  // Show/hide "Далее" button — show when at least A is selected
   const goBtn = document.getElementById('btn-go-generate');
   if (goBtn) {
-    if (state.selectedA && state.selectedB) {
+    if (state.selectedA) {
       goBtn.classList.remove('hidden');
+      goBtn.textContent = state.selectedB ? 'Далее → Локация и генерация' : 'Далее → Соло-ролик (без B)';
     } else {
       goBtn.classList.add('hidden');
     }
@@ -1058,8 +1059,13 @@ function initRandomPair() {
 function navigateTo(section) {
   sfx.nav();
   // Gentle reminder if user skips mode selection (don't block)
-  if (section === 'characters' && !state.generationMode) {
+  if ((section === 'content' || section === 'characters') && !state.generationMode) {
     showNotification('💡 Совет: сначала выберите режим генерации на шаге 1', 'warning');
+  }
+
+  // When navigating to content section, show the right mode panel
+  if (section === 'content' && state.generationMode) {
+    updateModeSpecificUI(state.generationMode);
   }
   
   // Update navigation UI
@@ -1077,7 +1083,11 @@ function navigateTo(section) {
   updateProgressIndicators(section);
 
   // Update readiness checklist when entering generate section
-  if (section === 'generate') updateReadiness();
+  if (section === 'generate') {
+    updateReadiness();
+    // Update char summary for solo mode
+    _updateGenCharSummary();
+  }
 
   // Refresh smart match when navigating to characters
   if (section === 'characters') updateSmartMatch();
@@ -1087,7 +1097,7 @@ function navigateTo(section) {
 }
 
 function updateProgressIndicators(currentSection) {
-  const sections = ['ideas', 'generation-mode', 'characters', 'locations', 'generate'];
+  const sections = ['ideas', 'generation-mode', 'content', 'characters', 'locations', 'generate'];
   const currentIndex = sections.indexOf(currentSection);
   
   sections.forEach((section, index) => {
@@ -1101,7 +1111,8 @@ function updateProgressIndicators(currentSection) {
         // Current section
         const colors = {
           'ideas': 'bg-amber-600',
-          'generation-mode': 'bg-violet-600', 
+          'generation-mode': 'bg-violet-600',
+          'content': 'bg-cyan-600',
           'characters': 'bg-cyan-600',
           'locations': 'bg-violet-600',
           'generate': 'bg-gradient-to-r from-emerald-600 to-cyan-600'
@@ -1115,6 +1126,24 @@ function updateProgressIndicators(currentSection) {
       }
     }
   });
+}
+
+function _updateGenCharSummary() {
+  const a = state.selectedA;
+  const b = state.selectedB;
+  const genA = document.getElementById('gen-char-a');
+  const genB = document.getElementById('gen-char-b');
+  const sep = document.getElementById('gen-char-separator');
+  const bWrap = document.getElementById('gen-char-b-wrap');
+  if (genA) genA.textContent = a ? a.name_ru : '—';
+  if (b) {
+    if (genB) genB.textContent = b.name_ru;
+    if (sep) sep.classList.remove('hidden');
+    if (bWrap) bWrap.classList.remove('hidden');
+  } else {
+    if (sep) sep.classList.add('hidden');
+    if (bWrap) bWrap.classList.add('hidden');
+  }
 }
 
 function initNavigation() {
@@ -1154,13 +1183,18 @@ function initNavigation() {
     }
   });
 
-  // "Далее" button on characters → go to locations
+  // "Далее" button on characters → go to generate (step 4: location + generate)
   document.getElementById('btn-go-generate')?.addEventListener('click', () => {
-    if (!state.selectedA || !state.selectedB) {
-      showNotification('⚠️ Сначала выберите двух персонажей (A и B)', 'warning');
+    if (!state.selectedA) {
+      showNotification('⚠️ Сначала выберите хотя бы одного персонажа (A)', 'warning');
       return;
     }
-    navigateTo('locations');
+    navigateTo('generate');
+  });
+
+  // "Далее" button on content → go to characters
+  document.getElementById('btn-content-to-characters')?.addEventListener('click', () => {
+    navigateTo('characters');
   });
 
   // "← Сменить персонажей" on generate → go back to characters
@@ -1175,8 +1209,8 @@ function initNavigation() {
       navigateTo('generation-mode');
       return;
     }
-    if (!state.selectedA || !state.selectedB) {
-      showNotification('⚠️ Сначала выберите двух персонажей', 'warning');
+    if (!state.selectedA) {
+      showNotification('⚠️ Сначала выберите хотя бы одного персонажа', 'warning');
       navigateTo('characters');
       return;
     }
@@ -1194,10 +1228,10 @@ function initGenerationMode() {
     });
   });
 
-  // Continue button
-  document.getElementById('btn-continue-to-characters')?.addEventListener('click', () => {
+  // Continue button — go to content input (step 2)
+  document.getElementById('btn-continue-to-content')?.addEventListener('click', () => {
     if (state.generationMode) {
-      navigateTo('characters');
+      navigateTo('content');
     } else {
       showNotification('⚠️ Сначала выберите режим генерации из списка выше', 'warning');
     }
@@ -1233,7 +1267,7 @@ function selectGenerationMode(mode) {
   // Update selected mode display
   const display = document.getElementById('selected-mode-display');
   const nameEl = document.getElementById('selected-mode-name');
-  const continueBtn = document.getElementById('btn-continue-to-characters');
+  const continueBtn = document.getElementById('btn-continue-to-content');
   
   if (display && nameEl && continueBtn) {
     display.classList.remove('hidden');
@@ -1245,16 +1279,16 @@ function selectGenerationMode(mode) {
     };
     nameEl.textContent = modeNames[mode] || mode;
     continueBtn.disabled = false;
-    continueBtn.innerHTML = `<span>Перейти к персонажам</span><span>→</span>`;
+    continueBtn.innerHTML = `<span>Далее → Описать контент</span><span>→</span>`;
 
     // Show mode-specific hint
     const hintEl = document.getElementById('selected-mode-hint');
     if (hintEl) {
       const hints = {
-        idea: '',
-        suggested: '💡 Зайдите в раздел <strong>«Поиск идей»</strong> в меню слева, чтобы выбрать тему из трендов. Или продолжайте — AI сам подберёт актуальную тему на странице генерации.',
-        script: '📝 На странице генерации вы сможете написать реплики для персонажей A и B.',
-        video: '🎥 На странице генерации загрузите видео-файл (MP4/MOV) для ремейка.',
+        idea: '💡 На следующем шаге опишите свою идею, затем выберете персонажей.',
+        suggested: '📚 На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
+        script: '📝 На следующем шаге напишите реплики для персонажей. Реплика B опциональна для соло-ролика.',
+        video: '🎥 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка.',
       };
       const hint = hints[mode] || '';
       if (hint) {
@@ -1838,7 +1872,7 @@ function updateReadiness() {
 
   const checks = {
     mode: !!state.generationMode,
-    chars: !!(state.selectedA && state.selectedB),
+    chars: !!state.selectedA,
     content: _hasContent(),
     promo: isPromoValid(),
   };
@@ -1874,9 +1908,12 @@ function updateReadiness() {
     checks.mode ? '' : '← выберите на шаге 1',
     checks.mode ? null : () => navigateTo('generation-mode'));
 
+  const charsLabel = checks.chars
+    ? (state.selectedB ? `${state.selectedA.name_ru} × ${state.selectedB.name_ru}` : `${state.selectedA.name_ru} (соло)`)
+    : 'Персонаж A (минимум 1)';
   _updateCheckItem('readiness-chars', checks.chars,
-    checks.chars ? `${state.selectedA.name_ru} × ${state.selectedB.name_ru}` : 'Персонажи A и B',
-    checks.chars ? '' : '← выберите на шаге 2',
+    charsLabel,
+    checks.chars ? '' : '← выберите на шаге 3',
     checks.chars ? null : () => navigateTo('characters'));
 
   // Location is always "ready" (auto if not selected), but show which one
@@ -2404,8 +2441,8 @@ function renderPreflight(localResult) {
       <div class="grid grid-cols-2 gap-2">
         <div class="bg-black/30 rounded-lg p-2.5">
           <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Персонажи</div>
-          <div class="text-[11px] text-cyan-300">${charA.name_ru || 'A'} <span class="text-gray-600">×</span> ${charB.name_ru || 'B'}</div>
-          <div class="text-[10px] text-gray-500 mt-0.5">${charA.vibe_archetype || '—'} × ${charB.vibe_archetype || '—'}</div>
+          <div class="text-[11px] text-cyan-300">${ctx.soloMode ? (charA.name_ru || 'A') + ' (соло)' : (charA.name_ru || 'A') + ' <span class="text-gray-600">×</span> ' + (charB.name_ru || 'B')}</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">${ctx.soloMode ? (charA.vibe_archetype || '—') : (charA.vibe_archetype || '—') + ' × ' + (charB.vibe_archetype || '—')}</div>
         </div>
         <div class="bg-black/30 rounded-lg p-2.5">
           <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Категория</div>
@@ -2913,8 +2950,8 @@ function initGenerate() {
       return;
     }
     
-    if (!state.selectedA || !state.selectedB) {
-      showGenStatus('⚠️ Сначала выберите двух персонажей на шаге 2', 'text-orange-400');
+    if (!state.selectedA) {
+      showGenStatus('⚠️ Сначала выберите хотя бы одного персонажа на шаге 3', 'text-orange-400');
       navigateTo('characters');
       return;
     }
@@ -3002,7 +3039,7 @@ function initGenerate() {
     const input = {
       input_mode: state.generationMode || state.inputMode,
       character1_id: state.selectedA.id,
-      character2_id: state.selectedB.id,
+      character2_id: state.selectedB ? state.selectedB.id : null,
       context_ru: topicText,
       script_ru: state.generationMode === 'script' ? {
         A: document.getElementById('script-a')?.value || '',
@@ -4384,9 +4421,9 @@ document.addEventListener('keydown', (e) => {
   // Number keys 1-5 for navigation (only when NOT typing in input/textarea)
   const activeTag = document.activeElement?.tagName?.toLowerCase();
   if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && activeTag !== 'input' && activeTag !== 'textarea') {
-    const sections = ['ideas', 'generation-mode', 'characters', 'locations', 'generate'];
+    const sections = ['ideas', 'generation-mode', 'content', 'characters', 'locations', 'generate'];
     const keyNum = parseInt(e.key);
-    if (keyNum >= 1 && keyNum <= 5) {
+    if (keyNum >= 1 && keyNum <= 6) {
       const section = sections[keyNum - 1];
       if (section && document.getElementById(`section-${section}`)) {
         e.preventDefault();
@@ -4659,7 +4696,7 @@ function updateProgress() {
   const charCheck = charStep?.querySelector('.progress-check');
   const charBorder = charStep?.querySelector('.w-4');
   
-  if (state.selectedA && state.selectedB) {
+  if (state.selectedA) {
     if (charCheck) { charCheck.classList.remove('hidden', 'bg-gray-700'); charCheck.classList.add('bg-emerald-500'); }
     if (charBorder) { charBorder.classList.remove('border-gray-700'); charBorder.classList.add('border-emerald-500'); }
   }

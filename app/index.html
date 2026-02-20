@@ -337,21 +337,93 @@
 
           <!-- Continue Button -->
           <div class="flex justify-center mt-6">
-            <button id="btn-continue-to-characters" class="btn-primary px-8 py-3 text-base font-medium flex items-center gap-2" disabled>
+            <button id="btn-continue-to-content" class="btn-primary px-8 py-3 text-base font-medium flex items-center gap-2" disabled>
               <span>Выберите режим генерации</span>
               <span>→</span>
             </button>
           </div>
         </section>
 
-        <!-- SECTION: Characters (Step 2) -->
+        <!-- SECTION: Content Input (Step 2) -->
+        <section id="section-content" class="section-panel hidden space-y-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">2</div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">Опишите контент</h2>
+              <p class="text-xs text-gray-400">Сначала задайте тему — потом подберём персонажей и локацию</p>
+            </div>
+          </div>
+
+          <!-- MODE: idea -->
+          <div id="remix-idea" class="glass-panel p-4 space-y-3 hidden">
+            <div class="text-xs text-gray-400 font-medium mb-2">💡 Ваша идея</div>
+            <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Например: цены на бензин выросли, сосед громко слушает музыку, дед не понимает смартфоны..."></textarea>
+            <div class="text-[10px] text-gray-600">✨ Чем конкретнее, тем смешнее будет результат</div>
+          </div>
+
+          <!-- MODE: suggested -->
+          <div id="remix-suggested" class="glass-panel p-4 space-y-3 hidden">
+            <div class="text-xs text-gray-400 font-medium mb-2">📚 Готовые идеи — AI подберёт тему</div>
+            <div id="trending-ideas-main" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[180px] overflow-y-auto">
+              <div class="text-xs text-gray-500 text-center py-3">🔍 Загружаем популярные темы...</div>
+            </div>
+            <div class="border-t border-gray-800/50 pt-3 mt-1">
+              <div class="text-[10px] text-gray-500 mb-1.5">Или напишите свою тему (необязательно):</div>
+              <textarea id="idea-input-suggested" class="input-field h-12 resize-none text-sm" placeholder="Уточнить тему или оставить пустым — AI сам подберёт"></textarea>
+            </div>
+            <div class="text-[10px] text-gray-600">🔥 Выберите тему из трендов или оставьте пустым — AI найдёт актуальную тему сам</div>
+          </div>
+
+          <!-- MODE: script -->
+          <div id="remix-script" class="glass-panel p-4 space-y-3 hidden">
+            <div class="text-xs text-gray-400 font-medium mb-2">📝 Свой диалог</div>
+            <div>
+              <label class="text-xs text-cyan-400 font-medium mb-1 block">🅰️ Реплика A (провокация):</label>
+              <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
+            </div>
+            <div>
+              <label class="text-xs text-purple-400 font-medium mb-1 block">🅱️ Реплика B (ответ/панчлайн) — необязательно для соло:</label>
+              <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
+            </div>
+            <div class="text-[10px] text-gray-600">✨ AI сохранит ваш текст, но добавит профессиональные детали и тайминги</div>
+          </div>
+
+          <!-- MODE: video -->
+          <div id="remix-video" class="glass-panel p-4 space-y-3 hidden">
+            <div class="text-xs text-gray-400 font-medium mb-2">🎥 Видео-референс</div>
+            <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone-main">
+              <div class="text-lg mb-1">📁</div>
+              <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
+              <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
+              <input type="file" id="video-file-main" accept="video/mp4,video/quicktime" class="hidden">
+            </div>
+            <div id="video-meta-main" class="hidden text-xs text-gray-500"></div>
+            <div id="video-remake-badge-main" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
+              🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами
+            </div>
+            <div>
+              <label class="text-xs text-gray-400 font-medium mb-1 block">🎬 Контекст видео (необязательно):</label>
+              <textarea id="scene-hint-main" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст"></textarea>
+            </div>
+          </div>
+
+          <!-- Continue to characters -->
+          <div class="flex justify-center mt-6">
+            <button id="btn-content-to-characters" class="btn-primary px-8 py-3 text-base font-medium flex items-center gap-2">
+              <span>Далее → Выбрать персонажей</span>
+              <span>→</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- SECTION: Characters (Step 3) -->
         <section id="section-characters" class="section-panel space-y-5">
           <!-- Step indicator -->
           <div class="flex items-center gap-3 mb-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">2</div>
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">3</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Выберите персонажей</h2>
-              <p class="text-xs text-gray-400">Кликните на персонажа A (провокатор), затем на персонажа B (отвечает). AI подберёт подходящих под вашу идею.</p>
+              <p class="text-xs text-gray-400">Выберите персонажа A (обязательно) и B (опционально). Один персонаж = соло-ролик, два = диалог.</p>
             </div>
           </div>
 
@@ -395,8 +467,8 @@
             </div>
             <button id="char-swap" class="btn-neon text-lg px-3">⇄</button>
             <div id="char-b-slot" class="glass-panel p-4 flex-1 min-h-[70px]">
-              <div class="text-[11px] text-purple-400 mb-1 font-medium">B · панчлайн</div>
-              <div id="char-b-name" class="text-sm text-gray-400">Нажми на второго ↓</div>
+              <div class="text-[11px] text-purple-400 mb-1 font-medium">B · панчлайн <span class="text-gray-600">(опционально)</span></div>
+              <div id="char-b-name" class="text-sm text-gray-400">Нажми на второго или пропусти ↓</div>
             </div>
           </div>
           <div id="char-compat-badge" class="hidden">
@@ -419,8 +491,8 @@
             </div>
           </div>
 
-          <!-- CTA: go to step 2 -->
-          <button id="btn-go-generate" class="btn-primary w-full py-3 hidden">Далее → Выбрать локацию</button>
+          <!-- CTA: go to generate (step 4) -->
+          <button id="btn-go-generate" class="btn-primary w-full py-3 hidden">Далее → Локация и генерация</button>
 
           <!-- Grid -->
           <div id="char-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[480px] overflow-y-auto pr-2"></div>
@@ -505,8 +577,8 @@
           <div class="flex items-center gap-3 mb-4">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white text-sm font-bold">4</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Финальная настройка</h2>
-              <p class="text-xs text-gray-400">Проверьте всё ли правильно и запустите генерацию контента</p>
+              <h2 class="text-lg font-semibold text-white">Локация и генерация</h2>
+              <p class="text-xs text-gray-400">Выберите локацию (или AI подберёт сам) и запустите генерацию</p>
             </div>
           </div>
 
@@ -519,12 +591,12 @@
               <div class="text-[11px] text-cyan-400 font-medium">A · провокатор</div>
               <div id="gen-char-a" class="text-sm text-gray-200 mt-0.5">—</div>
             </div>
-            <div class="text-gray-600">×</div>
-            <div class="flex-1">
+            <div id="gen-char-separator" class="text-gray-600">×</div>
+            <div id="gen-char-b-wrap" class="flex-1">
               <div class="text-[11px] text-purple-400 font-medium">B · панчлайн</div>
               <div id="gen-char-b" class="text-sm text-gray-200 mt-0.5">—</div>
             </div>
-            <button id="gen-back-chars" class="text-xs text-gray-500 hover:text-cyan-400 transition-colors">← Сменить персонажей</button>
+            <button id="gen-back-chars" class="text-xs text-gray-500 hover:text-cyan-400 transition-colors">← Сменить</button>
           </div>
 
           <!-- Location picker -->
@@ -549,71 +621,14 @@
             </div>
           </div>
 
-          <!-- Input — dynamic based on generation mode -->
-          <div id="section-remix" class="space-y-3">
-
-            <!-- MODE: idea -->
-            <div id="remix-idea" class="glass-panel p-4 space-y-3 hidden">
-              <div class="text-xs text-gray-400 font-medium mb-2">💡 Ваша идея</div>
-              <textarea id="idea-input" class="input-field h-20 resize-none" placeholder="Например: цены на бензин выросли, сосед громко слушает музыку, дед не понимает смартфоны..."></textarea>
-              <div class="text-[10px] text-gray-600">✨ Чем конкретнее, тем смешнее будет результат</div>
-            </div>
-
-            <!-- MODE: suggested -->
-            <div id="remix-suggested" class="glass-panel p-4 space-y-3 hidden">
-              <div class="text-xs text-gray-400 font-medium mb-2">📚 Готовые идеи — AI подберёт тему</div>
-              <div id="trending-ideas-main" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[180px] overflow-y-auto">
-                <div class="text-xs text-gray-500 text-center py-3">🔍 Загружаем популярные темы...</div>
-              </div>
-              <div class="border-t border-gray-800/50 pt-3 mt-1">
-                <div class="text-[10px] text-gray-500 mb-1.5">Или напишите свою тему (необязательно):</div>
-                <textarea id="idea-input-suggested" class="input-field h-12 resize-none text-sm" placeholder="Уточнить тему или оставить пустым — AI сам подберёт"></textarea>
-              </div>
-              <div class="text-[10px] text-gray-600">🔥 Выберите тему из трендов или оставьте пустым — AI найдёт актуальную тему сам</div>
-            </div>
-
-            <!-- MODE: script -->
-            <div id="remix-script" class="glass-panel p-4 space-y-3 hidden">
-              <div class="text-xs text-gray-400 font-medium mb-2">📝 Свой диалог</div>
-              <div>
-                <label class="text-xs text-cyan-400 font-medium mb-1 block">🅰️ Реплика A (провокация):</label>
-                <textarea id="script-a" class="input-field h-14 resize-none" placeholder="Ты видел что они с ценами сделали?!"></textarea>
-              </div>
-              <div>
-                <label class="text-xs text-purple-400 font-medium mb-1 block">🅱️ Реплика B (ответ/панчлайн):</label>
-                <textarea id="script-b" class="input-field h-14 resize-none" placeholder="В наше время за эти деньги квартиру покупали!"></textarea>
-              </div>
-              <div class="text-[10px] text-gray-600">✨ AI сохранит ваш текст, но добавит профессиональные детали и тайминги</div>
-            </div>
-
-            <!-- MODE: video -->
-            <div id="remix-video" class="glass-panel p-4 space-y-3 hidden">
-              <div class="text-xs text-gray-400 font-medium mb-2">🎥 Видео-референс</div>
-              <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone-main">
-                <div class="text-lg mb-1">📁</div>
-                <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
-                <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
-                <input type="file" id="video-file-main" accept="video/mp4,video/quicktime" class="hidden">
-              </div>
-              <div id="video-meta-main" class="hidden text-xs text-gray-500"></div>
-              <div id="video-remake-badge-main" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
-                🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами
-              </div>
-              <div>
-                <label class="text-xs text-gray-400 font-medium mb-1 block">🎬 Контекст видео (необязательно):</label>
-                <textarea id="scene-hint-main" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст"></textarea>
-              </div>
-            </div>
-
-            <!-- Simple note about advanced parameters -->
-            <div class="text-[10px] text-gray-500 mt-2">
-              💡 Расширенные параметры (фото товара, опции) доступны во вкладке <span class="text-cyan-400">"🔧 Расширенные параметры"</span>
-            </div>
+          <!-- Simple note about advanced parameters -->
+          <div class="text-[10px] text-gray-500 mt-2">
+            💡 Расширенные параметры (фото товара, опции) доступны во вкладке <span class="text-cyan-400">"🔧 Расширенные параметры"</span>
           </div>
 
-          <!-- Step 5: Generate -->
+          <!-- Generate button -->
           <div class="flex items-center gap-3 mt-6">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white text-sm font-bold">5</div>
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white text-sm font-bold">✓</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Запустите генерацию</h2>
               <p class="text-xs text-gray-400">Нажмите кнопку — AI создаст уникальный контент для вашего видео</p>
@@ -630,8 +645,8 @@
             </div>
             <div id="readiness-chars" class="flex items-center gap-2 text-xs">
               <span class="readiness-icon text-red-400">✗</span>
-              <span class="text-gray-400">Персонажи A и B</span>
-              <span class="readiness-hint text-[10px] text-red-400/70 ml-auto">← выберите на шаге 2</span>
+              <span class="text-gray-400">Персонаж A (минимум 1)</span>
+              <span class="readiness-hint text-[10px] text-red-400/70 ml-auto">← выберите на шаге 3</span>
             </div>
             <div id="readiness-location" class="flex items-center gap-2 text-xs">
               <span class="readiness-icon text-emerald-400">✓</span>

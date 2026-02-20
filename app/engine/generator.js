@@ -800,9 +800,9 @@ function _speechStyleToEn(styleRu, pace, compat) {
 }
 
 // ─── ENGAGEMENT BUILDER ─────────────────────
-function buildEngagement(catRu, charA, charB, rng) {
+function buildEngagement(catRu, charA, charB, rng, soloMode = false) {
   const nameA = charA.name_ru;
-  const nameB = charB.name_ru;
+  const nameB = soloMode ? nameA : charB.name_ru;
   const fill = (s) => s.replace(/\{A\}/g, nameA).replace(/\{B\}/g, nameB);
 
   // ── Hashtags: 3-layer mix ──
@@ -814,11 +814,13 @@ function buildEngagement(catRu, charA, charB, rng) {
 
   // Персонажные теги
   const grpA = GROUP_HASHTAGS[charA.group] || [];
-  const grpB = GROUP_HASHTAGS[charB.group] || [];
+  const grpB = soloMode ? [] : (GROUP_HASHTAGS[charB.group] || []);
   const charTags = pickN([...new Set([...grpA, ...grpB])], 3, rng);
 
   // Уникальный тег серии
-  const seriesTag = '#' + nameA.replace(/\s+/g, '').toLowerCase() + 'vs' + nameB.replace(/\s+/g, '').toLowerCase();
+  const seriesTag = soloMode
+    ? '#' + nameA.replace(/\s+/g, '').toLowerCase() + 'solo'
+    : '#' + nameA.replace(/\s+/g, '').toLowerCase() + 'vs' + nameB.replace(/\s+/g, '').toLowerCase();
 
   // Сборка: niche(5) + mid(4) + charTags(3) + big(2) + evergreen(3) + series(1) = ~18 тегов (идеально для IG)
   const allTags = [...niche, ...mid, ...charTags, ...big, ...evergreen, seriesTag];
@@ -1233,6 +1235,7 @@ function buildVeoPrompt(opts) {
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2,
     productInfo,
     referenceStyle,
+    soloMode = false,
   } = opts;
 
   const hasProduct = !!(productInfo?.description_en);
@@ -1279,30 +1282,50 @@ function buildVeoPrompt(opts) {
 
   const ageDescA = ageNumA < 35 ? 'young' : ageNumA < 55 ? 'middle-aged' : 'elderly';
   const ageDescB = ageNumB < 35 ? 'young' : ageNumB < 55 ? 'middle-aged' : 'elderly';
-  const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
-  lines.push(`A hyper-realistic smartphone selfie video of ${pairAgeDesc} characters in a heated comedic argument. ${camStyle}`);
-  lines.push('');
-  lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
-  lines.push('');
-  lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchorsA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
-  lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchorsB}. Calm, composed, arms crossed, slight smirk.`);
-  lines.push('');
-
-  // Scene flow
-  lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
-  lines.push('');
-  lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}. B listens silently with sealed lips, only eyes reacting.`);
-  lines.push('');
-
-  if (dA2) {
-    lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+  if (soloMode) {
+    // ── SOLO MODE: single character monologue ──
+    lines.push(`A hyper-realistic smartphone selfie video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. ${camStyle}`);
     lines.push('');
-    lines.push(`A fires back a short follow-up in Russian: "${dA2}" — quick 1-4 word reaction.`);
+    lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
+    lines.push('');
+    lines.push(`Character (center of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchorsA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
+    lines.push('');
+    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion.`);
+    lines.push('');
+    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}.`);
+    lines.push('');
+    if (dB && dB !== dA) {
+      lines.push(`Character continues: "${dB}" — shifts tone, ${charA.speech_pace === 'slow' ? 'measured devastating delivery' : charA.speech_pace === 'fast' ? 'rapid-fire escalation' : 'controlled buildup to punchline'}. The word "${killerWord}" is the punchline.`);
+      lines.push('');
+    }
+    lines.push(`Character bursts into self-satisfied laughter — ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
   } else {
-    lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+    // ── DUO MODE: two characters dialogue ──
+    const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
+    lines.push(`A hyper-realistic smartphone selfie video of ${pairAgeDesc} characters in a heated comedic argument. ${camStyle}`);
+    lines.push('');
+    lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
+    lines.push('');
+    lines.push(`Character A (left of frame): ${charDescA}. Wearing ${wardrobeA}. ${skinAnchorsA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character B (right of frame): ${charDescB}. Wearing ${wardrobeB}. ${skinAnchorsB}. Calm, composed, arms crossed, slight smirk.`);
+    lines.push('');
+
+    // Scene flow
+    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
+    lines.push('');
+    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${charA.speech_pace === 'fast' ? 'rapid and emotional, voice cracking with indignation' : charA.speech_pace === 'slow' ? 'deep gravelly voice, slow deliberate fury' : 'passionate rising intonation'}. B listens silently with sealed lips, only eyes reacting.`);
+    lines.push('');
+
+    if (dA2) {
+      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+      lines.push('');
+      lines.push(`A fires back a short follow-up in Russian: "${dA2}" — quick 1-4 word reaction.`);
+    } else {
+      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${charB.speech_pace === 'slow' ? 'measured devastating delivery, each word landing like a stone' : charB.speech_pace === 'fast' ? 'sharp rapid-fire comeback' : 'controlled buildup'}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+    }
+    lines.push('');
+    lines.push(`Both burst into genuine laughter — ${releaseBrief}. Camera shakes from their body tremor. Warm shared moment.`);
   }
-  lines.push('');
-  lines.push(`Both burst into genuine laughter — ${releaseBrief}. Camera shakes from their body tremor. Warm shared moment.`);
   lines.push('');
 
   // Sound design — synced with detailed audio section (lines 1762-1781)
@@ -1370,12 +1393,18 @@ export function generate(input) {
   const warnings = [];
   const rng = seededRandom(seed);
   
-  // Validate characters
+  // Validate characters — solo mode: character2_id can be null
   const rawA = characters.find(c => c.id === character1_id) || characters[0];
-  const rawB = characters.find(c => c.id === character2_id) || characters[1] || characters[0];
+  const soloMode = !character2_id;
+  const rawB = soloMode
+    ? rawA  // solo: reuse A as B placeholder (downstream functions need both)
+    : (characters.find(c => c.id === character2_id) || characters[1] || characters[0]);
 
-  if (!rawA || !rawB) {
-    return { error: 'Characters not found', warnings: ['Выберите двух персонажей'] };
+  if (!rawA) {
+    return { error: 'Character not found', warnings: ['Выберите хотя бы одного персонажа'] };
+  }
+  if (soloMode) {
+    warnings.push('Соло-режим: один персонаж, монолог');
   }
 
   // Validate input mode consistency
@@ -1892,15 +1921,18 @@ export function generate(input) {
     cat, topicRu, aesthetic, cinematography, isOutdoor, dialogueA2: null,
     productInfo: product_info,
     referenceStyle: reference_style,
+    soloMode,
   });
 
   // ── ENGAGEMENT (smart hashtags + viral bait) ──
-  const engage = buildEngagement(cat.ru, charA, charB, rng);
+  const engage = buildEngagement(cat.ru, charA, charB, rng, soloMode);
 
   // ── RU PACKAGE ──
   const hashMem = thread_memory ? (typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(thread_memory))).slice(0, 8) : 'mem') : 'none';
-  // ── Pair dynamic label ──
-  const pairDynamic = charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? '🔥 Взрывная пара: хаос vs спокойствие'
+  // ── Pair/Solo dynamic label ──
+  const pairDynamic = soloMode
+    ? `🎭 Соло: ${charA.vibe_archetype || charA.compatibility}`
+    : charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? '🔥 Взрывная пара: хаос vs спокойствие'
     : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? '🌪 Хаотичная пара'
     : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? '⚡ Конфликтная пара'
     : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
@@ -2070,8 +2102,9 @@ ${engage.firstComment}
     seed,
     generator_version: '2.0',
     memory_hash: hashMem,
-    characters: [charA.id, charB.id],
-    vibes: [charA.vibe_archetype, charB.vibe_archetype],
+    solo_mode: soloMode,
+    characters: soloMode ? [charA.id] : [charA.id, charB.id],
+    vibes: soloMode ? [charA.vibe_archetype] : [charA.vibe_archetype, charB.vibe_archetype],
     category: cat,
     engagement: {
       viral_title: engage.viralTitle,
@@ -2104,7 +2137,7 @@ ${engage.firstComment}
     // Context for API mode — sent to server for Gemini refinement
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
-      input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB,
+      input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode,
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
@@ -2338,6 +2371,7 @@ ${firstComment}
     aesthetic: ctx.aesthetic, cinematography: ctx.cinematography,
     isOutdoor: isOutdoorMerge, dialogueA2: dA2,
     productInfo: ctx.product_info,
+    soloMode: ctx.soloMode || false,
   });
 
   // ── 7. Post-merge dialogue validation ──
