@@ -1845,7 +1845,7 @@ export function generate(input) {
         ? 'crowd murmur, vendor calls, plastic bag rustle, metal scale clank, distant radio music'
         : location.includes('polyclinic') || location.includes('mint-green')
         ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA, muffled coughing behind doors'
-        : location.includes('Marshrutka') || location.includes('vinyl')
+        : location.includes('marshrutka') || location.includes('vinyl')
         ? 'diesel engine vibration, vinyl seat squeak, hanging air freshener sway, muffled traffic outside, door pneumatics hiss'
         : location.includes('barn') || location.includes('hay')
         ? 'creaking wood, wind through plank gaps, distant animal sounds, swinging lightbulb chain clink'

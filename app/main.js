@@ -3123,12 +3123,15 @@ function initGenerate() {
           `;
         } else if (apiErr.message?.includes('quota') || apiErr.message?.includes('exceeded')) {
           errorTitle = 'Лимит генераций исчерпан';
-          errorDesc = 'Достигнут лимит генераций для вашего промо-кода.';
-          errorAction = 'Попробуйте другой промо-код или обновите тариф';
+          errorDesc = 'Достигнут лимит генераций. Попробуйте позже или напишите в поддержку.';
+          errorAction = 'Подождите немного или свяжитесь с @ferixdiii в Telegram';
           errorIcon = '📊';
           errorButtons = `
-            <button onclick="document.getElementById('gen-error-overlay')?.remove();navigateTo('settings')" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
-              📊 Обновить тариф
+            <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
+              🔄 Попробовать снова
+            </button>
+            <button onclick="window.open('https://t.me/ferixdiii', '_blank')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
+              💬 Поддержка
             </button>
           `;
         } else {
