@@ -37,26 +37,6 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function showNotification(message, type = 'info') {
-  const colors = {
-    success: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-    error: 'bg-red-500/15 text-red-400 border-red-500/30',
-    info: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
-    warning: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  };
-  const cls = colors[type] || colors.info;
-  const el = document.createElement('div');
-  el.className = `fixed top-4 right-4 z-[999] px-4 py-3 rounded-xl border text-sm font-medium shadow-lg backdrop-blur-md transition-all duration-300 ${cls}`;
-  el.style.transform = 'translateX(120%)';
-  el.textContent = message;
-  document.body.appendChild(el);
-  requestAnimationFrame(() => { el.style.transform = 'translateX(0)'; });
-  setTimeout(() => {
-    el.style.transform = 'translateX(120%)';
-    setTimeout(() => el.remove(), 300);
-  }, 3000);
-}
-
 function log(level, module, msg) {
   const el = document.getElementById('log-output');
   if (!el) return;
