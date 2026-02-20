@@ -2188,7 +2188,7 @@ export function mergeGeminiResult(localResult, geminiData) {
     const arc = g.video_emotion_arc;
     r.video_prompt_en_json.emotion_arc = {
       hook: arc.hook_en || r.video_prompt_en_json.emotion_arc.hook,
-      act_A: arc.act_A_en || r.video_prompt_en_json.emotion_arc.act_A,
+      act_A: arc.monologue_en || arc.act_A_en || r.video_prompt_en_json.emotion_arc.act_A,
       act_B: arc.act_B_en || r.video_prompt_en_json.emotion_arc.act_B,
       release: arc.release_en || r.video_prompt_en_json.emotion_arc.release,
     };
@@ -2241,7 +2241,10 @@ export function mergeGeminiResult(localResult, geminiData) {
   const pinComment = g.pin_comment_ru || r.log?.engagement?.pin_comment || '';
   const firstComment = g.first_comment_ru || r.log?.engagement?.first_comment || '';
   const hashtags = (g.hashtags || r.log?.engagement?.hashtags || []).map(t => t.startsWith('#') ? t : '#' + t);
-  const seriesTag = '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
+  const isSolo = ctx.soloMode || (charA.id === charB.id);
+  const seriesTag = isSolo
+    ? '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'solo'
+    : '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
 
   // Instagram Pack from Gemini
   const instaAnalysis = g.insta_analysis_ru || {
@@ -2257,7 +2260,33 @@ export function mergeGeminiResult(localResult, geminiData) {
   ];
   const instaEngagementTip = g.insta_engagement_tip_ru || `В этой теме важно спровоцировать спор. Напиши в закрепе:\n«${pinComment}»\nЭтот «махач» в комментах вытолкнет ролик в рекомендации. 🚀`;
 
-  r.ru_package = `🎬 ДИАЛОГ С ТАЙМИНГАМИ (FERIXDI AI Production)
+  r.ru_package = isSolo
+  ? `🎬 МОНОЛОГ С ТАЙМИНГАМИ (FERIXDI AI Production)
+═══════════════════════════════════════════
+📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}
+🤖 Сгенерировано FERIXDI AI — уникальный контент
+👤 Персонаж: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) — СОЛО
+🎭 Архетип: ${charA.vibe_archetype || '—'}
+📍 Локация: ${ctx.location.split(',')[0]}
+💡 Освещение: ${ctx.lightingMood.mood}
+👗 Гардероб: ${ctx.wardrobeA}
+🪑 Реквизит: ${ctx.propAnchor}
+
+[0.00–0.60] 🎣 ХУК: ${ctx.hookAction.action_ru}
+  🔊 Звук: ${ctx.hookAction.audio}
+  🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
+
+[0.60–7.00] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
+  «${dA}»
+  💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая эмоция'}
+  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
+  💥 KILLER WORD «${kw}» → ближе к 6.8s
+
+[7.00–8.00] 😏 RELEASE: реакция/пауза/усмешка
+  🎭 Финал: ${charA.modifiers?.laugh_style || 'усмешка в камеру'}`
+
+  : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (FERIXDI AI Production)
 ═══════════════════════════════════════════
 📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}
 🤖 Сгенерировано FERIXDI AI — уникальный контент
@@ -2294,7 +2323,7 @@ ${dA2 ? `
 [7.30–8.00] 😂 RELEASE: ${ctx.releaseAction.action_ru}
   🔊 Смех громче реплик на 20-30%, без клиппинга, тела трясутся
   🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
-  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
+  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}`
 
 ═══════════════════════════════════════════
 

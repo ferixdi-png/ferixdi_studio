@@ -2834,7 +2834,7 @@ function populateInstaTab(result) {
         <div>5. <span class="text-violet-300 font-medium">Первый коммент</span> → напиши третий коммент через 1-2 мин (запускает обсуждение)</div>
         `}
       </div>
-      <div class="text-[9px] text-gray-500 mt-3">${isEN ? 'Series' : 'Серия'}: ${charA.name_ru || 'A'} × ${charB.name_ru || 'B'} — ${isEN ? 'use one series tag for all videos of this pair' : 'используй один серийный тег на все видео этой пары'}</div>
+      <div class="text-[9px] text-gray-500 mt-3">${isEN ? 'Series' : 'Серия'}: ${charA.id === charB.id ? (charA.name_ru || 'A') + ' (соло)' : (charA.name_ru || 'A') + ' × ' + (charB.name_ru || 'B')} — ${isEN ? 'use one series tag for all videos' : 'используй один серийный тег на все видео'}</div>
     </div>
   `;
 }
