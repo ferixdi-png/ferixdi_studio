@@ -1246,11 +1246,18 @@ function buildVeoPrompt(opts) {
   lines.push(`Both burst into genuine laughter — ${releaseBrief}. Camera shakes from their body tremor. Warm shared moment.`);
   lines.push('');
 
-  // Sound design
+  // Sound design — synced with detailed audio section (lines 1762-1781)
+  const locLower = location.toLowerCase();
   const roomTone = isOutdoor
     ? 'birds chirping, wind through foliage, distant ambient sounds'
-    : location.includes('kitchen') ? 'humming fridge, wall clock tick, distant plumbing'
-    : location.includes('stairwell') ? 'fluorescent buzz, distant elevator, echo in concrete space'
+    : locLower.includes('kitchen') || locLower.includes('fridge') ? 'humming fridge, wall clock tick, distant plumbing'
+    : locLower.includes('stairwell') || locLower.includes('mailbox') ? 'fluorescent buzz, distant elevator, echo in concrete space'
+    : locLower.includes('marshrutka') || locLower.includes('vinyl seat') ? 'diesel engine vibration, vinyl seat squeak, muffled traffic outside, door pneumatics hiss'
+    : locLower.includes('balcony') || locLower.includes('laundry') ? 'distant city hum, car horns, pigeon cooing, clothesline wire creak'
+    : locLower.includes('bazaar') || locLower.includes('watermelon') ? 'crowd murmur, vendor calls, plastic bag rustle, distant radio'
+    : locLower.includes('polyclinic') || locLower.includes('mint-green') ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA'
+    : locLower.includes('barn') || locLower.includes('hay') ? 'creaking wood, wind through plank gaps, distant animal sounds'
+    : locLower.includes('attic') || locLower.includes('rafter') ? 'roof rain patter, creaking rafters, dust settling whisper'
     : 'subtle room ambiance, quiet hum, occasional creak';
   lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Fabric rustle on every movement. Audible breathing between speaking turns. Saliva clicks on hard consonants. Laughter 20-30% louder than dialogue. No music.`);
   lines.push('');
@@ -1427,7 +1434,10 @@ export function generate(input) {
 
   // ── Lighting (location-coherent selection) ──
   // Indoor locations get indoor-compatible lighting; outdoor get outdoor-compatible
-  const isOutdoor = /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(location);
+  // Check explicit indoor keywords FIRST to prevent false-positive from outdoor regex
+  // (e.g. marshrutka description may mention "street" but it's indoor)
+  const isExplicitIndoor = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge/i.test(location);
+  const isOutdoor = !isExplicitIndoor && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(location);
   const indoorMoods = LIGHTING_MOODS.filter(m => !['organic chaos', 'golden confrontation', 'exposed clarity'].includes(m.mood));
   const outdoorMoods = LIGHTING_MOODS.filter(m => ['organic chaos', 'golden confrontation', 'exposed clarity', 'calm before storm'].includes(m.mood));
   const lightingPool = isOutdoor ? (outdoorMoods.length ? outdoorMoods : LIGHTING_MOODS) : (indoorMoods.length ? indoorMoods : LIGHTING_MOODS);
@@ -2253,7 +2263,8 @@ ${firstComment}
 • Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
 
   // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
-  const isOutdoorMerge = /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(ctx.location || '');
+  const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge/i.test(ctx.location || '');
+  const isOutdoorMerge = !isExplicitIndoorMerge && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley/i.test(ctx.location || '');
   r.veo_prompt = buildVeoPrompt({
     charA, charB, cast: r.video_prompt_en_json.cast || {},
     location: ctx.location, lightingMood: ctx.lightingMood,
