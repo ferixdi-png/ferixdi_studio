@@ -88,8 +88,9 @@ export function validateTwoSpeakers(blueprint) {
   const warnings = [];
   if (!blueprint || !blueprint.scenes) return { valid: false, warnings };
 
+  const isSolo = blueprint.cast_summary?.mode === 'solo' || blueprint.scenes.some(s => s.segment === 'monologue');
   const speakers = new Set(blueprint.scenes.map(s => s.speaker).filter(s => s && s !== 'both'));
-  if (speakers.size < 2) {
+  if (!isSolo && speakers.size < 2) {
     warnings.push(`Only ${speakers.size} speaker(s) found, need exactly 2`);
   }
 
@@ -162,7 +163,9 @@ export function validateIdentityAnchors(blueprint) {
   const warnings = [];
   if (!blueprint || !blueprint.identity_anchors) return { valid: true, warnings };
   const anchors = blueprint.identity_anchors;
-  for (const role of ['A', 'B']) {
+  const isSolo = blueprint.cast_summary?.mode === 'solo' || !anchors.B;
+  const roles = isSolo ? ['A'] : ['A', 'B'];
+  for (const role of roles) {
     const a = anchors[role];
     if (!a || !a.face_silhouette) {
       warnings.push(`${role}: missing face_silhouette anchor — Veo may redraw face`);

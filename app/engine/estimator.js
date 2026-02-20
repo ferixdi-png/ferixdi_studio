@@ -1,7 +1,7 @@
 /**
  * FERIXDI Studio — Duration Estimator v2
  * Оценка длительности RU реплик для 8s grid v2
- * Per-speaker window limits: A=2.8s, B=3.5s
+ * Per-speaker window limits: A=3.5s, B=4.0s (with 1.2s tolerance)
  */
 
 const PACE_WPS = { slow: 2.8, normal: 3.5, fast: 4.2 };
@@ -139,10 +139,10 @@ export function estimateDialogue(lines, options = {}) {
 export function getSegmentTimings(total) {
   const t = Math.min(total, 8.0);
   return {
-    hook: { start: 0, end: 0.8 },
-    speakerA: { start: 0.8, end: 3.6 },
-    speakerB: { start: 3.6, end: 7.1 },
-    release: { start: 7.1, end: t },
-    killerWord: 6.85,
+    hook: { start: 0.0, end: 0.6 },
+    speakerA: { start: 0.6, end: 3.8 },
+    speakerB: { start: 3.8, end: 7.3 },
+    release: { start: 7.3, end: t },
+    killerWord: 7.1,
   };
 }
