@@ -2075,13 +2075,19 @@ ${engage.firstComment}
     ...(sceneHint ? { scene_reference: sceneHint } : {}),
     category: cat,
     lighting: lightingMood,
-    scenes: [
+    scenes: soloMode ? [
+      { id: 1, segment: 'hook', action: mergedHookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${mergedHookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
+      { id: 2, segment: 'monologue', action: `${charA.vibe_archetype || 'Solo performer'} delivers monologue`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 15-30 words, solo monologue, killer word "${killerWord}" near end, ${anchorA.micro_gesture || 'emphatic gestures'}` },
+      { id: 3, segment: 'release', action: releaseObj.action_en, speaker: 'A', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charA.modifiers?.laugh_style || 'smirk to camera'}, solo reaction` },
+    ] : [
       { id: 1, segment: 'hook', action: mergedHookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${mergedHookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
       { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-10 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
       { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-12 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
       { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers?.laugh_style || 'natural laugh'}, shared laugh` },
     ],
-    dialogue_segments: [
+    dialogue_segments: soloMode ? [
+      { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_B.end, word_range: '15-30' },
+    ] : [
       { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '6-10' },
       { speaker: 'B', text_ru: dialogueB, start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, word_range: '6-12' },
     ],
@@ -2094,11 +2100,16 @@ ${engage.firstComment}
       killer_word_at: 7.1,
       gap_between_speakers: '0.15-0.25s',
     },
-    identity_anchors: {
+    identity_anchors: soloMode ? {
+      A: charA.identity_anchors || {},
+    } : {
       A: charA.identity_anchors || {},
       B: charB.identity_anchors || {},
     },
-    cast_summary: {
+    cast_summary: soloMode ? {
+      A: { name: charA.name_ru, age: cast.speaker_A.age, vibe: charA.vibe_archetype, pace: charA.speech_pace, compatibility: charA.compatibility },
+      mode: 'solo',
+    } : {
       A: { name: charA.name_ru, age: cast.speaker_A.age, vibe: charA.vibe_archetype, pace: charA.speech_pace, compatibility: charA.compatibility },
       B: { name: charB.name_ru, age: cast.speaker_B.age, vibe: charB.vibe_archetype, pace: charB.speech_pace, compatibility: charB.compatibility },
       pair_dynamic: pairDynamic,
@@ -2270,12 +2281,18 @@ export function mergeGeminiResult(localResult, geminiData) {
     : '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
 
   // Instagram Pack from Gemini
-  const instaAnalysis = g.insta_analysis_ru || {
+  const instaAnalysis = g.insta_analysis_ru || (isSolo ? {
+    plot: `${charA.name_ru} выдаёт монолог про ${ctx.category?.ru || 'тему'} — прямо в камеру, без фильтров.`,
+    punchline: `Killer word «${kw}» в конце переворачивает весь смысл сказанного.`,
+    why_viral: `Каждый хоть раз думал то же самое — этот момент узнавания и есть главный триггер пересылки.`,
+  } : {
     plot: `${charA.name_ru} идёт в атаку с вопросом про ${ctx.category?.ru || 'тему'}. ${charB.name_ru} оказывается прижат к стенке.`,
     punchline: `Killer word «${kw}» переворачивает весь разговор — то, что казалось нападением, оказывается точным попаданием.`,
     why_viral: `Каждый хоть раз был в такой ситуации — этот момент узнавания и есть главный триггер пересылки.`,
-  };
-  const instaCaption = g.insta_caption_ru || `${viralTitle} ${charA.name_ru} выдала такое, что ${charB.name_ru} не нашёлся что ответить. Реакция — бесценна! 😂 Перешли это видео тому, кто точно узнает себя! 👇`;
+  });
+  const instaCaption = g.insta_caption_ru || (isSolo
+    ? `${viralTitle} ${charA.name_ru} сказал(а) такое, что комменты взорвутся. 😂 Перешли тому, кто точно узнает себя! 👇`
+    : `${viralTitle} ${charA.name_ru} выдала такое, что ${charB.name_ru} не нашёлся что ответить. Реакция — бесценна! 😂 Перешли это видео тому, кто точно узнает себя! 👇`);
   const instaHookTexts = g.insta_hook_texts_ru || [
     `${charA.name_ru} подловила на самом интересном...`,
     `Когда ${ctx.category?.ru?.toLowerCase() || 'жиза'} доводит до точки кипения 🔥`,
@@ -2439,7 +2456,7 @@ ${firstComment}
     return null;
   };
   const dAwords = validateWordCount(dA, maxA, 'Реплика A');
-  const dBwords = validateWordCount(dB, maxB, 'Реплика B');
+  const dBwords = isSolo ? null : validateWordCount(dB, maxB, 'Реплика B');
   if (dAwords) r.warnings = [...(r.warnings || []), dAwords];
   if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
 

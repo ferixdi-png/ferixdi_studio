@@ -1005,7 +1005,28 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
     // A/B Testing: inject instruction for multiple dialogue variants
     if (requestedVariants > 0) {
-      promptText += `\n\n════════════════════════════════════════════════════════════════
+      const soloMode = context.soloMode;
+      promptText += soloMode
+        ? `\n\n════════════════════════════════════════════════════════════════
+⚡ A/B ТЕСТИРОВАНИЕ: СГЕНЕРИРУЙ ${requestedVariants + 1} ВАРИАНТА МОНОЛОГА
+
+Помимо основного монолога (dialogue_A_ru, killer_word), добавь в JSON массив "ab_variants" с ${requestedVariants} АЛЬТЕРНАТИВНЫМИ вариантами.
+
+Каждый вариант в массиве — объект с полями:
+{ "dialogue_A_ru": "...", "dialogue_B_ru": null, "dialogue_A2_ru": null, "killer_word": "..." }
+
+ПРАВИЛА ДЛЯ ВАРИАНТОВ:
+• Каждый вариант — ДРУГОЙ угол юмора, ДРУГИЕ слова, ДРУГОЙ поворот
+• Все варианты про ТУ ЖЕ тему, но с разными панчлайнами
+• Все правила монолога (15-30 слов, пайпы, без тире) действуют для каждого варианта
+• Основной вариант — самый сильный. Альтернативные — экспериментальные
+
+Пример структуры:
+"ab_variants": [
+  { "dialogue_A_ru": "альт монолог", "dialogue_B_ru": null, "dialogue_A2_ru": null, "killer_word": "слово" }
+]
+════════════════════════════════════════════════════════════════`
+        : `\n\n════════════════════════════════════════════════════════════════
 ⚡ A/B ТЕСТИРОВАНИЕ: СГЕНЕРИРУЙ ${requestedVariants + 1} ВАРИАНТА ДИАЛОГА
 
 Помимо основного диалога (dialogue_A_ru, dialogue_B_ru, killer_word), добавь в JSON массив "ab_variants" с ${requestedVariants} АЛЬТЕРНАТИВНЫМИ вариантами.
@@ -1179,7 +1200,9 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       }
     }
 
-    if (geminiResult.dialogue_B_ru) {
+    const soloMode = context.soloMode;
+
+    if (geminiResult.dialogue_B_ru && !soloMode) {
       let bLine = sanitizeLine(geminiResult.dialogue_B_ru);
       // Strip "Зато" from beginning
       if (/^\s*[Зз]ато\s/i.test(bLine)) {
@@ -1204,6 +1227,19 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
           geminiResult.killer_word = actualLastWord;
         }
       }
+    } else if (soloMode) {
+      // Solo mode: ensure dialogue_B_ru is null, fix killer_word from monologue A
+      geminiResult.dialogue_B_ru = null;
+      geminiResult.dialogue_A2_ru = null;
+      const aLine = geminiResult.dialogue_A_ru || '';
+      const kwWords = aLine.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
+      if (kwWords.length > 0) {
+        const actualLastWord = kwWords[kwWords.length - 1];
+        if (geminiResult.killer_word !== actualLastWord) {
+          console.log('Fixed killer_word (solo):', { was: geminiResult.killer_word, now: actualLastWord });
+          geminiResult.killer_word = actualLastWord;
+        }
+      }
     }
 
     // Sanitize добивка if present
@@ -1216,22 +1252,29 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
     // ── Sanitize A/B variants if present ──
     if (Array.isArray(geminiResult.ab_variants)) {
-      geminiResult.ab_variants = geminiResult.ab_variants.filter(v => v && v.dialogue_A_ru && v.dialogue_B_ru).map(v => {
+      geminiResult.ab_variants = geminiResult.ab_variants.filter(v => v && v.dialogue_A_ru && (soloMode || v.dialogue_B_ru)).map(v => {
         v.dialogue_A_ru = sanitizeLine(v.dialogue_A_ru);
-        let bLine = sanitizeLine(v.dialogue_B_ru);
-        if (/^\s*[Зз]ато\s/i.test(bLine)) {
-          bLine = bLine.replace(/^\s*[Зз]ато\s+/i, '').trim();
-          if (bLine.length > 0) bLine = bLine[0].toUpperCase() + bLine.slice(1);
+        if (soloMode) {
+          v.dialogue_B_ru = null;
+          v.dialogue_A2_ru = null;
+          const kwW = (v.dialogue_A_ru || '').replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
+          if (kwW.length > 0) v.killer_word = kwW[kwW.length - 1];
+        } else {
+          let bLine = sanitizeLine(v.dialogue_B_ru);
+          if (/^\s*[Зз]ато\s/i.test(bLine)) {
+            bLine = bLine.replace(/^\s*[Зз]ато\s+/i, '').trim();
+            if (bLine.length > 0) bLine = bLine[0].toUpperCase() + bLine.slice(1);
+          }
+          v.dialogue_B_ru = bLine;
+          if (v.dialogue_A2_ru && typeof v.dialogue_A2_ru === 'string') {
+            v.dialogue_A2_ru = sanitizeLine(v.dialogue_A2_ru);
+            if (!v.dialogue_A2_ru.trim()) v.dialogue_A2_ru = null;
+          } else { v.dialogue_A2_ru = null; }
+          // Fix killer_word for variant
+          const kwSrc = v.dialogue_A2_ru || v.dialogue_B_ru;
+          const kwW = kwSrc.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
+          if (kwW.length > 0) v.killer_word = kwW[kwW.length - 1];
         }
-        v.dialogue_B_ru = bLine;
-        if (v.dialogue_A2_ru && typeof v.dialogue_A2_ru === 'string') {
-          v.dialogue_A2_ru = sanitizeLine(v.dialogue_A2_ru);
-          if (!v.dialogue_A2_ru.trim()) v.dialogue_A2_ru = null;
-        } else { v.dialogue_A2_ru = null; }
-        // Fix killer_word for variant
-        const kwSrc = v.dialogue_A2_ru || v.dialogue_B_ru;
-        const kwW = kwSrc.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
-        if (kwW.length > 0) v.killer_word = kwW[kwW.length - 1];
         return v;
       });
     }
