@@ -46,10 +46,14 @@
             "signature_element": "turquoise clip-on earrings",
             "micro_gesture": "dramatic hand wave with spread fingers",
             "wardrobe_anchor": "emerald silk blouse with mother-of-pearl buttons, velvet collar, always tucked into high-waist wool skirt",
-            "accessory_anchors": "large turquoise clip-on earrings",
+            "accessory_anchors": [
+                "large turquoise clip-on earrings"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "turquoise",
+            "color_palette": [
+                "turquoise"
+            ],
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
@@ -233,7 +237,9 @@
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "silver hair hidden under floral headscarf tied under chin",
-            "color_palette": "silver",
+            "color_palette": [
+                "silver"
+            ],
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
@@ -407,7 +413,9 @@
             "signature_element": "bright hand-knitted shawl draped over shoulders",
             "micro_gesture": "finger jabbing the air like conductor's baton",
             "wardrobe_anchor": "hand-knitted mohair cardigan with reindeer pattern, stretched at elbows, wooden toggle buttons",
-            "accessory_anchors": "snub nose with wide nostrils flaring when angry",
+            "accessory_anchors": [
+                "snub nose with wide nostrils flaring when angry"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -765,7 +773,9 @@
             "signature_element": "amber pendant on gold chain",
             "micro_gesture": "slaps own thigh then points at opponent",
             "wardrobe_anchor": "leopard-print chiffon shawl over black cashmere turtleneck, chunky amber rings on three fingers",
-            "accessory_anchors": "gold chain necklace with large amber pendant",
+            "accessory_anchors": [
+                "gold chain necklace with large amber pendant"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -942,7 +952,9 @@
             "signature_element": "gold rose brooch on lapel",
             "micro_gesture": "leans in close then jerks back in shock",
             "wardrobe_anchor": "faux-fur-trimmed burgundy coat, gold rose brooch on lapel, knitted beret tilted rakishly",
-            "accessory_anchors": "gold brooch shaped like a rose pinned to lapel",
+            "accessory_anchors": [
+                "gold brooch shaped like a rose pinned to lapel"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -1475,7 +1487,9 @@
             "signature_element": "vintage costume rings on multiple fingers",
             "micro_gesture": "touches temple with ringed finger while remembering",
             "wardrobe_anchor": "vintage brocade jacket with padded shoulders, costume jewelry rings on every other finger, silk scarf",
-            "accessory_anchors": "costume jewelry rings on multiple fingers collected from flea markets",
+            "accessory_anchors": [
+                "costume jewelry rings on multiple fingers collected from flea markets"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -1822,7 +1836,9 @@
             "signature_element": "leather-strap watch on bare wrist, rolled sleeves",
             "micro_gesture": "tilts head slightly, squints — 'say that again'",
             "wardrobe_anchor": "faded plaid flannel shirt rolled to elbows, leather watch strap, no jewelry at all",
-            "accessory_anchors": "leather watch strap on sinewy wrist",
+            "accessory_anchors": [
+                "leather watch strap on sinewy wrist"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -2171,10 +2187,14 @@
             "signature_element": "thick-framed fashion glasses and paisley burgundy shawl",
             "micro_gesture": "points with glasses in hand, then puts them back on to deliver verdict",
             "wardrobe_anchor": "paisley-print burgundy silk shawl over black cashmere turtleneck, thick-framed glasses, practical but stylish",
-            "accessory_anchors": "warm brown eyes behind fashionable thick-framed glasses",
+            "accessory_anchors": [
+                "warm brown eyes behind fashionable thick-framed glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "burgundy",
+            "color_palette": [
+                "burgundy"
+            ],
             "jewelry_anchors": "none visible",
             "glasses_anchor": "thick black Soviet-era frames",
             "nail_style_anchor": "manicured neat nails",
@@ -2690,7 +2710,9 @@
             "signature_element": "magnificent bushy ginger mustache",
             "micro_gesture": "strokes mustache confidently before delivering opinion",
             "wardrobe_anchor": "black polo shirt, gold chain at neck, leather jacket draped over shoulders",
-            "accessory_anchors": "gold chain necklace visible at collar",
+            "accessory_anchors": [
+                "gold chain necklace visible at collar"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -3396,7 +3418,9 @@
             "signature_element": "AirPods + rhinestone sunglasses on head",
             "micro_gesture": "eye roll then leans into camera conspiratorially",
             "wardrobe_anchor": "oversized puffer jacket, rhinestone sunglasses on head, AirPods, phone always in hand",
-            "accessory_anchors": "oversized designer-knockoff puffer jacket with rhinestone sunglasses pushed up on head",
+            "accessory_anchors": [
+                "oversized designer-knockoff puffer jacket with rhinestone sunglasses pushed up on head"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -3569,7 +3593,9 @@
             "signature_element": "pastel-pink hair tips",
             "micro_gesture": "raises one finger like 'actually...' before demolishing argument",
             "wardrobe_anchor": "striped telnyashka under corduroy jacket, messy ponytail, minimal jewelry",
-            "accessory_anchors": "light tan with subtle freckles across nose bridge",
+            "accessory_anchors": [
+                "light tan with subtle freckles across nose bridge"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -3742,7 +3768,9 @@
             "signature_element": "nostril piercing + voluminous curly hair",
             "micro_gesture": "head tilt with squint — 'you did NOT just say that'",
             "wardrobe_anchor": "faux-pearl necklace over embroidered magenta kaftan dress, doc martens boots",
-            "accessory_anchors": "faux-pearl necklace over embroidered magenta kaftan dress",
+            "accessory_anchors": [
+                "faux-pearl necklace over embroidered magenta kaftan dress"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -4090,7 +4118,9 @@
             "signature_element": "thin gold chain at neck + sports track jacket",
             "micro_gesture": "shrugs with palms up — 'what's the problem?'",
             "wardrobe_anchor": "fitted sports track jacket, joggers, clean white sneakers, thin gold chain",
-            "accessory_anchors": "gold chain thin at neck",
+            "accessory_anchors": [
+                "gold chain thin at neck"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -4264,7 +4294,9 @@
             "signature_element": "wild Einstein-white frizzy hair",
             "micro_gesture": "leans in conspiratorially then jerks back in mock outrage",
             "wardrobe_anchor": "track suit bottoms, wool socks in sandals, oversized knit sweater, bathrobe on top",
-            "accessory_anchors": "tight suspicious mouth always whispering",
+            "accessory_anchors": [
+                "tight suspicious mouth always whispering"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "flushed face with broken capillary veins",
             "color_palette": [
@@ -4434,7 +4466,9 @@
             "signature_element": "wool socks in sandals combo",
             "micro_gesture": "pushes imaginary glasses up nose, delivers cryptic observation",
             "wardrobe_anchor": "track suit bottoms, wool socks in sandals, oversized knit sweater, always looks like just woke up",
-            "accessory_anchors": "curious wide eyes always watching everything",
+            "accessory_anchors": [
+                "curious wide eyes always watching everything"
+            ],
             "footwear_anchor": "track suit bottoms with wool socks in sandals",
             "headwear_anchor": "neat combover with hat indentation",
             "color_palette": [
@@ -4605,10 +4639,14 @@
             "signature_element": "stylish glasses + pearl earrings + judgment stare",
             "micro_gesture": "slight head tilt, evaluating, before pronouncing sentence",
             "wardrobe_anchor": "cashmere cardigan, pearl earrings, reading glasses on decorative chain",
-            "accessory_anchors": "pearl earrings",
+            "accessory_anchors": [
+                "pearl earrings"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "silver",
+            "color_palette": [
+                "silver"
+            ],
             "jewelry_anchors": "thin gold wedding band left hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
@@ -5122,10 +5160,14 @@
             "signature_element": "ultra-short silver buzzcut + anchor tattoo on forearm",
             "micro_gesture": "rolls up sleeve to show anchor tattoo when making point",
             "wardrobe_anchor": "black leather vest over striped sailor telnyashka, wide leather bracelet, combat boots",
-            "accessory_anchors": "wide leather bracelet",
+            "accessory_anchors": [
+                "wide leather bracelet"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "SILVER",
+            "color_palette": [
+                "SILVER"
+            ],
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
@@ -5476,7 +5518,9 @@
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "turquoise",
+            "color_palette": [
+                "turquoise"
+            ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
@@ -5651,7 +5695,9 @@
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "SILVER",
+            "color_palette": [
+                "SILVER"
+            ],
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
@@ -5825,7 +5871,9 @@
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "SILVER",
+            "color_palette": [
+                "SILVER"
+            ],
             "signature_element": "thin white scar from left temple to ear + ice-blue eyes + silver wolf hair",
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "none",
@@ -6173,7 +6221,9 @@
             "signature_element": "black eye patch + gold earring + torn ear",
             "micro_gesture": "lifts eye patch slightly as if revealing secret then drops it",
             "wardrobe_anchor": "faded navy peacoat, striped telnyashka, captain cap tilted, gold earring",
-            "accessory_anchors": "GOLD EARRING IN LEFT EAR real sea gold",
+            "accessory_anchors": [
+                "GOLD EARRING IN LEFT EAR real sea gold"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -7055,7 +7105,9 @@
             "signature_element": "fiery red braid + freckle constellation across entire face",
             "micro_gesture": "strokes braid thoughtfully before delivering wisdom",
             "wardrobe_anchor": "linen apron with dried herbs, forest-green hand-knit cardigan, amber bead bracelet",
-            "accessory_anchors": "CONSTELLATION OF FRECKLES covering entire face nose cheeks forehead even eyelids",
+            "accessory_anchors": [
+                "CONSTELLATION OF FRECKLES covering entire face nose cheeks forehead even eyelids"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -7229,7 +7281,9 @@
             "signature_element": "shaved left temple with tribal + signet ring",
             "micro_gesture": "taps signet ring on table once — meeting begins",
             "wardrobe_anchor": "tailored black blazer, white silk blouse, signet ring, shaved temple visible",
-            "accessory_anchors": "SINGLE LARGE SIGNET RING on index finger like authority seal",
+            "accessory_anchors": [
+                "SINGLE LARGE SIGNET RING on index finger like authority seal"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -7402,10 +7456,14 @@
             "signature_element": "single bright purple hair streak at temple",
             "micro_gesture": "touches purple strand thinking, tucks before speaking",
             "wardrobe_anchor": "crisp white blouse, pencil skirt, amethyst studs, everything immaculate except purple streak",
-            "accessory_anchors": "minimalist amethyst stud earrings",
+            "accessory_anchors": [
+                "minimalist amethyst stud earrings"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "PURPLE",
+            "color_palette": [
+                "PURPLE"
+            ],
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
@@ -8096,7 +8154,9 @@
             "signature_element": "photochromic glasses always mid-transition + tweed elbow patches",
             "micro_gesture": "pushes glasses up then stares into middle distance before answering",
             "wardrobe_anchor": "tweed jacket elbow patches, photochromic glasses, ink-stained fingers, leather satchel",
-            "accessory_anchors": "PHOTOCHROMIC TRANSITION GLASSES always in mid-state between dark and clear",
+            "accessory_anchors": [
+                "PHOTOCHROMIC TRANSITION GLASSES always in mid-state between dark and clear"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -8269,7 +8329,9 @@
             "signature_element": "loose top knot + geometric tattoo sleeve + specialty coffee",
             "micro_gesture": "adjusts loose top knot then sips coffee before speaking",
             "wardrobe_anchor": "raw denim apron over flannel, leather watch, round glasses",
-            "accessory_anchors": "warm brown eyes round thin-frame glasses",
+            "accessory_anchors": [
+                "warm brown eyes round thin-frame glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -8442,10 +8504,14 @@
             "signature_element": "thick unibrow + aquiline nose + black stone ring",
             "micro_gesture": "touches black stone ring before judgment",
             "wardrobe_anchor": "dark wool coat, white shirt, black stone ring, polished shoes",
-            "accessory_anchors": "BLACK STONE SIGNET RING",
+            "accessory_anchors": [
+                "BLACK STONE SIGNET RING"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "silver",
+            "color_palette": [
+                "silver"
+            ],
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
@@ -8786,10 +8852,14 @@
             "signature_element": "pink hair + acid-yellow earrings + lightning tattoo behind ear",
             "micro_gesture": "touches lightning tattoo before bold statement",
             "wardrobe_anchor": "vintage denim jacket with pins, pink hair, yellow earrings, platform boots",
-            "accessory_anchors": "ACID-YELLOW DROP EARRINGS neon accent",
+            "accessory_anchors": [
+                "ACID-YELLOW DROP EARRINGS neon accent"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "purple",
+            "color_palette": [
+                "purple"
+            ],
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
@@ -9134,7 +9204,9 @@
             "signature_element": "athletic build + chin scar + zero makeup + fitness watch",
             "micro_gesture": "tightens ponytail before delivering argument",
             "wardrobe_anchor": "plain black t-shirt, joggers, fitness watch, ponytail, no accessories",
-            "accessory_anchors": "FITNESS WATCH wrist",
+            "accessory_anchors": [
+                "FITNESS WATCH wrist"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -9306,7 +9378,9 @@
             "signature_element": "1950s hairstyle + pearl necklace + polka-dot dress in 2026",
             "micro_gesture": "touches pearl necklace thoughtfully before quoting old movie",
             "wardrobe_anchor": "polka-dot vintage dress, pearl necklace, cat-eye liner, red lips, kitten heels",
-            "accessory_anchors": "PEARL NECKLACE grandmother's",
+            "accessory_anchors": [
+                "PEARL NECKLACE grandmother's"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -9478,7 +9552,9 @@
             "signature_element": "huge thick-frame glasses + pencils in messy bun + hoodie",
             "micro_gesture": "pushes glasses up bridge with middle finger, types something, then answers",
             "wardrobe_anchor": "oversized grey hoodie, enormous glasses, messy bun with pencils, energy drink nearby",
-            "accessory_anchors": "ENORMOUS THICK BLACK FRAME GLASSES covering half face",
+            "accessory_anchors": [
+                "ENORMOUS THICK BLACK FRAME GLASSES covering half face"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "oversized hoodie with hood half-up",
             "color_palette": [
@@ -9996,7 +10072,9 @@
             "signature_element": "enormous magnifying glasses + plaid shirt tucked in + neat side part",
             "micro_gesture": "raises index finger before correcting someone — 'actually...'",
             "wardrobe_anchor": "plaid button-up tucked into high-waist jeans, belt, enormous glasses, calculator watch",
-            "accessory_anchors": "ENORMOUS METAL-FRAME GLASSES thick lenses magnifying eyes",
+            "accessory_anchors": [
+                "ENORMOUS METAL-FRAME GLASSES thick lenses magnifying eyes"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -10519,10 +10597,14 @@
             "signature_element": "orange cat permanently on shoulder + cat-fur cardigan",
             "micro_gesture": "strokes cat then delivers surprisingly wise observation",
             "wardrobe_anchor": "cat-fur-covered burgundy cardigan, glasses on nose tip, cat on shoulder, apron with paw prints",
-            "accessory_anchors": "glasses on tip of nose peering over them",
+            "accessory_anchors": [
+                "glasses on tip of nose peering over them"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "ORANGE",
+            "color_palette": [
+                "ORANGE"
+            ],
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "manicured neat nails",
@@ -11200,7 +11282,9 @@
             "signature_element": "three-row pearl necklace + perfect platinum updo + icy stare",
             "micro_gesture": "touches pearl necklace before delivering sentence about son-in-law",
             "wardrobe_anchor": "cashmere stole, three-row pearls, perfect hair, everything immaculate",
-            "accessory_anchors": "THREE-ROW PEARL NECKLACE",
+            "accessory_anchors": [
+                "THREE-ROW PEARL NECKLACE"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -11540,7 +11624,9 @@
             "signature_element": "handlebar mustache curled up + gold rings + sauce-stained apron",
             "micro_gesture": "twirls mustache end before naming price with flourish",
             "wardrobe_anchor": "sauce-stained white apron, gold rings, handlebar mustache, chef hat tilted",
-            "accessory_anchors": "GOLD RINGS on three fingers",
+            "accessory_anchors": [
+                "GOLD RINGS on three fingers"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -11711,7 +11797,9 @@
             "signature_element": "massive bald build + unexpectedly kind eyes + whisper voice",
             "micro_gesture": "leans down to whisper something — scarier than any shout",
             "wardrobe_anchor": "tight black turtleneck, bald head, stud earring, all black, massive presence",
-            "accessory_anchors": "tiny STUD EARRING left ear",
+            "accessory_anchors": [
+                "tiny STUD EARRING left ear"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -12224,7 +12312,9 @@
             "signature_element": "pristine white coat + stethoscope + X-ray diagnostic eyes",
             "micro_gesture": "touches stethoscope before delivering diagnosis of situation",
             "wardrobe_anchor": "pristine white coat, stethoscope, tight bun, short nails, everything sterile-clean",
-            "accessory_anchors": "STETHOSCOPE around neck like necklace",
+            "accessory_anchors": [
+                "STETHOSCOPE around neck like necklace"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -13602,7 +13692,9 @@
             "signature_element": "red lipstick + black suit + steel gaze",
             "micro_gesture": "closes laptop before delivering verdict",
             "wardrobe_anchor": "black tailored suit, red lipstick, diamond studs, tablet in hand",
-            "accessory_anchors": "diamond stud earrings",
+            "accessory_anchors": [
+                "diamond stud earrings"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -13773,7 +13865,9 @@
             "signature_element": "ring light + perfect brows + phone permanently in hand",
             "micro_gesture": "flips hair, checks phone reflection, delivers opinion",
             "wardrobe_anchor": "crop top, high-waisted jeans, white sneakers, ring light, AirPods",
-            "accessory_anchors": "RING LIGHT always nearby",
+            "accessory_anchors": [
+                "RING LIGHT always nearby"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -13945,7 +14039,9 @@
             "signature_element": "GoPro on head strap + merch hoodie + manic energy",
             "micro_gesture": "checks GoPro is recording before every dramatic moment",
             "wardrobe_anchor": "merch hoodie with channel logo, joggers, GoPro on head, phone in pocket",
-            "accessory_anchors": "shaved temples long fringe swept to side",
+            "accessory_anchors": [
+                "shaved temples long fringe swept to side"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "own-channel MERCH HOODIE with logo",
             "color_palette": [
@@ -14287,7 +14383,9 @@
             "signature_element": "steering wheel grip + steel stare + coffee mug",
             "micro_gesture": "checks mirror then delivers road-wisdom truth",
             "wardrobe_anchor": "leather jacket, short hair, thermal mug, confident grip",
-            "accessory_anchors": "hands firm on steering wheel",
+            "accessory_anchors": [
+                "hands firm on steering wheel"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -14801,7 +14899,9 @@
             "signature_element": "chalk dust on blazer + pointer in hand + patient eyes",
             "micro_gesture": "draws invisible diagram in air while explaining",
             "wardrobe_anchor": "dark blazer with chalk dust, thin glasses, worn briefcase, pointer",
-            "accessory_anchors": "thin-framed glasses",
+            "accessory_anchors": [
+                "thin-framed glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -14970,7 +15070,9 @@
             "signature_element": "red pencil behind ear + strict bun + x-ray teacher eyes",
             "micro_gesture": "removes red pencil from ear before delivering grade/verdict",
             "wardrobe_anchor": "strict blouse, pencil skirt, glasses on chain, red pencil, class register",
-            "accessory_anchors": "glasses on chain",
+            "accessory_anchors": [
+                "glasses on chain"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -15139,7 +15241,9 @@
             "signature_element": "thick-frame glasses + energy drink + dark circles + hoodie",
             "micro_gesture": "pushes glasses up, types something, then delivers wisdom",
             "wardrobe_anchor": "black hoodie, thick glasses, energy drink, mechanical keyboard sounds",
-            "accessory_anchors": "intelligent grey-green eyes behind thick-frame glasses",
+            "accessory_anchors": [
+                "intelligent grey-green eyes behind thick-frame glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "hoodie with hood half-up",
             "color_palette": [
@@ -15310,7 +15414,9 @@
             "signature_element": "pink mechanical keyboard + sticker-covered laptop + pencil in bun",
             "micro_gesture": "removes glasses before demolishing argument, puts back after",
             "wardrobe_anchor": "oversized sweater, stylish glasses, pink keyboard, sticker laptop, thermal mug",
-            "accessory_anchors": "serious grey eyes behind stylish glasses",
+            "accessory_anchors": [
+                "serious grey eyes behind stylish glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -15480,7 +15586,9 @@
             "signature_element": "enormous biceps + protein shaker + tight t-shirt",
             "micro_gesture": "flexes unconsciously while thinking, shaker rattles",
             "wardrobe_anchor": "tight t-shirt, joggers, fitness watch, protein shaker, shoulder tattoo",
-            "accessory_anchors": "fitness watch",
+            "accessory_anchors": [
+                "fitness watch"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -15653,7 +15761,9 @@
             "signature_element": "yoga mat on back + smoothie + mantra bracelet + serene energy",
             "micro_gesture": "closes eyes, breathes, then delivers truth with devastating calm",
             "wardrobe_anchor": "linen top, loose pants, yoga mat, smoothie, mantra bracelet",
-            "accessory_anchors": "mantra bracelet",
+            "accessory_anchors": [
+                "mantra bracelet"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -16166,7 +16276,9 @@
             "signature_element": "tight necktie + document folder + rubber stamp",
             "micro_gesture": "clicks pen three times before pronouncing bureaucratic verdict",
             "wardrobe_anchor": "grey rumpled suit, tight tie, document folder, glasses, rubber stamp",
-            "accessory_anchors": "small evaluating grey eyes behind glasses",
+            "accessory_anchors": [
+                "small evaluating grey eyes behind glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -16335,7 +16447,9 @@
             "signature_element": "clicking heels + strict bob + folder with stamp",
             "micro_gesture": "stamps document with authority before speaking",
             "wardrobe_anchor": "two-piece suit, high heels, strict bob, folder, perfect manicure",
-            "accessory_anchors": "cold grey eyes behind fashionable glasses",
+            "accessory_anchors": [
+                "cold grey eyes behind fashionable glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -16504,7 +16618,9 @@
             "signature_element": "whistle on lanyard + notepad + military haircut + interrogating eyes",
             "micro_gesture": "clicks pen and opens notepad before any conversation",
             "wardrobe_anchor": "grey cardigan, whistle on lanyard, notepad, men's watch, military posture",
-            "accessory_anchors": "men's watch on wrist",
+            "accessory_anchors": [
+                "men's watch on wrist"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -17368,7 +17484,9 @@
             "signature_element": "platinum-pink hair + ring light reflection + phone on tripod",
             "micro_gesture": "fixes hair and checks phone angle before every sentence",
             "wardrobe_anchor": "crop top, high-waist jeans, platform sneakers, airpods, phone on tripod",
-            "accessory_anchors": "RING LIGHT reflected in eyes",
+            "accessory_anchors": [
+                "RING LIGHT reflected in eyes"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -17540,7 +17658,9 @@
             "signature_element": "hands on imaginary wheel + pine freshener + mirror-checking",
             "micro_gesture": "checks imaginary rearview mirror before making point",
             "wardrobe_anchor": "polo shirt, seatbelt tan line, pine freshener hanging, phone mount",
-            "accessory_anchors": "hands on imaginary steering wheel",
+            "accessory_anchors": [
+                "hands on imaginary steering wheel"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -18233,7 +18353,9 @@
             "signature_element": "one-arm tan from cab window + trucker cap + earpiece",
             "micro_gesture": "grips invisible wheel while telling road wisdom story",
             "wardrobe_anchor": "trucker cap, flannel shirt, one tanned arm, Bluetooth earpiece, work boots",
-            "accessory_anchors": "hands always positioned on invisible steering wheel",
+            "accessory_anchors": [
+                "hands always positioned on invisible steering wheel"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "trucker cap with logo",
             "color_palette": [
@@ -18404,7 +18526,9 @@
             "signature_element": "gold cufflinks + signet ring + heavy-lidded power stare",
             "micro_gesture": "slowly rotates signet ring while deciding fate",
             "wardrobe_anchor": "expensive tight suit, gold cufflinks with crest, signet ring",
-            "accessory_anchors": "SIGNET RING on pinky",
+            "accessory_anchors": [
+                "SIGNET RING on pinky"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -18581,7 +18705,9 @@
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "leather jacket over hoodie",
-            "color_palette": "ORANGE",
+            "color_palette": [
+                "ORANGE"
+            ],
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "round gold-rimmed spectacles",
             "nail_style_anchor": "long painted nails",
@@ -18747,7 +18873,9 @@
             "signature_element": "golden hard hat + black mustache + developer polo",
             "micro_gesture": "taps hard hat and points at horizon promising buildings",
             "wardrobe_anchor": "golden hard hat, company polo, Breitling watch",
-            "accessory_anchors": "Breitling watch",
+            "accessory_anchors": [
+                "Breitling watch"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "GOLDEN HARD HAT worn even in office",
             "color_palette": [
@@ -18917,7 +19045,9 @@
             "signature_element": "leather apron + silk headband + perfectionist gaze",
             "micro_gesture": "wipes invisible smudge off plate rim before serving",
             "wardrobe_anchor": "leather designer apron, silk headband, gold hoops, notebook",
-            "accessory_anchors": "gold hoop earrings",
+            "accessory_anchors": [
+                "gold hoop earrings"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -19087,7 +19217,9 @@
             "signature_element": "two phones + HODL hoodie + watches on both wrists",
             "micro_gesture": "rapidly switches between two phone screens",
             "wardrobe_anchor": "HODL hoodie, smart watches both wrists, two phones",
-            "accessory_anchors": "smart watches on BOTH wrists",
+            "accessory_anchors": [
+                "smart watches on BOTH wrists"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "HODL HOODIE",
             "color_palette": [
@@ -19263,7 +19395,9 @@
             ],
             "footwear_anchor": "jeans sneakers",
             "headwear_anchor": "none",
-            "color_palette": "PURPLE",
+            "color_palette": [
+                "PURPLE"
+            ],
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
@@ -20120,7 +20254,9 @@
             "signature_element": "knitting on seat + seat cushion + 40 kmh",
             "micro_gesture": "knits two stitches at red light, checks mirror, continues",
             "wardrobe_anchor": "warm cardigan, bifocals, knitting needles, seat cushion",
-            "accessory_anchors": "bifocal glasses on nose tip",
+            "accessory_anchors": [
+                "bifocal glasses on nose tip"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -20290,7 +20426,9 @@
             "signature_element": "one earbud + university hoodie + energy drink + silence",
             "micro_gesture": "nods once instead of speaking, adjusts single earbud",
             "wardrobe_anchor": "university hoodie, one earbud, energy drink, student pallor",
-            "accessory_anchors": "fringe",
+            "accessory_anchors": [
+                "fringe"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "thin in hoodie",
             "color_palette": [
@@ -21315,7 +21453,9 @@
             "signature_element": "textbook from backpack + two braids + forehead glasses",
             "micro_gesture": "reads textbook between doorbell rings, lips moving",
             "wardrobe_anchor": "delivery backpack with textbook, braids, Converse, glasses",
-            "accessory_anchors": "glasses on forehead",
+            "accessory_anchors": [
+                "glasses on forehead"
+            ],
             "footwear_anchor": "Converse sneakers",
             "headwear_anchor": "none",
             "color_palette": [
@@ -21486,7 +21626,9 @@
             "signature_element": "necktie under courier jacket + office shoes + motorcycle",
             "micro_gesture": "straightens necktie before ringing doorbell",
             "wardrobe_anchor": "leather jacket over shirt with tie, office shoes, moto helmet",
-            "accessory_anchors": "still wearing OFFICE SHOES",
+            "accessory_anchors": [
+                "still wearing OFFICE SHOES"
+            ],
             "footwear_anchor": "still wearing OFFICE SHOES",
             "headwear_anchor": "none",
             "color_palette": [
@@ -21661,7 +21803,9 @@
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "orange",
+            "color_palette": [
+                "orange"
+            ],
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
@@ -22172,7 +22316,9 @@
             "signature_element": "name stickers on backpack + red beard + candies for kids",
             "micro_gesture": "greets regular by name and asks about their dog",
             "wardrobe_anchor": "green cap, backpack with name stickers, pockets of candies",
-            "accessory_anchors": "cheerful brown eyes remembering every customer",
+            "accessory_anchors": [
+                "cheerful brown eyes remembering every customer"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "green baseball cap",
             "color_palette": [
@@ -22514,7 +22660,9 @@
             "signature_element": "whistle + stopwatch + New Balance sneakers",
             "micro_gesture": "clicks stopwatch and blows whistle simultaneously",
             "wardrobe_anchor": "track pants, New Balance, whistle and stopwatch on neck",
-            "accessory_anchors": "STOPWATCH next to whistle on neck",
+            "accessory_anchors": [
+                "STOPWATCH next to whistle on neck"
+            ],
             "footwear_anchor": "New Balance sneakers",
             "headwear_anchor": "none",
             "color_palette": [
@@ -22683,7 +22831,9 @@
             "signature_element": "Python mug + meme t-shirt + projector glow on face",
             "micro_gesture": "draws meme on whiteboard to explain algorithm",
             "wardrobe_anchor": "meme t-shirt, rectangular glasses, Python mug, goatee",
-            "accessory_anchors": "amused grey-green eyes behind rectangular glasses",
+            "accessory_anchors": [
+                "amused grey-green eyes behind rectangular glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -23199,7 +23349,9 @@
             "signature_element": "tea with milk + tweed jacket + UK flag pointer",
             "micro_gesture": "sips tea and switches to English mid-sentence without warning",
             "wardrobe_anchor": "tweed jacket, thin glasses, UK pointer, tea with milk cup",
-            "accessory_anchors": "thin glasses",
+            "accessory_anchors": [
+                "thin glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -23713,7 +23865,9 @@
             "signature_element": "crumbling chalk + Einstein hair + equation-filled blackboard",
             "micro_gesture": "stares at broken chalk piece puzzled then continues writing",
             "wardrobe_anchor": "rumpled turtleneck, thick glasses, chalk dust, Einstein hair",
-            "accessory_anchors": "absent but deep brown eyes behind thick glasses",
+            "accessory_anchors": [
+                "absent but deep brown eyes behind thick glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -24054,7 +24208,9 @@
             "signature_element": "graphic tablet + stylus + mood ring + black turtleneck",
             "micro_gesture": "holds up stylus to screen comparing two nearly identical colors",
             "wardrobe_anchor": "black turtleneck, graphic tablet, stylus, mood ring",
-            "accessory_anchors": "MOOD RING color-changing",
+            "accessory_anchors": [
+                "MOOD RING color-changing"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -24225,7 +24381,9 @@
             "signature_element": "aviator glasses + 'I break things' shirt + bug notebook",
             "micro_gesture": "squints at restaurant menu looking for typos instinctively",
             "wardrobe_anchor": "'I break things' tee, aviator glasses, red pen, bug notebook",
-            "accessory_anchors": "thin AVIATOR GLASSES",
+            "accessory_anchors": [
+                "thin AVIATOR GLASSES"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -24396,10 +24554,14 @@
             "signature_element": "silver glasses + 47 Excel tabs + laser pointer",
             "micro_gesture": "points laser pointer at graph proving her argument",
             "wardrobe_anchor": "blouse, pencil skirt, silver glasses, laser pointer, laptop",
-            "accessory_anchors": "THIN SILVER-FRAME GLASSES",
+            "accessory_anchors": [
+                "THIN SILVER-FRAME GLASSES"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
-            "color_palette": "SILVER",
+            "color_palette": [
+                "SILVER"
+            ],
             "jewelry_anchors": "tarnished silver ring",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "thick ridged nails",
@@ -24565,7 +24727,9 @@
             "signature_element": "cable bundle on shoulder + retractor badge + liter coffee",
             "micro_gesture": "clicks badge retractor rhythmically while listening to problem",
             "wardrobe_anchor": "rumpled polo, cable bundle, badge retractor, liter thermos",
-            "accessory_anchors": "BADGE ON RETRACTOR clicked for comfort",
+            "accessory_anchors": [
+                "BADGE ON RETRACTOR clicked for comfort"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -24909,7 +25073,9 @@
             "signature_element": "Sony headphones + MacBook stickers + dark hoodie",
             "micro_gesture": "lifts one headphone ear to listen, puts it back immediately",
             "wardrobe_anchor": "dark navy hoodie, huge headphones, stylish glasses, MacBook",
-            "accessory_anchors": "calm grey eyes behind stylish glasses",
+            "accessory_anchors": [
+                "calm grey eyes behind stylish glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "dark navy hoodie",
             "color_palette": [
@@ -25937,7 +26103,9 @@
             "signature_element": "Garmin GPS watch + hollow cheeks + runner singlet",
             "micro_gesture": "checks GPS watch pulse mid-conversation",
             "wardrobe_anchor": "running shorts, singlet, Garmin GPS, lean veined legs",
-            "accessory_anchors": "GPS GARMIN WATCH screen always on pulse",
+            "accessory_anchors": [
+                "GPS GARMIN WATCH screen always on pulse"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -26450,7 +26618,9 @@
             "signature_element": "pointe ribbons on wrist + ballet bun + steel-straight posture",
             "micro_gesture": "adjusts student's posture with one precise finger touch",
             "wardrobe_anchor": "black leotard, chiffon skirt, ballet bun, pointe ribbons",
-            "accessory_anchors": "thin straight as string",
+            "accessory_anchors": [
+                "thin straight as string"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -27989,7 +28159,9 @@
             "signature_element": "rubber stamp + 'lunch break' sign + combover + glasses",
             "micro_gesture": "stamps documents without reading, eyes on clock",
             "wardrobe_anchor": "short-sleeve shirt, tie, glasses, rubber stamp, lunch sign",
-            "accessory_anchors": "indifferent grey eyes behind glasses",
+            "accessory_anchors": [
+                "indifferent grey eyes behind glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -28158,7 +28330,9 @@
             "signature_element": "glasses on chain + document stack + grey suit",
             "micro_gesture": "removes glasses, holds document at arm's length, frowns deeply",
             "wardrobe_anchor": "grey suit, glasses on chain, document stack, lacquered hair",
-            "accessory_anchors": "GLASSES ON CHAIN removed and put on for dramatic effect",
+            "accessory_anchors": [
+                "GLASSES ON CHAIN removed and put on for dramatic effect"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -28328,7 +28502,9 @@
             "signature_element": "golden deputy badge + tasteless suit + promising smile",
             "micro_gesture": "adjusts deputy badge before making another empty promise",
             "wardrobe_anchor": "expensive tasteless suit, deputy badge, 'projects' folder",
-            "accessory_anchors": "GOLDEN DEPUTY BADGE on lapel",
+            "accessory_anchors": [
+                "GOLDEN DEPUTY BADGE on lapel"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -29010,7 +29186,9 @@
             "signature_element": "blueprint tube + T-square ruler + thin glasses",
             "micro_gesture": "unrolls blueprint and measures with T-square to verify claim",
             "wardrobe_anchor": "dress shirt, vest, thin glasses, blueprint tube, T-square",
-            "accessory_anchors": "thin-frame glasses",
+            "accessory_anchors": [
+                "thin-frame glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -29354,7 +29532,9 @@
             "signature_element": "unboxing knife + channel hoodie + wonder-struck eyes",
             "micro_gesture": "slices box tape with dramatic pause before revealing",
             "wardrobe_anchor": "channel logo hoodie, unboxing knife, surrounded by boxes",
-            "accessory_anchors": "dark hair side fringe",
+            "accessory_anchors": [
+                "dark hair side fringe"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "channel logo hoodie",
             "color_palette": [
@@ -29525,7 +29705,9 @@
             "signature_element": "aesthetic coffee + beige oversized + multiple rings",
             "micro_gesture": "adjusts coffee cup angle for non-existent camera",
             "wardrobe_anchor": "beige oversized sweater, rings, aesthetic coffee cup",
-            "accessory_anchors": "multiple rings",
+            "accessory_anchors": [
+                "multiple rings"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -29696,7 +29878,9 @@
             "signature_element": "spy camera glasses + dyed blond + bright jacket",
             "micro_gesture": "adjusts spy glasses while targeting unsuspecting person",
             "wardrobe_anchor": "bright jacket, spy glasses, dyed blond, hidden mic",
-            "accessory_anchors": "SPY CAMERA GLASSES",
+            "accessory_anchors": [
+                "SPY CAMERA GLASSES"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -29867,7 +30051,9 @@
             "signature_element": "messy bun + wrist hair tie + baby food stain",
             "micro_gesture": "wipes baby food off shoulder mid-sentence without pausing",
             "wardrobe_anchor": "casual clothes, hair tie on wrist, ring light, shoulder stain",
-            "accessory_anchors": "ring light",
+            "accessory_anchors": [
+                "ring light"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -30382,7 +30568,9 @@
             "signature_element": "condenser mic + round glasses + acoustic panels",
             "micro_gesture": "leans toward mic and pauses meaningfully before speaking",
             "wardrobe_anchor": "dark shirt, round glasses, studio headphones, condenser mic",
-            "accessory_anchors": "round glasses",
+            "accessory_anchors": [
+                "round glasses"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -30895,7 +31083,9 @@
             "signature_element": "pearl earrings + white dust-glove + perfect styling",
             "micro_gesture": "runs white-gloved finger along shelf showing dust to camera",
             "wardrobe_anchor": "cream blouse, pearl earrings, white inspection glove",
-            "accessory_anchors": "PEARL EARRINGS family heirloom",
+            "accessory_anchors": [
+                "PEARL EARRINGS family heirloom"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -31064,7 +31254,9 @@
             "signature_element": "tarot cards + layered shawls + rings every finger",
             "micro_gesture": "draws tarot card before answering any question",
             "wardrobe_anchor": "layered shawls, rings every finger, tarot deck, candles",
-            "accessory_anchors": "rings every finger",
+            "accessory_anchors": [
+                "rings every finger"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -31234,7 +31426,9 @@
             "signature_element": "gold glasses + planner + director posture",
             "micro_gesture": "opens planner and assigns family weekend tasks",
             "wardrobe_anchor": "suit set, gold glasses, planner, director bearing",
-            "accessory_anchors": "GOLD-FRAME GLASSES",
+            "accessory_anchors": [
+                "GOLD-FRAME GLASSES"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -31919,7 +32113,9 @@
             "signature_element": "blue tape wrist bracelet + multimeter on neck + headlamp",
             "micro_gesture": "wraps blue tape around something while muttering about wiring",
             "wardrobe_anchor": "work jacket, blue tape bracelet, multimeter, headlamp",
-            "accessory_anchors": "BLUE ELECTRICAL TAPE on wrist like bracelet",
+            "accessory_anchors": [
+                "BLUE ELECTRICAL TAPE on wrist like bracelet"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -32430,7 +32626,9 @@
             "signature_element": "huge jingling key ring + stilettos + floor plan folder",
             "micro_gesture": "jingles keys while enthusiastically describing invisible view",
             "wardrobe_anchor": "blazer, skirt, stilettos, huge key ring, floor plan folder",
-            "accessory_anchors": "HUGE KEY RING jingling",
+            "accessory_anchors": [
+                "HUGE KEY RING jingling"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
@@ -33113,7 +33311,9 @@
             "signature_element": "RGB gaming headset + Red Bull can + screen glow on face",
             "micro_gesture": "says 'five minutes' while clearly starting new 40-min match",
             "wardrobe_anchor": "rumpled hoodie, RGB headset, Red Bull, keyboard glow",
-            "accessory_anchors": "dark long hair covering eyes",
+            "accessory_anchors": [
+                "dark long hair covering eyes"
+            ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "rumpled hoodie",
             "color_palette": [
@@ -33632,7 +33832,9 @@
             "signature_element": "drill + house robe + slippers + 7am determination",
             "micro_gesture": "checks watch at exactly 7:00 and starts drilling with satisfaction",
             "wardrobe_anchor": "house robe, undershirt, slippers, drill, newspaper",
-            "accessory_anchors": "bald with hair fringe",
+            "accessory_anchors": [
+                "bald with hair fringe"
+            ],
             "footwear_anchor": "slippers",
             "headwear_anchor": "none",
             "color_palette": [
