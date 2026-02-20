@@ -3195,8 +3195,13 @@ function initGenerate() {
 // ─── ENGLISH ADAPTATION ─────────────────────
 function initTranslate() {
   document.getElementById('btn-translate-en')?.addEventListener('click', async () => {
+    log('INFO', 'TRANSLATE', 'Кнопка нажата — начинаем адаптацию...');
     const result = state.lastResult;
-    if (!result) return;
+    if (!result) {
+      log('ERR', 'TRANSLATE', 'state.lastResult пустой — нет данных для перевода');
+      showNotification('❌ Нет результата для перевода — сначала сгенерируйте контент', 'error');
+      return;
+    }
 
     const btn = document.getElementById('btn-translate-en');
     btn.disabled = true;
@@ -3213,18 +3218,28 @@ function initTranslate() {
     const dialogueA2 = lineA2?.text_ru || '';
     const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || '';
 
+    log('INFO', 'TRANSLATE', `A="${dialogueA?.slice(0, 30)}..." B="${dialogueB?.slice(0, 30)}..." kw="${killerWord}"`);
+
     // Extract insta pack
     const engage = result.log?.engagement || {};
 
     const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
-    const token = localStorage.getItem('ferixdi_jwt');
+    let token = localStorage.getItem('ferixdi_jwt');
     if (!token) {
-      btn.innerHTML = '❌ Нет токена — введите промо-код';
-      setTimeout(() => { btn.innerHTML = '🇬🇧 Адаптация на English'; btn.disabled = false; }, 2500);
-      return;
+      log('ERR', 'TRANSLATE', 'JWT токен отсутствует — переавторизуемся...');
+      // Auto-retry auth before giving up
+      await autoAuth();
+      token = localStorage.getItem('ferixdi_jwt');
+      if (!token) {
+        btn.innerHTML = '❌ Нет токена — введите промо-код в Настройках';
+        setTimeout(() => { btn.innerHTML = '🇬🇧 Адаптация на English'; btn.disabled = false; }, 2500);
+        return;
+      }
+      log('OK', 'TRANSLATE', 'JWT получен после переавторизации');
     }
 
     try {
+      log('INFO', 'TRANSLATE', `Отправляем запрос на ${apiUrl}/api/translate...`);
       const resp = await fetch(`${apiUrl}/api/translate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
