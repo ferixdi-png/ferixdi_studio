@@ -494,9 +494,9 @@ const FIRST_COMMENTS = {
 // Короткая фраза в контексте видео, которая заставляет переслать другу
 const SHARE_BAITS = {
   'Бытовой абсурд': [
-    'Когда {A} узнала правду про {тему} — последняя фраза {B} убила 💀',
+    'Когда {A} узнала правду — последняя фраза {B} убила 💀',
     'Скинь маме — она скажет «это точно про нас» 😂',
-    '{A} и {B} разнесли тему {темы} за 8 секунд, последнее слово решает',
+    '{A} и {B} разнесли всё за 8 секунд, последнее слово решает',
     'Перешли тому кто поймёт — тут каждое слово в точку',
   ],
   'AI и технологии': [
@@ -730,6 +730,9 @@ function seededRandom(seed) {
 }
 
 function pickRandom(arr, rng) { return arr[Math.floor(rng() * arr.length)]; }
+// Helper: safely join array or return string fallback (used in prompts)
+const safeArr = (v) => Array.isArray(v) ? v.join(', ') : (v || '');
+
 function pickN(arr, n, rng) {
   const copy = [...arr];
   const result = [];
@@ -1254,7 +1257,6 @@ function buildVeoPrompt(opts) {
 
   // ── FULL CHARACTER BLOCK BUILDER ──
   // Includes ALL 50+ params from biology_override, identity_anchors, modifiers
-  const safeArr = (v) => Array.isArray(v) ? v.join(', ') : (v || '');
   const buildVeoCharBlock = (char, wardrobe, castEntry) => {
     const bio = char.biology_override || {};
     const id = char.identity_anchors || {};
@@ -2023,6 +2025,20 @@ export function generate(input) {
         ? 'creaking wood, wind through plank gaps, distant animal sounds, swinging lightbulb chain clink'
         : location.includes('attic') || location.includes('rafter')
         ? 'roof rain patter or wind howl, creaking rafters, moth flutter, dust settling whisper'
+        : location.includes('garage')
+        ? 'metal tool clink, oil drip echo, distant car engine, fluorescent tube buzz, radio static'
+        : location.includes('elevator')
+        ? 'motor hum, cable tension creak, distant floor ding, muffled voices through walls'
+        : location.includes('bathroom')
+        ? 'dripping tap, pipe gurgle, tile echo, extractor fan hum'
+        : location.includes('bedroom')
+        ? 'wall clock tick, muffled TV from neighbors, fabric rustle, radiator click'
+        : location.includes('office')
+        ? 'keyboard clicking, air conditioning hum, printer whirring, muffled phone ringing'
+        : location.includes('store') || location.includes('shop')
+        ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
+        : location.includes('corridor') || location.includes('hallway')
+        ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
         : 'subtle ambient room sound — quiet hum, occasional creak, authentic space acoustics matching location'),
       cloth_rustle: `on every major body movement: A wears ${wardrobeA.split(',')[0]} — ${wardrobeA.includes('silk') || wardrobeA.includes('chiffon') ? 'soft whisper swish' : wardrobeA.includes('leather') ? 'stiff leather creak' : wardrobeA.includes('knit') || wardrobeA.includes('mohair') || wardrobeA.includes('wool') ? 'soft fibrous drag' : 'medium fabric rustle'}; B wears ${wardrobeB.split(',')[0]} — ${wardrobeB.includes('telnyashka') || wardrobeB.includes('cotton') ? 'cotton stretch snap' : wardrobeB.includes('corduroy') ? 'corduroy ridge whisper' : wardrobeB.includes('quilted') || wardrobeB.includes('fufaika') ? 'padded fabric thump' : 'natural fabric rustle'}`,
       saliva_clicks: 'subtle mouth sounds on hard consonants (t, k, p, d — Russian plosives)',

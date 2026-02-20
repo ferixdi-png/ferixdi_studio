@@ -759,9 +759,10 @@ ${remake_mode ? `⚠️⚠️⚠️ РЕЖИМ РЕМЕЙКА — ДИАЛОГ �
 • ❌ ПЛОХО (14 слов): «Зато хоть не надо как в девяностые на дискетах винду переустанавливать»
 • ✅ ХОРОШО (8 слов): «Дискеты хотя бы работали | без интернета.»
 
-⚡ ПАЙПЫ (символ |) — МАКСИМУМ ОДИН НА РЕПЛИКУ:
+⚡ ПАЙПЫ (символ |) — ПАУЗЫ В РЕЧИ:
 • | = пауза-вдох длиной 0.3 секунды. Это НЕ запятая, НЕ разделитель фраз.
-• В ОДНОЙ реплике может быть 0 или 1 символ |. НИКОГДА 2 и более.
+• ДИАЛОГ (два персонажа): в ОДНОЙ реплике 0 или 1 символ |. НИКОГДА 2 и более.
+• МОНОЛОГ (соло): допускается 0, 1 или 2 символа | (монолог длиннее — 15-30 слов). НИКОГДА 3 и более.
 • ❌ ПЛОХО: «Слово | слово | слово | слово» (3 пайпа — ЗАПРЕЩЕНО)
 • ❌ ПЛОХО: «Фраза | фраза | фраза» (2 пайпа — ЗАПРЕЩЕНО)
 • ✅ ХОРОШО: «Молоко восемьсот рублей | МОЛОКО!» (1 пайп — ОК)
@@ -1224,24 +1225,24 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
     // ── HARD DIALOGUE SANITIZER — code-level enforcement ──
     // Gemini ignores prompt rules, so we fix its output programmatically.
-    const sanitizeLine = (line) => {
+    const sanitizeLine = (line, maxPipes = 1) => {
       if (!line || typeof line !== 'string') return line;
       let s = line.trim();
       // Strip dashes
       s = s.replace(/\s*[—–]\s*/g, ' ').replace(/\s+-\s+/g, ' ').replace(/\s{2,}/g, ' ').trim();
-      // Enforce max 1 pipe: keep only the FIRST pipe, remove all others
-      const pipeIdx = s.indexOf('|');
-      if (pipeIdx !== -1) {
-        const before = s.slice(0, pipeIdx + 1);
-        const after = s.slice(pipeIdx + 1).replace(/\|/g, '');
-        s = (before + after).replace(/\s{2,}/g, ' ').trim();
-      }
+      // Enforce max N pipes: keep first N, remove the rest
+      let pipeCount = 0;
+      s = s.replace(/\|/g, () => {
+        pipeCount++;
+        return pipeCount <= maxPipes ? '|' : '';
+      });
+      s = s.replace(/\s{2,}/g, ' ').trim();
       return s;
     };
 
     if (geminiResult.dialogue_A_ru) {
       const orig = geminiResult.dialogue_A_ru;
-      geminiResult.dialogue_A_ru = sanitizeLine(orig);
+      geminiResult.dialogue_A_ru = sanitizeLine(orig, soloMode ? 2 : 1);
       if (orig !== geminiResult.dialogue_A_ru) {
         console.log('Sanitized dialogue_A_ru:', { before: orig.slice(0, 100), after: geminiResult.dialogue_A_ru.slice(0, 100) });
       }
