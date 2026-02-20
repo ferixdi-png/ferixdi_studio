@@ -1964,9 +1964,9 @@ export function generate(input) {
   : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
 📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
-� Пара: ${charA.name_ru} (${cast.speaker_A.age}) × ${charB.name_ru} (${cast.speaker_B.age})
+👥 Пара: ${charA.name_ru} (${cast.speaker_A.age}) × ${charB.name_ru} (${cast.speaker_B.age})
 🎭 Динамика: ${pairDynamic}
-�� Локация: ${location.split(',')[0]}
+📍 Локация: ${location.split(',')[0]}
 💡 Освещение: ${lightingMood.mood}
 👗 A: ${wardrobeA}
 👔 B: ${wardrobeB}
