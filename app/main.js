@@ -3758,6 +3758,21 @@ function applyDialogueUpdate(newA, newB) {
   if (edA) edA.value = newA;
   if (edB && !isSolo) edB.value = newB;
   updateEditorEstimates();
+
+  // Sync context block display (gen-dialogue-a/b/killer-word) — keep UI in sync with prompt
+  const killerWord = vp?.dialogue?.killer_word || bp?.killer_word || '';
+  if (bp) bp.killer_word = killerWord;
+  const dAEl = document.getElementById('gen-dialogue-a');
+  const dBEl = document.getElementById('gen-dialogue-b');
+  const kwEl = document.getElementById('gen-killer-word');
+  if (dAEl) dAEl.textContent = `«${newA}»`;
+  if (dBEl && !isSolo) dBEl.textContent = `«${newB}»`;
+  if (kwEl && killerWord) kwEl.textContent = `💥 Killer word: «${killerWord}»`;
+
+  // Sync _apiContext fallback values so downstream readers get correct dialogue
+  if (ctx.dialogueA !== undefined) ctx.dialogueA = newA;
+  if (ctx.dialogueB !== undefined) ctx.dialogueB = newB;
+  if (ctx.killerWord !== undefined) ctx.killerWord = killerWord;
 }
 
 // ─── DIALOGUE EDITOR ────────────────────

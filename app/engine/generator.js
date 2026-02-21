@@ -2601,6 +2601,12 @@ ${firstComment}
 • Товар остаётся видимым на протяжении всего ролика
 • Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
 
+  // ── 6a-sync. Sync _apiContext fallback dialogue with Gemini's values ──
+  // Without this, _apiContext.dialogueA/B retain stale local placeholders
+  r._apiContext.dialogueA = dA;
+  r._apiContext.dialogueB = dB;
+  r._apiContext.killerWord = kw;
+
   // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
   const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge|garage|bathroom|sauna|gym|cafe|restaurant|shop|store|classroom|library|closet|studio/i.test(ctx.location || '');
   const isOutdoorMerge = !isExplicitIndoorMerge && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley|balcony/i.test(ctx.location || '');
