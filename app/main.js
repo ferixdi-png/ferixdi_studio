@@ -3421,6 +3421,12 @@ function initTranslate() {
       const ruTabBtn = document.querySelector('#gen-results .mode-btn[data-tab="ru"]');
       if (ruTabBtn) ruTabBtn.textContent = '🇬🇧 Post';
 
+      // Sync _apiContext with English values so downstream readers stay consistent
+      const trCtx = result._apiContext || {};
+      if (en.dialogue_A_en) trCtx.dialogueA = en.dialogue_A_en;
+      if (en.dialogue_B_en) trCtx.dialogueB = en.dialogue_B_en;
+      if (en.killer_word_en) trCtx.killerWord = en.killer_word_en;
+
       btn.innerHTML = '✅ English готово!';
       log('OK', 'TRANSLATE', `Адаптация на English: A="${en.dialogue_A_en?.slice(0, 40)}..." B="${en.dialogue_B_en?.slice(0, 40)}..."`);
       showNotification('🇬🇧 Весь контент адаптирован на английский — диалог, инста-пакет, хештеги, описание!', 'success');
@@ -3719,6 +3725,11 @@ function applyDialogueUpdate(newA, newB) {
       pkg = pkg.replace(/(🅰️[^\n]*\n\s*«)[^»]*(»)/, `$1${newA}$2`);
       pkg = pkg.replace(/(🅱️[^\n]*\n\s*«)[^»]*(»)/, `$1${newB}$2`);
     }
+    // Also update killer_word line in ru_package
+    const newKw = vp?.dialogue?.killer_word || '';
+    if (newKw) {
+      pkg = pkg.replace(/(KILLER WORD \u00ab)[^\u00bb]*(\u00bb)/, `$1${newKw}$2`);
+    }
     state.lastResult.ru_package = pkg;
     const ruPre = document.querySelector('#tab-ru pre');
     if (ruPre) ruPre.textContent = pkg;
@@ -3746,6 +3757,11 @@ function applyDialogueUpdate(newA, newB) {
     } else {
       veo = veo.replace(/(A speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
       veo = veo.replace(/(B responds in Russian: ")[^"]*(")/, `$1${newB.replace(/\s*\|\s*/g, '... ')}$2`);
+    }
+    // Also update killer_word references in Veo prompt
+    const newKwVeo = vp?.dialogue?.killer_word || '';
+    if (newKwVeo) {
+      veo = veo.replace(/(The word ")[^"]*(?=" is the punchline)/, `$1${newKwVeo}`);
     }
     state.lastResult.veo_prompt = veo;
     const veoEl = document.getElementById('veo-prompt-text');
