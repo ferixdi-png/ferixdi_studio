@@ -232,17 +232,19 @@ async function loadServerCustomLocations() {
   try {
     const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
     const resp = await fetch(`${apiBase}/api/custom/locations`);
-    if (!resp.ok) return;
+    if (!resp.ok) { log('WARN', 'GH-ЛОКАЦИИ', `Сервер ответил ${resp.status}`); return; }
     const serverLocs = await resp.json();
-    if (!Array.isArray(serverLocs) || !serverLocs.length) return;
+    if (!Array.isArray(serverLocs)) return;
+    if (!serverLocs.length) { log('INFO', 'GH-ЛОКАЦИИ', '0 пользовательских локаций на сервере'); return; }
     const existingIds = new Set(state.locations.map(l => l.id));
     let added = 0;
+    const names = [];
     serverLocs.forEach(l => {
-      if (!existingIds.has(l.id)) { state.locations.push(l); existingIds.add(l.id); added++; }
+      if (!existingIds.has(l.id)) { state.locations.push(l); existingIds.add(l.id); added++; names.push(l.name_ru || l.id); }
     });
-    if (added > 0) log('OK', 'LOC-SERVER', `Загружено ${added} пользовательских локаций с сервера`);
+    log('OK', 'GH-ЛОКАЦИИ', `✅ ${serverLocs.length} на сервере, ${added} новых добавлено${names.length ? ': ' + names.join(', ') : ''}`);
   } catch (e) {
-    // Server unavailable — localStorage fallback will handle it
+    log('WARN', 'GH-ЛОКАЦИИ', 'Сервер недоступен — используем локальный кэш');
   }
 }
 
@@ -480,17 +482,19 @@ async function loadServerCustomCharacters() {
   try {
     const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
     const resp = await fetch(`${apiBase}/api/custom/characters`);
-    if (!resp.ok) return;
+    if (!resp.ok) { log('WARN', 'GH-ПЕРСОНАЖИ', `Сервер ответил ${resp.status}`); return; }
     const serverChars = await resp.json();
-    if (!Array.isArray(serverChars) || !serverChars.length) return;
+    if (!Array.isArray(serverChars)) return;
+    if (!serverChars.length) { log('INFO', 'GH-ПЕРСОНАЖИ', '0 пользовательских персонажей на сервере'); return; }
     const existingIds = new Set(state.characters.map(c => c.id));
     let added = 0;
+    const names = [];
     serverChars.forEach(c => {
-      if (!existingIds.has(c.id)) { state.characters.push(c); existingIds.add(c.id); added++; }
+      if (!existingIds.has(c.id)) { state.characters.push(c); existingIds.add(c.id); added++; names.push(c.name_ru || c.id); }
     });
-    if (added > 0) log('OK', 'CHAR-SERVER', `Загружено ${added} пользовательских персонажей с сервера`);
+    log('OK', 'GH-ПЕРСОНАЖИ', `✅ ${serverChars.length} на сервере, ${added} новых добавлено${names.length ? ': ' + names.join(', ') : ''}`);
   } catch (e) {
-    // Server unavailable — localStorage fallback will handle it
+    log('WARN', 'GH-ПЕРСОНАЖИ', 'Сервер недоступен — используем локальный кэш');
   }
 }
 

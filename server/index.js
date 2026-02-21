@@ -102,14 +102,25 @@ async function saveCustomToGitHub(type) {
 }
 
 async function initCustomData() {
-  console.log('[GH] Loading custom characters/locations from GitHub...');
+  console.log('\n╔══════════════════════════════════════════╗');
+  console.log('║  🗄️  GitHub Persistence — Loading...      ║');
+  console.log('╚══════════════════════════════════════════╝');
   const [chars, locs] = await Promise.all([
     loadCustomFromGitHub('character'),
     loadCustomFromGitHub('location'),
   ]);
   _customCharacters = chars;
   _customLocations = locs;
-  console.log(`[GH] Loaded: ${_customCharacters.length} custom characters, ${_customLocations.length} custom locations`);
+  console.log(`✅ [GH] Custom characters: ${_customCharacters.length}`);
+  console.log(`✅ [GH] Custom locations:  ${_customLocations.length}`);
+  if (_customCharacters.length > 0) {
+    console.log(`   📋 Characters: ${_customCharacters.map(c => c.name_ru || c.id).join(', ')}`);
+  }
+  if (_customLocations.length > 0) {
+    console.log(`   📋 Locations:  ${_customLocations.map(l => l.name_ru || l.id).join(', ')}`);
+  }
+  console.log(`🗄️  GitHub SHA cache — chars: ${_ghCacheSha.chars ? 'OK' : 'none'}, locs: ${_ghCacheSha.locs ? 'OK' : 'none'}`);
+  console.log('─────────────────────────────────────────────\n');
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
