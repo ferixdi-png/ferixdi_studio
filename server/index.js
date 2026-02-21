@@ -11,6 +11,107 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+// ─── GitHub Persistence for Custom Characters/Locations ─────
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'ferixdi-png/ferixdi_studio';
+const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
+const CUSTOM_CHARS_PATH = 'app/data/custom_characters.json';
+const CUSTOM_LOCS_PATH = 'app/data/custom_locations.json';
+
+// In-memory cache (loaded from GitHub on startup)
+let _customCharacters = [];
+let _customLocations = [];
+let _ghCacheSha = { chars: null, locs: null };
+
+async function ghApiRequest(path, method = 'GET', body = null) {
+  const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`;
+  const headers = {
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'ferixdi-studio-server',
+  };
+  if (GITHUB_TOKEN) headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(url, opts);
+}
+
+async function loadCustomFromGitHub(type) {
+  const filePath = type === 'character' ? CUSTOM_CHARS_PATH : CUSTOM_LOCS_PATH;
+  try {
+    const resp = await ghApiRequest(filePath);
+    if (!resp.ok) {
+      if (resp.status === 404) {
+        console.log(`[GH] ${filePath} not found — starting empty`);
+        return [];
+      }
+      console.warn(`[GH] Failed to load ${filePath}: ${resp.status}`);
+      return [];
+    }
+    const data = await resp.json();
+    if (type === 'character') _ghCacheSha.chars = data.sha;
+    else _ghCacheSha.locs = data.sha;
+    const content = Buffer.from(data.content, 'base64').toString('utf-8');
+    return JSON.parse(content);
+  } catch (e) {
+    console.error(`[GH] Error loading ${filePath}:`, e.message);
+    return [];
+  }
+}
+
+async function saveCustomToGitHub(type) {
+  if (!GITHUB_TOKEN) {
+    console.warn('[GH] No GITHUB_TOKEN — skipping persist');
+    return false;
+  }
+  const filePath = type === 'character' ? CUSTOM_CHARS_PATH : CUSTOM_LOCS_PATH;
+  const items = type === 'character' ? _customCharacters : _customLocations;
+  const sha = type === 'character' ? _ghCacheSha.chars : _ghCacheSha.locs;
+  const content = Buffer.from(JSON.stringify(items, null, 2) + '\n').toString('base64');
+  const body = {
+    message: `[auto] Update custom ${type}s (${items.length} items)`,
+    content,
+    branch: GITHUB_BRANCH,
+  };
+  if (sha) body.sha = sha;
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`;
+    const resp = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'User-Agent': 'ferixdi-studio-server',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      console.error(`[GH] Save failed ${filePath}: ${resp.status}`, err.message || '');
+      return false;
+    }
+    const result = await resp.json();
+    if (type === 'character') _ghCacheSha.chars = result.content?.sha;
+    else _ghCacheSha.locs = result.content?.sha;
+    console.log(`[GH] Saved ${filePath} (${items.length} items)`);
+    return true;
+  } catch (e) {
+    console.error(`[GH] Save error ${filePath}:`, e.message);
+    return false;
+  }
+}
+
+async function initCustomData() {
+  console.log('[GH] Loading custom characters/locations from GitHub...');
+  const [chars, locs] = await Promise.all([
+    loadCustomFromGitHub('character'),
+    loadCustomFromGitHub('location'),
+  ]);
+  _customCharacters = chars;
+  _customLocations = locs;
+  console.log(`[GH] Loaded: ${_customCharacters.length} custom characters, ${_customLocations.length} custom locations`);
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -155,9 +256,19 @@ app.post('/api/auth/validate', async (req, res) => {
   }
 });
 
-// ─── POST /api/custom/create — Validate promo + save custom content ────
+// ─── GET /api/custom/characters — Serve custom characters from memory ────
+app.get('/api/custom/characters', (req, res) => {
+  res.json(_customCharacters);
+});
+
+// ─── GET /api/custom/locations — Serve custom locations from memory ────
+app.get('/api/custom/locations', (req, res) => {
+  res.json(_customLocations);
+});
+
+// ─── POST /api/custom/create — Validate promo + persist to GitHub ────
 // Requires JWT auth — prevents DevTools bypass of client-side isPromoValid()
-app.post('/api/custom/create', authMiddleware, (req, res) => {
+app.post('/api/custom/create', authMiddleware, async (req, res) => {
   const { type, data: itemData } = req.body;
   if (!type || !itemData) {
     return res.status(400).json({ error: 'type and data required' });
@@ -197,8 +308,28 @@ app.post('/api/custom/create', authMiddleware, (req, res) => {
       return res.status(400).json({ error: 'name_ru and scene_en required for location' });
     }
   }
-  // Auth middleware already validated JWT — user is VIP
-  res.json({ ok: true, type, id: itemData.id || `srv_${Date.now().toString(36)}` });
+
+  // Assign server-side id if missing
+  const id = itemData.id || `srv_${Date.now().toString(36)}`;
+  itemData.id = id;
+  itemData._custom = true;
+  itemData._createdAt = new Date().toISOString();
+
+  // Add to in-memory cache (dedup)
+  if (type === 'character') {
+    if (!_customCharacters.find(c => c.id === id)) {
+      _customCharacters.push(itemData);
+    }
+  } else {
+    if (!_customLocations.find(l => l.id === id)) {
+      _customLocations.push(itemData);
+    }
+  }
+
+  // Persist to GitHub (async, don't block response)
+  saveCustomToGitHub(type).catch(e => console.error(`[GH] Background save failed:`, e.message));
+
+  res.json({ ok: true, type, id });
 });
 
 // ─── POST /api/fun/category ──────────────────
@@ -2441,5 +2572,8 @@ app.listen(PORT, () => {
   console.log(`🚀 FERIXDI Studio API running on port ${PORT}`);
   console.log(`🔐 JWT_SECRET: ${JWT_SECRET ? 'SET' : 'RANDOM (set in production!)'}`);
   console.log(`🔑 Gemini keys: ${getGeminiKeys().length} available`);
+  console.log(`🗄️  GitHub persistence: ${GITHUB_TOKEN ? 'ENABLED' : 'DISABLED (set GITHUB_TOKEN!)'}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
+  // Load custom characters/locations from GitHub on startup
+  initCustomData().catch(e => console.error('[GH] Init failed:', e.message));
 });

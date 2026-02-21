@@ -219,10 +219,30 @@ async function loadLocations() {
     const resp = await fetch(new URL('./data/locations.json', import.meta.url));
     state.locations = await resp.json();
     log('OK', 'ДАННЫЕ', `Загружено ${state.locations.length} локаций`);
+    // Merge custom locations from server (permanent) before rendering
+    await loadServerCustomLocations();
     populateLocationFilters();
     renderLocations();
   } catch (e) {
     log('ERR', 'ДАННЫЕ', `Ошибка загрузки локаций: ${e.message}`);
+  }
+}
+
+async function loadServerCustomLocations() {
+  try {
+    const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const resp = await fetch(`${apiBase}/api/custom/locations`);
+    if (!resp.ok) return;
+    const serverLocs = await resp.json();
+    if (!Array.isArray(serverLocs) || !serverLocs.length) return;
+    const existingIds = new Set(state.locations.map(l => l.id));
+    let added = 0;
+    serverLocs.forEach(l => {
+      if (!existingIds.has(l.id)) { state.locations.push(l); existingIds.add(l.id); added++; }
+    });
+    if (added > 0) log('OK', 'LOC-SERVER', `Загружено ${added} пользовательских локаций с сервера`);
+  } catch (e) {
+    // Server unavailable — localStorage fallback will handle it
   }
 }
 
@@ -444,11 +464,33 @@ async function refreshCharacters() {
     
     log('OK', 'ДАННЫЕ', `Загружено ${state.characters.length} персонажей`);
     populateFilters();
+
+    // Merge custom characters: server API (permanent) + localStorage (offline fallback)
+    await loadServerCustomCharacters();
     loadCustomCharacters();
+
     renderCharacters();
     populateSeriesSelects();
   } catch (e) {
     log('ERR', 'ДАННЫЕ', `Ошибка загрузки персонажей: ${e.message}`);
+  }
+}
+
+async function loadServerCustomCharacters() {
+  try {
+    const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const resp = await fetch(`${apiBase}/api/custom/characters`);
+    if (!resp.ok) return;
+    const serverChars = await resp.json();
+    if (!Array.isArray(serverChars) || !serverChars.length) return;
+    const existingIds = new Set(state.characters.map(c => c.id));
+    let added = 0;
+    serverChars.forEach(c => {
+      if (!existingIds.has(c.id)) { state.characters.push(c); existingIds.add(c.id); added++; }
+    });
+    if (added > 0) log('OK', 'CHAR-SERVER', `Загружено ${added} пользовательских персонажей с сервера`);
+  } catch (e) {
+    // Server unavailable — localStorage fallback will handle it
   }
 }
 
