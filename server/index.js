@@ -1260,7 +1260,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   }
   
   if (!context.input_mode) {
-    return res.status(400).json({ error: 'Input mode is required (idea, script, video, suggested)' });
+    return res.status(400).json({ error: 'Input mode is required (idea, script, video, suggested, meme)' });
   }
   
   // Validate input_mode
@@ -1280,6 +1280,10 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   
   if (context.input_mode === 'idea' && !context.topic_ru) {
     return res.status(400).json({ error: 'Idea mode requires topic (напишите идею в поле ввода)' });
+  }
+  
+  if (context.input_mode === 'meme' && !meme_image && !meme_file && !meme_context) {
+    return res.status(400).json({ error: 'Meme mode requires meme image/video or context description' });
   }
   // suggested mode: topic_ru is optional (AI can pick trending topic itself)
 
