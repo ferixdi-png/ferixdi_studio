@@ -2608,21 +2608,27 @@ ${firstComment}
   r._apiContext.killerWord = kw;
 
   // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
-  const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge|garage|bathroom|sauna|gym|cafe|restaurant|shop|store|classroom|library|closet|studio/i.test(ctx.location || '');
-  const isOutdoorMerge = !isExplicitIndoorMerge && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley|balcony/i.test(ctx.location || '');
-  r.veo_prompt = buildVeoPrompt({
-    charA, charB, cast: r.video_prompt_en_json.cast || {},
-    location: ctx.location, lightingMood: ctx.lightingMood,
-    wardrobeA: ctx.wardrobeA, wardrobeB: ctx.wardrobeB,
-    hookObj: ctx.hookAction, releaseObj: ctx.releaseAction,
-    propAnchor: ctx.propAnchor, dialogueA: dA, dialogueB: dB,
-    killerWord: kw, cat: ctx.category, topicRu: ctx.topic_ru,
-    aesthetic: ctx.aesthetic, cinematography: ctx.cinematography,
-    isOutdoor: isOutdoorMerge, dialogueA2: dA2,
-    productInfo: ctx.product_info,
-    referenceStyle: ctx.reference_style,
-    soloMode: ctx.soloMode || false,
-  });
+  // In REMAKE mode: if Gemini provided remake_veo_prompt_en (visual copy of original video),
+  // use it directly — it describes the SAME scene/action as the original, not a generic dialogue template.
+  if (g.remake_veo_prompt_en && ctx.remake_mode) {
+    r.veo_prompt = g.remake_veo_prompt_en;
+  } else {
+    const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge|garage|bathroom|sauna|gym|cafe|restaurant|shop|store|classroom|library|closet|studio/i.test(ctx.location || '');
+    const isOutdoorMerge = !isExplicitIndoorMerge && /garden|outdoor|park|bench|bazaar|bus.?stop|train|playground|fishing|chicken|cemetery|veranda|beach|shore|pier|dock|pool|river|lake|field|forest|mountain|road|street|sidewalk|market|parking|bridge|roof|terrace|porch|courtyard|alley|balcony/i.test(ctx.location || '');
+    r.veo_prompt = buildVeoPrompt({
+      charA, charB, cast: r.video_prompt_en_json.cast || {},
+      location: ctx.location, lightingMood: ctx.lightingMood,
+      wardrobeA: ctx.wardrobeA, wardrobeB: ctx.wardrobeB,
+      hookObj: ctx.hookAction, releaseObj: ctx.releaseAction,
+      propAnchor: ctx.propAnchor, dialogueA: dA, dialogueB: dB,
+      killerWord: kw, cat: ctx.category, topicRu: ctx.topic_ru,
+      aesthetic: ctx.aesthetic, cinematography: ctx.cinematography,
+      isOutdoor: isOutdoorMerge, dialogueA2: dA2,
+      productInfo: ctx.product_info,
+      referenceStyle: ctx.reference_style,
+      soloMode: ctx.soloMode || false,
+    });
+  }
 
   // ── 7. Post-merge dialogue validation ──
   // Warn if Gemini's dialogue is too long for timing windows
