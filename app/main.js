@@ -279,7 +279,7 @@ function renderLocations(filterGroup = '') {
     return `
     <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
       <div class="text-sm">${moodIcon}</div>
-      <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
+      <div class="text-[11px] font-medium text-white leading-tight">${l.numeric_id ? `<span class="text-[9px] text-gray-500 font-mono mr-1">#${l.numeric_id}</span>` : ''}${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug mb-2">${l.tagline_ru}</div>
       <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '✓ Выбрано' : '📍 Выбрать'}</button>
       <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
@@ -514,7 +514,8 @@ function renderCharacters(filter = {}) {
 
   if (filter.search) {
     const q = filter.search.toLowerCase();
-    chars = chars.filter(c => c.name_ru.toLowerCase().includes(q) || c.group.toLowerCase().includes(q) || c.tags.some(t => t.includes(q)));
+    const qNum = parseInt(q, 10);
+    chars = chars.filter(c => c.name_ru.toLowerCase().includes(q) || c.group.toLowerCase().includes(q) || c.tags.some(t => t.includes(q)) || (qNum && c.numeric_id === qNum) || (c.numeric_id && String(c.numeric_id).includes(q)));
   }
   if (filter.group) chars = chars.filter(c => c.group === filter.group);
   if (filter.compat) chars = chars.filter(c => c.compatibility === filter.compat);
@@ -533,7 +534,7 @@ function renderCharacters(filter = {}) {
     return `
     <div class="char-card ${selCls}" data-id="${c.id}">
       <div class="flex items-center justify-between mb-1">
-        <span class="text-sm font-bold text-white">${c.name_ru}</span>
+        <span class="text-sm font-bold text-white">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span>
         <span class="tag text-[10px] ${tagCls}">${compatRu[c.compatibility] || c.compatibility}</span>
       </div>
       ${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}
@@ -4475,7 +4476,7 @@ function renderLocationsBrowse(filterGroup = '') {
     return `
     <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
       <div class="text-sm">${moodIcon}</div>
-      <div class="text-[11px] font-medium text-white leading-tight">${l.name_ru}</div>
+      <div class="text-[11px] font-medium text-white leading-tight">${l.numeric_id ? `<span class="text-[9px] text-gray-500 font-mono mr-1">#${l.numeric_id}</span>` : ''}${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
       ${l.tags ? `<div class="flex gap-1 flex-wrap mt-1">${l.tags.slice(0, 3).map(t => `<span class="text-[8px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${t}</span>`).join('')}</div>` : ''}
       <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border mt-2 ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '✓ Выбрано' : '📍 Выбрать'}</button>
