@@ -528,6 +528,10 @@ function renderCharacters(filter = {}) {
   const grid = document.getElementById('char-grid');
   let chars = [...state.characters];
 
+  // Update dynamic character count (total including custom)
+  const countEl = document.getElementById('welcome-char-count');
+  if (countEl) countEl.textContent = `${state.characters.length}`;
+
   if (filter.search) {
     const q = filter.search.toLowerCase();
     const qNum = parseInt(q, 10);
