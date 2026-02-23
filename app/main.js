@@ -2688,19 +2688,37 @@ function displayResult(result) {
     document.querySelector('#tab-video pre').textContent = JSON.stringify(m, null, 2);
     document.querySelector('#tab-ru pre').textContent = result.ru_package;
     document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
-    // Rename tabs for meme mode
+    // Rename tabs for meme mode and activate veo (Frame 0) tab
     const tabBtns = document.querySelectorAll('#gen-results .mode-btn');
     tabBtns.forEach(b => {
-      if (b.dataset.tab === 'veo') b.textContent = '📸 Frame 0';
-      if (b.dataset.tab === 'photo') b.textContent = '🎬 Анимация';
-      if (b.dataset.tab === 'video') b.textContent = '📦 JSON';
-      if (b.dataset.tab === 'ru') b.textContent = '🎭 Полный пакет';
+      if (b.dataset.tab === 'veo') { b.textContent = '📸 Frame 0'; b.classList.add('active'); }
+      else if (b.dataset.tab === 'photo') { b.textContent = '🎬 Анимация'; b.classList.remove('active'); }
+      else if (b.dataset.tab === 'video') { b.textContent = '📦 JSON'; b.classList.remove('active'); }
+      else if (b.dataset.tab === 'ru') { b.textContent = '🎭 Полный пакет'; b.classList.remove('active'); }
+      else if (b.dataset.tab === 'insta') { b.style.display = 'none'; b.classList.remove('active'); }
+      else b.classList.remove('active');
     });
+    // Show veo tab, hide all others
+    ['veo', 'photo', 'video', 'insta', 'ru', 'blueprint'].forEach(t => {
+      document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== 'veo');
+    });
+    // Hide panels not applicable for meme mode
+    document.getElementById('translate-panel')?.classList.add('hidden');
+    document.getElementById('ab-testing-panel')?.classList.add('hidden');
     document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     log('OK', 'MEME', 'Мем-ремейк готов: Frame 0 + анимация + вирусная упаковка');
     showNotification('🎭 Мем-ремейк готов! Скопируй Frame 0 → Imagen, потом анимацию → Kling 2.6', 'success');
     return;
   }
+
+  // Restore default tab names and visibility (may have been renamed/hidden by meme mode)
+  const _tabDefaults = { veo: '🎬 Промпт для Veo', photo: '📸 Фото (кадр 0)', video: '📋 Видео JSON', insta: '📱 Инста', ru: '🇷🇺 Пост', blueprint: '⚙️ План' };
+  document.querySelectorAll('#gen-results .mode-btn').forEach(b => {
+    if (b.dataset.tab && _tabDefaults[b.dataset.tab]) {
+      b.textContent = _tabDefaults[b.dataset.tab];
+      b.style.display = ''; // Restore insta tab hidden by meme mode
+    }
+  });
 
   // Show results
   document.getElementById('gen-results').classList.remove('hidden');
