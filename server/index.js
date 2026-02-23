@@ -467,6 +467,33 @@ ${ctx.hasVideoFile ? `⚠️ К ЭТОМУ СООБЩЕНИЮ ПРИКРЕПЛЕ
 
 КАТЕГОРИЮ ЮМОРА определи САМ по содержанию оригинала — придумай короткую (2-4 слова) категорию которая точно описывает суть.`;
 
+  } else if (input_mode === 'meme' && ctx.meme_context) {
+    taskBlock = `
+══════════ ЗАДАНИЕ: МЕМ-РЕМЕЙК (НУЛЕВОЙ КАДР + АНИМАЦИЯ) ══════════
+Пользователь хочет ПЕРЕСОЗДАТЬ мем/вирусное видео с ОДНИМ из наших персонажей.
+Он загрузил оригинальный мем/скриншот/видео как визуальный референс.
+
+ОПИСАНИЕ ОРИГИНАЛА ОТ ПОЛЬЗОВАТЕЛЯ: "${ctx.meme_context}"
+
+${ctx.hasMemeImage ? '⚠️ К СООБЩЕНИЮ ПРИКРЕПЛЕНО ИЗОБРАЖЕНИЕ ОРИГИНАЛЬНОГО МЕМА/ВИДЕО. Внимательно проанализируй его: позу, фон, освещение, ракурс камеры, действия, движения, выражение лица, одежду, предметы в кадре.' : ''}
+${ctx.hasMemeFile ? '⚠️ К СООБЩЕНИЮ ПРИКРЕПЛЕНО ВИДЕО ОРИГИНАЛА. Посмотри его полностью — запомни движения, действия, тайминги, выражения лица.' : ''}
+
+НАШИ ЖЕЛЕЗОБЕТОННЫЕ ПРАВИЛА:
+1. ПРАВИЛО «НУЛЕВОГО КАДРА» (Frame 0): Картинка ВСЕГДА копирует ПЕРВУЮ СЕКУНДУ оригинала. Ракурс, фон, поза — 1 в 1, чтобы анимация легла идеально.
+2. УЛЬТРА-ХАРИЗМА И АБСУРД: Наши персонажи — невероятно старые, глубоко морщинистые, но БЕЗУМНО брутальные, дерзкие альфа-боссы. Контраст старости/милоты и уличного стиля.
+3. ОСОБАЯ АНАТОМИЯ: Удлинённое тело, чуть худощавые руки и ноги, угловатый силуэт. Никаких «пухляшей» — для хлёстких, техничных движений.
+4. КИНЕМАТОГРАФИЧНЫЙ РЕАЛИЗМ: Гиперреализм (8k, свет как в дорогом клипе, детальные текстуры кожи и одежды). НЕ мультик!
+
+ЧТО НУЖНО ВЫДАТЬ:
+1. frame0_prompt_en — Промпт для генерации НУЛЕВОГО КАДРА (картинки). 150-250 слов на английском. Описывает ТОЧНУЮ позу, фон, освещение, ракурс из оригинала, но с НАШИМ персонажем. Гиперреализм, 8k, детальные текстуры.
+2. animation_prompt_en — Короткий промпт для анимации в Kling 2.6 / Motion Control (30-60 слов на английском). Описывает ДВИЖЕНИЕ: что делает персонаж, куда двигается, как меняется поза. Стабильный фон, чистое движение без глюков.
+3. viral_hooks_ru — 3 цепляющих надписи для видео (хуки для CapCut/Reels), на русском, каждый до 8 слов.
+4. viral_caption_ru — Абсурдное описание для поста (2-3 предложения), на русском.
+5. viral_hashtags — 10-15 хештегов для TikTok/Reels/Shorts.
+6. assembly_tips_ru — 2-3 подсказки по сборке (какой звук наложить, как смонтировать).
+
+КАТЕГОРИЮ определи САМ по содержанию оригинала.`;
+
   } else if (input_mode === 'script' && script_ru) {
     const isScriptSolo = soloMode || (!script_ru.B || !script_ru.B.trim());
     taskBlock = isScriptSolo ? `
@@ -1144,9 +1171,25 @@ ${remake_mode ? `□ photo_scene_en описывает ТУ ЖЕ СЦЕНУ чт
 □ Есть хотя бы 1 signature_word в диалоге? (фирменная фраза персонажа)
 Если ЛЮБОЙ пункт не пройден — ИСПРАВЬ перед выводом!
 ════════════════════════════════════════════════════════════════
-ФОРМАТ ОТВЕТА — строго JSON:
+${input_mode === 'meme' ? `ФОРМАТ ОТВЕТА — строго JSON (МЕМ-РЕМЕЙК):
 {
-  "humor_category_ru": "Твоя категория юмора — 2-4 слова. НЕ копируй примеры — придумай свою!",
+  "humor_category_ru": "Категория — 2-4 слова",
+  "frame0_prompt_en": "150-250 слов на английском. Промпт для генерации НУЛЕВОГО КАДРА (картинки). ТОЧНАЯ поза, фон, освещение, ракурс из оригинала, но с НАШИМ персонажем. Гиперреализм, 8k, детальные текстуры кожи, одежды, морщин. Удлинённое тело, худощавые руки/ноги, угловатый силуэт. Negative: no text, no subtitles, no watermark, no cartoon, no anime, no plastic skin",
+  "animation_prompt_en": "30-60 слов на английском. Промпт для Kling 2.6 / Motion Control. ДВИЖЕНИЕ: что делает персонаж, куда двигается, как меняется поза. Stable background, clean motion, no glitches",
+  "viral_hooks_ru": ["Хук 1 (до 8 слов)", "Хук 2", "Хук 3"],
+  "viral_caption_ru": "Абсурдное описание для поста (2-3 предложения на русском)",
+  "viral_hashtags": ["тег1", "тег2", "...10-15 штук без #"],
+  "assembly_tips_ru": ["Совет 1 по сборке", "Совет 2", "Совет 3"],
+  "viral_title_ru": "Заголовок для видео на русском",
+  "share_bait_ru": "Фраза для пересылки — живая, макс 120 символов",
+  "pin_comment_ru": "Закреплённый комментарий",
+  "first_comment_ru": "Первый комментарий от автора"
+}
+
+КРИТИЧНО: Отвечай ТОЛЬКО валидным JSON. Без markdown. Без блоков кода. Без пояснений. Только JSON.`
+: `ФОРМАТ ОТВЕТА — строго JSON:
+{
+  "humor_category_ru": "Твоя категория юмора — 2-4 слова. НЕ копируй примеры — придумай свою!",`}
 ${soloMode ? `  "dialogue_A_ru": "15-30 слов монолог, макс 2 символа |. Персонаж говорит прямо в камеру",
   "dialogue_B_ru": null,
   "dialogue_A2_ru": null,` : `  "dialogue_A_ru": "6-15 слов, макс 1 символ |, НЕ начинай с Зато",
@@ -1194,7 +1237,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
-  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime, ab_variants } = req.body;
+  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime, ab_variants, meme_image, meme_image_mime, meme_file, meme_file_mime, meme_context } = req.body;
   const requestedVariants = Math.min(Math.max(parseInt(ab_variants) || 0, 0), 3); // 0 = normal, 1-3 = extra variants
   
   // Enhanced validation
@@ -1221,7 +1264,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   }
   
   // Validate input_mode
-  const validModes = ['idea', 'script', 'video', 'suggested'];
+  const validModes = ['idea', 'script', 'video', 'suggested', 'meme'];
   if (!validModes.includes(context.input_mode)) {
     return res.status(400).json({ error: `Invalid input_mode. Must be one of: ${validModes.join(', ')}` });
   }
@@ -1244,6 +1287,9 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   context.hasProductImage = !!product_image;
   context.hasVideoFile = !!video_file;
   context.hasVideoCover = !!video_cover;
+  context.hasMemeImage = !!meme_image;
+  context.hasMemeFile = !!meme_file;
+  if (meme_context) context.meme_context = meme_context;
 
   try {
     let promptText = buildAIPrompt(context);
@@ -1320,6 +1366,24 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       });
       parts.push({
         inline_data: { mime_type: video_cover_mime || 'image/jpeg', data: video_cover }
+      });
+    }
+
+    // Attach meme image/video for meme-remake mode
+    if (meme_file) {
+      parts.push({
+        text: '\n\n[ПРИКРЕПЛЁННОЕ ОРИГИНАЛЬНОЕ ВИДЕО-МЕМА — ПОСМОТРИ ПОЛНОСТЬЮ. Запомни: позу, движения, фон, освещение, ракурс камеры, действия, выражения лица. Frame 0 должен ТОЧНО копировать первую секунду этого видео.]'
+      });
+      parts.push({
+        inline_data: { mime_type: meme_file_mime || 'video/mp4', data: meme_file }
+      });
+    }
+    if (meme_image) {
+      parts.push({
+        text: '\n\n[ПРИКРЕПЛЁННОЕ ИЗОБРАЖЕНИЕ ОРИГИНАЛЬНОГО МЕМА — проанализируй ДЕТАЛЬНО: позу, фон, освещение, ракурс камеры, действия, выражение лица, одежду, предметы. Frame 0 должен ТОЧНО копировать эту картинку с нашим персонажем.]'
+      });
+      parts.push({
+        inline_data: { mime_type: meme_image_mime || 'image/jpeg', data: meme_image }
       });
     }
 

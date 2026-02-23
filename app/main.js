@@ -1293,7 +1293,7 @@ function selectGenerationMode(mode) {
   
   // Update UI
   document.querySelectorAll('.generation-mode-card').forEach(card => {
-    card.classList.remove('ring-2', 'ring-cyan-500', 'ring-purple-500', 'ring-amber-500', 'ring-emerald-500');
+    card.classList.remove('ring-2', 'ring-cyan-500', 'ring-purple-500', 'ring-amber-500', 'ring-emerald-500', 'ring-rose-500');
   });
   
   const selectedCard = document.querySelector(`.generation-mode-card[data-mode="${mode}"]`);
@@ -1302,7 +1302,8 @@ function selectGenerationMode(mode) {
       idea: 'ring-cyan-500',
       suggested: 'ring-emerald-500',
       script: 'ring-purple-500', 
-      video: 'ring-amber-500'
+      video: 'ring-amber-500',
+      meme: 'ring-rose-500'
     };
     selectedCard.classList.add('ring-2', colors[mode] || 'ring-cyan-500');
   }
@@ -1318,7 +1319,8 @@ function selectGenerationMode(mode) {
       idea: '💡 Своя идея',
       suggested: '📚 Готовые идеи',
       script: '📝 Свой диалог',
-      video: '🎥 По видео'
+      video: '🎥 По видео',
+      meme: '🎭 Мем-ремейк'
     };
     nameEl.textContent = modeNames[mode] || mode;
     continueBtn.disabled = false;
@@ -1332,6 +1334,7 @@ function selectGenerationMode(mode) {
         suggested: '📚 На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
         script: '📝 На следующем шаге напишите реплики для персонажей. Реплика B опциональна для соло-ролика.',
         video: '🎥 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка.',
+        meme: '🎭 Загрузите мем/видео и опишите что на нём. Получите промпт Frame 0 + анимацию для Kling 2.6.',
       };
       const hint = hints[mode] || '';
       if (hint) {
@@ -1362,6 +1365,7 @@ function updateModeSpecificUI(mode) {
   document.getElementById('remix-suggested')?.classList.add('hidden');
   document.getElementById('remix-script')?.classList.add('hidden');
   document.getElementById('remix-video')?.classList.add('hidden');
+  document.getElementById('remix-meme')?.classList.add('hidden');
 
   // Show relevant mode elements
   if (mode === 'idea') {
@@ -1382,6 +1386,9 @@ function updateModeSpecificUI(mode) {
     document.getElementById('mode-video')?.classList.remove('hidden');
     document.getElementById('remix-video')?.classList.remove('hidden');
     initVideoDropzoneMain();
+  } else if (mode === 'meme') {
+    document.getElementById('remix-meme')?.classList.remove('hidden');
+    initMemeDropzone();
   }
 
   log('INFO', 'РЕЖИМ', `Выбран режим: ${mode}`);
@@ -1890,6 +1897,82 @@ function initVideoDropzoneMain() {
   fileInput.addEventListener('change', () => { if (fileInput.files.length) handleVideoFile(fileInput.files[0]); });
 }
 
+// ─── MEME DROPZONE ──────────────────────────
+function initMemeDropzone() {
+  const dropzone = document.getElementById('meme-dropzone');
+  const fileInput = document.getElementById('meme-file-input');
+  if (!dropzone || !fileInput || dropzone._initialized) return;
+  dropzone._initialized = true;
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = '#f43f5e'; });
+  dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropzone.style.borderColor = '';
+    if (e.dataTransfer.files.length) handleMemeFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) handleMemeFile(fileInput.files[0]); });
+
+  // Update readiness on context input
+  document.getElementById('meme-context')?.addEventListener('input', () => setTimeout(updateReadiness, 100));
+}
+
+function handleMemeFile(file) {
+  const isImage = file.type.startsWith('image/');
+  const isVideo = file.type.startsWith('video/');
+  if (!isImage && !isVideo) { log('WARN', 'МЕМ', 'Поддерживаются только изображения и видео'); return; }
+  if (file.size > 50 * 1024 * 1024) { log('WARN', 'МЕМ', 'Файл больше 50 MB'); return; }
+
+  state._memeFileName = file.name;
+  state._memeFileMime = file.type;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const base64 = reader.result.split(',')[1];
+    if (isImage) {
+      state._memeImageBase64 = base64;
+      state._memeFileBase64 = null;
+      // Show preview
+      const preview = document.getElementById('meme-preview');
+      const img = document.getElementById('meme-preview-img');
+      if (preview && img) { img.src = reader.result; preview.classList.remove('hidden'); }
+    } else {
+      state._memeFileBase64 = base64;
+      state._memeImageBase64 = null;
+      document.getElementById('meme-preview')?.classList.add('hidden');
+      // Extract cover frame from video
+      const url = URL.createObjectURL(file);
+      const vid = document.createElement('video');
+      vid.preload = 'auto'; vid.muted = true;
+      vid.onloadeddata = () => { vid.currentTime = Math.min(1, vid.duration * 0.25); };
+      vid.onseeked = () => {
+        try {
+          const c = document.createElement('canvas');
+          c.width = Math.min(vid.videoWidth, 640);
+          c.height = Math.round(c.width * (vid.videoHeight / vid.videoWidth));
+          c.getContext('2d').drawImage(vid, 0, 0, c.width, c.height);
+          state._memeImageBase64 = c.toDataURL('image/jpeg', 0.8).split(',')[1];
+          const preview = document.getElementById('meme-preview');
+          const img = document.getElementById('meme-preview-img');
+          if (preview && img) { img.src = c.toDataURL('image/jpeg', 0.8); preview.classList.remove('hidden'); }
+        } catch (e) { log('WARN', 'МЕМ', 'Не удалось захватить кадр'); }
+        URL.revokeObjectURL(url);
+      };
+      vid.src = url;
+    }
+
+    const metaEl = document.getElementById('meme-meta');
+    if (metaEl) {
+      metaEl.classList.remove('hidden');
+      metaEl.innerHTML = `<span class="text-emerald-400">✓</span> ${isImage ? '🖼️' : '🎥'} ${escapeHtml(file.name)} · ${(file.size / 1024 / 1024).toFixed(1)} MB`;
+    }
+
+    log('OK', 'МЕМ', `Загружен: ${file.name} (${isImage ? 'изображение' : 'видео'})`);
+    updateReadiness();
+  };
+  reader.readAsDataURL(file);
+}
+
 // ─── VIDEO URL FETCH (removed — now using external download services) ───
 function initVideoUrlFetch() {
   // No-op: Instagram downloads handled via external links
@@ -1995,6 +2078,9 @@ function _hasContent() {
   if (state.generationMode === 'video') {
     return !!state.videoMeta;
   }
+  if (state.generationMode === 'meme') {
+    return !!(document.getElementById('meme-context')?.value?.trim()) && !!(state._memeFileBase64 || state._memeImageBase64);
+  }
   return false;
 }
 
@@ -2009,11 +2095,12 @@ function _contentLabel() {
   }
   if (state.generationMode === 'script') return 'Диалог готов';
   if (state.generationMode === 'video') return state.videoMeta ? `Видео: ${state.videoMeta.name}` : '';
+  if (state.generationMode === 'meme') return state._memeFileName ? `Мем: ${state._memeFileName}` : '';
   return '';
 }
 
 function _modeLabel(m) {
-  return { idea: '💡 Своя идея', suggested: '📚 Готовые идеи', script: '📝 Свой диалог', video: '🎥 По видео' }[m] || m;
+  return { idea: '💡 Своя идея', suggested: '📚 Готовые идеи', script: '📝 Свой диалог', video: '🎥 По видео', meme: '🎭 Мем-ремейк' }[m] || m;
 }
 
 function _updateCheckItem(elId, ok, label, hint, onClick) {
@@ -2590,6 +2677,31 @@ function displayResult(result) {
     return;
   }
 
+  // ── MEME MODE: custom display ──
+  if (result.meme_result) {
+    const m = result.meme_result;
+    document.getElementById('gen-results').classList.remove('hidden');
+    showGenStatus('', 'hidden');
+    // Use veo tab for frame0, photo tab for animation, ru tab for full package
+    document.getElementById('veo-prompt-text').textContent = m.frame0_prompt_en || '(Промпт не сгенерирован)';
+    document.querySelector('#tab-photo pre').textContent = m.animation_prompt_en || '(Промпт анимации не сгенерирован)';
+    document.querySelector('#tab-video pre').textContent = JSON.stringify(m, null, 2);
+    document.querySelector('#tab-ru pre').textContent = result.ru_package;
+    document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
+    // Rename tabs for meme mode
+    const tabBtns = document.querySelectorAll('#gen-results .mode-btn');
+    tabBtns.forEach(b => {
+      if (b.dataset.tab === 'veo') b.textContent = '📸 Frame 0';
+      if (b.dataset.tab === 'photo') b.textContent = '🎬 Анимация';
+      if (b.dataset.tab === 'video') b.textContent = '📦 JSON';
+      if (b.dataset.tab === 'ru') b.textContent = '🎭 Полный пакет';
+    });
+    document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    log('OK', 'MEME', 'Мем-ремейк готов: Frame 0 + анимация + вирусная упаковка');
+    showNotification('🎭 Мем-ремейк готов! Скопируй Frame 0 → Imagen, потом анимацию → Kling 2.6', 'success');
+    return;
+  }
+
   // Show results
   document.getElementById('gen-results').classList.remove('hidden');
   document.getElementById('veo-prompt-text').textContent = result.veo_prompt || '(Промпт не сгенерирован)';
@@ -2982,6 +3094,19 @@ async function callAIEngine(apiContext) {
     payload.video_cover_mime = 'image/jpeg';
   }
 
+  // Attach meme image/video for meme-remake mode
+  if (state.generationMode === 'meme') {
+    if (state._memeFileBase64) {
+      payload.meme_file = state._memeFileBase64;
+      payload.meme_file_mime = state._memeFileMime || 'video/mp4';
+    }
+    if (state._memeImageBase64) {
+      payload.meme_image = state._memeImageBase64;
+      payload.meme_image_mime = 'image/jpeg';
+    }
+    payload.meme_context = document.getElementById('meme-context')?.value?.trim() || '';
+  }
+
   const resp = await fetch(`${apiUrl}/api/generate`, {
     method: 'POST',
     headers: {
@@ -3088,6 +3213,18 @@ function initGenerate() {
       return;
     }
     
+    if (state.generationMode === 'meme') {
+      if (!state._memeImageBase64 && !state._memeFileBase64) {
+        showGenStatus('⚠️ Загрузите мем или видео-референс', 'text-orange-400');
+        document.getElementById('remix-meme')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      if (!(document.getElementById('meme-context')?.value?.trim())) {
+        showGenStatus('⚠️ Опишите что происходит на мем/видео', 'text-orange-400');
+        return;
+      }
+    }
+    
     // Validate location selection (optional but recommended)
     if (!state.selectedLocation) {
       // Location is optional, but we should inform user
@@ -3151,6 +3288,8 @@ function initGenerate() {
       characters: state.characters,
       locations: state.locations,
       selected_location_id: state.selectedLocation,
+      // Meme mode data
+      meme_context: state.generationMode === 'meme' ? (document.getElementById('meme-context')?.value?.trim() || '') : null,
     };
 
     // Step 1: Local generation (instant, structural template)

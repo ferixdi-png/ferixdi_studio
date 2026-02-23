@@ -254,7 +254,7 @@
           </div>
 
           <!-- Generation Mode Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <!-- Idea Mode -->
             <div class="glass-panel p-5 border-l-2 border-cyan-500/40 cursor-pointer hover:border-cyan-500/60 transition-all hover:bg-cyan-500/5 generation-mode-card" data-mode="idea">
               <div class="flex items-center gap-3 mb-3">
@@ -321,6 +321,23 @@
                 Загрузите видео (Reels) и AI создаст ремейк с вашими персонажами. Сохранит стиль, энергию и структуру оригинала.
               </div>
               <div class="mt-3 text-xs text-amber-300">🚀 Для копирования вирусных видео</div>
+            </div>
+
+            <!-- Meme Mode -->
+            <div class="glass-panel p-5 border-l-2 border-rose-500/40 cursor-pointer hover:border-rose-500/60 transition-all hover:bg-rose-500/5 generation-mode-card" data-mode="meme">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 border border-rose-500/30">
+                  <span class="text-2xl">🎭</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-semibold text-rose-400">🎭 Мем-ремейк</h3>
+                  <p class="text-xs text-gray-400">Нулевой кадр</p>
+                </div>
+              </div>
+              <div class="text-sm text-gray-300 leading-relaxed">
+                Загрузите мем/видео, выберите персонажа — получите промпт нулевого кадра и анимации для Kling 2.6. Персонаж встаёт в сцену оригинала.
+              </div>
+              <div class="mt-3 text-xs text-rose-300">🎬 Для Kling 2.6 / Motion Control</div>
             </div>
           </div>
 
@@ -408,6 +425,38 @@
             <div>
               <label class="text-xs text-gray-400 font-medium mb-1 block">🎬 Контекст видео (необязательно):</label>
               <textarea id="scene-hint-main" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст"></textarea>
+            </div>
+          </div>
+
+          <!-- MODE: meme -->
+          <div id="remix-meme" class="glass-panel p-4 space-y-3 hidden">
+            <div class="text-xs text-gray-400 font-medium mb-2">🎭 Мем-ремейк — Нулевой кадр + Анимация</div>
+            <div class="text-[11px] text-rose-300 bg-rose-500/8 border border-rose-500/15 rounded-lg p-2.5 leading-relaxed">
+              🎬 <strong>Как это работает:</strong> Загрузите мем или видео-референс → выберите персонажа из каталога → AI создаст промпт «нулевого кадра» (картинка) + промпт анимации для <strong>Kling 2.6 / Motion Control</strong> + вирусную упаковку. Персонаж идеально встраивается в сцену оригинала.
+            </div>
+            <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-rose-400/30 transition-colors" id="meme-dropzone">
+              <div class="text-lg mb-1">🖼️</div>
+              <div class="text-xs text-gray-400">Перетащи мем/скриншот/видео сюда или нажми</div>
+              <div class="text-[10px] text-gray-600 mt-1">jpg / png / mp4 / mov · до 50 MB</div>
+              <input type="file" id="meme-file-input" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" class="hidden">
+            </div>
+            <div id="meme-preview" class="hidden">
+              <img id="meme-preview-img" class="rounded-lg max-h-48 mx-auto border border-gray-700" alt="Preview">
+            </div>
+            <div id="meme-meta" class="hidden text-xs text-gray-500"></div>
+            <div>
+              <label class="text-xs text-gray-400 font-medium mb-1 block">📝 Что происходит на мем/видео (обязательно):</label>
+              <textarea id="meme-context" class="input-field h-20 resize-none" placeholder="Опишите что на мем/видео: Шрек кидает джебы во дворе ночью, пьяный Шрек у копов на допросе, человек танцует на крыше..."></textarea>
+            </div>
+            <div class="glass-panel p-3 border-l-2 border-rose-500/20 space-y-2">
+              <div class="text-[11px] text-gray-300 leading-relaxed">
+                <strong class="text-rose-400">📦 Что вы получите:</strong>
+              </div>
+              <div class="text-[10px] text-gray-400 space-y-1">
+                <div>1️⃣ <strong>Промпт «Нулевого кадра»</strong> — генерируете картинку (Google Imagen / Flow)</div>
+                <div>2️⃣ <strong>Промпт анимации</strong> — отправляете картинку + промпт в Kling 2.6 / Motion Control</div>
+                <div>3️⃣ <strong>Вирусная упаковка</strong> — хуки, описание, хештеги для TikTok/Reels/Shorts</div>
+              </div>
             </div>
           </div>
 

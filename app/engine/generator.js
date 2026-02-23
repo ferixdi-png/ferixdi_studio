@@ -1749,6 +1749,11 @@ export function generate(input) {
     dialogueA = demo.A_lines[demoIdx];
     dialogueB = demo.B_lines[demoIdx];
     killerWord = demo.killer_word;
+  } else if (input_mode === 'meme') {
+    // Meme mode: placeholder — real output (frame0_prompt, animation_prompt) comes from Gemini
+    dialogueA = demo.A_lines[demoIdx];
+    dialogueB = soloMode ? null : demo.B_lines[demoIdx];
+    killerWord = demo.killer_word;
   } else {
     // Default idea mode
     dialogueA = demo.A_lines[demoIdx];
@@ -2335,6 +2340,7 @@ ${engage.firstComment}
       input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode,
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
+      meme_context: input.meme_context || null,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
       dialogueA, dialogueB, killerWord,
       // Remake instruction — when video reference is provided, Gemini must replicate it
@@ -2354,6 +2360,68 @@ export function mergeGeminiResult(localResult, geminiData) {
 
   // Deep clone to avoid mutating original
   const r = JSON.parse(JSON.stringify(localResult));
+
+  // ── MEME MODE: completely different output structure ──
+  if (ctx.input_mode === 'meme' && (g.frame0_prompt_en || g.animation_prompt_en)) {
+    r.meme_result = {
+      frame0_prompt_en: g.frame0_prompt_en || '',
+      animation_prompt_en: g.animation_prompt_en || '',
+      viral_hooks_ru: g.viral_hooks_ru || [],
+      viral_caption_ru: g.viral_caption_ru || '',
+      viral_hashtags: (g.viral_hashtags || []).map(t => t.startsWith('#') ? t : '#' + t),
+      assembly_tips_ru: g.assembly_tips_ru || [],
+      viral_title_ru: g.viral_title_ru || '',
+      share_bait_ru: g.share_bait_ru || '',
+      pin_comment_ru: g.pin_comment_ru || '',
+      first_comment_ru: g.first_comment_ru || '',
+    };
+    if (g.humor_category_ru) {
+      r.log.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
+    }
+    r.log.input_mode = 'meme';
+    // Build meme-specific ru_package
+    const charA = ctx.charA;
+    r.ru_package = `🎭 МЕМ-РЕМЕЙК (FERIXDI AI Production)
+═══════════════════════════════════════════
+📂 Категория: ${g.humor_category_ru || '—'}
+👤 Персонаж: ${charA.name_ru}
+📝 Описание: ${ctx.meme_context || '—'}
+🤖 Сгенерировано FERIXDI AI
+
+═══════════════════════════════════════════
+📸 1. ПРОМПТ НУЛЕВОГО КАДРА (Frame 0):
+(Копируй → Google Imagen / Flow для генерации картинки)
+═══════════════════════════════════════════
+
+${g.frame0_prompt_en || '—'}
+
+═══════════════════════════════════════════
+🎬 2. ПРОМПТ АНИМАЦИИ (Kling 2.6 / Motion Control):
+(Копируй → Kling 2.6 вместе с картинкой Frame 0)
+═══════════════════════════════════════════
+
+${g.animation_prompt_en || '—'}
+
+═══════════════════════════════════════════
+🔥 3. ВИРУСНАЯ УПАКОВКА:
+═══════════════════════════════════════════
+
+📝 Заголовок: ${g.viral_title_ru || '—'}
+💬 Описание: ${g.viral_caption_ru || '—'}
+📌 Закреп: ${g.pin_comment_ru || '—'}
+💬 Первый коммент: ${g.first_comment_ru || '—'}
+📤 Байт для пересылки: ${g.share_bait_ru || '—'}
+
+🎬 Хуки для видео (CapCut):
+${(g.viral_hooks_ru || []).map((h, i) => `• ${h}`).join('\n')}
+
+#️⃣ Хештеги:
+${(g.viral_hashtags || []).map(t => t.startsWith('#') ? t : '#' + t).join(' ')}
+
+🛠 Советы по сборке:
+${(g.assembly_tips_ru || []).map((t, i) => `${i + 1}. ${t}`).join('\n')}`;
+    return r;
+  }
 
   // ── 0. Humor category: Gemini invents its own category ──
   if (g.humor_category_ru) {
