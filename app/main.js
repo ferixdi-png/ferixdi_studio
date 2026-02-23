@@ -240,7 +240,10 @@ async function loadServerCustomLocations() {
     let added = 0;
     const names = [];
     serverLocs.forEach(l => {
-      if (!existingIds.has(l.id)) { state.locations.push(l); existingIds.add(l.id); added++; names.push(l.name_ru || l.id); }
+      if (!existingIds.has(l.id)) {
+        if (!l.numeric_id) l.numeric_id = getNextLocNumericId();
+        state.locations.push(l); existingIds.add(l.id); added++; names.push(l.name_ru || l.id);
+      }
     });
     log('OK', 'GH-ЛОКАЦИИ', `✅ ${serverLocs.length} на сервере, ${added} новых добавлено${names.length ? ': ' + names.join(', ') : ''}`);
   } catch (e) {
@@ -427,6 +430,16 @@ function translateEnRu(text) {
   return text;
 }
 
+// ─── NUMERIC ID HELPERS ─────────────────────
+function getNextCharNumericId() {
+  const maxId = state.characters.reduce((mx, c) => Math.max(mx, c.numeric_id || 0), 0);
+  return maxId + 1;
+}
+function getNextLocNumericId() {
+  const maxId = state.locations.reduce((mx, l) => Math.max(mx, l.numeric_id || 0), 0);
+  return maxId + 1;
+}
+
 // ─── CHARACTERS ──────────────────────────────
 async function loadCharacters() {
   // Check cache first
@@ -490,7 +503,10 @@ async function loadServerCustomCharacters() {
     let added = 0;
     const names = [];
     serverChars.forEach(c => {
-      if (!existingIds.has(c.id)) { state.characters.push(c); existingIds.add(c.id); added++; names.push(c.name_ru || c.id); }
+      if (!existingIds.has(c.id)) {
+        if (!c.numeric_id) c.numeric_id = getNextCharNumericId();
+        state.characters.push(c); existingIds.add(c.id); added++; names.push(c.name_ru || c.id);
+      }
     });
     log('OK', 'GH-ПЕРСОНАЖИ', `✅ ${serverChars.length} на сервере, ${added} новых добавлено${names.length ? ': ' + names.join(', ') : ''}`);
   } catch (e) {
@@ -5941,6 +5957,7 @@ async function createCustomCharacter() {
 
   const newChar = {
     id,
+    numeric_id: getNextCharNumericId(),
     name_ru: nameRu,
     name_en: nameRu,
     group: group === 'custom' ? 'пользовательские' : group,
@@ -6001,9 +6018,9 @@ async function createCustomCharacter() {
   document.getElementById('cc-speech').value = '';
   document.getElementById('cc-photo-preview')?.classList.add('hidden');
 
-  showCCStatus(`✓ Персонаж "${nameRu}" создан!`, 'text-emerald-400');
-  showNotification(`✨ Персонаж "${nameRu}" добавлен в каталог`, 'success');
-  log('OK', 'CHAR-CREATE', `Создан: ${nameRu} (${id})`);
+  showCCStatus(`✓ Персонаж #${newChar.numeric_id} "${nameRu}" создан!`, 'text-emerald-400');
+  showNotification(`✨ Персонаж #${newChar.numeric_id} "${nameRu}" добавлен в каталог`, 'success');
+  log('OK', 'CHAR-CREATE', `Создан: #${newChar.numeric_id} ${nameRu} (${id})`);
 }
 
 function showCCStatus(text, cls) {
@@ -6021,7 +6038,7 @@ function loadCustomCharacters() {
     if (customChars.length && state.characters) {
       const existingIds = new Set(state.characters.map(c => c.id));
       let added = 0;
-      customChars.forEach(c => { if (!existingIds.has(c.id)) { state.characters.push(c); added++; } });
+      customChars.forEach(c => { if (!existingIds.has(c.id)) { if (!c.numeric_id) c.numeric_id = getNextCharNumericId(); state.characters.push(c); added++; } });
       if (added > 0) log('OK', 'CHAR-CUSTOM', `Загружено ${added} пользовательских персонажей`);
     }
     _customCharsLoaded = true;
@@ -6056,6 +6073,7 @@ async function createCustomLocation() {
 
   const newLoc = {
     id,
+    numeric_id: getNextLocNumericId(),
     name_ru: nameRu,
     tagline_ru: scene.slice(0, 80),
     group: group === 'custom' ? 'пользовательские' : group,
@@ -6106,9 +6124,9 @@ async function createCustomLocation() {
   document.getElementById('lc-lighting').value = '';
   document.getElementById('lc-mood').value = '';
 
-  showLCStatus(`✓ Локация "${nameRu}" создана!`, 'text-emerald-400');
-  showNotification(`📍 Локация "${nameRu}" добавлена`, 'success');
-  log('OK', 'LOC-CREATE', `Создана: ${nameRu} (${id})`);
+  showLCStatus(`✓ Локация #${newLoc.numeric_id} "${nameRu}" создана!`, 'text-emerald-400');
+  showNotification(`📍 Локация #${newLoc.numeric_id} "${nameRu}" добавлена`, 'success');
+  log('OK', 'LOC-CREATE', `Создана: #${newLoc.numeric_id} ${nameRu} (${id})`);
 }
 
 function showLCStatus(text, cls) {
@@ -6125,7 +6143,7 @@ function loadCustomLocations() {
     if (customLocs.length && state.locations) {
       const existingIds = new Set(state.locations.map(l => l.id));
       let added = 0;
-      customLocs.forEach(l => { if (!existingIds.has(l.id)) { state.locations.push(l); added++; } });
+      customLocs.forEach(l => { if (!existingIds.has(l.id)) { if (!l.numeric_id) l.numeric_id = getNextLocNumericId(); state.locations.push(l); added++; } });
       if (added > 0) log('OK', 'LOC-CUSTOM', `Загружено ${added} пользовательских локаций`);
     }
   } catch (e) { log('ERR', 'LOC-CUSTOM', e.message); }

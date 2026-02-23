@@ -326,6 +326,17 @@ app.post('/api/custom/create', authMiddleware, async (req, res) => {
   itemData._custom = true;
   itemData._createdAt = new Date().toISOString();
 
+  // Assign numeric_id if missing (server-side guarantee)
+  if (!itemData.numeric_id) {
+    if (type === 'character') {
+      const maxId = _customCharacters.reduce((mx, c) => Math.max(mx, c.numeric_id || 0), 200);
+      itemData.numeric_id = maxId + 1;
+    } else {
+      const maxId = _customLocations.reduce((mx, l) => Math.max(mx, l.numeric_id || 0), 144);
+      itemData.numeric_id = maxId + 1;
+    }
+  }
+
   // Add to in-memory cache (dedup)
   if (type === 'character') {
     if (!_customCharacters.find(c => c.id === id)) {
