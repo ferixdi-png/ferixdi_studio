@@ -2506,6 +2506,9 @@ function clearPostGenPhoto() {
   document.getElementById('post-photo-status')?.classList.add('hidden');
   document.getElementById('post-photo-mode-ref')?.classList.remove('ring-2', 'ring-violet-500');
   document.getElementById('post-photo-mode-prod')?.classList.remove('ring-2', 'ring-emerald-500');
+  document.getElementById('post-photo-lang-toggle')?.classList.add('hidden');
+  const langCb = document.getElementById('post-photo-lang-ru');
+  if (langCb) langCb.checked = false;
   const fileInput = document.getElementById('post-photo-file');
   if (fileInput) fileInput.value = '';
   log('INFO', 'POST-PHOTO', 'Фото убрано');
