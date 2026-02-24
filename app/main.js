@@ -4796,7 +4796,7 @@ function initConsultation() {
 
   // Character counter
   input.addEventListener('input', () => {
-    if (counterEl) counterEl.textContent = `${input.value.length} / 500`;
+    if (counterEl) counterEl.textContent = `${input.value.length} / 2000`;
   });
 
   // Copy button
@@ -4835,7 +4835,7 @@ function initConsultation() {
       const loc = state.locations?.find(l => l.id === state.selectedLocation);
       if (loc) context.location = loc.name_ru || loc.scene_en;
     }
-    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'По видео' }[state.generationMode] || state.generationMode;
+    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'По видео', meme: 'Мем-ремейк' }[state.generationMode] || state.generationMode;
     context.hasPromo = isPromoValid();
 
     try {
