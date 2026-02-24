@@ -1385,6 +1385,17 @@ function buildVeoPrompt(opts) {
   // Release with character-specific laugh styles
   const releaseBrief = releaseObj.action_en.split(',').slice(0, 2).join(',').trim();
 
+  // Strip example portions from speech tokens (after ' — ') so that
+  // identity-specific examples like "МОЛОКО! Восемьсот рублей МОЛОКО!"
+  // don't contaminate scene-specific dialogue delivery directions.
+  // Full tokens remain in the character description block.
+  const stripSpeechExample = (s) => {
+    if (!s) return '';
+    const idx = s.indexOf(' — ');
+    const cleaned = idx > 0 ? s.slice(0, idx).trim() : s;
+    return cleaned.length >= 6 ? cleaned : '';
+  };
+
   // Voice quality descriptions from speech_identity
   const buildVoiceDesc = (char) => {
     const si = char.speech_identity || {};
@@ -1393,8 +1404,10 @@ function buildVeoPrompt(opts) {
       : pace === 'slow' ? 'deep gravelly voice, slow deliberate fury'
       : 'passionate rising intonation';
     const extras = [];
-    if (si.emphasis_pattern) extras.push(si.emphasis_pattern);
-    if (si.emotional_escalation) extras.push(si.emotional_escalation);
+    const emp = stripSpeechExample(si.emphasis_pattern);
+    const esc = stripSpeechExample(si.emotional_escalation);
+    if (emp) extras.push(emp);
+    if (esc) extras.push(esc);
     return extras.length ? `${base}, ${extras.join(', ')}` : base;
   };
   const voiceA = buildVoiceDesc(charA);
@@ -1408,8 +1421,10 @@ function buildVeoPrompt(opts) {
       : pace === 'fast' ? 'sharp rapid-fire comeback'
       : 'controlled buildup';
     const extras = [];
-    if (si.emphasis_pattern) extras.push(si.emphasis_pattern);
-    if (si.interruption_style) extras.push(si.interruption_style);
+    const emp = stripSpeechExample(si.emphasis_pattern);
+    const intr = stripSpeechExample(si.interruption_style);
+    if (emp) extras.push(emp);
+    if (intr) extras.push(intr);
     return extras.length ? `${base}, ${extras.join(', ')}` : base;
   };
   const responseStyleB = buildResponseStyle(charB);
