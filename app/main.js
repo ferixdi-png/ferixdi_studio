@@ -5593,7 +5593,7 @@ function initSeries() {
 }
 
 // ─── VIRAL SURPRISE PRESETS v2 ───────────────
-// 120 curated viral formulas — hook, killer word, share trigger, weighted pair matching, anti-repeat
+// 80+ curated viral formulas — hook, killer word, share trigger, weighted pair matching, anti-repeat
 
 const VIRAL_SURPRISE_PRESETS = [
   // ═══ AI И ТЕХНОЛОГИИ ═══
