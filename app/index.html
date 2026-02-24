@@ -1013,6 +1013,16 @@
                   </button>
                 </div>
 
+                <!-- Language toggle -->
+                <div id="post-photo-lang-toggle" class="hidden flex items-center gap-2 px-1">
+                  <label class="text-[10px] text-gray-500">Язык описания:</label>
+                  <label class="flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" id="post-photo-lang-ru" class="w-3.5 h-3.5 rounded accent-amber-500 cursor-pointer">
+                    <span class="text-[11px] text-amber-400 font-medium">🇷🇺 Русский</span>
+                  </label>
+                  <span class="text-[10px] text-gray-600">(по умолчанию English)</span>
+                </div>
+
                 <!-- Dropzone -->
                 <div id="post-photo-dropzone" class="hidden border-2 border-dashed border-gray-700 rounded-xl p-6 text-center cursor-pointer hover:border-violet-500/50 transition-colors">
                   <input type="file" id="post-photo-file" accept="image/*" class="hidden">

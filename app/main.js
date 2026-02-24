@@ -2269,6 +2269,7 @@ function initPostGenPhoto() {
     document.getElementById('post-photo-icon').textContent = '🎨';
     document.getElementById('post-photo-label').textContent = 'Загрузи фото-референс (стиль, настроение, эстетика)';
     dropzone.classList.remove('hidden');
+    document.getElementById('post-photo-lang-toggle')?.classList.remove('hidden');
     log('INFO', 'POST-PHOTO', 'Режим: референс стиля');
   });
 
@@ -2279,6 +2280,7 @@ function initPostGenPhoto() {
     document.getElementById('post-photo-icon').textContent = '📦';
     document.getElementById('post-photo-label').textContent = 'Загрузи фото товара (появится в кадре)';
     dropzone.classList.remove('hidden');
+    document.getElementById('post-photo-lang-toggle')?.classList.remove('hidden');
     log('INFO', 'POST-PHOTO', 'Режим: фото товара');
   });
 
@@ -2344,6 +2346,7 @@ async function handlePostGenPhoto(file) {
           image_base64: base64,
           mime_type: mimeType,
           mode: _postPhotoMode,
+          language: document.getElementById('post-photo-lang-ru')?.checked ? 'ru' : 'en',
         }),
       });
       const data = await resp.json();
@@ -2363,10 +2366,11 @@ async function handlePostGenPhoto(file) {
 
       // Show result
       const resultTitle = document.getElementById('post-photo-result-title');
+      const langLabel = data.language === 'ru' ? 'RU' : 'EN';
       if (resultTitle) {
         resultTitle.textContent = _postPhotoMode === 'reference'
-          ? '🎨 ОПИСАНИЕ РЕФЕРЕНСА (EN)'
-          : '📦 ОПИСАНИЕ ТОВАРА (EN)';
+          ? `🎨 ОПИСАНИЕ РЕФЕРЕНСА (${langLabel})`
+          : `📦 ОПИСАНИЕ ТОВАРА (${langLabel})`;
         resultTitle.className = `text-[10px] font-semibold uppercase tracking-wider mb-1 ${_postPhotoMode === 'reference' ? 'text-violet-400' : 'text-emerald-400'}`;
       }
       document.getElementById('post-photo-description').textContent = data.description_en;

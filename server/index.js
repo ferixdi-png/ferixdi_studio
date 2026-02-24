@@ -949,7 +949,19 @@ ${remake_mode ? `⚠️⚠️⚠️ РЕЖИМ РЕМЕЙКА — ДИАЛОГ �
 ПРИМЕР ПРАВИЛЬНОЙ АДАПТАЦИИ:
 Оригинал: "Ты чё творишь?! Это же мой суп!"
 Адаптация: "Ты чё творишь?! Это ж мой суп!" (убрали "же" -> "ж" под стиль речи — ВСЁ)
-НЕПРАВИЛЬНО: "Опять ты за своё! Суп мне испортила!" (полностью переписано — БРАК!)` : `⚠️⚠️⚠️ ГЛАВНОЕ ПРАВИЛО — ДИАЛОГ ПРИДУМЫВАЕШЬ ТОЛЬКО ТЫ:
+НЕПРАВИЛЬНО: "Опять ты за своё! Суп мне испортила!" (полностью переписано — БРАК!)` : (input_mode === 'script' && script_ru) ? `⚠️⚠️⚠️ РЕЖИМ СВОЕГО ДИАЛОГА — ТЕКСТ ПОЛЬЗОВАТЕЛЯ НЕПРИКОСНОВЕНЕН:
+ТЫ ОБЯЗАН ВЕРНУТЬ ДИАЛОГ ПОЛЬЗОВАТЕЛЯ СЛОВО В СЛОВО. ЗАПРЕЩЕНО МЕНЯТЬ, УЛУЧШАТЬ, ПЕРЕПИСЫВАТЬ.
+
+АБСОЛЮТНЫЕ ПРАВИЛА:
+1. dialogue_A_ru = ТОЧНАЯ КОПИЯ текста пользователя из раздела "ДИАЛОГ ПОЛЬЗОВАТЕЛЯ" выше
+2. dialogue_B_ru = ТОЧНАЯ КОПИЯ текста пользователя из раздела "ДИАЛОГ ПОЛЬЗОВАТЕЛЯ" выше
+3. ЗАПРЕЩЕНО: менять слова, переставлять слова, "улучшать" юмор, добавлять свои фразы
+4. ЗАПРЕЩЕНО: придумывать НОВЫЙ диалог — пользователь УЖЕ написал свой
+5. Единственное что ТЫ придумываешь: фото-промпт, видео-промпт, хештеги, заголовок, engagement — всё ПО ТЕМЕ диалога пользователя
+6. Killer word = последнее ударное слово из ТЕКСТА ПОЛЬЗОВАТЕЛЯ
+7. Если текст пользователя длиннее лимита — можешь НЕМНОГО сократить, сохранив ВСЕ ключевые слова и смысл
+
+ТЕСТ: если dialogue_A_ru или dialogue_B_ru отличаются от того что написал пользователь больше чем на 1-2 слова — это БРАК.` : `⚠️⚠️⚠️ ГЛАВНОЕ ПРАВИЛО — ДИАЛОГ ПРИДУМЫВАЕШЬ ТОЛЬКО ТЫ:
 ТЫ ОБЯЗАН ПРИДУМАТЬ ДИАЛОГ САМ С НУЛЯ. Не копируй примеры. Не используй шаблоны.
 Твоя задача — написать ОРИГИНАЛЬНЫЕ, СМЕШНЫЕ реплики которые идеально подходят:
 1. Под КОНКРЕТНЫХ персонажей (их характер, стиль речи, возраст, вайб)
@@ -1635,8 +1647,9 @@ app.post('/api/product/describe', authMiddleware, async (req, res) => {
     return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
   }
 
-  const { image_base64, mime_type, mode } = req.body;
+  const { image_base64, mime_type, mode, language } = req.body;
   if (!image_base64) return res.status(400).json({ error: 'image_base64 required' });
+  const lang = language === 'ru' ? 'ru' : 'en';
 
   const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) {
@@ -1649,8 +1662,9 @@ app.post('/api/product/describe', authMiddleware, async (req, res) => {
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
     // Different prompts for product vs reference mode
+    const langInstruction = lang === 'ru' ? 'Опиши на РУССКОМ языке.' : 'Describe in English.';
     const prompt = mode === 'reference'
-      ? `You are a visual style analyst specializing in creating descriptions for AI image and video generation. Analyze this reference image and describe its VISUAL AESTHETIC in English.
+      ? `You are a visual style analyst specializing in creating descriptions for AI image and video generation. Analyze this reference image and describe its VISUAL AESTHETIC. ${langInstruction}
 
 Focus ONLY on the visual style, NOT on objects or people:
 1. **LIGHTING**: Direction, quality (soft/hard), color temperature, key-to-fill ratio, shadows, highlights, any dramatic light effects
@@ -1661,7 +1675,7 @@ Focus ONLY on the visual style, NOT on objects or people:
 6. **STYLE REFERENCES**: If it resembles a known visual style (e.g., "Wes Anderson pastel palette", "noir high-contrast", "golden hour warmth")
 
 Format your response as a single dense paragraph optimized for AI video generation prompts. Start directly with the style description, no preamble. The goal is that an AI model can replicate this EXACT visual aesthetic in a completely different scene.`
-      : `You are a product photography analyst specializing in creating descriptions for AI image and video generation. Analyze this product photo and provide an ULTRA-DETAILED description in English.
+      : `You are a product photography analyst specializing in creating descriptions for AI image and video generation. Analyze this product photo and provide an ULTRA-DETAILED description. ${langInstruction}
 
 IGNORE the background completely — describe ONLY the product itself.
 
@@ -1711,6 +1725,7 @@ Format your response as a single dense paragraph optimized for AI image generati
 
     res.json({
       description_en: text.trim(),
+      language: lang,
       model: 'ferixdi-ai-v2',
       tokens: data.usageMetadata?.totalTokenCount || 0,
     });
