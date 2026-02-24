@@ -91,7 +91,7 @@
           <div class="nav-item" data-section="content"><span>📝</span><span>2. Контент</span></div>
           <div class="nav-item" data-section="characters"><span>👥</span><span>3. Персонажи</span></div>
           <div class="nav-item" data-section="locations"><span>📍</span><span>4. Локации</span></div>
-          <div class="nav-item" data-section="generate"><span>⚡</span><span>5. Генерация</span></div>
+          <div class="nav-item" data-section="generate"><span>⚡</span><span>5. Промпт</span></div>
 
           <div class="px-2 pt-3 pb-1"><div class="text-[9px] text-gray-600 uppercase tracking-[0.2em] font-medium">Инструменты</div></div>
           <div class="nav-item" data-section="series"><span>📺</span><span>Серии</span></div>
@@ -249,7 +249,7 @@
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">1</div>
             <div>
               <h2 class="text-lg font-semibold text-white">Выберите режим генерации</h2>
-              <p class="text-xs text-gray-400">Определите как будет создаваться контент — от идеи до готового видео</p>
+              <p class="text-xs text-gray-400">Определите как Studio соберёт промпт — вы скопируете его в Google Flow и получите видео</p>
             </div>
           </div>
 
@@ -630,8 +630,8 @@
           <div class="flex items-center gap-3 mb-4">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white text-sm font-bold">4</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Локация и генерация</h2>
-              <p class="text-xs text-gray-400">Выберите локацию (или AI подберёт сам) и запустите генерацию</p>
+              <h2 class="text-lg font-semibold text-white">Локация и сборка промпта</h2>
+              <p class="text-xs text-gray-400">Выберите локацию (или AI подберёт сам) и запустите сборку промпта</p>
             </div>
           </div>
 
@@ -683,14 +683,14 @@
           <div class="flex items-center gap-3 mt-6">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white text-sm font-bold">✓</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Запустите генерацию</h2>
-              <p class="text-xs text-gray-400">Нажмите кнопку — AI создаст уникальный контент для вашего видео</p>
+              <h2 class="text-lg font-semibold text-white">Запустите сборку промпта</h2>
+              <p class="text-xs text-gray-400">Нажмите кнопку — AI соберёт промпт, диалог и сюжет. Останется скопировать и вставить в Google Flow</p>
             </div>
           </div>
 
           <!-- Readiness checklist (live) -->
           <div id="gen-readiness" class="glass-panel p-4 space-y-2 border-l-2 border-gray-700/50 mb-3">
-            <div class="text-xs text-gray-400 font-semibold mb-1">📋 Чеклист перед генерацией:</div>
+            <div class="text-xs text-gray-400 font-semibold mb-1">📋 Чеклист перед сборкой промпта:</div>
             <div id="readiness-mode" class="flex items-center gap-2 text-xs">
               <span class="readiness-icon text-red-400">✗</span>
               <span class="text-gray-400">Режим генерации</span>
@@ -720,7 +720,7 @@
 
           <button id="btn-generate" class="btn-primary w-full text-lg py-4 tracking-wide opacity-50 cursor-not-allowed" title="Ctrl+Enter для быстрой генерации" disabled>
             <span class="flex items-center justify-center gap-2">
-              🚀 Создать контент
+              🚀 Собрать промпт
               <span class="text-xs opacity-60">Ctrl+Enter</span>
             </span>
           </button>
@@ -734,7 +734,7 @@
             <div class="flex items-center justify-between flex-wrap gap-3">
               <div class="flex items-center gap-3">
                 <div class="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white text-xs font-bold">✓</div>
-                <span class="text-sm font-semibold text-emerald-400">Готово! Скопируй промпт и генерируй:</span>
+                <span class="text-sm font-semibold text-emerald-400">Готово! Скопируй промпт → вставь в Google Flow → получи видео:</span>
               </div>
               <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-semibold hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all">
                 🎬 Открыть Google Flow →

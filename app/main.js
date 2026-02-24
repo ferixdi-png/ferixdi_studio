@@ -774,7 +774,7 @@ function updateCharDisplay() {
   if (goBtn) {
     if (state.selectedA) {
       goBtn.classList.remove('hidden');
-      goBtn.textContent = state.selectedB ? 'Далее → Локация и генерация' : 'Далее → Соло-ролик (без B)';
+      goBtn.textContent = state.selectedB ? 'Далее → Локация и сборка промпта' : 'Далее → Соло-ролик (без B)';
     } else {
       goBtn.classList.add('hidden');
     }
@@ -2013,7 +2013,7 @@ function updateReadiness() {
   if (allReady) {
     btn.disabled = false;
     btn.classList.remove('opacity-50', 'cursor-not-allowed');
-    btn.innerHTML = '<span class="flex items-center justify-center gap-2">🚀 Создать контент<span class="text-xs opacity-60">Ctrl+Enter</span></span>';
+    btn.innerHTML = '<span class="flex items-center justify-center gap-2">🚀 Собрать промпт<span class="text-xs opacity-60">Ctrl+Enter</span></span>';
   } else {
     btn.disabled = true;
     btn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -2571,8 +2571,8 @@ function renderPreflight(localResult) {
             <span class="text-xs">⚙️</span>
           </div>
           <div>
-            <div class="text-xs font-semibold text-cyan-400 tracking-wide">ПАРАМЕТРЫ ГЕНЕРАЦИИ</div>
-            <div class="text-[10px] text-gray-500">FERIXDI AI готовит контент по вашим настройкам</div>
+            <div class="text-xs font-semibold text-cyan-400 tracking-wide">ПАРАМЕТРЫ СБОРКИ</div>
+            <div class="text-[10px] text-gray-500">FERIXDI AI собирает промпт по вашим настройкам</div>
           </div>
         </div>
         <div class="text-[10px] text-gray-600 font-mono">v2.0</div>
@@ -3329,14 +3329,14 @@ function initGenerate() {
       showGenStatus(`❌ Ошибка генерации: ${e.message}`, 'text-red-400');
       log('ERR', 'GEN', e.message);
       btn.disabled = false;
-      btn.textContent = '🚀 Сгенерировать';
+      btn.textContent = '🚀 Собрать промпт';
       return;
     }
 
     if (localResult.error) {
       displayResult(localResult);
       btn.disabled = false;
-      btn.textContent = '🚀 Сгенерировать';
+      btn.textContent = '🚀 Собрать промпт';
       return;
     }
 
@@ -3349,16 +3349,16 @@ function initGenerate() {
     const isApiMode = state.settingsMode === 'api' && (localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL);
 
     if (isApiMode && localResult._apiContext) {
-      btn.textContent = '⏳ AI генерирует...';
-      showGenStatus('🧠 FERIXDI AI генерирует контент... (15-30с)', 'text-violet-400');
-      log('INFO', 'AI', 'Генерирую уникальный контент...');
+      btn.textContent = '⚡ AI собирает промпт...';
+      showGenStatus('🧠 FERIXDI AI собирает промпт и сюжет... (15-30с)', 'text-violet-400');
+      log('INFO', 'AI', 'Собираю промпт и диалог...');
 
       try {
         const aiData = await callAIEngine(localResult._apiContext);
         if (aiData) {
           const merged = mergeGeminiResult(localResult, aiData);
-          log('OK', 'AI', 'Творческий контент сгенерирован');
-          updatePreflightStatus('✅ Готово · FERIXDI AI сгенерировал уникальный контент', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
+          log('OK', 'AI', 'Промпт и сюжет готовы');
+          updatePreflightStatus('✅ Готово · Промпт собран — скопируй и вставь в Google Flow', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
           saveGenerationHistory(merged);
           displayResult(merged);
         } else {
@@ -3404,11 +3404,11 @@ function initGenerate() {
         } else if (apiErr.message?.includes('502') || apiErr.message?.includes('503') || apiErr.message?.includes('504')) {
           errorTitle = 'Сервер перезагружается';
           errorDesc = 'AI-движок обновляется или перезапускается. Это занимает 30–60 секунд.';
-          errorAction = 'Нажмите «Сгенерировать» повторно через минуту';
+          errorAction = 'Нажмите «Собрать промпт» повторно через минуту';
           errorIcon = '🔄';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
-              🚀 Сгенерировать снова
+              🚀 Собрать промпт снова
             </button>
           `;
         } else if (apiErr.message?.includes('timeout') || apiErr.message?.includes('network') || apiErr.message?.includes('Failed to fetch')) {
@@ -3435,7 +3435,7 @@ function initGenerate() {
             </button>
           `;
         } else {
-          errorTitle = 'Ошибка генерации';
+          errorTitle = 'Ошибка сборки промпта';
           errorDesc = escapeHtml(apiErr.message || 'Непредвиденная ошибка');
           errorAction = 'Попробуйте снова через несколько секунд';
           errorIcon = '⚠️';
@@ -3483,7 +3483,7 @@ function initGenerate() {
     }
 
     btn.disabled = false;
-    btn.textContent = '🚀 Сгенерировать';
+    btn.textContent = '🚀 Собрать промпт';
   });
 
   // Result tabs
