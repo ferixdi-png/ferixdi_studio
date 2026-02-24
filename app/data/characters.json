@@ -311,19 +311,18 @@
                 "none"
             ],
             "ear_tokens": [
-                "large weathered ears with elongated lobes",
-                "thick forearms from decades of farm work"
+                "large weathered ears with elongated lobes"
             ],
             "neck_tokens": [
                 "loose sagging neck skin with visible tendons"
             ],
             "body_shape_tokens": [
                 "wide hips",
-                "thick forearms from decades of farm work"
+                "stocky build with thick forearms from decades of farm work"
             ],
             "scar_mark_tokens": [
-                "silver hair hidden under floral headscarf tied under chin",
-                "sun damage spots on forehead"
+                "sun damage spots on forehead",
+                "calloused rough hands from manual labor"
             ],
             "voice_texture_tokens": [
                 "age-weathered female voice"
@@ -1343,7 +1342,7 @@
                 "dark worried eyes",
                 "permanent crease above nose"
             ],
-            "height_build": "thin expressive lips quick to both",
+            "height_build": "petite curvy build",
             "hair_tokens": [
                 "shoulder-length dyed auburn hair with morning blowout"
             ],
@@ -1377,11 +1376,11 @@
                 "silk scarf at neck"
             ],
             "body_shape_tokens": [
-                "shoulder-length dyed auburn hair with morning blowout"
+                "petite curvy build"
             ],
             "scar_mark_tokens": [
                 "silk scarf at neck",
-                "shoulder-length dyed auburn hair with morning blowout",
+                "fair freckled skin",
                 "fair freckled skin"
             ],
             "voice_texture_tokens": [
@@ -1554,7 +1553,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "vintage brocade jacket with padded shoulders"
+                "slender elegant build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -2258,8 +2257,7 @@
                 "paisley-print burgundy silk shawl draped over shoulders over black cashmere turtleneck"
             ],
             "body_shape_tokens": [
-                "paisley-print burgundy silk shawl draped over shoulders over black cashmere turtleneck",
-                "warm brown eyes behind fashionable thick-framed glasses"
+                "short thick build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -3116,8 +3114,7 @@
                 "natural nose shape"
             ],
             "mouth_tokens": [
-                "thin lips rarely smiling",
-                "small scar on chin"
+                "thin lips rarely smiling"
             ],
             "hands_tokens": [
                 "sinewy hands",
@@ -3503,7 +3500,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -3525,7 +3522,7 @@
                 "narrow pale lips"
             ],
             "chin_tokens": [
-                "double chin"
+                "smooth youthful chin"
             ],
             "nasolabial_tokens": [
                 "moderate nasolabial lines"
@@ -3537,7 +3534,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -3679,7 +3676,7 @@
                 "light tan with subtle freckles across nose bridge"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "defiant slouching stride, earbuds in"
@@ -3713,7 +3710,7 @@
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -3844,7 +3841,7 @@
             ],
             "ear_tokens": [
                 "natural proportioned ears",
-                "faux-pearl necklace over embroidered magenta kaftan dress"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "faux-pearl necklace over embroidered magenta kaftan dress"
@@ -3856,7 +3853,7 @@
                 "upturned nose with small nostril piercing"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "defiant slouching stride, earbuds in"
@@ -4006,7 +4003,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "skinny slightly hunched from gaming"
+                "slightly hunched from gaming"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -4031,7 +4028,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -4050,13 +4047,13 @@
                 "neat trimmed eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin pressed lips with deep vertical lines"
+                "thin natural lips"
             ],
             "chin_tokens": [
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -4065,7 +4062,7 @@
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -4196,7 +4193,7 @@
             ],
             "ear_tokens": [
                 "natural proportioned ears",
-                "young skin with jaw acne and patchy first beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "gold chain thin at neck"
@@ -4208,7 +4205,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "casual youthful stride, natural energy"
@@ -4703,7 +4700,7 @@
                 "pursed lips in permanent judgmental set"
             ],
             "hands_tokens": [
-                "pearl earrings"
+                "natural hands"
             ],
             "posture_tokens": [
                 "imposing full figure with remarkably straight posture"
@@ -4725,7 +4722,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "sharp evaluating grey eyes behind stylish frames"
+                "imposing full figure"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -5425,7 +5422,7 @@
                 "loose sagging neck skin with visible tendons"
             ],
             "body_shape_tokens": [
-                "PURE SNOW-WHITE HAIR to shoulders swept back — pristine white not grey"
+                "tall gaunt angular frame"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -5599,13 +5596,13 @@
             ],
             "ear_tokens": [
                 "full regal bearing",
-                "TEN ROWS OF BEADED NECKLACES amber turquoise coral pearl jangling with every movement"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "TEN ROWS OF BEADED NECKLACES amber turquoise coral pearl jangling with every movement"
             ],
             "body_shape_tokens": [
-                "black grey-streaked hair in thick braid to waist"
+                "full rounded build with regal bearing"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -6041,7 +6038,7 @@
             "slow"
         ],
         "appearance_ru": "87 лет, ОГРОМНЫЙ — 190 см, плечи-шкаф. БЕЛАЯ БОРОДА ДО ГРУДИ — аккуратно расчёсана. Лысина, густые брови. МЯГКИЕ КАРИЕ ГЛАЗА как у медведя — добрые и сонные. Широкий мясистый нос. Улыбка превращает лицо в солнце. Руки-брёвна, но всё делают нежно.",
-        "speech_style_ru": "Басом, медленно. Каждое слово как кирпич. Тон добрый. 'Ну-ну-ну, не кипятись' — мантра.",
+        "speech_style_ru": "Басом, медленно. Каждое слово — как кирпич. Тон добрый. 'Ну-ну-ну, не кипятись' — мантра.",
         "behavior_ru": "Сбалансированный медведь — огромный и добрый",
         "speech_pace": "slow",
         "swear_level": 0,
@@ -6132,11 +6129,11 @@
                 "SNOW-WHITE BEARD TO CHEST neatly combed"
             ],
             "ear_tokens": [
-                "SNOW-WHITE BEARD TO CHEST neatly combed",
+                "natural ears proportional to face",
                 "SOFT WARM BROWN EYES like bear after hibernation kind sleepy"
             ],
             "neck_tokens": [
-                "loose sagging neck skin with visible tendons"
+                "thick bull neck"
             ],
             "body_shape_tokens": [
                 "MASSIVE 190cm enormously broad shoulders arms like logs yet gentle face",
@@ -7004,10 +7001,12 @@
                 "natural nose shape"
             ],
             "mouth_tokens": [
-                "full dramatic makeup eyeshadow liner blush lipstick"
+                "full lips with dramatic red lipstick",
+                "expressive mouth always gasping or exclaiming"
             ],
             "hands_tokens": [
-                "chunky gold hoop earrings"
+                "manicured hands with long painted nails",
+                "dramatic gesturing hands always in motion"
             ],
             "posture_tokens": [
                 "dramatic gestures"
@@ -7022,8 +7021,8 @@
                 "none"
             ],
             "ear_tokens": [
-                "chunky gold hoop earrings",
-                "FAUX FUR STOLE draped year-round"
+                "ears hidden behind voluminous lacquered bob",
+                "chunky gold hoop earrings dangling"
             ],
             "neck_tokens": [
                 "slight neck creasing with visible throat movement"
@@ -7205,11 +7204,10 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "FIERY NATURAL RED HAIR thick braid over one shoulder"
+                "medium soft curves"
             ],
             "scar_mark_tokens": [
-                "CONSTELLATION OF FRECKLES covering entire face nose cheeks forehead even eyelids",
-                "upturned freckled nose"
+                "CONSTELLATION OF FRECKLES covering entire face nose cheeks forehead even eyelids"
             ],
             "voice_texture_tokens": [
                 "age-weathered female voice"
@@ -7535,7 +7533,7 @@
                 "thin pursed lips"
             ],
             "hands_tokens": [
-                "minimalist amethyst stud earrings"
+                "natural hands"
             ],
             "posture_tokens": [
                 "clean aesthetic"
@@ -7556,7 +7554,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "shoulder-length brown hair ONE BRIGHT PURPLE STREAK at temple her only rebellion"
+                "slim nervous build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -7726,7 +7724,7 @@
                 "LONG BEARD WITH TWO WOODEN BEADS braided into small braids"
             ],
             "ear_tokens": [
-                "LONG BEARD WITH TWO WOODEN BEADS braided into small braids"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "RUNIC TATTOO ON NECK visible above collar"
@@ -8254,7 +8252,7 @@
             ],
             "ear_tokens": [
                 "PHOTOCHROMIC TRANSITION GLASSES always in mid-state between dark and clear",
-                "neat goatee beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "slight neck creasing with visible throat movement"
@@ -8403,7 +8401,7 @@
                 "warm brown eyes",
                 "round glasses"
             ],
-            "height_build": "thin-frame glasses",
+            "height_build": "medium fit build",
             "hair_tokens": [
                 "HAIR IN LOOSE TOP KNOT with wispy strands",
                 "THICK GROOMED DARK BEARD beard oil sheen"
@@ -8430,13 +8428,13 @@
                 "THICK GROOMED DARK BEARD beard oil sheen"
             ],
             "ear_tokens": [
-                "THICK GROOMED DARK BEARD beard oil sheen"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "warm brown eyes round thin-frame glasses"
+                "medium fit build"
             ],
             "scar_mark_tokens": [
                 "GEOMETRIC TATTOO SLEEVE right arm mountains compass lines"
@@ -8605,7 +8603,7 @@
                 "neat BLACK BEARD silver threads"
             ],
             "ear_tokens": [
-                "neat BLACK BEARD silver threads"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
@@ -8792,7 +8790,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "smooth gliding walk, effortless movement"
@@ -8817,7 +8815,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "pronounced deep smile lines"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "deep purple-brown under-eye bags"
@@ -8826,7 +8824,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "healthy natural teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -8939,8 +8937,7 @@
                 "thin lips purple gloss"
             ],
             "hands_tokens": [
-                "ACID-YELLOW DROP EARRINGS neon accent",
-                "TINY LIGHTNING TATTOO behind ear"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -8962,14 +8959,14 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "BRIGHT PINK HAIR to shoulders dark roots"
+                "thin build"
             ],
             "scar_mark_tokens": [
                 "TINY LIGHTNING TATTOO behind ear",
                 "pale freckled skin"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -8988,13 +8985,13 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin pressed lips with deep vertical lines"
+                "thin natural lips"
             ],
             "chin_tokens": [
-                "double chin"
+                "smooth youthful chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -9003,7 +9000,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -9117,9 +9114,7 @@
                 "LIP RING PIERCING lower lip"
             ],
             "hands_tokens": [
-                "thin fingers chipped black nail polish",
-                "BLACK FRINGE COVERING ONE EYE only left visible",
-                "LIP RING PIERCING lower lip"
+                "thin fingers chipped black nail polish"
             ],
             "posture_tokens": [
                 "thin hunched"
@@ -9140,13 +9135,13 @@
                 "black headphones around neck"
             ],
             "body_shape_tokens": [
-                "thin fingers chipped black nail polish"
+                "thin hunched build"
             ],
             "scar_mark_tokens": [
                 "LIP RING PIERCING lower lip"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "smooth gliding walk, effortless movement"
@@ -9165,22 +9160,22 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "full lips with age cracks"
+                "full natural lips"
             ],
             "chin_tokens": [
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "creased thin-skin under eyes"
+                "smooth under-eye area"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "healthy natural teeth"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -9290,14 +9285,13 @@
                 "straight nose"
             ],
             "mouth_tokens": [
-                "set jaw",
-                "SCAR ON CHIN from pullup bar"
+                "set jaw"
             ],
             "hands_tokens": [
                 "FITNESS WATCH wrist"
             ],
             "posture_tokens": [
-                "tanned clean skin ZERO MAKEUP"
+                "athletic confident posture"
             ],
             "skin_color_tokens": [
                 "tanned clean skin ZERO MAKEUP"
@@ -9321,7 +9315,7 @@
                 "SCAR ON CHIN from pullup bar"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "defiant slouching stride, earbuds in"
@@ -9340,7 +9334,7 @@
                 "neat trimmed eyebrows"
             ],
             "lip_texture_tokens": [
-                "full weathered lips"
+                "full natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -9483,7 +9477,7 @@
                 "none"
             ],
             "ear_tokens": [
-                "PEARL NECKLACE grandmother's",
+                "natural ears proportional to face",
                 "clear skin retro makeup cat-eye liner red lips"
             ],
             "neck_tokens": [
@@ -9496,7 +9490,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -9515,13 +9509,13 @@
                 "wild unkempt eyebrows"
             ],
             "lip_texture_tokens": [
-                "full lips with age cracks"
+                "full natural lips"
             ],
             "chin_tokens": [
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "pronounced deep smile lines"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -9643,7 +9637,7 @@
                 "dry lips biting lower"
             ],
             "hands_tokens": [
-                "ENORMOUS THICK BLACK FRAME GLASSES covering half face"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -9664,13 +9658,13 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "ENORMOUS THICK BLACK FRAME GLASSES covering half face"
+                "thin build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -9839,13 +9833,13 @@
                 "THICK GOLD CHAIN on neck main accessory"
             ],
             "body_shape_tokens": [
-                "DREADLOCKS TO SHOULDERS brown with sun-bleached tips"
+                "thin build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -9864,7 +9858,7 @@
                 "neat trimmed eyebrows"
             ],
             "lip_texture_tokens": [
-                "full weathered lips"
+                "full natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -10007,19 +10001,22 @@
                 "clean-shaven or age-appropriate stubble"
             ],
             "ear_tokens": [
-                "skateboard always nearby"
+                "small ears close to head",
+                "slightly sunburned ear tips"
             ],
             "neck_tokens": [
-                "smooth neck with natural skin texture"
+                "smooth young neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "wide CHIPPED-TOOTH GRIN front tooth chipped"
+                "wiry athletic build",
+                "lean frame built for skateboarding"
             ],
             "scar_mark_tokens": [
-                "tanned windburned face with scrapes"
+                "scrapes and minor scabs on knuckles and elbows",
+                "tanned windburned face with fresh scrapes"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young energetic male voice, slightly cracking"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -10053,7 +10050,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -10196,7 +10193,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "smooth gliding walk, effortless movement"
@@ -10215,7 +10212,7 @@
                 "thick bushy gray eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin pressed lips with deep vertical lines"
+                "thin natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -10360,20 +10357,19 @@
                 "light patchy beard growing naturally"
             ],
             "ear_tokens": [
-                "light patchy beard growing naturally"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "WOODEN BEAD NECKLACE"
             ],
             "body_shape_tokens": [
-                "LONG WAVY HAIR TO SHOULDERS brown always tousled",
-                "friendship bracelet on wrist"
+                "thin build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "casual youthful stride, natural energy"
@@ -10395,7 +10391,7 @@
                 "thin dry cracked lips"
             ],
             "chin_tokens": [
-                "double chin"
+                "smooth youthful chin"
             ],
             "nasolabial_tokens": [
                 "faint nasolabial creases"
@@ -10407,7 +10403,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "healthy natural teeth"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -10547,7 +10543,7 @@
                 "THIN WHITE SCAR bisecting right eyebrow"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "defiant slouching stride, earbuds in"
@@ -10572,7 +10568,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -10581,7 +10577,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -10694,10 +10690,10 @@
                 "warm smile"
             ],
             "hands_tokens": [
-                "glasses on tip of nose peering over them"
+                "natural hands"
             ],
             "posture_tokens": [
-                "cardigan COVERED IN CAT FUR impossible to clean"
+                "natural relaxed posture"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -10715,7 +10711,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "ORANGE CAT ALWAYS ON SHOULDER sitting like pirate's parrot"
+                "lean build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -11200,16 +11196,14 @@
             "eye_tokens": [
                 "calm blue eyes"
             ],
-            "height_build": "short grey buzz cut",
+            "height_build": "sturdy broad-shouldered build",
             "hair_tokens": [
                 "thick grey mustache"
             ],
             "nose_tokens": [
                 "wide nose"
             ],
-            "mouth_tokens": [
-                "WELDING MASK perpetually flipped up on forehead like visor"
-            ],
+            "mouth_tokens": [],
             "hands_tokens": [
                 "calloused hands with oil-black nails"
             ],
@@ -11398,13 +11392,13 @@
                 "none"
             ],
             "ear_tokens": [
-                "THREE-ROW PEARL NECKLACE"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "THREE-ROW PEARL NECKLACE"
             ],
             "body_shape_tokens": [
-                "cashmere stole on shoulders"
+                "tall stately build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -11902,7 +11896,7 @@
                 "tight black turtleneck stretching over muscles"
             ],
             "hands_tokens": [
-                "tiny STUD EARRING left ear"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -12096,7 +12090,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "enormous MAIL BAG slung over shoulder containing half the world"
+                "short wiry build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -12408,7 +12402,7 @@
             "eye_tokens": [
                 "X-ray green eyes"
             ],
-            "height_build": "short nails",
+            "height_build": "slim composed build",
             "hair_tokens": [
                 "dark hair in tight bun not one strand loose"
             ],
@@ -12574,7 +12568,7 @@
         "world_aesthetic": "кукольный дом",
         "biology_override": {
             "age": "91",
-            "height_build": "thin white hair in tiny curls",
+            "height_build": "thin petite build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "PORCELAIN FACE smooth from powder wrinkles hidden"
@@ -12593,7 +12587,7 @@
                 "pearl clip earrings"
             ],
             "hands_tokens": [
-                "pearl clip earrings"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -12756,7 +12750,7 @@
             "eye_tokens": [
                 "small stubborn blue eyes"
             ],
-            "height_build": "short grey buzz cut",
+            "height_build": "stocky sturdy build",
             "hair_tokens": [
                 "natural hair"
             ],
@@ -13622,7 +13616,7 @@
             "eye_tokens": [
                 "sharp calculating brown eyes"
             ],
-            "height_build": "thin lips permanent half-smile",
+            "height_build": "tall fit build",
             "hair_tokens": [
                 "dark hair slicked back with gel"
             ],
@@ -13808,7 +13802,7 @@
             ],
             "hands_tokens": [
                 "laptop or tablet always in hand",
-                "diamond stud earrings"
+                "natural hands"
             ],
             "posture_tokens": [
                 "tall slim model posture"
@@ -14156,7 +14150,7 @@
                 "natural mouth"
             ],
             "hands_tokens": [
-                "shaved temples long fringe swept to side"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -14183,7 +14177,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -14319,7 +14313,7 @@
             "eye_tokens": [
                 "shrewd brown eyes"
             ],
-            "height_build": "short hair receding",
+            "height_build": "medium stocky build",
             "hair_tokens": [
                 "short hair receding"
             ],
@@ -14491,7 +14485,7 @@
             "eye_tokens": [
                 "steel grey road eyes"
             ],
-            "height_build": "short practical haircut",
+            "height_build": "medium sturdy build",
             "hair_tokens": [
                 "short practical haircut"
             ],
@@ -14702,7 +14696,7 @@
                 "tanned windburned face"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -14727,7 +14721,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "pronounced deep smile lines"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -14851,7 +14845,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "clean young skin wind-flushed cheeks"
+                "natural relaxed posture"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -14875,7 +14869,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -14894,10 +14888,10 @@
                 "thin sparse eyebrows"
             ],
             "lip_texture_tokens": [
-                "full weathered lips"
+                "full natural lips"
             ],
             "chin_tokens": [
-                "double chin"
+                "smooth youthful chin"
             ],
             "nasolabial_tokens": [
                 "asymmetric nasolabial folds"
@@ -14909,7 +14903,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -15042,7 +15036,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "thin-framed glasses"
+                "thin build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -15387,7 +15381,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "intelligent grey-green eyes behind thick-frame glasses"
+                "thin hunched build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -15542,7 +15536,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "clean skin minimal makeup"
+                "natural relaxed posture"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -15566,7 +15560,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "defiant slouching stride, earbuds in"
@@ -15701,7 +15695,7 @@
             "eye_tokens": [
                 "small brown eyes"
             ],
-            "height_build": "short hair shaved temples",
+            "height_build": "tall massive muscular build",
             "hair_tokens": [
                 "short hair shaved temples"
             ],
@@ -15737,7 +15731,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "shoulder tattoo"
+                "tall massive muscular build"
             ],
             "scar_mark_tokens": [
                 "shoulder tattoo"
@@ -16732,7 +16726,7 @@
         "world_aesthetic": "советская классика",
         "biology_override": {
             "age": "86",
-            "height_build": "short grey military-cut hair",
+            "height_build": "short stooped elderly build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "stern face square jaw"
@@ -16943,7 +16937,7 @@
             ],
             "ear_tokens": [
                 "tall straight naval bearing",
-                "neat grey beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "loose sagging neck skin with visible tendons"
@@ -17092,7 +17086,7 @@
                 "attentive brown eyes",
                 "scanning for symptoms"
             ],
-            "height_build": "short-manicured hands smelling of antiseptic",
+            "height_build": "medium slim build",
             "hair_tokens": [
                 "dark hair with grey in tight bun"
             ],
@@ -17266,7 +17260,7 @@
                 "strict blue eyes",
                 "behind taped glasses"
             ],
-            "height_build": "medium build hunched from blackboard",
+            "height_build": "medium build",
             "hair_tokens": [
                 "grey messy hair"
             ],
@@ -17298,7 +17292,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "thick-framed glasses one arm taped with electrical tape"
+                "medium hunched build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -17470,7 +17464,7 @@
                 "large build bull neck"
             ],
             "body_shape_tokens": [
-                "RADIO on shoulder crackling"
+                "large stocky build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -17786,7 +17780,7 @@
                 "squinting brown eyes",
                 "mirror-checking"
             ],
-            "height_build": "short hair receding",
+            "height_build": "stocky medium build",
             "hair_tokens": [
                 "short hair receding"
             ],
@@ -18174,7 +18168,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -18199,10 +18193,10 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "creased thin-skin under eyes"
+                "smooth under-eye area"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -19191,7 +19185,7 @@
                 "pursed perfectionist lips"
             ],
             "hands_tokens": [
-                "gold hoop earrings"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -19212,7 +19206,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "chestnut hair under silk headband"
+                "slim build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -19346,7 +19340,7 @@
         "world_aesthetic": "трейдинг-бессонница",
         "biology_override": {
             "age": "27",
-            "height_build": "short hair high forehead",
+            "height_build": "thin nervous build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "pale dark circles"
@@ -19885,7 +19879,6 @@
                 "straight nose"
             ],
             "mouth_tokens": [
-                "FLIPCHART nearby",
                 "gleaming whitened teeth"
             ],
             "hands_tokens": [
@@ -19904,13 +19897,13 @@
                 "none"
             ],
             "ear_tokens": [
-                "FLIPCHART nearby"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "perfect chestnut waves"
+                "tall fit build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -20580,7 +20573,7 @@
                 "natural mouth"
             ],
             "hands_tokens": [
-                "fringe"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -20607,7 +20600,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "casual youthful stride, natural energy"
@@ -20626,7 +20619,7 @@
                 "thick bushy gray eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin pressed lips with deep vertical lines"
+                "thin natural lips"
             ],
             "chin_tokens": [
                 "cleft chin"
@@ -20635,7 +20628,7 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "creased thin-skin under eyes"
+                "smooth under-eye area"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -21467,7 +21460,7 @@
                 "chin scar"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "casual youthful stride, natural energy"
@@ -21641,7 +21634,7 @@
                 "freckles"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -21660,7 +21653,7 @@
                 "wild unkempt eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin pressed lips with deep vertical lines"
+                "thin natural lips"
             ],
             "chin_tokens": [
                 "rounded stubborn chin"
@@ -21675,7 +21668,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "healthy natural teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -21987,7 +21980,7 @@
                 "freckle constellation"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -22496,7 +22489,7 @@
                 "short red beard"
             ],
             "ear_tokens": [
-                "short red beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
@@ -22809,7 +22802,7 @@
         "world_aesthetic": "стадион-школа",
         "biology_override": {
             "age": "38",
-            "height_build": "short sun-bleached hair",
+            "height_build": "athletic fit build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "slight roughness around eyes and forehead"
@@ -23186,13 +23179,13 @@
                 "none"
             ],
             "ear_tokens": [
-                "piano always nearby"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "long loose chestnut hair"
+                "slim build"
             ],
             "scar_mark_tokens": [
                 "silk scarf with music notes pattern"
@@ -23325,7 +23318,7 @@
         "world_aesthetic": "мастерская-школа",
         "biology_override": {
             "age": "52",
-            "height_build": "large broad hands",
+            "height_build": "large broad build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "fine lines and early age spots"
@@ -23362,18 +23355,15 @@
                 "thick auburn beard with grey"
             ],
             "ear_tokens": [
-                "SAWDUST IN BEARD constantly",
-                "thick auburn beard with grey"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "large broad hands"
+                "large broad build"
             ],
-            "scar_mark_tokens": [
-                "thick auburn beard with grey"
-            ],
+            "scar_mark_tokens": [],
             "voice_texture_tokens": [
                 "age-weathered male voice"
             ],
@@ -23502,7 +23492,7 @@
         "world_aesthetic": "кабинет-английского",
         "biology_override": {
             "age": "41",
-            "height_build": "thin glasses",
+            "height_build": "medium neat build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "slight roughness around eyes and forehead"
@@ -23542,7 +23532,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "chestnut bob"
+                "medium neat build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -24226,13 +24216,13 @@
                 "THICK RED BEARD to chest"
             ],
             "ear_tokens": [
-                "THICK RED BEARD to chest"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "HUGE HEADPHONES on neck"
             ],
             "body_shape_tokens": [
-                "THICK RED BEARD to chest"
+                "thick build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -24366,7 +24356,7 @@
         "world_aesthetic": "студия-минимализм",
         "biology_override": {
             "age": "27",
-            "height_build": "short precise bob",
+            "height_build": "slim petite build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "smooth youthful skin with minor natural blemishes"
@@ -24540,7 +24530,7 @@
         "world_aesthetic": "офис-баголовка",
         "biology_override": {
             "age": "29",
-            "height_build": "short neat hair",
+            "height_build": "medium attentive build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "smooth youthful skin with minor natural blemishes"
@@ -24714,7 +24704,7 @@
         "world_aesthetic": "офис-таблицы",
         "biology_override": {
             "age": "31",
-            "height_build": "THIN SILVER-FRAME GLASSES",
+            "height_build": "slim fit build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "smooth youthful skin with minor natural blemishes"
@@ -24754,7 +24744,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "THIN SILVER-FRAME GLASSES"
+                "slim fit build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -24922,13 +24912,13 @@
                 "unkempt beard"
             ],
             "ear_tokens": [
-                "unkempt beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "BUNDLE OF CABLES on shoulder like bandolier"
+                "heavyset build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -25102,7 +25092,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "loose chestnut hair"
+                "average build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -25270,7 +25260,7 @@
                 "trimmed beard"
             ],
             "ear_tokens": [
-                "trimmed beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
@@ -25583,7 +25573,7 @@
         "world_aesthetic": "ринг-зал",
         "biology_override": {
             "age": "45",
-            "height_build": "short hair grey temples",
+            "height_build": "wiry lean build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "slight roughness around eyes and forehead"
@@ -25623,7 +25613,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "towel on shoulder"
+                "wiry lean build"
             ],
             "scar_mark_tokens": [
                 "scar on eyebrow"
@@ -26445,7 +26435,7 @@
         "world_aesthetic": "бокс-кроссфит",
         "biology_override": {
             "age": "30",
-            "height_build": "short ponytail loose strands",
+            "height_build": "muscular sturdy build",
             "skin_tokens": [
                 "tanned skin callused palms",
                 "hyper-realistic skin microtexture with visible pores"
@@ -26484,7 +26474,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "BRIGHT KINESIO TAPE on shoulders and knees"
+                "muscular sturdy build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -26617,7 +26607,7 @@
         "world_aesthetic": "бассейн-бортик",
         "biology_override": {
             "age": "29",
-            "height_build": "short chlorine-bleached blond",
+            "height_build": "broad-shouldered V-shape swimmer build",
             "skin_tokens": [
                 "light skin slight tan",
                 "hyper-realistic skin microtexture with visible pores"
@@ -27690,7 +27680,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "TOWEL OVER SHOULDER"
+                "slim build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -29413,7 +29403,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "thin-frame glasses"
+                "tall thin build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -29740,7 +29730,7 @@
             ],
             "hands_tokens": [
                 "UNBOXING KNIFE utility blade in hand",
-                "dark hair side fringe"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -29935,13 +29925,13 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "soft chestnut waves"
+                "slim build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "young female voice"
             ],
             "gait_tokens": [
                 "casual youthful stride, natural energy"
@@ -30115,7 +30105,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -30140,7 +30130,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -30149,7 +30139,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -30283,7 +30273,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "BABY FOOD STAIN on shoulder"
+                "average build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -30797,7 +30787,7 @@
                 "neat beard"
             ],
             "ear_tokens": [
-                "neat beard"
+                "natural ears proportional to face"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
@@ -30976,7 +30966,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "dyed chestnut hair"
+                "plump build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -31299,7 +31289,7 @@
                 "pursed lips"
             ],
             "hands_tokens": [
-                "PEARL EARRINGS family heirloom"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
@@ -31666,7 +31656,7 @@
                 "slight neck creasing with visible throat movement"
             ],
             "body_shape_tokens": [
-                "GOLD-FRAME GLASSES"
+                "tall commanding build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -32184,7 +32174,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "blow dryer on hip"
+                "slim build"
             ],
             "scar_mark_tokens": [
                 "no prominent scars or marks"
@@ -32317,7 +32307,7 @@
         "world_aesthetic": "квартира-щиток",
         "biology_override": {
             "age": "52",
-            "height_build": "short hair",
+            "height_build": "thin wiry build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "fine lines and early age spots"
@@ -32528,7 +32518,7 @@
                 "smooth neck with natural skin texture"
             ],
             "body_shape_tokens": [
-                "chestnut braid"
+                "medium build"
             ],
             "scar_mark_tokens": [
                 "freckles"
@@ -32661,7 +32651,7 @@
         "world_aesthetic": "гараж-яма",
         "biology_override": {
             "age": "40",
-            "height_build": "short hair",
+            "height_build": "sturdy medium build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "slight roughness around eyes and forehead"
@@ -33178,7 +33168,7 @@
         "world_aesthetic": "рынок-палатка",
         "biology_override": {
             "age": "28",
-            "height_build": "short hair",
+            "height_build": "thin quick build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "smooth youthful skin with minor natural blemishes"
@@ -33569,7 +33559,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "adolescent male voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -33594,10 +33584,10 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "creased thin-skin under eyes"
+                "smooth under-eye area"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -33698,7 +33688,7 @@
         "world_aesthetic": "спортзал-зеркало",
         "biology_override": {
             "age": "19",
-            "height_build": "short hair shaved temples",
+            "height_build": "young muscular build",
             "skin_tokens": [
                 "hyper-realistic skin microtexture with visible pores",
                 "smooth youthful skin with minor natural blemishes"
@@ -33743,7 +33733,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "young male voice"
             ],
             "gait_tokens": [
                 "TikTok-ready bounce, always camera-aware"
@@ -33762,7 +33752,7 @@
                 "neat trimmed eyebrows"
             ],
             "lip_texture_tokens": [
-                "full weathered lips"
+                "full natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -33917,7 +33907,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "adolescent female voice"
             ],
             "gait_tokens": [
                 "fidgety quick steps, phone-checking walk"
@@ -33942,7 +33932,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "pronounced deep smile lines"
+                "faint nasolabial creases"
             ],
             "undereye_tokens": [
                 "deep purple-brown under-eye bags"
@@ -33951,7 +33941,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "healthy white teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -34066,7 +34056,7 @@
             ],
             "hands_tokens": [
                 "DRILL in hand activated at 7am",
-                "bald with hair fringe"
+                "natural hands"
             ],
             "posture_tokens": [
                 "natural relaxed posture"
