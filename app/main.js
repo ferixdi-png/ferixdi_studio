@@ -4837,7 +4837,7 @@ function initConsultation() {
       const loc = state.locations?.find(l => l.id === state.selectedLocation);
       if (loc) context.location = loc.name_ru || loc.scene_en;
     }
-    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'Копия видео', meme: 'Мем-ремейк', product: 'Продукт в кадре' }[state.generationMode] || state.generationMode;
+    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'Копия видео', meme: 'Мем-ремейк' }[state.generationMode] || state.generationMode;
     if (state.category) context.category = state.category;
     if (state.lastResult?.dialogue_A) context.lastDialogueA = state.lastResult.dialogue_A.slice(0, 200);
     if (state.lastResult?.dialogue_B) context.lastDialogueB = state.lastResult.dialogue_B.slice(0, 200);
