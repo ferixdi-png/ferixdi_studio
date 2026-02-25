@@ -1865,9 +1865,10 @@ function handleVideoFile(file) {
     }
     URL.revokeObjectURL(url);
 
-    // Show remake badge (both advanced and main page)
+    // Show remake badge and auto-match button (both advanced and main page)
     document.getElementById('video-remake-badge')?.classList.remove('hidden');
     document.getElementById('video-remake-badge-main')?.classList.remove('hidden');
+    document.getElementById('auto-match-cast-btn')?.classList.remove('hidden');
 
     // Auto-switch to video mode
     state.inputMode = 'video';
@@ -1883,6 +1884,112 @@ function handleVideoFile(file) {
 
   video.src = url;
 }
+
+// ─── AUTO-MATCH CAST by video context ────────
+async function autoMatchCast() {
+  const btn = document.getElementById('auto-match-cast-btn');
+  const resultEl = document.getElementById('auto-match-result');
+  if (!state.videoMeta?.cover_base64 && !state._videoFileBase64) {
+    log('WARN', 'ПОДБОР', 'Сначала загрузи видео');
+    return;
+  }
+  if (!state.characters?.length) {
+    log('WARN', 'ПОДБОР', 'Каталог персонажей пуст');
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ AI анализирует видео...'; }
+  if (resultEl) resultEl.classList.add('hidden');
+
+  const token = localStorage.getItem('ferixdi_jwt');
+  const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+  if (!token) { log('WARN', 'ПОДБОР', 'Нет авторизации'); if (btn) { btn.disabled = false; btn.textContent = '🎯 Подобрать персонажей и локацию автоматически'; } return; }
+
+  // Build compact catalogs
+  const characters = state.characters.map(c => ({
+    id: c.id,
+    name_ru: c.name_ru,
+    character_en: c.prompt_tokens?.character_en || '',
+    group: c.group || '',
+    short_desc: `${c.biology_override?.age || ''}yo ${c.appearance_ru || ''}`
+  }));
+  const locations = (state.locations || []).map(l => ({
+    id: l.id,
+    name_ru: l.name_ru,
+    scene_en: l.scene_en || ''
+  }));
+
+  const payload = {
+    video_title: state.videoMeta?.name || '',
+    scene_hint: document.getElementById('scene-hint-main')?.value?.trim() || document.getElementById('scene-hint')?.value?.trim() || '',
+    characters,
+    locations,
+  };
+  // Attach cover image for visual analysis
+  if (state.videoMeta?.cover_base64) {
+    payload.video_cover = state.videoMeta.cover_base64;
+    payload.video_cover_mime = 'image/jpeg';
+  }
+
+  try {
+    const resp = await fetch(`${apiBase}/api/match-cast`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(payload),
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${resp.status}`);
+    }
+    const result = await resp.json();
+
+    // Apply character A
+    const reasons = [];
+    if (result.character_a_id) {
+      const charA = state.characters.find(c => c.id === result.character_a_id);
+      if (charA) {
+        state.selectedA = charA;
+        reasons.push(`<strong>A:</strong> ${charA.name_ru} — ${result.character_a_reason || ''}`);
+        log('OK', 'ПОДБОР', `A: ${charA.name_ru}`);
+      }
+    }
+    // Apply character B
+    if (result.character_b_id) {
+      const charB = state.characters.find(c => c.id === result.character_b_id);
+      if (charB) {
+        state.selectedB = charB;
+        reasons.push(`<strong>B:</strong> ${charB.name_ru} — ${result.character_b_reason || ''}`);
+        log('OK', 'ПОДБОР', `B: ${charB.name_ru}`);
+      }
+    }
+    // Apply location
+    if (result.location_id) {
+      const loc = state.locations.find(l => l.id === result.location_id);
+      if (loc) {
+        state.selectedLocation = loc.id;
+        reasons.push(`<strong>Локация:</strong> ${loc.name_ru} — ${result.location_reason || ''}`);
+        log('OK', 'ПОДБОР', `Локация: ${loc.name_ru}`);
+        renderLocations(document.getElementById('loc-group-filter')?.value || '');
+      }
+    }
+
+    // Update UI
+    updateCharDisplay();
+    renderCharacters(getCurrentFilters());
+    updateReadiness();
+
+    if (resultEl && reasons.length) {
+      resultEl.innerHTML = '🎯 <strong>AI подобрал:</strong><br>' + reasons.join('<br>');
+      resultEl.classList.remove('hidden');
+    }
+    log('OK', 'ПОДБОР', `Готово — ${reasons.length} элементов подобрано`);
+  } catch (e) {
+    log('ERR', 'ПОДБОР', `Ошибка: ${e.message}`);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🎯 Подобрать персонажей и локацию автоматически'; }
+  }
+}
+window.autoMatchCast = autoMatchCast;
 
 // ─── VIDEO DROPZONE (main generate page) ────
 function initVideoDropzoneMain() {

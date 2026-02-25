@@ -2390,6 +2390,94 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
   }
 });
 
+// ─── POST /api/match-cast — Auto-pick characters + location by video context ──
+app.post('/api/match-cast', authMiddleware, async (req, res) => {
+  const GEMINI_KEY = nextGeminiKey();
+  if (!GEMINI_KEY) return res.status(503).json({ error: 'AI-движок не настроен.' });
+
+  const userId = req.user?.hash || getClientIP(req);
+  if (!checkRateLimit(`match:${userId}`, 60_000, 10)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+
+  const { video_title, video_cover, video_cover_mime, scene_hint, characters, locations } = req.body;
+  if (!characters?.length) return res.status(400).json({ error: 'Нужен каталог персонажей.' });
+
+  // Build compact catalog for Gemini (id + short description)
+  const charCatalog = characters.map(c => `${c.id}: ${c.name_ru} — ${c.short_desc || c.character_en?.slice(0, 80) || ''}${c.group ? ' [' + c.group + ']' : ''}`).join('\n');
+  const locCatalog = locations?.length ? locations.map(l => `${l.id}: ${l.name_ru || l.scene_en?.slice(0, 60) || l.id}`).join('\n') : '';
+
+  const prompt = `Ты — AI-кастинг-директор для FERIXDI Studio. Тебе дано описание оригинального видео. Подбери из каталога персонажей двух наиболее ПОХОЖИХ на людей из оригинала (по возрасту, полу, телосложению, стилю, энергии). Также подбери наиболее подходящую локацию.
+
+ОРИГИНАЛ ВИДЕО:
+${video_title ? `Название: "${video_title}"` : ''}
+${scene_hint ? `Описание: "${scene_hint}"` : ''}
+${video_cover ? '(К запросу прикреплён кадр из видео — анализируй внешность, обстановку, настроение)' : ''}
+
+КАТАЛОГ ПЕРСОНАЖЕЙ (id: имя — описание [группа]):
+${charCatalog}
+
+${locCatalog ? `КАТАЛОГ ЛОКАЦИЙ (id: название):
+${locCatalog}` : ''}
+
+ПРАВИЛА ПОДБОРА:
+1. Персонаж A (провокатор) — кто визуально ближе к ПЕРВОМУ/главному человеку в видео
+2. Персонаж B (панчлайн) — кто визуально ближе ко ВТОРОМУ человеку
+3. Если в видео один человек — выбери только A, B = null
+4. Локация — максимально похожая на обстановку в видео
+5. Приоритет: пол → возраст → телосложение → стиль → энергетика
+6. Объясни кратко ПОЧЕМУ выбрал именно этих (1 предложение на каждого)
+
+Ответь ТОЛЬКО JSON:
+{
+  "character_a_id": "id_персонажа",
+  "character_a_reason": "почему выбран",
+  "character_b_id": "id_персонажа или null",
+  "character_b_reason": "почему выбран или null",
+  "location_id": "id_локации или null",
+  "location_reason": "почему выбрана или null"
+}`;
+
+  const parts = [{ text: prompt }];
+  if (video_cover) {
+    parts.push({ inline_data: { mime_type: video_cover_mime || 'image/jpeg', data: video_cover } });
+  }
+
+  try {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { temperature: 0.3, maxOutputTokens: 512, responseMimeType: 'application/json' },
+      }),
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) {
+      return res.status(resp.status).json({ error: `AI ошибка: ${data.error?.message || 'unknown'}` });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) return res.status(422).json({ error: 'AI не вернул результат.' });
+
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch {
+      const m = text.match(/\{[\s\S]*\}/);
+      if (m) result = JSON.parse(m[0]);
+      else return res.status(422).json({ error: 'Не удалось распарсить ответ AI.' });
+    }
+
+    res.json(result);
+  } catch (e) {
+    console.error('Match-cast error:', e.message);
+    res.status(500).json({ error: 'Ошибка при подборе персонажей.' });
+  }
+});
+
 // ─── POST /api/consult — Free AI consultation (NO auth required) ──────
 app.post('/api/consult', async (req, res) => {
   const ip = getClientIP(req);

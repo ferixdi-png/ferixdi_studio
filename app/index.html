@@ -422,6 +422,10 @@
             <div id="video-remake-badge-main" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
               🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами
             </div>
+            <button id="auto-match-cast-btn" class="hidden w-full py-2.5 rounded-lg text-[12px] font-bold transition-all border bg-emerald-600/15 text-emerald-300 border-emerald-500/25 hover:bg-emerald-600/30 hover:border-emerald-500/50 active:scale-[0.98]" onclick="autoMatchCast()">
+              🎯 Подобрать персонажей и локацию автоматически
+            </button>
+            <div id="auto-match-result" class="hidden text-[11px] text-emerald-300 bg-emerald-500/8 border border-emerald-500/15 rounded-lg p-2.5 leading-relaxed"></div>
             <div>
               <label class="text-xs text-gray-400 font-medium mb-1 block">🎬 Контекст видео (необязательно):</label>
               <textarea id="scene-hint-main" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст"></textarea>
