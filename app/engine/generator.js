@@ -1361,7 +1361,7 @@ function buildVeoPrompt(opts) {
   const ageNumB = parseInt(String(charB.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
 
   // Camera style
-  const camStyle = 'Smartphone front camera selfie video, 9:16 vertical portrait, handheld with natural micro-jitter and breathing oscillation. Slight computational portrait-mode bokeh on background. Phone sensor noise in shadows.';
+  const camStyle = 'Smartphone video, 9:16 vertical portrait, medium shot (waist-up framing — NOT close-up talking heads). Device INVISIBLE — hands busy with props. Handheld micro-jitter and breathing oscillation. RAW phone aesthetic: sensor noise ISO 800-1600, blown highlights, JPEG artifacts. Computational portrait-mode bokeh on background.';
 
   // Location brief — use full location for richer setting
   const locBrief = location.split(',').slice(0, 3).join(',').trim();
@@ -1434,7 +1434,7 @@ function buildVeoPrompt(opts) {
 
   if (soloMode) {
     // ── SOLO MODE: single character monologue ──
-    lines.push(`A hyper-realistic smartphone selfie video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. ${camStyle}`);
+    lines.push(`A hyper-realistic smartphone video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. Medium shot (waist-up). ${camStyle}`);
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
@@ -1449,7 +1449,7 @@ function buildVeoPrompt(opts) {
   } else {
     // ── DUO MODE: two characters dialogue ──
     const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
-    lines.push(`A hyper-realistic smartphone selfie video of ${pairAgeDesc} characters in a heated comedic argument. ${camStyle}`);
+    lines.push(`A hyper-realistic smartphone video of ${pairAgeDesc} characters in a heated comedic argument. Medium shot (waist-up). ${camStyle}`);
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
@@ -1460,7 +1460,7 @@ function buildVeoPrompt(opts) {
     // Scene flow
     lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. B listens silently with sealed lips, only eyes reacting.`);
+    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED — only micro-expressions: side-eye, nostrils flaring, one eyebrow raising.`);
     lines.push('');
 
     if (dA2) {
@@ -1473,7 +1473,7 @@ function buildVeoPrompt(opts) {
     lines.push('');
     const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
     const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
-    lines.push(`Both burst into genuine laughter — both lean into each other laughing, brief embrace. ${laughA} from A, ${laughB} from B. Camera shakes from their body tremor. Warm shared moment.`);
+    lines.push(`Both burst into genuine raspy laughter — both lean into each other, shoulders shaking, ${laughA} from A, ${laughB} from B. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. Warm shared moment.`);
   }
   lines.push('');
 
@@ -1502,7 +1502,7 @@ function buildVeoPrompt(opts) {
     : locLower.includes('store') || locLower.includes('магазин') || locLower.includes('shop') ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
     : locLower.includes('corridor') || locLower.includes('коридор') || locLower.includes('hallway') ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
     : 'subtle room ambiance, quiet hum, occasional creak, distant muffled sounds';
-  lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Fabric rustle on every movement. Audible breathing between speaking turns. Saliva clicks on hard consonants. Laughter 20-30% louder than dialogue. No music.`);
+  lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Minimum 2 specific micro-sounds from this location. Fabric rustle on every movement. Audible inhale before each speaking turn. Saliva clicks on т/к/п/д consonants, lip smack, tongue contact on л/н. Laughter 20-30% louder — raspy, contagious. No music.`);
   lines.push('');
 
   // Style/negative
