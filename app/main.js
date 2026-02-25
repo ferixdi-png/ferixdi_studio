@@ -3598,7 +3598,9 @@ function initTranslate() {
       if (kw && en.killer_word_en) kw.textContent = `💥 Killer word: «${en.killer_word_en}»`;
 
       // Update Veo prompt (both DOM and state)
-      if (en.veo_prompt_en) {
+      // REMAKE mode: veo_prompt is already remake_veo_prompt_en (fully English, ultra-detailed)
+      // — do NOT overwrite with re-translated version that Gemini may paraphrase/shorten
+      if (en.veo_prompt_en && !result.is_remake) {
         result.veo_prompt = en.veo_prompt_en;
         document.getElementById('veo-prompt-text').textContent = en.veo_prompt_en;
       }

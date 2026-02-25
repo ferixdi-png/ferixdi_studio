@@ -1236,14 +1236,14 @@ ${soloMode ? `  "dialogue_A_ru": "15-30 слов монолог, макс 2 си
   "dialogue_B_ru": "${remake_mode ? 'ДОСЛОВНАЯ копия речи из оригинала — сколько слов в оригинале столько и здесь (обычно 6-25 слов), макс 2 символа |, killer word ПОСЛЕДНЕЕ' : '6-18 слов, макс 1 символ |, killer word ПОСЛЕДНЕЕ (если нет добивки), НЕ начинай с Зато'}",
   "dialogue_A2_ru": "${remake_mode ? 'ДОБИВКА если есть в оригинале — дословно. null если в оригинале нет' : 'ДОБИВКА от A — 1-4 слова, короткая финальная фраза. null если добивки нет. Используй ТОЛЬКО если структура оригинала предполагает добивку или если она усиливает комедию'}",`}
   "killer_word": "ОДНО слово — последнее слово из ПОСЛЕДНЕЙ реплики${soloMode ? ' (монолога)' : ' (dialogue_B_ru или dialogue_A2_ru если есть добивка)'}",
-  "photo_scene_en": "${remake_mode ? 'КОПИЯ СЦЕНЫ ИЗ ОРИГИНАЛА с нашими персонажами. Опиши ТУ ЖЕ локацию, ракурс камеры, композицию, действие, позы, освещение что в оригинале. Если в оригинале НЕ selfie — НЕ пиши selfie! Если в оригинале спортзал/улица/площадка — описывай ЭТУ локацию. 150-250 слов EN' : 'Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) from which video begins — MUST match hook_en poses/expressions... 150-250 слов на английском'}",
+  "photo_scene_en": "${remake_mode ? 'КОПИЯ СЦЕНЫ ИЗ ОРИГИНАЛА с нашими персонажами. ТА ЖЕ локация, ракурс, композиция, позы, освещение. Для КАЖДОГО персонажа — ДОСЛОВНО вставь character_en из Identity Lock + wardrobe_anchor + signature_element. НЕ пиши selfie если в оригинале другой ракурс. Персонажи в СВОЕЙ одежде, НЕ из оригинала. 150-250 слов EN + negative prompt' : 'Smartphone selfie photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.6s) from which video begins — MUST match hook_en poses/expressions... 150-250 слов на английском'}",
   "video_emotion_arc": {
-    "hook_en": "0.0-0.6s: описание на английском",
-${soloMode ? `    "monologue_en": "0.6-7.3s: описание монолога на английском — один персонаж, прямо в камеру, killer word ≈ 7.1s",` : `    "act_A_en": "0.6-3.8s: описание на английском",
-    "act_B_en": "3.8-7.3s: описание на английском",`}
-    "release_en": "${soloMode ? '7.3-8.0s' : '7.3-8.0s'}: описание на английском"
+    "hook_en": "0.0-0.6s: ${remake_mode ? 'СКОПИРУЙ тип хука из оригинала + signature micro_gesture A. Описание на английском' : 'описание на английском'}",
+${soloMode ? `    "monologue_en": "0.6-7.3s: описание монолога на английском — один персонаж, прямо в камеру, killer word ≈ 7.1s",` : `    "act_A_en": "0.6-3.8s: ${remake_mode ? 'СКОПИРУЙ темп и паузы из оригинала + micro_gesture A, reaction B без слов' : 'описание на английском'}",
+    "act_B_en": "3.8-7.3s: ${remake_mode ? 'СКОПИРУЙ ритм доставки killer word из оригинала + contempt/anger expression B' : 'описание на английском'}",`}
+    "release_en": "7.3-8.0s: ${remake_mode ? 'СКОПИРУЙ тип финала из оригинала + laugh_style обоих персонажей. Rewatch-bait micro-expression' : 'описание на английском'}"
   },
-  "video_atmosphere_en": "80-100 слов на английском",
+  "video_atmosphere_en": "${remake_mode ? 'СКОПИРУЙ атмосферу оригинала: звуки локации, реверб по размеру помещения, room tone, шорохи, фоновый шум. 80-120 слов EN' : '80-100 слов на английском'}",
   "viral_title_ru": "заголовок на русском",
   "share_bait_ru": "описание видео для пересылки — живая фраза в контексте видео, макс 120 символов",
   "pin_comment_ru": "закреп на русском",
@@ -2762,7 +2762,7 @@ pin_comment: "${esc(pin_comment)}"
 first_comment: "${esc(first_comment)}"
 hashtags: ${JSON.stringify(hashtags || [])}
 ${series_tag ? `series_tag: "${esc(series_tag)}"` : ''}
-${veo_prompt ? `\nveo_prompt (translate ONLY the Russian dialogue lines inside, keep everything else as-is):\n---\n${veo_prompt.slice(0, 3000)}\n---` : ''}
+${veo_prompt ? `\nveo_prompt (translate ONLY the Russian dialogue lines inside, keep everything else as-is):\n---\n${veo_prompt.slice(0, 5000)}\n---` : ''}
 ${ru_package ? `\nru_package (FULL production package in Russian — translate EVERYTHING to English, preserve emoji structure and formatting):\n---\n${ru_package.slice(0, 5000)}\n---` : ''}
 
 Return ONLY valid JSON (no markdown):
