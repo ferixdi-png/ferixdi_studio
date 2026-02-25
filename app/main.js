@@ -3710,7 +3710,8 @@ function initTranslate() {
       // — do NOT overwrite with re-translated version that Gemini may paraphrase/shorten
       if (en.veo_prompt_en && !result.is_remake) {
         result.veo_prompt = en.veo_prompt_en;
-        document.getElementById('veo-prompt-text').textContent = en.veo_prompt_en;
+        const veoEl = document.getElementById('veo-prompt-text');
+        if (veoEl) veoEl.textContent = en.veo_prompt_en;
       }
 
       // Update video prompt JSON dialogue
@@ -3718,7 +3719,8 @@ function initTranslate() {
         if (en.dialogue_A_en) result.video_prompt_en_json.dialogue.final_A_ru = en.dialogue_A_en;
         if (en.dialogue_B_en) result.video_prompt_en_json.dialogue.final_B_ru = en.dialogue_B_en;
         if (en.killer_word_en) result.video_prompt_en_json.dialogue.killer_word = en.killer_word_en;
-        document.querySelector('#tab-video pre').textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
+        const videoPreEl = document.querySelector('#tab-video pre');
+        if (videoPreEl) videoPreEl.textContent = JSON.stringify(result.video_prompt_en_json, null, 2);
       }
 
       // Update blueprint dialogue segments
@@ -3730,7 +3732,8 @@ function initTranslate() {
         if (segB && en.dialogue_B_en) segB.text_ru = en.dialogue_B_en;
         if (segA2 && en.dialogue_A2_en) segA2.text_ru = en.dialogue_A2_en;
         if (en.killer_word_en) result.blueprint_json.killer_word = en.killer_word_en;
-        document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
+        const bpPreEl = document.querySelector('#tab-blueprint pre');
+        if (bpPreEl) bpPreEl.textContent = JSON.stringify(result.blueprint_json, null, 2);
       }
 
       // Update insta tab with English content
@@ -3749,7 +3752,8 @@ function initTranslate() {
       // Update ru_package tab (now English)
       if (en.ru_package_en) {
         result.ru_package = en.ru_package_en;
-        document.querySelector('#tab-ru pre').textContent = en.ru_package_en;
+        const ruPreEl = document.querySelector('#tab-ru pre');
+        if (ruPreEl) ruPreEl.textContent = en.ru_package_en;
       }
 
       // Update dialogue editor inputs

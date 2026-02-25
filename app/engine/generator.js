@@ -1195,7 +1195,7 @@ function runQCGate(blueprint, cast) {
     { id: 'h2', name_ru: 'Реализм рта', name_en: 'mouth_realistic', pass: true, hard: true, group: 'лицо', desc_fix: 'Артикуляция синхронизирована с речью' },
     { id: 'h3', name_ru: 'Тишина B при речи A', name_en: 'silent_sealed', pass: true, hard: true, group: 'аудио', desc_fix: 'Рот B заблокирован на сегменте A' },
     { id: 'h4', name_ru: 'Нет наложений аудио', name_en: 'audio_no_overlap', pass: true, hard: true, group: 'аудио', desc_fix: 'Сегменты не пересекаются' },
-    { id: 'h5', name_ru: 'Хук читаем', name_en: 'hook_timing', pass: true, hard: false, group: 'тайминг', desc_fix: 'Хук ≤0.6с — внимание захвачено' },
+    { id: 'h5', name_ru: 'Хук читаем', name_en: 'hook_timing', pass: true, hard: false, group: 'тайминг', desc_fix: 'Хук ≤0.7с — внимание захвачено' },
     { id: 'h6', name_ru: 'Killer word на месте', name_en: 'killer_word_position', pass: true, hard: false, group: 'тайминг', desc_fix: 'Ударное слово в последней трети B' },
     { id: 'h7', name_ru: 'Release без слов', name_en: 'release_clean', pass: true, hard: false, group: 'тайминг', desc_fix: 'Финал — только смех, 0 слов' },
     { id: 'h8', name_ru: 'Фон без паттернов', name_en: 'background_solid', pass: true, hard: false, group: 'сцена', desc_fix: 'Фон натуральный, без артефактов' },
