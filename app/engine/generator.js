@@ -2442,7 +2442,20 @@ ${(g.assembly_tips_ru || []).map((t, i) => `${i + 1}. ${t}`).join('\n')}`;
 
   // ── 1. Photo prompt: replace scene with Gemini's ultra-detailed version ──
   if (g.photo_scene_en) {
-    r.photo_prompt_en_json.scene = g.photo_scene_en;
+    // ── IDENTITY LOCK: append canonical character_en to photo scene ──
+    const cA = ctx.charA;
+    const cB = ctx.charB;
+    const idA = cA?.prompt_tokens?.character_en;
+    const idB = cB?.prompt_tokens?.character_en;
+    let photoScene = g.photo_scene_en;
+    if (idA || idB) {
+      const idBlock = [
+        idA ? `EXACT CHARACTER A: ${idA}. Wardrobe: ${cA.identity_anchors?.wardrobe_anchor || ctx.wardrobeA || ''}. Signature: ${cA.identity_anchors?.signature_element || ''}.` : '',
+        idB ? `EXACT CHARACTER B: ${idB}. Wardrobe: ${cB.identity_anchors?.wardrobe_anchor || ctx.wardrobeB || ''}. Signature: ${cB.identity_anchors?.signature_element || ''}.` : '',
+      ].filter(Boolean).join(' ');
+      photoScene += ' ' + idBlock;
+    }
+    r.photo_prompt_en_json.scene = photoScene;
   }
 
   // ── 2. Video prompt: replace dialogue (Gemini generates fresh lines) ──
@@ -2691,7 +2704,26 @@ ${firstComment}
   // In REMAKE mode: if Gemini provided remake_veo_prompt_en (visual copy of original video),
   // use it directly — it describes the SAME scene/action as the original, not a generic dialogue template.
   if (g.remake_veo_prompt_en && ctx.remake_mode) {
-    r.veo_prompt = g.remake_veo_prompt_en;
+    // ── IDENTITY LOCK ENFORCEMENT ──
+    // Gemini paraphrases character descriptions instead of copying verbatim.
+    // Inject canonical character_en from catalog to guarantee identity consistency.
+    const charA = ctx.charA;
+    const charB = ctx.charB;
+    const canonicalA = charA?.prompt_tokens?.character_en;
+    const canonicalB = charB?.prompt_tokens?.character_en;
+    let remakePrompt = g.remake_veo_prompt_en;
+
+    // Append identity override block so Veo always gets the exact catalog descriptions
+    if (canonicalA || canonicalB) {
+      const identityBlock = [
+        '\n\n[IDENTITY LOCK — EXACT CHARACTER DESCRIPTIONS (override any paraphrased versions above)]:',
+        canonicalA ? `CHARACTER A (${charA.name_ru || 'A'}): ${canonicalA}. Wardrobe: ${charA.identity_anchors?.wardrobe_anchor || ctx.wardrobeA || ''}. Signature: ${charA.identity_anchors?.signature_element || ''}.` : '',
+        canonicalB ? `CHARACTER B (${charB.name_ru || 'B'}): ${canonicalB}. Wardrobe: ${charB.identity_anchors?.wardrobe_anchor || ctx.wardrobeB || ''}. Signature: ${charB.identity_anchors?.signature_element || ''}.` : '',
+      ].filter(Boolean).join('\n');
+      remakePrompt += identityBlock;
+    }
+
+    r.veo_prompt = remakePrompt;
     r.is_remake = true; // Flag for main.js: DO NOT re-translate this prompt (it's already English)
   } else {
     const isExplicitIndoorMerge = /interior|kitchen|stairwell|marshrutka|polyclinic|barn|attic|cellar|bathhouse|bedroom|living.?room|apartment|office|elevator|corridor|hallway|basement|laundry|fridge|garage|bathroom|sauna|gym|cafe|restaurant|shop|store|classroom|library|closet|studio/i.test(ctx.location || '');
