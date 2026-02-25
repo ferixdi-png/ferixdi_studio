@@ -3244,22 +3244,33 @@ async function callAIEngine(apiContext) {
     payload.meme_context = document.getElementById('meme-context')?.value?.trim() || '';
   }
 
-  const resp = await fetch(`${apiUrl}/api/generate`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 90_000); // 90s timeout
 
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
-    throw new Error(err.error || `API error ${resp.status}`);
+  try {
+    const resp = await fetch(`${apiUrl}/api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+      throw new Error(err.error || `API error ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    return data.ai;
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('Таймаут: AI не ответил за 90 секунд. Попробуйте снова.');
+    throw e;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const data = await resp.json();
-  return data.ai;
 }
 
 // ─── GENERATION HISTORY (localStorage) ──────
@@ -5220,8 +5231,15 @@ function resetAll() {
   state.selectedLocation = null;
   state.videoMeta = null;
   state.productInfo = null;
+  state.referenceStyle = null;
   state.lastResult = null;
   state.category = null;
+  // Free heavy base64 blobs (video up to 50MB, meme up to 10MB)
+  state._videoFileBase64 = null;
+  state._videoFileMime = null;
+  state._memeFileBase64 = null;
+  state._memeFileMime = null;
+  state._memeImageBase64 = null;
   
   // Clear UI inputs
   const inputs = ['idea-input', 'idea-input-custom', 'script-a', 'script-b', 'scene-hint', 'product-description'];

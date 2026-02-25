@@ -58,9 +58,16 @@ async function loadCustomFromGitHub(type) {
   }
 }
 
+const _ghSaveLock = { character: null, location: null };
 async function saveCustomToGitHub(type) {
+  // Serialize saves per type to prevent SHA race conditions (409 conflict)
+  if (_ghSaveLock[type]) await _ghSaveLock[type].catch(() => {});
+  let resolve;
+  _ghSaveLock[type] = new Promise(r => { resolve = r; });
+
   if (!GITHUB_TOKEN) {
     console.warn('[GH] No GITHUB_TOKEN — skipping persist');
+    resolve(); _ghSaveLock[type] = null;
     return false;
   }
   const filePath = type === 'character' ? CUSTOM_CHARS_PATH : CUSTOM_LOCS_PATH;
@@ -88,15 +95,18 @@ async function saveCustomToGitHub(type) {
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
       console.error(`[GH] Save failed ${filePath}: ${resp.status}`, err.message || '');
+      resolve(); _ghSaveLock[type] = null;
       return false;
     }
     const result = await resp.json();
     if (type === 'character') _ghCacheSha.chars = result.content?.sha;
     else _ghCacheSha.locs = result.content?.sha;
     console.log(`[GH] Saved ${filePath} (${items.length} items)`);
+    resolve(); _ghSaveLock[type] = null;
     return true;
   } catch (e) {
     console.error(`[GH] Save error ${filePath}:`, e.message);
+    resolve(); _ghSaveLock[type] = null;
     return false;
   }
 }
@@ -1459,11 +1469,15 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       };
 
       try {
+        const ac = new AbortController();
+        const to = setTimeout(() => ac.abort(), 80_000); // 80s timeout
         const resp = await fetch(geminiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
+          signal: ac.signal,
         });
+        clearTimeout(to);
 
         data = await resp.json();
 
@@ -1766,11 +1780,15 @@ Format your response as a single dense paragraph optimized for AI image generati
       }
     };
 
+    const acProd = new AbortController();
+    const toProd = setTimeout(() => acProd.abort(), 30_000); // 30s timeout
     const resp = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: acProd.signal,
     });
+    clearTimeout(toProd);
 
     const data = await resp.json();
 
@@ -1819,9 +1837,13 @@ app.post('/api/video/fetch', authMiddleware, async (req, res) => {
       const shortcode = match[2];
       // Use Instagram's public oEmbed API for metadata
       const oembedUrl = `https://api.instagram.com/oembed/?url=https://www.instagram.com/p/${shortcode}/`;
+      const acOe = new AbortController();
+      const toOe = setTimeout(() => acOe.abort(), 10_000); // 10s timeout
       const oembedResp = await fetch(oembedUrl, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
+        signal: acOe.signal,
       });
+      clearTimeout(toOe);
 
       if (!oembedResp.ok) {
         return res.status(422).json({ error: 'Instagram: пост не найден или приватный' });
@@ -1832,11 +1854,15 @@ app.post('/api/video/fetch', authMiddleware, async (req, res) => {
       // Try saveig API for actual video URL
       let videoUrl = null;
       try {
+        const acSi = new AbortController();
+        const toSi = setTimeout(() => acSi.abort(), 10_000); // 10s timeout
         const saveigResp = await fetch('https://v3.saveig.app/api/ajaxSearch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0' },
           body: `q=${encodeURIComponent(normalized)}&t=media&lang=en`,
+          signal: acSi.signal,
         });
+        clearTimeout(toSi);
         const saveigData = await saveigResp.json();
         if (saveigData.status === 'ok' && saveigData.data) {
           // Extract first download link from HTML response
@@ -2197,6 +2223,8 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
     // First try WITH online grounding for real-time data
+    const acTrend = new AbortController();
+    const toTrend = setTimeout(() => acTrend.abort(), 60_000); // 60s timeout
     let resp = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2209,13 +2237,17 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
           responseMimeType: 'application/json',
         },
       }),
+      signal: acTrend.signal,
     });
+    clearTimeout(toTrend);
 
     let data = await resp.json();
 
     // If grounding fails (quota/region), retry WITHOUT grounding
     if (!resp.ok) {
       console.warn('Trends grounding failed, retrying without:', data.error?.message);
+      const acTrend2 = new AbortController();
+      const toTrend2 = setTimeout(() => acTrend2.abort(), 60_000);
       resp = await fetch(geminiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2227,7 +2259,9 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
             responseMimeType: 'application/json',
           },
         }),
+        signal: acTrend2.signal,
       });
+      clearTimeout(toTrend2);
       data = await resp.json();
       if (!resp.ok) {
         return res.status(resp.status).json({ error: data.error?.message || 'AI error' });
@@ -2445,6 +2479,8 @@ ${locCatalog}` : ''}
 
   try {
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const ac = new AbortController();
+    const to = setTimeout(() => ac.abort(), 30_000); // 30s timeout
     const resp = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2452,7 +2488,9 @@ ${locCatalog}` : ''}
         contents: [{ parts }],
         generationConfig: { temperature: 0.3, maxOutputTokens: 512, responseMimeType: 'application/json' },
       }),
+      signal: ac.signal,
     });
+    clearTimeout(to);
 
     const data = await resp.json();
     if (!resp.ok) {
@@ -2769,11 +2807,15 @@ STUDIO = СБОРЩИК ПРОМПТОВ: Studio НЕ генерирует ви�
       },
     };
 
+    const acCon = new AbortController();
+    const toCon = setTimeout(() => acCon.abort(), 60_000); // 60s timeout
     const resp = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: acCon.signal,
     });
+    clearTimeout(toCon);
 
     const data = await resp.json();
 
@@ -2879,11 +2921,15 @@ Return ONLY valid JSON (no markdown):
       },
     };
 
+    const acTr = new AbortController();
+    const toTr = setTimeout(() => acTr.abort(), 60_000); // 60s timeout
     const resp = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: acTr.signal,
     });
+    clearTimeout(toTr);
 
     const data = await resp.json();
     if (!resp.ok) {
