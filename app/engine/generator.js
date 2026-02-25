@@ -11,10 +11,10 @@ import { historyCache } from './history_cache.js';
 
 // ─── V2 TIMING GRID ─────────────────────────
 const GRID_V2 = {
-  hook:    { start: 0.0, end: 0.6 },
-  act_A:   { start: 0.6, end: 3.8 },
-  act_B:   { start: 3.8, end: 7.3 },
-  release: { start: 7.3, end: 8.0 },
+  hook:    { start: 0.0, end: 0.7 },
+  act_A:   { start: 0.7, end: 3.5 },
+  act_B:   { start: 3.5, end: 7.0 },
+  release: { start: 7.0, end: 8.0 },
 };
 
 // ─── LOCATIONS (fallback — used when no external locations loaded) ──
@@ -2274,7 +2274,7 @@ ${engage.firstComment}
       A: [GRID_V2.act_A.start, GRID_V2.act_A.end],
       B: [GRID_V2.act_B.start, GRID_V2.act_B.end],
       release: [GRID_V2.release.start, GRID_V2.release.end],
-      killer_word_at: 7.1,
+      killer_word_at: 6.8,
       gap_between_speakers: '0.15-0.25s',
     },
     identity_anchors: soloMode ? {
