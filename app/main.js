@@ -1970,6 +1970,7 @@ async function autoMatchCast() {
         reasons.push(`<strong>Локация:</strong> ${loc.name_ru} — ${result.location_reason || ''}`);
         log('OK', 'ПОДБОР', `Локация: ${loc.name_ru}`);
         renderLocations(document.getElementById('loc-group-filter')?.value || '');
+        renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
       }
     }
 
