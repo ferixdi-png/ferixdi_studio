@@ -4837,7 +4837,10 @@ function initConsultation() {
       const loc = state.locations?.find(l => l.id === state.selectedLocation);
       if (loc) context.location = loc.name_ru || loc.scene_en;
     }
-    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'По видео', meme: 'Мем-ремейк' }[state.generationMode] || state.generationMode;
+    if (state.generationMode) context.mode = { idea: 'Своя идея', suggested: 'Готовые идеи', script: 'Свой диалог', video: 'Копия видео', meme: 'Мем-ремейк', product: 'Продукт в кадре' }[state.generationMode] || state.generationMode;
+    if (state.category) context.category = state.category;
+    if (state.lastResult?.dialogue_A) context.lastDialogueA = state.lastResult.dialogue_A.slice(0, 200);
+    if (state.lastResult?.dialogue_B) context.lastDialogueB = state.lastResult.dialogue_B.slice(0, 200);
     context.hasPromo = isPromoValid();
 
     try {
@@ -4868,10 +4871,20 @@ function initConsultation() {
           } else {
             clearInterval(_typeTimer);
             _typeTimer = null;
-            // Make @ferixdiii a clickable Telegram link
-            responseEl.innerHTML = responseEl.textContent
-              .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '\n')
-              .replace(/@ferixdiii/g, '<a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition-colors">@ferixdiii</a>');
+            // Format markdown-like response into HTML
+            let html = responseEl.textContent
+              .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+              .replace(/\*\*(.+?)\*\*/g, '<strong class="text-amber-300">$1</strong>')
+              .replace(/^[•●▪] (.+)$/gm, '<li class="ml-3">$1</li>')
+              .replace(/^- (.+)$/gm, '<li class="ml-3">$1</li>')
+              .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-3"><strong class="text-amber-400/70">$1.</strong> $2</li>')
+              .replace(/((?:<li[^>]*>.*<\/li>\n?)+)/g, '<ul class="space-y-1 my-1.5">$1</ul>')
+              .replace(/^(={3,}|─{3,})$/gm, '<hr class="border-gray-700/50 my-2"/>')
+              .replace(/^(❓|✅|🚫|📝|═══)(.*)$/gm, '<div class="font-semibold mt-2">$1$2</div>')
+              .replace(/@ferixdiii/g, '<a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition-colors">@ferixdiii</a>')
+              .replace(/@ferixdi\.ai/g, '<a href="https://www.instagram.com/ferixdi.ai/" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition-colors">@ferixdi.ai</a>')
+              .replace(/\n/g, '<br/>');
+            responseEl.innerHTML = html;
           }
         }, 6);
       }
@@ -4891,7 +4904,7 @@ function initConsultation() {
 
       // Clear input after successful response
       input.value = '';
-      if (counterEl) counterEl.textContent = '0 / 500';
+      if (counterEl) counterEl.textContent = '0 / 2000';
 
       log('OK', 'ПОМОЩНИК', `Ответ получен`);
 
