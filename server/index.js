@@ -1513,11 +1513,16 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
     // ── HARD DIALOGUE SANITIZER — code-level enforcement ──
     // Gemini ignores prompt rules, so we fix its output programmatically.
+    // REMAKE/VIDEO MODE: bypass destructive sanitizers — original dialogue must be preserved verbatim.
+    const isRemakeMode = context.input_mode === 'video' || !!context.remake_mode;
+
     const sanitizeLine = (line, maxPipes = 1) => {
       if (!line || typeof line !== 'string') return line;
       let s = line.trim();
-      // Strip dashes
-      s = s.replace(/\s*[—–]\s*/g, ' ').replace(/\s+-\s+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      if (!isRemakeMode) {
+        // Strip dashes (only for generated dialogue, not original)
+        s = s.replace(/\s*[—–]\s*/g, ' ').replace(/\s+-\s+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      }
       // Enforce max N pipes: keep first N, remove the rest
       let pipeCount = 0;
       s = s.replace(/\|/g, () => {
@@ -1528,20 +1533,34 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       return s;
     };
 
+    // In remake mode: only trim whitespace, allow up to 3 pipes (longer original lines may have more timing marks)
+    const remakeSanitize = (line) => {
+      if (!line || typeof line !== 'string') return line;
+      let s = line.trim().replace(/\s{2,}/g, ' ');
+      // Allow up to 3 pipe markers in original dialogue
+      let pipeCount = 0;
+      s = s.replace(/\|/g, () => { pipeCount++; return pipeCount <= 3 ? '|' : ''; });
+      return s;
+    };
+
     if (geminiResult.dialogue_A_ru) {
       const orig = geminiResult.dialogue_A_ru;
-      geminiResult.dialogue_A_ru = sanitizeLine(orig, soloMode ? 2 : 1);
+      geminiResult.dialogue_A_ru = isRemakeMode
+        ? remakeSanitize(orig)
+        : sanitizeLine(orig, soloMode ? 2 : 1);
       if (orig !== geminiResult.dialogue_A_ru) {
         console.log('Sanitized dialogue_A_ru:', { before: orig.slice(0, 100), after: geminiResult.dialogue_A_ru.slice(0, 100) });
       }
     }
 
     if (geminiResult.dialogue_B_ru && !soloMode) {
-      let bLine = sanitizeLine(geminiResult.dialogue_B_ru);
-      // Strip "Зато" from beginning
-      if (/^\s*[Зз]ато\s/i.test(bLine)) {
+      let bLine = isRemakeMode
+        ? remakeSanitize(geminiResult.dialogue_B_ru)
+        : sanitizeLine(geminiResult.dialogue_B_ru);
+
+      // Strip "Зато" from beginning — only for generated dialogue, not original
+      if (!isRemakeMode && /^\s*[Зз]ато\s/i.test(bLine)) {
         bLine = bLine.replace(/^\s*[Зз]ато\s+/i, '').trim();
-        // Capitalize first letter after stripping
         if (bLine.length > 0) bLine = bLine[0].toUpperCase() + bLine.slice(1);
         console.log('Stripped "Зато" from dialogue_B_ru');
       }
@@ -1550,15 +1569,17 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       }
       geminiResult.dialogue_B_ru = bLine;
 
-      // Fix killer_word: must be the LAST word of the LAST dialogue line
-      // If добивка (dialogue_A2_ru) exists, killer_word comes from it; otherwise from B
-      const killerSource = geminiResult.dialogue_A2_ru ? sanitizeLine(geminiResult.dialogue_A2_ru) : bLine;
-      const kwWords = killerSource.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
-      if (kwWords.length > 0) {
-        const actualLastWord = kwWords[kwWords.length - 1];
-        if (geminiResult.killer_word !== actualLastWord) {
-          console.log('Fixed killer_word:', { was: geminiResult.killer_word, now: actualLastWord, source: geminiResult.dialogue_A2_ru ? 'A2_добивка' : 'B' });
-          geminiResult.killer_word = actualLastWord;
+      // Fix killer_word: only auto-fix for generated content, not original dialogue
+      // In remake mode Gemini determines the killer_word from the original — trust it
+      if (!isRemakeMode) {
+        const killerSource = geminiResult.dialogue_A2_ru ? sanitizeLine(geminiResult.dialogue_A2_ru) : bLine;
+        const kwWords = killerSource.replace(/[|!?.…,«»"]/g, '').trim().split(/\s+/).filter(Boolean);
+        if (kwWords.length > 0) {
+          const actualLastWord = kwWords[kwWords.length - 1];
+          if (geminiResult.killer_word !== actualLastWord) {
+            console.log('Fixed killer_word:', { was: geminiResult.killer_word, now: actualLastWord, source: geminiResult.dialogue_A2_ru ? 'A2_добивка' : 'B' });
+            geminiResult.killer_word = actualLastWord;
+          }
         }
       }
     } else if (soloMode) {
@@ -1578,7 +1599,9 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
     // Sanitize добивка if present
     if (geminiResult.dialogue_A2_ru && typeof geminiResult.dialogue_A2_ru === 'string') {
-      geminiResult.dialogue_A2_ru = sanitizeLine(geminiResult.dialogue_A2_ru);
+      geminiResult.dialogue_A2_ru = isRemakeMode
+        ? remakeSanitize(geminiResult.dialogue_A2_ru)
+        : sanitizeLine(geminiResult.dialogue_A2_ru);
       if (!geminiResult.dialogue_A2_ru.trim()) geminiResult.dialogue_A2_ru = null;
     } else {
       geminiResult.dialogue_A2_ru = null;
