@@ -870,10 +870,10 @@ CINEMATOGRAPHY CONTRACT — 12 PRODUCTION PILLARS (обязательно учи
    ЗАПРЕТ: ${cinematography.face_stability?.forbidden || 'No hand over mouth >0.3s, no hair covering lips, no head turn >25°, no phantom mouth movements when not speaking'}.
 
 6. ГЛАЗА И ВЗГЛЯД (по таймингу):
-   Hook 0-0.6с: ${cinematography.gaze?.hook_gaze || 'A → direct camera eye contact'}.
-   Act A 0.6-3.8с: ${cinematography.gaze?.act_A_gaze || 'A 70% camera 30% B; B side-eye tracking A'}.
-   Act B 3.8-7.3с: ${cinematography.gaze?.act_B_gaze || 'B 80% camera; A eyes widen, dart between B and camera'}.
-   Release 7.3-8.0с: ${cinematography.gaze?.release_gaze || 'Both look at each other, occasional camera glance'}.
+   Hook 0-0.7с: ${cinematography.gaze?.hook_gaze || 'A → direct camera eye contact, stop-scroll stare'}.
+   Act A 0.7-3.5с: ${cinematography.gaze?.act_A_gaze || 'A 70% camera 30% B; B MOUTH CLOSED, side-eye tracking A'}.
+   Act B 3.5-7.0с: ${cinematography.gaze?.act_B_gaze || 'B 80% camera, KW≈6.8s; A MOUTH CLOSED, eyes widen, dart between B and camera'}.
+   Release 7.0-8.0с: ${cinematography.gaze?.release_gaze || 'Both look at each other, raspy laugh, rewatch-bait 0.3s'}.
    Зрачки: ${cinematography.gaze?.pupil_detail || '3-5mm, catch-light from source, wet sclera, iris texture'}.
    Микросаккады: ${cinematography.gaze?.micro_saccades || 'Tiny 0.5-1° jumps every 0.5-1.5s — eyes NEVER still'}.
    Фронталка: ${cinematography.gaze?.smartphone_eye_contact || 'Camera 2-5cm above screen; mix 60% lens contact + 40% screen look'}.
