@@ -2746,6 +2746,23 @@ ${firstComment}
       remakePrompt += identityBlock;
     }
 
+    // ── DIALOGUE INJECTION ──
+    // Gemini's remake prompt describes actions but omits actual spoken words.
+    // Veo needs the exact Russian lines for lip-sync.
+    const isSoloRemake = ctx.soloMode || (charA && charB && charA.id === charB.id);
+    const dialogueBlock = [
+      '\n\n[EXACT DIALOGUE — MUST BE SPOKEN IN RUSSIAN WITH PERFECT LIP-SYNC]:',
+    ];
+    if (isSoloRemake) {
+      dialogueBlock.push(`Character speaks in Russian to the camera: "${dA}" — ${charA?.speech_pace || 'normal'} pace. The word "${kw}" is the punchline near the end. Perfect syllable-level lip-sync required.`);
+    } else {
+      dialogueBlock.push(`A speaks in Russian to the camera: "${dA}" — ${charA?.speech_pace || 'normal'} pace. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED — only micro-expressions.`);
+      if (dB && dB !== '—') {
+        dialogueBlock.push(`B responds in Russian: "${dB}" — ${charB?.speech_pace || 'normal'} pace. The word "${kw}" is the punchline that reframes everything. A freezes mid-gesture.`);
+      }
+    }
+    remakePrompt += dialogueBlock.join('\n');
+
     r.veo_prompt = remakePrompt;
     r.is_remake = true; // Flag for main.js: DO NOT re-translate this prompt (it's already English)
   } else {
