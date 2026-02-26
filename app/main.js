@@ -82,7 +82,6 @@ function initPromoCode() {
   if (isPromoValid()) {
     status.innerHTML = '<span class="neon-text-green">✓ Промо-код активен</span>';
     input.placeholder = '••••••••';
-    document.getElementById('header-mode')?.setAttribute('textContent', 'VIP');
     const modeEl = document.getElementById('header-mode');
     if (modeEl) modeEl.textContent = 'VIP';
   }
@@ -2948,7 +2947,7 @@ function displayResult(result) {
 
   // Warnings with categorization
   if (result.warnings?.length > 0) {
-    document.getElementById('gen-warnings').classList.remove('hidden');
+    document.getElementById('gen-warnings')?.classList.remove('hidden');
     
     // Categorize warnings by type
     const infoWarnings = result.warnings.filter(w => w.includes('Для генерации') || w.includes('введите') || w.includes('проверьте'));
@@ -3542,13 +3541,14 @@ function initGenerate() {
           log('WARN', 'AI', 'Нет токена — показываю локальный результат');
           updatePreflightStatus('⚠️ Нет токена — показан локальный шаблон', 'bg-amber-500/8 text-amber-400 border border-amber-500/15');
           if (isPromoValid()) autoAuth();
+          saveGenerationHistory(localResult);
           displayResult(localResult);
         }
       } catch (apiErr) {
         log('ERR', 'AI', `Ошибка API: ${apiErr.message}`);
         updatePreflightStatus(`❌ Ошибка генерации: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
         showGenStatus('', '');
-        document.getElementById('gen-results').classList.remove('hidden');
+        document.getElementById('gen-results')?.classList.remove('hidden');
 
         // Enhanced error handling with specific error types and actionable buttons
         let errorTitle = 'Сервис временно недоступен';
@@ -3639,7 +3639,7 @@ function initGenerate() {
           </div>
         `;
         const genResults = document.getElementById('gen-results');
-        genResults.prepend(errDiv);
+        genResults?.prepend(errDiv);
       }
     } else {
       // Demo mode or API without _apiContext — show local result with better UX
