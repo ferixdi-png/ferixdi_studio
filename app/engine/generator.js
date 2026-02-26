@@ -1868,6 +1868,7 @@ export function generate(input) {
       ? `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Single character delivering a passionate comedic monologue directly to camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character is mid-hook-action with intense direct eye contact at camera lens. The video will be generated FROM this photo.${product_info?.description_en ? ` Character is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`
       : `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
+    IDENTITY_LOCK: 'CRITICAL: This photo is the CHARACTER VISUAL ANCHOR. The video will be generated FROM this exact image (frame 0). Every biological detail (skin tone, wrinkles, scars, facial hair, eye color, nose shape, jaw, teeth), every accessory (glasses, earrings, headwear, jewelry), and every wardrobe detail (fabric, pattern, color palette) MUST appear EXACTLY as described below. If a character has gold teeth — gold teeth MUST be visible. If they wear a headscarf — it MUST be in frame. If they have a scar — render it. Deviation = broken identity across all videos. Generate this photo ONCE per character pair and reuse it as the image input for EVERY video with these characters.',
     characters: soloMode ? [
       {
         role: 'Solo performer (speaking)',
@@ -1890,7 +1891,29 @@ export function generate(input) {
         neck_detail: safeArr(charA.biology_override?.neck_tokens) || undefined,
         expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
         body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
+        // ── FULL BIOLOGY IDENTITY (photo anchor) ──
+        skin_color: safeArr(charA.biology_override?.skin_color_tokens) || undefined,
+        wrinkle_map: safeArr(charA.biology_override?.wrinkle_map_tokens) || undefined,
+        nasolabial: safeArr(charA.biology_override?.nasolabial_tokens) || undefined,
+        body_shape: safeArr(charA.biology_override?.body_shape_tokens) || undefined,
+        posture: safeArr(charA.biology_override?.posture_tokens) || undefined,
+        shoulders: safeArr(charA.biology_override?.shoulder_tokens) || undefined,
+        hands: safeArr(charA.biology_override?.hands_tokens) || undefined,
+        scar_marks: safeArr(charA.biology_override?.scar_mark_tokens) || undefined,
+        facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) || undefined,
+        eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
+        resting_face: charA.biology_override?.facial_expression_default || undefined,
+        // ── WARDROBE IDENTITY ANCHORS ──
         wardrobe: wardrobeA,
+        wardrobe_anchor: anchorA.wardrobe_anchor || undefined,
+        accessories: safeArr(anchorA.accessory_anchors) || undefined,
+        glasses: anchorA.glasses_anchor && anchorA.glasses_anchor !== 'none' ? anchorA.glasses_anchor : undefined,
+        headwear: anchorA.headwear_anchor && anchorA.headwear_anchor !== 'none' ? anchorA.headwear_anchor : undefined,
+        jewelry: anchorA.jewelry_anchors && anchorA.jewelry_anchors !== 'none' ? anchorA.jewelry_anchors : undefined,
+        color_palette: safeArr(anchorA.color_palette) || undefined,
+        fabric_texture: anchorA.fabric_texture_anchor || undefined,
+        pattern: anchorA.pattern_anchor && anchorA.pattern_anchor !== 'solid color' ? anchorA.pattern_anchor : undefined,
+        sleeve_style: anchorA.sleeve_style_anchor || undefined,
         spatial: 'centered in frame, facing camera directly',
       },
     ] : [
@@ -1915,7 +1938,29 @@ export function generate(input) {
         neck_detail: safeArr(charA.biology_override?.neck_tokens) || undefined,
         expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
         body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
+        // ── FULL BIOLOGY IDENTITY (photo anchor) ──
+        skin_color: safeArr(charA.biology_override?.skin_color_tokens) || undefined,
+        wrinkle_map: safeArr(charA.biology_override?.wrinkle_map_tokens) || undefined,
+        nasolabial: safeArr(charA.biology_override?.nasolabial_tokens) || undefined,
+        body_shape: safeArr(charA.biology_override?.body_shape_tokens) || undefined,
+        posture: safeArr(charA.biology_override?.posture_tokens) || undefined,
+        shoulders: safeArr(charA.biology_override?.shoulder_tokens) || undefined,
+        hands: safeArr(charA.biology_override?.hands_tokens) || undefined,
+        scar_marks: safeArr(charA.biology_override?.scar_mark_tokens) || undefined,
+        facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) || undefined,
+        eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
+        resting_face: charA.biology_override?.facial_expression_default || undefined,
+        // ── WARDROBE IDENTITY ANCHORS ──
         wardrobe: wardrobeA,
+        wardrobe_anchor: anchorA.wardrobe_anchor || undefined,
+        accessories: safeArr(anchorA.accessory_anchors) || undefined,
+        glasses: anchorA.glasses_anchor && anchorA.glasses_anchor !== 'none' ? anchorA.glasses_anchor : undefined,
+        headwear: anchorA.headwear_anchor && anchorA.headwear_anchor !== 'none' ? anchorA.headwear_anchor : undefined,
+        jewelry: anchorA.jewelry_anchors && anchorA.jewelry_anchors !== 'none' ? anchorA.jewelry_anchors : undefined,
+        color_palette: safeArr(anchorA.color_palette) || undefined,
+        fabric_texture: anchorA.fabric_texture_anchor || undefined,
+        pattern: anchorA.pattern_anchor && anchorA.pattern_anchor !== 'solid color' ? anchorA.pattern_anchor : undefined,
+        sleeve_style: anchorA.sleeve_style_anchor || undefined,
         spatial: 'positioned left of frame, body angled 30° toward B',
       },
       {
@@ -1939,7 +1984,29 @@ export function generate(input) {
         neck_detail: safeArr(charB.biology_override?.neck_tokens) || undefined,
         expression: `${charB.compatibility === 'calm' ? 'zen-like stillness, barely contained superiority' : charB.compatibility === 'chaotic' ? 'simmering barely-restrained energy, jaw tight, eyes burning' : charB.compatibility === 'conflict' ? 'cold calculating stare, measuring every word A says' : 'amused skepticism, one corner of mouth fighting a smirk'}, ${anchorB.micro_gesture || 'raised eyebrow'}, eyes tracking A with ${charB.speech_pace === 'slow' ? 'patient devastating certainty' : 'sharp analytical intensity'}, one eyebrow 2mm higher than the other`,
         body: `${charB.compatibility === 'calm' ? 'perfectly still, arms loosely crossed, weight centered, radiating quiet authority' : charB.compatibility === 'chaotic' ? 'restless energy contained in stillness, fingers tapping on crossed arms, weight shifting' : 'arms crossed or hands on hips, leaning back slightly, weight on back foot, chin slightly raised'}`,
+        // ── FULL BIOLOGY IDENTITY (photo anchor) ──
+        skin_color: safeArr(charB.biology_override?.skin_color_tokens) || undefined,
+        wrinkle_map: safeArr(charB.biology_override?.wrinkle_map_tokens) || undefined,
+        nasolabial: safeArr(charB.biology_override?.nasolabial_tokens) || undefined,
+        body_shape: safeArr(charB.biology_override?.body_shape_tokens) || undefined,
+        posture: safeArr(charB.biology_override?.posture_tokens) || undefined,
+        shoulders: safeArr(charB.biology_override?.shoulder_tokens) || undefined,
+        hands: safeArr(charB.biology_override?.hands_tokens) || undefined,
+        scar_marks: safeArr(charB.biology_override?.scar_mark_tokens) || undefined,
+        facial_hair: safeArr(charB.biology_override?.facial_hair_tokens) || undefined,
+        eyelashes: safeArr(charB.biology_override?.eyelash_tokens) || undefined,
+        resting_face: charB.biology_override?.facial_expression_default || undefined,
+        // ── WARDROBE IDENTITY ANCHORS ──
         wardrobe: wardrobeB,
+        wardrobe_anchor: anchorB.wardrobe_anchor || undefined,
+        accessories: safeArr(anchorB.accessory_anchors) || undefined,
+        glasses: anchorB.glasses_anchor && anchorB.glasses_anchor !== 'none' ? anchorB.glasses_anchor : undefined,
+        headwear: anchorB.headwear_anchor && anchorB.headwear_anchor !== 'none' ? anchorB.headwear_anchor : undefined,
+        jewelry: anchorB.jewelry_anchors && anchorB.jewelry_anchors !== 'none' ? anchorB.jewelry_anchors : undefined,
+        color_palette: safeArr(anchorB.color_palette) || undefined,
+        fabric_texture: anchorB.fabric_texture_anchor || undefined,
+        pattern: anchorB.pattern_anchor && anchorB.pattern_anchor !== 'solid color' ? anchorB.pattern_anchor : undefined,
+        sleeve_style: anchorB.sleeve_style_anchor || undefined,
         spatial: 'positioned right of frame, body angled 30° toward A',
       },
     ],
@@ -2162,6 +2229,16 @@ export function generate(input) {
 👗 Гардероб: ${wardrobeA}
 🪑 Реквизит: ${propAnchor}
 
+📷 ФОТО = ВИЗУАЛЬНЫЙ ЯКОРЬ (Identity Lock)
+═══════════════════════════════════════════
+⚠️ Фото — кадр 0. Видео генерируется ИЗ него. Консистентность зависит от фото.
+1. Сгенерируй фото по «photo_prompt» ОДИН РАЗ для персонажа
+2. Проверь ВСЕ детали: цвет кожи, морщины, шрамы, борода, очки, головной убор, серьги, ткань, узор
+3. Используй ЭТО ЖЕ фото для КАЖДОГО ролика с этим персонажем
+4. НЕ генерируй новое фото каждый раз — сломаешь консистентность
+5. Если деталь пропала — перегенерируй фото до идеала
+═══════════════════════════════════════════
+
 [0.00–0.70] 🎣 ХУК: ${mergedHookObj.action_ru}
   🔊 Звук: ${mergedHookObj.audio}
   🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
@@ -2185,6 +2262,16 @@ export function generate(input) {
 👗 A: ${wardrobeA}
 👔 B: ${wardrobeB}
 🪑 Реквизит: ${propAnchor}
+
+📷 ФОТО = ВИЗУАЛЬНЫЙ ЯКОРЬ (Identity Lock)
+═══════════════════════════════════════════
+⚠️ Фото — кадр 0. Видео генерируется ИЗ него. Консистентность зависит от фото.
+1. Сгенерируй фото по «photo_prompt» ОДИН РАЗ для этой пары
+2. Проверь ВСЕ детали: цвет кожи, морщины, шрамы, борода, очки, головной убор, серьги, украшения, ткань, узор
+3. Используй ЭТО ЖЕ фото для КАЖДОГО ролика с этой парой
+4. НЕ генерируй новое фото каждый раз — сломаешь консистентность
+5. Если деталь пропала (например, золотые зубы, платок) — перегенерируй фото
+═══════════════════════════════════════════
 
 [0.00–0.70] 🎣 ХУК: ${mergedHookObj.action_ru}
   🔊 Звук: ${mergedHookObj.audio}
