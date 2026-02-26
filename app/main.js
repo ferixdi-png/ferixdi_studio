@@ -5021,9 +5021,13 @@ function initConsultation() {
     copyBtn.addEventListener('click', () => {
       const text = responseEl?.textContent || '';
       if (text) {
-        navigator.clipboard.writeText(text);
-        copyBtn.textContent = '✓ Скопировано';
-        setTimeout(() => { copyBtn.textContent = '📋 Копировать'; }, 1500);
+        navigator.clipboard.writeText(text).then(() => {
+          copyBtn.textContent = '✓ Скопировано';
+          setTimeout(() => { copyBtn.textContent = '📋 Копировать'; }, 1500);
+        }).catch(() => {
+          copyBtn.textContent = '⚠ Не удалось';
+          setTimeout(() => { copyBtn.textContent = '📋 Копировать'; }, 1500);
+        });
       }
     });
   }
