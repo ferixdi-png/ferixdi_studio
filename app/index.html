@@ -1346,6 +1346,17 @@
               <p class="text-xs text-gray-400">Все ваши заготовки — промпты, тексты для инсты, диалоги. Открывайте и копируйте.</p>
             </div>
           </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <input id="history-search" type="text" placeholder="Поиск по персонажам, диалогу, категории..." class="flex-1 min-w-[180px] px-3 py-1.5 rounded-lg bg-black/30 border border-gray-700/50 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-violet-500/50">
+            <select id="history-mode-filter" class="px-2 py-1.5 rounded-lg bg-black/30 border border-gray-700/50 text-xs text-gray-300 focus:outline-none focus:border-violet-500/50">
+              <option value="">Все режимы</option>
+              <option value="idea">💡 Идея</option>
+              <option value="suggested">📚 Готовые</option>
+              <option value="script">📝 Скрипт</option>
+              <option value="video">🎥 Видео</option>
+              <option value="meme">🎭 Мем</option>
+            </select>
+          </div>
           <div class="flex items-center justify-between">
             <div class="text-[10px] text-gray-500" id="history-count"></div>
             <button id="btn-clear-history" class="text-[10px] px-3 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors hidden">🗑 Очистить</button>

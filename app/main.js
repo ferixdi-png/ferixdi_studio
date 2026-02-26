@@ -34,6 +34,9 @@ const state = {
   avatarMap: {},
 };
 
+// Lazy-init tracker: heavy sections init on first navigateTo()
+const _lazyInited = new Set();
+
 // ─── AVATARS HELPER ─────────────────────────
 function getAvatarImg(charId, size = 'w-9 h-9') {
   const file = state.avatarMap[charId];
@@ -325,6 +328,7 @@ function deselectLocation() {
   renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
   log('INFO', 'ЛОКАЦИЯ', 'Сброшена → Авто-выбор');
   updateProgress();
+  _scheduleDraftSave();
 }
 window.deselectLocation = deselectLocation;
 window.navigateTo = navigateTo;
@@ -347,6 +351,7 @@ function initLocationPicker() {
     renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
     log('INFO', 'ЛОКАЦИЯ', state.selectedLocation ? `Выбрана: ${state.locations.find(l => l.id === state.selectedLocation)?.name_ru}` : 'Авто-выбор');
     updateProgress();
+    _scheduleDraftSave();
   });
   document.getElementById('loc-group-filter')?.addEventListener('change', (e) => {
     renderLocations(e.target.value);
@@ -361,6 +366,7 @@ function initLocationPicker() {
     renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
     log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
     updateProgress();
+    _scheduleDraftSave();
   });
   
   // Update progress when inputs change
@@ -670,6 +676,7 @@ function selectChar(role, id) {
   renderCharacters(getCurrentFilters());
   log('INFO', 'ПЕРСОНАЖИ', `${role}: ${char.name_ru} (${char.compatibility})`);
   updateReadiness();
+  _scheduleDraftSave();
 }
 
 function deselectChar(role) {
@@ -680,6 +687,7 @@ function deselectChar(role) {
   renderCharacters(getCurrentFilters());
   log('INFO', 'ПЕРСОНАЖИ', `${role}: сброшен`);
   updateReadiness();
+  _scheduleDraftSave();
 }
 window.deselectChar = deselectChar;
 
@@ -1168,7 +1176,18 @@ function navigateTo(section) {
 
   // Refresh history when navigating to history section
   if (section === 'history') renderHistory();
-  
+
+  // Lazy init heavy sections on first visit
+  if (!_lazyInited.has(section)) {
+    _lazyInited.add(section);
+    const _lazyMap = { ideas: initTrends, education: initEducation, jokes: initJokesLibrary };
+    const lazyFn = _lazyMap[section];
+    if (lazyFn) {
+      try { lazyFn(); log('OK', 'LAZY', `Секция «${section}» инициализирована`); }
+      catch(e) { console.error(`[FERIXDI] lazy ${section}:`, e); }
+    }
+  }
+
   // Log navigation for debugging
   log('INFO', 'НАВИГАЦИЯ', `Переход к разделу: ${section}`);
 }
@@ -1386,6 +1405,7 @@ function selectGenerationMode(mode) {
   // Update progress tracker
   updateProgress();
   updateReadiness();
+  _scheduleDraftSave();
 }
 
 function updateModeSpecificUI(mode) {
@@ -5121,19 +5141,32 @@ function initConsultation() {
   });
 }
 
-// Save current state to localStorage
-function saveCurrentState() {
-  const stateToSave = {
-    selectedA: state.selectedA,
-    selectedB: state.selectedB,
-    selectedLocation: state.selectedLocation,
-    generationMode: state.generationMode,
-    inputMode: state.inputMode,
-    options: state.options,
-    timestamp: Date.now()
-  };
-  localStorage.setItem('ferixdi_saved_state', JSON.stringify(stateToSave));
-  showNotification('💾 Состояние сохранено', 'success');
+// Save current state to localStorage (silent=true for auto-save, false for manual)
+function saveCurrentState(silent = false) {
+  try {
+    const stateToSave = {
+      selectedA_id: state.selectedA?.id || null,
+      selectedB_id: state.selectedB?.id || null,
+      selectedLocation: state.selectedLocation,
+      generationMode: state.generationMode,
+      inputMode: state.inputMode,
+      options: state.options,
+      // Text inputs — save current values
+      ideaText: document.getElementById('idea-input')?.value || '',
+      scriptA: document.getElementById('script-a')?.value || '',
+      scriptB: document.getElementById('script-b')?.value || '',
+      timestamp: Date.now()
+    };
+    localStorage.setItem('ferixdi_saved_state', JSON.stringify(stateToSave));
+    if (!silent) showNotification('💾 Состояние сохранено', 'success');
+  } catch { /* ignore quota errors */ }
+}
+
+// Debounced auto-save — triggers silently on state changes
+let _autoSaveTimer = null;
+function _scheduleDraftSave() {
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer = setTimeout(() => saveCurrentState(true), 3000);
 }
 
 // Reset to defaults
@@ -5149,23 +5182,73 @@ function resetToDefaults() {
   showNotification('🔄 Сброс выполнен', 'info');
 }
 
-// Load saved state on startup
+// Load saved state on startup (restores state fields; UI restore deferred to _restoreDraftUI)
 function loadSavedState() {
   try {
     const saved = localStorage.getItem('ferixdi_saved_state');
-    if (saved) {
-      const stateData = JSON.parse(saved);
-      const age = Date.now() - stateData.timestamp;
-      
-      // Only restore if less than 24 hours old
-      if (age < 24 * 60 * 60 * 1000) {
-        Object.assign(state, stateData);
-        log('OK', 'СОСТОЯНИЕ', 'Загружено сохранённое состояние');
-      }
-    }
+    if (!saved) return;
+    const d = JSON.parse(saved);
+    const age = Date.now() - (d.timestamp || 0);
+    if (age > 24 * 60 * 60 * 1000) return; // expire after 24h
+
+    // Restore simple state fields
+    state.selectedLocation = d.selectedLocation ?? null;
+    state.generationMode = d.generationMode ?? null;
+    state.inputMode = d.inputMode ?? 'idea';
+    if (d.options) state.options = { ...state.options, ...d.options };
+
+    // Store IDs + text for deferred UI restore (characters may not be loaded yet)
+    state._draftRestore = {
+      charA_id: d.selectedA_id || null,
+      charB_id: d.selectedB_id || null,
+      ideaText: d.ideaText || '',
+      scriptA: d.scriptA || '',
+      scriptB: d.scriptB || '',
+    };
+    log('OK', 'ЧЕРНОВИК', 'Загружено сохранённое состояние');
   } catch (e) {
     console.warn('Failed to load saved state:', e);
   }
+}
+
+// Deferred UI restore — called after characters are loaded so we can resolve IDs to objects
+function _restoreDraftUI() {
+  const draft = state._draftRestore;
+  if (!draft) return;
+  delete state._draftRestore;
+
+  // Restore characters by ID
+  if (draft.charA_id && state.characters.length) {
+    state.selectedA = state.characters.find(c => c.id === draft.charA_id) || null;
+  }
+  if (draft.charB_id && state.characters.length) {
+    state.selectedB = state.characters.find(c => c.id === draft.charB_id) || null;
+  }
+  if (state.selectedA || state.selectedB) {
+    updateCharDisplay();
+    renderCharacters(getCurrentFilters());
+  }
+
+  // Restore generation mode UI
+  if (state.generationMode) {
+    selectGenerationMode(state.generationMode);
+  }
+
+  // Restore text inputs
+  if (draft.ideaText) {
+    const el = document.getElementById('idea-input');
+    if (el) el.value = draft.ideaText;
+  }
+  if (draft.scriptA) {
+    const el = document.getElementById('script-a');
+    if (el) el.value = draft.scriptA;
+  }
+  if (draft.scriptB) {
+    const el = document.getElementById('script-b');
+    if (el) el.value = draft.scriptB;
+  }
+
+  log('OK', 'ЧЕРНОВИК', `Восстановлен черновик${state.selectedA ? ` · ${state.selectedA.name_ru}` : ''}${state.selectedB ? ` × ${state.selectedB.name_ru}` : ''}`);
 }
 
 // Show notification toast
@@ -5947,6 +6030,13 @@ function initSeries() {
 }
 
 // ─── GENERATION HISTORY UI ───────────────────
+function _getHistoryFilters() {
+  return {
+    search: (document.getElementById('history-search')?.value || '').toLowerCase().trim(),
+    mode: document.getElementById('history-mode-filter')?.value || '',
+  };
+}
+
 function renderHistory() {
   const list = document.getElementById('history-list');
   const empty = document.getElementById('history-empty');
@@ -5954,8 +6044,10 @@ function renderHistory() {
   const clearBtn = document.getElementById('btn-clear-history');
   if (!list) return;
 
-  const history = getGenerationHistory();
-  if (history.length === 0) {
+  const allHistory = getGenerationHistory();
+  const totalCount = allHistory.length;
+
+  if (totalCount === 0) {
     list.innerHTML = '';
     empty?.classList.remove('hidden');
     clearBtn?.classList.add('hidden');
@@ -5964,16 +6056,40 @@ function renderHistory() {
   }
   empty?.classList.add('hidden');
   clearBtn?.classList.remove('hidden');
-  if (countEl) countEl.textContent = `${history.length} ${history.length === 1 ? 'генерация' : history.length < 5 ? 'генерации' : 'генераций'}`;
 
-  list.innerHTML = history.slice().reverse().map((ep, ri) => {
-    const idx = history.length - 1 - ri;
+  // Map with original indices before filtering (so delete buttons still reference correct index)
+  let indexed = allHistory.map((ep, i) => ({ ep, origIdx: i }));
+
+  // Apply filters
+  const { search, mode } = _getHistoryFilters();
+  if (search) {
+    indexed = indexed.filter(({ ep }) => {
+      const haystack = `${ep.charA || ''} ${ep.charB || ''} ${ep.category || ''} ${ep.dialogueA || ''} ${ep.dialogueB || ''} ${ep.killerWord || ''}`.toLowerCase();
+      return haystack.includes(search);
+    });
+  }
+  if (mode) {
+    indexed = indexed.filter(({ ep }) => ep.mode === mode);
+  }
+
+  const shownCount = indexed.length;
+  const countText = shownCount === totalCount
+    ? `${totalCount} ${totalCount === 1 ? 'генерация' : totalCount < 5 ? 'генерации' : 'генераций'}`
+    : `${shownCount} из ${totalCount}`;
+  if (countEl) countEl.textContent = countText;
+
+  if (shownCount === 0) {
+    list.innerHTML = '<div class="text-center text-xs text-gray-500 py-4">Ничего не найдено</div>';
+    return;
+  }
+
+  list.innerHTML = indexed.slice().reverse().map(({ ep, origIdx }) => {
     const dt = new Date(ep.ts);
     const dateStr = dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     const label = `${ep.charA || '?'} × ${ep.charB || '?'}`;
-    return `<div class="hist-entry" data-idx="${idx}">
+    return `<div class="hist-entry" data-idx="${origIdx}">
       <div class="text-[10px] text-gray-500 px-1 mb-0.5">${label}${ep.mode ? ` · ${ep.mode}` : ''}</div>
-      ${renderEpisodeCard(ep, idx + 1, dateStr, `h_ep${idx}`)}
+      ${renderEpisodeCard(ep, origIdx + 1, dateStr, `h_ep${origIdx}`)}
     </div>`;
   }).join('');
 
@@ -6023,6 +6139,17 @@ function initHistory() {
       showNotification('История очищена', 'info');
     }
   });
+
+  // Search with debounce
+  let _histSearchTimer = null;
+  document.getElementById('history-search')?.addEventListener('input', () => {
+    clearTimeout(_histSearchTimer);
+    _histSearchTimer = setTimeout(() => renderHistory(), 250);
+  });
+
+  // Mode filter — instant
+  document.getElementById('history-mode-filter')?.addEventListener('change', () => renderHistory());
+
   renderHistory();
 }
 
@@ -7269,11 +7396,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initCharFilters',initCharFilters],['initRandomPair',initRandomPair],
     ['initCopyButtons',initCopyButtons],['initHeaderSettings',initHeaderSettings],
     ['initLogPanel',initLogPanel],['initLocationPicker',initLocationPicker],
-    ['initTrends',initTrends],['initConsultation',initConsultation],
-    ['initJokesLibrary',initJokesLibrary],['initSeries',initSeries],['initHistory',initHistory],
+    ['initConsultation',initConsultation],
+    ['initSeries',initSeries],['initHistory',initHistory],
     ['initSurprise',initSurprise],['initABTesting',initABTesting],
     ['initTranslate',initTranslate],['initCharConstructor',initCharConstructor],
-    ['initLocConstructor',initLocConstructor],['initEducation',initEducation],
+    ['initLocConstructor',initLocConstructor],
     ['initMatrixRain',initMatrixRain],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
@@ -7288,6 +7415,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCharacters();
     populateSeriesSelects();
     renderSeriesList();
+    // Restore draft UI after characters are available
+    _restoreDraftUI();
+    // Auto-save text inputs on typing
+    ['idea-input', 'script-a', 'script-b'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', _scheduleDraftSave);
+    });
     // Handle hash deep-links (e.g. #education from landing)
     const hash = window.location.hash.replace('#', '');
     if (hash) {
