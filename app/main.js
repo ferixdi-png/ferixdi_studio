@@ -30,7 +30,17 @@ const state = {
   _isLoading: false,
   _lastActivity: Date.now(),
   _cachedResults: new Map(),
+  // Character avatars: { "babka_zina": "babka_zina.webp", ... }
+  avatarMap: {},
 };
+
+// ─── AVATARS HELPER ─────────────────────────
+function getAvatarImg(charId, size = 'w-9 h-9') {
+  const file = state.avatarMap[charId];
+  if (!file) return '';
+  const url = new URL(`./data/avatars/${file}`, import.meta.url).href;
+  return `<img src="${url}" alt="" class="${size} rounded-lg object-cover border border-gray-700/60 flex-shrink-0" loading="lazy" onerror="this.style.display='none'">`;
+}
 
 // ─── LOG ─────────────────────────────────────
 function escapeHtml(str) {
@@ -180,6 +190,7 @@ function initApp() {
   // Load data in parallel
   const loadPromises = [
     loadCharacters(),
+    loadAvatarManifest(),
     updateCacheStats(),
     initWelcomeBanner()
   ];
@@ -491,6 +502,20 @@ async function refreshCharacters() {
   }
 }
 
+async function loadAvatarManifest() {
+  try {
+    const resp = await fetch(new URL('./data/avatars/manifest.json', import.meta.url));
+    if (!resp.ok) return;
+    const data = await resp.json();
+    state.avatarMap = data || {};
+    const count = Object.keys(state.avatarMap).length;
+    if (count > 0) {
+      log('OK', 'АВАТАРЫ', `Загружено ${count} аватаров`);
+      renderCharacters(getCurrentFilters());
+    }
+  } catch { /* manifest missing or invalid — silent */ }
+}
+
 async function loadServerCustomCharacters() {
   try {
     const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
@@ -554,8 +579,11 @@ function renderCharacters(filter = {}) {
     return `
     <div class="char-card ${selCls}" data-id="${c.id}">
       <div class="flex items-center justify-between mb-1">
-        <span class="text-sm font-bold text-white">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span>
-        <span class="tag text-[10px] ${tagCls}">${compatRu[c.compatibility] || c.compatibility}</span>
+        <div class="flex items-center gap-2 min-w-0">
+          ${getAvatarImg(c.id)}
+          <span class="text-sm font-bold text-white truncate">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span>
+        </div>
+        <span class="tag text-[10px] ${tagCls} flex-shrink-0">${compatRu[c.compatibility] || c.compatibility}</span>
       </div>
       ${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}
       <div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2">
@@ -735,7 +763,7 @@ function updateCharDisplay() {
   const charAName = document.getElementById('char-a-name');
   if (charAName) {
     if (state.selectedA) {
-      charAName.innerHTML = `<span class="text-white">${escapeHtml(state.selectedA.name_ru)} • ${escapeHtml(state.selectedA.group)}</span> <button onclick="deselectChar('A')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить A">✕</button>`;
+      charAName.innerHTML = `${getAvatarImg(state.selectedA.id, 'w-6 h-6 inline-block align-middle mr-1.5')}<span class="text-white">${escapeHtml(state.selectedA.name_ru)} • ${escapeHtml(state.selectedA.group)}</span> <button onclick="deselectChar('A')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить A">✕</button>`;
     } else {
       charAName.innerHTML = '<span class="text-gray-400">Нажми на персонажа ↓</span>';
     }
@@ -744,7 +772,7 @@ function updateCharDisplay() {
   const charBName = document.getElementById('char-b-name');
   if (charBName) {
     if (state.selectedB) {
-      charBName.innerHTML = `<span class="text-white">${escapeHtml(state.selectedB.name_ru)} • ${escapeHtml(state.selectedB.group)}</span> <button onclick="deselectChar('B')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить B">✕</button>`;
+      charBName.innerHTML = `${getAvatarImg(state.selectedB.id, 'w-6 h-6 inline-block align-middle mr-1.5')}<span class="text-white">${escapeHtml(state.selectedB.name_ru)} • ${escapeHtml(state.selectedB.group)}</span> <button onclick="deselectChar('B')" class="ml-2 text-[10px] text-red-400/60 hover:text-red-400 transition-colors" title="Сбросить B">✕</button>`;
     } else {
       charBName.innerHTML = '<span class="text-gray-400">Нажми на второго или пропусти ↓</span>';
     }
@@ -5778,8 +5806,8 @@ function renderEpisodeCard(ep, num, dateStr, uid) {
   const hasVeo = !!ep.veo_prompt;
   const hasRu = !!ep.ru_package;
   const hasInsta = !!(ep.insta?.caption || ep.engage?.viral_title);
-  const veoSafe = (ep.veo_prompt || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  const ruSafe = (ep.ru_package || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const veoSafe = escapeHtml(ep.veo_prompt || '');
+  const ruSafe = escapeHtml(ep.ru_package || '');
   const viralTitle = ep.engage?.viral_title || '';
   const shareBait = ep.engage?.share_bait || '';
   const caption = ep.insta?.caption || '';
