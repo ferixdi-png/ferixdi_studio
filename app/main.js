@@ -1138,6 +1138,9 @@ function navigateTo(section) {
 
   // Refresh smart match when navigating to characters
   if (section === 'characters') updateSmartMatch();
+
+  // Refresh history when navigating to history section
+  if (section === 'history') renderHistory();
   
   // Log navigation for debugging
   log('INFO', 'НАВИГАЦИЯ', `Переход к разделу: ${section}`);
@@ -2995,7 +2998,20 @@ function displayResult(result) {
       const s = series[state._currentSeries.idx];
       if (s) {
         if (!s.episodes) s.episodes = [];
-        s.episodes.push({ date: Date.now(), dialogueA: result._apiContext?.dialogueA, dialogueB: result._apiContext?.dialogueB });
+        const ep = {
+          date: Date.now(),
+          charA: state.selectedA?.name_ru || '?',
+          charB: state.selectedB?.name_ru || '?',
+          category: result.log?.category?.ru || '',
+          dialogueA: result.blueprint_json?.dialogue_segments?.find(seg => seg.speaker === 'A')?.text_ru || result._apiContext?.dialogueA || '',
+          dialogueB: result.blueprint_json?.dialogue_segments?.find(seg => seg.speaker === 'B')?.text_ru || result._apiContext?.dialogueB || '',
+          killerWord: result.blueprint_json?.killer_word || '',
+          veo_prompt: result.veo_prompt || '',
+          ru_package: result.ru_package || '',
+          engage: result.log?.engagement || {},
+          insta: result.log?.instagram_pack || {},
+        };
+        s.episodes.push(ep);
         saveSeries(series);
         log('OK', 'SERIES', `Эпизод #${s.episodes.length} сохранён в серию "${s.name}"`);
       }
@@ -3275,7 +3291,7 @@ async function callAIEngine(apiContext) {
 
 // ─── GENERATION HISTORY (localStorage) ──────
 const GEN_HISTORY_KEY = 'ferixdi_gen_history';
-const GEN_HISTORY_MAX = 10;
+const GEN_HISTORY_MAX = 50;
 
 function saveGenerationHistory(result) {
   try {
@@ -3288,11 +3304,20 @@ function saveGenerationHistory(result) {
       dialogueA: result.blueprint_json?.dialogue_segments?.find(s => s.speaker === 'A')?.text_ru || '',
       dialogueB: result.blueprint_json?.dialogue_segments?.find(s => s.speaker === 'B')?.text_ru || '',
       killerWord: result.blueprint_json?.killer_word || '',
+      veo_prompt: result.veo_prompt || '',
+      ru_package: result.ru_package || '',
+      engage: result.log?.engagement || {},
+      insta: result.log?.instagram_pack || {},
+      mode: state.generationMode || state.inputMode || 'idea',
     };
     history.push(entry);
     if (history.length > GEN_HISTORY_MAX) history.splice(0, history.length - GEN_HISTORY_MAX);
     localStorage.setItem(GEN_HISTORY_KEY, JSON.stringify(history));
   } catch { /* ignore */ }
+}
+
+function getGenerationHistory() {
+  try { return JSON.parse(localStorage.getItem(GEN_HISTORY_KEY) || '[]'); } catch { return []; }
 }
 
 function getThreadMemory() {
@@ -3602,6 +3627,7 @@ function initGenerate() {
         localResult.warnings.push('AI-движок временно недоступен — показан локальный шаблон');
       }
       
+      saveGenerationHistory(localResult);
       displayResult(localResult);
     }
 
@@ -5665,6 +5691,7 @@ function renderSeriesList() {
         <div class="flex items-center justify-between">
           <div class="text-sm font-semibold text-amber-400">${escapeHtml(s.name)}</div>
           <div class="flex gap-2">
+            ${epCount > 0 ? `<button class="series-eps-btn text-[10px] px-3 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors" data-idx="${i}">📂 ${epCount} эп.</button>` : ''}
             <button class="series-gen-btn text-[10px] px-3 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition-colors" data-idx="${i}">▶ Новый эпизод</button>
             <button class="series-del-btn text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors" data-idx="${i}">✕</button>
           </div>
@@ -5676,11 +5703,147 @@ function renderSeriesList() {
         </div>
         ${s.style ? `<div class="text-[10px] text-gray-500">Стиль: ${escapeHtml(s.style)}</div>` : ''}
         <div class="text-[10px] text-gray-600">${epCount} ${epCount === 1 ? 'эпизод' : (epCount >= 2 && epCount <= 4) ? 'эпизода' : 'эпизодов'}</div>
+        <div id="series-eps-${i}" class="hidden mt-3 space-y-2"></div>
       </div>`;
   }).join('');
 
   list.querySelectorAll('.series-gen-btn').forEach(btn => btn.addEventListener('click', () => generateFromSeries(parseInt(btn.dataset.idx))));
   list.querySelectorAll('.series-del-btn').forEach(btn => btn.addEventListener('click', () => deleteSeries(parseInt(btn.dataset.idx))));
+  list.querySelectorAll('.series-eps-btn').forEach(btn => btn.addEventListener('click', () => toggleSeriesEpisodes(parseInt(btn.dataset.idx))));
+}
+
+function toggleSeriesEpisodes(seriesIdx) {
+  const container = document.getElementById(`series-eps-${seriesIdx}`);
+  if (!container) return;
+
+  if (!container.classList.contains('hidden')) {
+    container.classList.add('hidden');
+    return;
+  }
+
+  const series = getSeries();
+  const s = series[seriesIdx];
+  if (!s?.episodes?.length) return;
+
+  container.innerHTML = s.episodes.slice().reverse().map((ep, ri) => {
+    const idx = s.episodes.length - 1 - ri;
+    const dt = new Date(ep.date);
+    const dateStr = dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    return renderEpisodeCard(ep, idx + 1, dateStr, `s${seriesIdx}_ep${idx}`);
+  }).join('');
+
+  container.querySelectorAll('.ep-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = btn.closest('.ep-card').querySelector('.ep-body');
+      if (body) body.classList.toggle('hidden');
+      btn.textContent = body?.classList.contains('hidden') ? '▸ Открыть' : '▾ Свернуть';
+    });
+  });
+
+  container.querySelectorAll('.ep-copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.dataset.copy;
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = '✓';
+          setTimeout(() => btn.textContent = orig, 1200);
+        });
+      }
+    });
+  });
+
+  container.querySelectorAll('.ep-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const epIdx = parseInt(btn.dataset.epidx);
+      const sIdx = parseInt(btn.dataset.sidx);
+      const ser = getSeries();
+      if (ser[sIdx]?.episodes) {
+        ser[sIdx].episodes.splice(epIdx, 1);
+        saveSeries(ser);
+        renderSeriesList();
+        showNotification('Эпизод удалён', 'info');
+      }
+    });
+  });
+
+  container.classList.remove('hidden');
+}
+
+function renderEpisodeCard(ep, num, dateStr, uid) {
+  const dA = ep.dialogueA || '—';
+  const dB = ep.dialogueB || '';
+  const kw = ep.killerWord || '';
+  const cat = ep.category || '';
+  const hasVeo = !!ep.veo_prompt;
+  const hasRu = !!ep.ru_package;
+  const hasInsta = !!(ep.insta?.caption || ep.engage?.viral_title);
+  const veoSafe = (ep.veo_prompt || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const ruSafe = (ep.ru_package || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const viralTitle = ep.engage?.viral_title || '';
+  const shareBait = ep.engage?.share_bait || '';
+  const caption = ep.insta?.caption || '';
+  const hashtags = (ep.engage?.hashtags || []).join(' ');
+  const pinComment = ep.engage?.pin_comment || '';
+
+  return `
+    <div class="ep-card bg-black/20 rounded-lg border border-gray-800/60 overflow-hidden">
+      <div class="flex items-center justify-between px-3 py-2 bg-gray-900/40">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-bold text-amber-400">#${num}</span>
+          <span class="text-[10px] text-gray-500">${dateStr}</span>
+          ${cat ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">${escapeHtml(cat)}</span>` : ''}
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button class="ep-toggle-btn text-[9px] px-2 py-0.5 rounded text-amber-400 hover:bg-amber-500/10 transition-colors">▸ Открыть</button>
+          <button class="ep-del-btn text-[9px] px-1.5 py-0.5 rounded text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-colors" data-sidx="${uid.split('_')[0].replace('s','')}" data-epidx="${uid.split('_')[1].replace('ep','')}">✕</button>
+        </div>
+      </div>
+      <div class="px-3 py-1.5 text-[11px] text-gray-300 border-b border-gray-800/40">
+        <span class="text-cyan-400">A:</span> «${escapeHtml(dA.length > 60 ? dA.slice(0, 60) + '...' : dA)}»
+        ${dB ? `<span class="ml-2 text-violet-400">B:</span> «${escapeHtml(dB.length > 60 ? dB.slice(0, 60) + '...' : dB)}»` : ''}
+        ${kw ? `<span class="ml-2 text-amber-400">💥 ${escapeHtml(kw)}</span>` : ''}
+      </div>
+      <div class="ep-body hidden p-3 space-y-2">
+        ${hasVeo ? `<div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider">🎬 Veo промпт</span>
+            <button class="ep-copy-btn text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors" data-copy="${veoSafe}">📋 Копировать</button>
+          </div>
+          <pre class="text-[10px] text-gray-400 bg-black/30 rounded p-2 max-h-32 overflow-y-auto whitespace-pre-wrap break-words leading-relaxed">${escapeHtml(ep.veo_prompt?.slice(0, 500))}${ep.veo_prompt?.length > 500 ? '...' : ''}</pre>
+        </div>` : '<div class="text-[10px] text-gray-600 italic">⚠ Промпт не сохранён (старый эпизод)</div>'}
+        ${hasRu ? `<div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] text-blue-400 font-semibold uppercase tracking-wider">🇷🇺 Пост</span>
+            <button class="ep-copy-btn text-[9px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors" data-copy="${ruSafe}">📋 Копировать</button>
+          </div>
+          <pre class="text-[10px] text-gray-400 bg-black/30 rounded p-2 max-h-32 overflow-y-auto whitespace-pre-wrap break-words leading-relaxed">${escapeHtml(ep.ru_package?.slice(0, 300))}${ep.ru_package?.length > 300 ? '...' : ''}</pre>
+        </div>` : ''}
+        ${hasInsta ? `<div class="space-y-1.5">
+          <span class="text-[9px] text-pink-400 font-semibold uppercase tracking-wider">📱 Инста-пакет</span>
+          ${viralTitle ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
+            <div><span class="text-[9px] text-amber-400">🔥 Заголовок:</span> <span class="text-[10px] text-gray-300">${escapeHtml(viralTitle)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors" data-copy="${escapeHtml(viralTitle)}">📋</button>
+          </div>` : ''}
+          ${shareBait ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
+            <div><span class="text-[9px] text-orange-400">📝 Описание:</span> <span class="text-[10px] text-gray-300">${escapeHtml(shareBait.length > 80 ? shareBait.slice(0, 80) + '...' : shareBait)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 transition-colors" data-copy="${escapeHtml(shareBait)}">📋</button>
+          </div>` : ''}
+          ${caption ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
+            <div><span class="text-[9px] text-pink-400">📝 Caption:</span> <span class="text-[10px] text-gray-300">${escapeHtml(caption.length > 80 ? caption.slice(0, 80) + '...' : caption)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-400 hover:bg-pink-500/20 transition-colors" data-copy="${escapeHtml(caption)}">📋</button>
+          </div>` : ''}
+          ${hashtags ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
+            <div><span class="text-[9px] text-cyan-400">#</span> <span class="text-[10px] text-gray-400">${escapeHtml(hashtags.length > 80 ? hashtags.slice(0, 80) + '...' : hashtags)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors" data-copy="${escapeHtml(hashtags)}">📋</button>
+          </div>` : ''}
+          ${pinComment ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
+            <div><span class="text-[9px] text-rose-400">📌 Закреп:</span> <span class="text-[10px] text-gray-300">${escapeHtml(pinComment.length > 80 ? pinComment.slice(0, 80) + '...' : pinComment)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors" data-copy="${escapeHtml(pinComment)}">📋</button>
+          </div>` : ''}
+        </div>` : ''}
+      </div>
+    </div>`;
 }
 
 function createSeries() {
@@ -5753,6 +5916,86 @@ function populateSeriesSelects() {
 function initSeries() {
   document.getElementById('btn-create-series')?.addEventListener('click', createSeries);
   renderSeriesList();
+}
+
+// ─── GENERATION HISTORY UI ───────────────────
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const empty = document.getElementById('history-empty');
+  const countEl = document.getElementById('history-count');
+  const clearBtn = document.getElementById('btn-clear-history');
+  if (!list) return;
+
+  const history = getGenerationHistory();
+  if (history.length === 0) {
+    list.innerHTML = '';
+    empty?.classList.remove('hidden');
+    clearBtn?.classList.add('hidden');
+    if (countEl) countEl.textContent = '';
+    return;
+  }
+  empty?.classList.add('hidden');
+  clearBtn?.classList.remove('hidden');
+  if (countEl) countEl.textContent = `${history.length} ${history.length === 1 ? 'генерация' : history.length < 5 ? 'генерации' : 'генераций'}`;
+
+  list.innerHTML = history.slice().reverse().map((ep, ri) => {
+    const idx = history.length - 1 - ri;
+    const dt = new Date(ep.ts);
+    const dateStr = dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    const label = `${ep.charA || '?'} × ${ep.charB || '?'}`;
+    return `<div class="hist-entry" data-idx="${idx}">
+      <div class="text-[10px] text-gray-500 px-1 mb-0.5">${label}${ep.mode ? ` · ${ep.mode}` : ''}</div>
+      ${renderEpisodeCard(ep, idx + 1, dateStr, `h_ep${idx}`)}
+    </div>`;
+  }).join('');
+
+  // Wire toggle buttons
+  list.querySelectorAll('.ep-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = btn.closest('.ep-card').querySelector('.ep-body');
+      if (body) body.classList.toggle('hidden');
+      btn.textContent = body?.classList.contains('hidden') ? '▸ Открыть' : '▾ Свернуть';
+    });
+  });
+
+  // Wire copy buttons
+  list.querySelectorAll('.ep-copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.dataset.copy;
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = '✓';
+          setTimeout(() => btn.textContent = orig, 1200);
+        });
+      }
+    });
+  });
+
+  // Wire delete buttons (delete from history)
+  list.querySelectorAll('.ep-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const epIdx = parseInt(btn.dataset.epidx);
+      try {
+        const h = getGenerationHistory();
+        h.splice(epIdx, 1);
+        localStorage.setItem(GEN_HISTORY_KEY, JSON.stringify(h));
+        renderHistory();
+        showNotification('Запись удалена', 'info');
+      } catch { /* ignore */ }
+    });
+  });
+}
+
+function initHistory() {
+  document.getElementById('btn-clear-history')?.addEventListener('click', () => {
+    if (confirm('Очистить всю историю генераций?')) {
+      localStorage.removeItem(GEN_HISTORY_KEY);
+      renderHistory();
+      showNotification('История очищена', 'info');
+    }
+  });
+  renderHistory();
 }
 
 // ─── VIRAL SURPRISE PRESETS v2 ───────────────
@@ -6999,7 +7242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initCopyButtons',initCopyButtons],['initHeaderSettings',initHeaderSettings],
     ['initLogPanel',initLogPanel],['initLocationPicker',initLocationPicker],
     ['initTrends',initTrends],['initConsultation',initConsultation],
-    ['initJokesLibrary',initJokesLibrary],['initSeries',initSeries],
+    ['initJokesLibrary',initJokesLibrary],['initSeries',initSeries],['initHistory',initHistory],
     ['initSurprise',initSurprise],['initABTesting',initABTesting],
     ['initTranslate',initTranslate],['initCharConstructor',initCharConstructor],
     ['initLocConstructor',initLocConstructor],['initEducation',initEducation],

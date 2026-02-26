@@ -95,6 +95,7 @@
 
           <div class="px-2 pt-3 pb-1"><div class="text-[9px] text-gray-600 uppercase tracking-[0.2em] font-medium">Инструменты</div></div>
           <div class="nav-item" data-section="series"><span>📺</span><span>Серии</span></div>
+          <div class="nav-item" data-section="history"><span>📜</span><span>История</span></div>
           <div class="nav-item" data-section="ideas"><span>🔍</span><span>Поиск идей</span></div>
           <div class="nav-item" data-section="jokes"><span>😂</span><span>Библиотека шуток</span></div>
           <div class="nav-item" data-section="consult"><span>💬</span><span>AI-маркетолог</span></div>
@@ -1333,6 +1334,27 @@
             <div class="text-2xl mb-2">📺</div>
             <div class="text-sm text-gray-400">Пока нет серий</div>
             <div class="text-[10px] text-gray-600 mt-1">Создайте первую серию — фиксированная пара персонажей для вашей рубрики</div>
+          </div>
+        </section>
+
+        <!-- SECTION: History -->
+        <section id="section-history" class="section-panel hidden space-y-5">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-600 text-white text-sm font-bold">📜</div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">История генераций</h2>
+              <p class="text-xs text-gray-400">Все ваши заготовки — промпты, тексты для инсты, диалоги. Открывайте и копируйте.</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="text-[10px] text-gray-500" id="history-count"></div>
+            <button id="btn-clear-history" class="text-[10px] px-3 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors hidden">🗑 Очистить</button>
+          </div>
+          <div id="history-list" class="space-y-2"></div>
+          <div id="history-empty" class="glass-panel p-6 text-center hidden">
+            <div class="text-2xl mb-2">📜</div>
+            <div class="text-sm text-gray-400">История пуста</div>
+            <div class="text-[10px] text-gray-600 mt-1">Генерации будут сохраняться автоматически</div>
           </div>
         </section>
 
