@@ -3431,6 +3431,8 @@ function initGenerate() {
       video_meta: state.videoMeta,
       product_info: state.productInfo,
       reference_style: state.referenceStyle,
+      // Dialogue override from editor edits / variant selection (set by btn-regenerate)
+      dialogue_override: state._dialogueOverride || null,
       options: state.options,
       seed: Date.now().toString(),
       characters: state.characters,
@@ -3439,6 +3441,8 @@ function initGenerate() {
       // Meme mode data
       meme_context: state.generationMode === 'meme' ? (document.getElementById('meme-context')?.value?.trim() || '') : null,
     };
+    // Clear override after reading — only applies to this single regeneration
+    state._dialogueOverride = null;
 
     // Step 1: Local generation (instant, structural template)
     let localResult;
@@ -3620,11 +3624,25 @@ function initGenerate() {
   // Regenerate with feedback
   document.getElementById('btn-regenerate')?.addEventListener('click', () => {
     const feedback = document.getElementById('regen-feedback')?.value.trim();
+
+    // Read current dialogue from editor (may have been edited by user or variant selection)
+    const edA = document.getElementById('editor-line-a')?.value?.trim();
+    const edB = document.getElementById('editor-line-b')?.value?.trim();
+
+    // If editor has dialogue, apply it first (sync all outputs) and store as override
+    if (edA) {
+      applyDialogueUpdate(edA, edB || '');
+      // Store override so generator.js preserves this dialogue instead of picking random
+      state._dialogueOverride = { A: edA, B: edB || null };
+    } else {
+      state._dialogueOverride = null;
+    }
+
     const ideaInput = document.getElementById('idea-input');
-    if (ideaInput) {
+    if (ideaInput && feedback) {
       // Append feedback to the idea input so generator picks it up
       const prev = ideaInput.value.trim();
-      const feedbackLine = feedback ? `[ДОРАБОТКА: ${feedback}]` : '';
+      const feedbackLine = `[ДОРАБОТКА: ${feedback}]`;
       ideaInput.value = prev ? `${prev}\n${feedbackLine}` : feedbackLine;
     }
     // Clear feedback field
@@ -6115,17 +6133,17 @@ async function generateABVariants() {
         const idx = parseInt(b.dataset.idx);
         const v = variants[idx];
         if (!v) return;
-        // Update main result dialogues
-        if (state.lastResult.blueprint_json?.dialogue_segments) {
-          const segA = state.lastResult.blueprint_json.dialogue_segments.find(s => s.speaker === 'A');
-          const segB = state.lastResult.blueprint_json.dialogue_segments.find(s => s.speaker === 'B');
-          if (segA) segA.text_ru = v.a;
-          if (segB) segB.text_ru = v.b;
+        // Use shared applyDialogueUpdate to sync ALL outputs:
+        // veo_prompt, video_json, ru_package, editor, _apiContext, storyboard
+        applyDialogueUpdate(v.a, v.b === '—' ? '' : v.b);
+        // Override killer word with the variant's specific one (applyDialogueUpdate derives from last word)
+        if (v.killer && state.lastResult.blueprint_json) {
           state.lastResult.blueprint_json.killer_word = v.killer;
+          const vp = state.lastResult.video_prompt_en_json;
+          if (vp?.dialogue) vp.dialogue.killer_word = v.killer;
+          const kwEl = document.getElementById('gen-killer-word');
+          if (kwEl) kwEl.textContent = `💥 killer word: ${v.killer}`;
         }
-        document.getElementById('gen-dialogue-a').textContent = v.a;
-        document.getElementById('gen-dialogue-b').textContent = v.b;
-        document.getElementById('gen-killer-word').textContent = v.killer ? `💥 killer word: ${v.killer}` : '';
         populateStoryboard(state.lastResult);
         // Update active state in UI
         container.querySelectorAll('.ab-variant-card').forEach(card => {

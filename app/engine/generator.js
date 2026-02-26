@@ -1544,6 +1544,7 @@ export function generate(input) {
     category, thread_memory, video_meta,
     product_info,
     reference_style,
+    dialogue_override,
     options = {}, seed = Date.now().toString(),
     characters = [],
     locations = [],
@@ -1769,6 +1770,19 @@ export function generate(input) {
     dialogueA = demo.A_lines[demoIdx];
     dialogueB = demo.B_lines[demoIdx];
     killerWord = demo.killer_word;
+  }
+
+  // ── Dialogue override (from editor edits or variant selection) ──
+  if (dialogue_override) {
+    if (dialogue_override.A) dialogueA = dialogue_override.A;
+    if (dialogue_override.B) dialogueB = dialogue_override.B;
+    if (dialogue_override.killer) {
+      killerWord = dialogue_override.killer;
+    } else {
+      // Derive killer word from last word of the final speaker
+      const lastLine = (dialogueB || dialogueA || '');
+      killerWord = lastLine.split(/\s+/).pop()?.replace(/[^\u0430-\u044f\u0451a-z]/gi, '') || killerWord;
+    }
   }
 
   // ── Estimate duration ──
@@ -2352,6 +2366,7 @@ ${engage.firstComment}
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       meme_context: input.meme_context || null,
+      dialogue_override: dialogue_override || null,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
       dialogueA, dialogueB, killerWord,
       // Remake instruction — when video reference is provided, Gemini must replicate it
@@ -2459,14 +2474,18 @@ ${(g.assembly_tips_ru || []).map((t, i) => `${i + 1}. ${t}`).join('\n')}`;
   }
 
   // ── 2. Video prompt: replace dialogue (Gemini generates fresh lines) ──
-  if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
-  if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
-  if (g.killer_word) {
-    r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
-    // Sync killer_word into vibe.punchline so it matches actual dialogue
-    if (r.video_prompt_en_json.vibe?.punchline) {
-      r.video_prompt_en_json.vibe.punchline = r.video_prompt_en_json.vibe.punchline
-        .replace(/Killer word "[^"]*"/, `Killer word "${g.killer_word}"`);
+  // If dialogue_override is set, user explicitly chose this dialogue — skip Gemini's
+  const hasDialogueOverride = !!(ctx.dialogue_override?.A);
+  if (!hasDialogueOverride) {
+    if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
+    if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
+    if (g.killer_word) {
+      r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
+      // Sync killer_word into vibe.punchline so it matches actual dialogue
+      if (r.video_prompt_en_json.vibe?.punchline) {
+        r.video_prompt_en_json.vibe.punchline = r.video_prompt_en_json.vibe.punchline
+          .replace(/Killer word "[^"]*"/, `Killer word "${g.killer_word}"`);
+      }
     }
   }
 
@@ -2487,20 +2506,23 @@ ${(g.assembly_tips_ru || []).map((t, i) => `${i + 1}. ${t}`).join('\n')}`;
   }
 
   // ── 5. Blueprint: replace dialogue in scenes (solo-aware) ──
+  // Skip if dialogue_override — user's edited dialogue is already in the blueprint from generator
   const isSoloMerge = ctx.soloMode || (ctx.charA && ctx.charB && ctx.charA.id === ctx.charB.id);
-  if (g.dialogue_A_ru) {
-    // In solo mode, scene[1] is 'monologue'; in duo mode, scene[1] is 'act_A'
-    if (r.blueprint_json.scenes[1]) r.blueprint_json.scenes[1].dialogue_ru = g.dialogue_A_ru;
-    if (r.blueprint_json.dialogue_segments?.[0]) r.blueprint_json.dialogue_segments[0].text_ru = g.dialogue_A_ru;
-  }
-  if (g.dialogue_B_ru && !isSoloMerge) {
-    // Only update B in duo mode — in solo mode there is no scene[2] 'act_B' or dialogue_segments[1]
-    if (r.blueprint_json.scenes[2]) r.blueprint_json.scenes[2].dialogue_ru = g.dialogue_B_ru;
-    if (r.blueprint_json.dialogue_segments?.[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
+  if (!hasDialogueOverride) {
+    if (g.dialogue_A_ru) {
+      // In solo mode, scene[1] is 'monologue'; in duo mode, scene[1] is 'act_A'
+      if (r.blueprint_json.scenes[1]) r.blueprint_json.scenes[1].dialogue_ru = g.dialogue_A_ru;
+      if (r.blueprint_json.dialogue_segments?.[0]) r.blueprint_json.dialogue_segments[0].text_ru = g.dialogue_A_ru;
+    }
+    if (g.dialogue_B_ru && !isSoloMerge) {
+      // Only update B in duo mode — in solo mode there is no scene[2] 'act_B' or dialogue_segments[1]
+      if (r.blueprint_json.scenes[2]) r.blueprint_json.scenes[2].dialogue_ru = g.dialogue_B_ru;
+      if (r.blueprint_json.dialogue_segments?.[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
+    }
   }
 
   // ── 5a. Blueprint: sync killer_word ──
-  if (g.killer_word) {
+  if (g.killer_word && !hasDialogueOverride) {
     r.blueprint_json.killer_word = g.killer_word;
   }
 
@@ -2515,9 +2537,10 @@ ${(g.assembly_tips_ru || []).map((t, i) => `${i + 1}. ${t}`).join('\n')}`;
   }
 
   // ── 6. Rebuild RU package with Gemini's creative content ──
-  const dA = g.dialogue_A_ru || ctx.dialogueA || '—';
-  const dB = g.dialogue_B_ru || ctx.dialogueB || '—';
-  const kw = g.killer_word || '—';
+  // If dialogue_override, prefer user's edited dialogue over Gemini's
+  const dA = hasDialogueOverride ? (ctx.dialogueA || '—') : (g.dialogue_A_ru || ctx.dialogueA || '—');
+  const dB = hasDialogueOverride ? (ctx.dialogueB || '—') : (g.dialogue_B_ru || ctx.dialogueB || '—');
+  const kw = hasDialogueOverride ? (r.blueprint_json?.killer_word || '—') : (g.killer_word || '—');
   const charA = ctx.charA;
   const charB = ctx.charB;
   const cast = r.video_prompt_en_json.cast || {};
