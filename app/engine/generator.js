@@ -1317,6 +1317,7 @@ function buildVeoPrompt(opts) {
       faceSilhouette ? `Face shape: ${faceSilhouette}` : null,
       bio.skin_color_tokens ? `Skin tone: ${safeArr(bio.skin_color_tokens)}` : null,
       bio.skin_tokens ? `Skin texture: ${safeArr(bio.skin_tokens)}` : null,
+      bio.skin_glow_tokens ? `Skin glow: ${safeArr(bio.skin_glow_tokens)}` : null,
       ageFilter(bio.wrinkle_map_tokens) ? `Wrinkles: ${safeArr(bio.wrinkle_map_tokens)}` : (isYoung ? null : null),
       ageFilter(bio.nasolabial_tokens) ? `Nasolabial: ${safeArr(bio.nasolabial_tokens)}` : null,
       ageFilter(bio.forehead_tokens) ? `Forehead: ${safeArr(bio.forehead_tokens)}` : null,
@@ -1325,11 +1326,13 @@ function buildVeoPrompt(opts) {
       bio.chin_tokens ? `Chin: ${safeArr(bio.chin_tokens)}` : null,
       ageFilter(bio.undereye_tokens) ? `Under eyes: ${safeArr(bio.undereye_tokens)}` : null,
       bio.eye_tokens ? `Eyes: ${safeArr(bio.eye_tokens)}` : null,
+      bio.eye_catchlight_tokens ? `Eye catchlight: ${safeArr(bio.eye_catchlight_tokens)}` : null,
       ageFilter(bio.eyebrow_tokens) ? `Eyebrows: ${safeArr(bio.eyebrow_tokens)}` : null,
       bio.eyelash_tokens ? `Eyelashes: ${safeArr(bio.eyelash_tokens)}` : null,
       bio.nose_tokens ? `Nose: ${safeArr(bio.nose_tokens)}` : null,
       bio.mouth_tokens ? `Mouth: ${safeArr(bio.mouth_tokens)}` : null,
       ageFilter(bio.lip_texture_tokens) ? `Lips: ${safeArr(bio.lip_texture_tokens)}` : null,
+      bio.lip_finish_tokens ? `Lip finish: ${safeArr(bio.lip_finish_tokens)}` : null,
       ageFilter(bio.teeth_tokens) ? `Teeth: ${safeArr(bio.teeth_tokens)}` : null,
       bio.hair_tokens ? `Hair: ${safeArr(bio.hair_tokens)}` : null,
       bio.facial_hair_tokens && !/^none$/i.test(safeArr(bio.facial_hair_tokens)) ? `Facial hair: ${safeArr(bio.facial_hair_tokens)}` : null,
@@ -1365,6 +1368,7 @@ function buildVeoPrompt(opts) {
       !skipFabric && id.fabric_texture_anchor ? `Fabric: ${id.fabric_texture_anchor}` : null,
       !skipPattern && id.pattern_anchor && id.pattern_anchor !== 'solid color' ? `Pattern: ${id.pattern_anchor}` : null,
       id.sleeve_style_anchor ? `Sleeves: ${id.sleeve_style_anchor}` : null,
+      id.cloth_physics_hint ? `Cloth physics: ${id.cloth_physics_hint}` : null,
     ].filter(Boolean);
 
     // ── EXPRESSION & BEHAVIOR ──
@@ -1385,6 +1389,9 @@ function buildVeoPrompt(opts) {
       mod.thinking_expression ? `Thinking: ${mod.thinking_expression}` : null,
       mod.eye_contact_style ? `Eye contact: ${_eyeSafe(mod.eye_contact_style)}` : null,
       mod.sad_expression ? `Sadness: ${mod.sad_expression}` : null,
+      mod.head_motion_style ? `Head motion: ${mod.head_motion_style}` : null,
+      mod.breath_pattern ? `Breathing: ${mod.breath_pattern}` : null,
+      mod.mouth_motion_style ? `Mouth motion: ${mod.mouth_motion_style}` : null,
     ].filter(Boolean);
 
     // ── SPEECH IDENTITY ──
@@ -2005,6 +2012,10 @@ export function generate(input) {
         facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charA.biology_override?.facial_hair_tokens)) ? safeArr(charA.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
         resting_face: charA.biology_override?.facial_expression_default || undefined,
+        // ── V19.3 REALISM PHYSICS ──
+        skin_glow: safeArr(charA.biology_override?.skin_glow_tokens) || undefined,
+        eye_catchlight: safeArr(charA.biology_override?.eye_catchlight_tokens) || undefined,
+        lip_finish: safeArr(charA.biology_override?.lip_finish_tokens) || undefined,
         // ── WARDROBE IDENTITY ANCHORS ──
         wardrobe: wardrobeA,
         wardrobe_anchor: anchorA.wardrobe_anchor || undefined,
@@ -2052,6 +2063,10 @@ export function generate(input) {
         facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charA.biology_override?.facial_hair_tokens)) ? safeArr(charA.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
         resting_face: charA.biology_override?.facial_expression_default || undefined,
+        // ── V19.3 REALISM PHYSICS ──
+        skin_glow: safeArr(charA.biology_override?.skin_glow_tokens) || undefined,
+        eye_catchlight: safeArr(charA.biology_override?.eye_catchlight_tokens) || undefined,
+        lip_finish: safeArr(charA.biology_override?.lip_finish_tokens) || undefined,
         // ── WARDROBE IDENTITY ANCHORS ──
         wardrobe: wardrobeA,
         wardrobe_anchor: anchorA.wardrobe_anchor || undefined,
@@ -2098,6 +2113,10 @@ export function generate(input) {
         facial_hair: safeArr(charB.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charB.biology_override?.facial_hair_tokens)) ? safeArr(charB.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charB.biology_override?.eyelash_tokens) || undefined,
         resting_face: charB.biology_override?.facial_expression_default || undefined,
+        // ── V19.3 REALISM PHYSICS ──
+        skin_glow: safeArr(charB.biology_override?.skin_glow_tokens) || undefined,
+        eye_catchlight: safeArr(charB.biology_override?.eye_catchlight_tokens) || undefined,
+        lip_finish: safeArr(charB.biology_override?.lip_finish_tokens) || undefined,
         // ── WARDROBE IDENTITY ANCHORS ──
         wardrobe: wardrobeB,
         wardrobe_anchor: anchorB.wardrobe_anchor || undefined,
