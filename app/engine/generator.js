@@ -897,7 +897,7 @@ function buildCastContract(charA, charB) {
     const defaultSkinMiddle = ['visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'fine lines around eyes', 'early nasolabial folds', 'uneven skin tone with natural redness on cheeks/nose', 'visible blood capillaries on nose bridge', 'skin texture like real phone photo NOT AI render'];
     const defaultSkinElderly = ['deep wrinkles with varying depth', 'age spots and sun damage', 'visible pores especially on nose and cheeks', 'slight oily sheen on T-zone (NOT plastic shine)', 'micro-wrinkles around eyes (crow\'s feet)', 'nasolabial folds', 'uneven skin tone with natural redness on cheeks/nose', 'visible blood capillaries on nose bridge', 'skin texture like real phone photo NOT AI render'];
     const defaultSkin = isYoung ? defaultSkinYoung : isMiddle ? defaultSkinMiddle : defaultSkinElderly;
-    const defaultEyes = ['wet glint on cornea', 'slight sclera redness with visible micro-vessels', 'micro-saccades every 0.3-0.5s', 'natural iris detail with color variation', 'slight asymmetry between left and right eye', 'realistic eyelash detail (not perfect)', 'tear film moisture visible'];
+    const defaultEyes = ['wet glint on cornea', 'slight sclera redness with visible micro-vessels', 'steady focused gaze with natural depth', 'natural iris detail with color variation', 'slight asymmetry between left and right eye', 'realistic eyelash detail (not perfect)', 'tear film moisture visible'];
     const ageFallback = isYoung ? 'young adult' : isMiddle ? 'middle-aged' : 'elderly';
     return {
       character_en: char.prompt_tokens?.character_en || `${ageFallback} character, hyper-realistic detail, NEVER plastic or smooth`,
@@ -1273,6 +1273,26 @@ function buildVeoPrompt(opts) {
       return val;
     };
 
+    // ── VIDEO-SAFE EYE STABILIZATION ──
+    // Veo interprets eye-movement tokens literally → causes darting eyes
+    const _eyeSafe = (v) => {
+      if (!v) return v;
+      // Replace darting/shifting eye contact with steady focused alternative
+      if (/dart|never still|shifting|flick|scanning/i.test(v)) return 'steady focused alternation between camera and scene partner';
+      return v;
+    };
+    const _blinkSafe = (v) => {
+      if (!v) return v;
+      // Cap rapid blinking to natural pace
+      if (/rapid|2-3 per second|nervous blink/i.test(v)) return 'natural relaxed blinking every 3-5 seconds';
+      return v;
+    };
+    const _listenSafe = (v) => {
+      if (!v) return v;
+      // Strip eye-darting phrases from listening behavior
+      return v.replace(/,?\s*eye[s]?\s+(dart|roll)[^,]*/gi, '').replace(/^\s*,\s*/, '').trim() || v;
+    };
+
     // ── FACE_SILHOUETTE VALIDATION ──
     // Must contain face geometry, not accessories/identity items
     const FACE_SHAPE_WORDS = /face|oval|angular|round|square|heart|diamond|jaw|cheek|forehead|brow|chin|silhouette/i;
@@ -1352,7 +1372,7 @@ function buildVeoPrompt(opts) {
       bio.facial_expression_default ? `Resting face: ${bio.facial_expression_default}` : null,
       bio.voice_texture_tokens ? `Voice: ${safeArr(bio.voice_texture_tokens)}` : null,
       id.micro_gesture ? `Micro-gesture: ${id.micro_gesture}` : null,
-      mod.listening_behavior ? `When listening: ${mod.listening_behavior}` : null,
+      mod.listening_behavior ? `When listening: ${_listenSafe(mod.listening_behavior)}` : null,
       mod.humor_delivery ? `Humor delivery: ${mod.humor_delivery}` : null,
       mod.camera_relationship ? `Camera: ${mod.camera_relationship}` : null,
       mod.anger_expression ? `Anger: ${mod.anger_expression}` : null,
@@ -1360,10 +1380,10 @@ function buildVeoPrompt(opts) {
       mod.contempt_expression ? `Contempt: ${mod.contempt_expression}` : null,
       mod.disgust_expression ? `Disgust: ${mod.disgust_expression}` : null,
       mod.joy_expression ? `Joy: ${mod.joy_expression}` : null,
-      mod.blink_pattern ? `Blink: ${mod.blink_pattern}` : null,
+      mod.blink_pattern ? `Blink: ${_blinkSafe(mod.blink_pattern)}` : null,
       mod.fidget_style ? `Fidget: ${mod.fidget_style}` : null,
       mod.thinking_expression ? `Thinking: ${mod.thinking_expression}` : null,
-      mod.eye_contact_style ? `Eye contact: ${mod.eye_contact_style}` : null,
+      mod.eye_contact_style ? `Eye contact: ${_eyeSafe(mod.eye_contact_style)}` : null,
       mod.sad_expression ? `Sadness: ${mod.sad_expression}` : null,
     ].filter(Boolean);
 
