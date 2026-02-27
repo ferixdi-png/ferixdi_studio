@@ -1636,9 +1636,49 @@ export function generate(input) {
     warnings.push('Описание видео слишком длинное — может быть обрезано до 200 символов');
   }
 
-  const { A: charA, B: charB } = roles_locked
+  let { A: charA, B: charB } = roles_locked
     ? { A: rawA, B: rawB }
     : resolveRoles(rawA, rawB);
+
+  // ── AGE-AWARE CHARACTER SANITIZATION ──
+  // Filter elderly-specific tokens from young/middle-aged characters’ biology_override
+  // + validate face_silhouette contains actual face geometry, not accessories
+  // Creates shallow copies — does NOT mutate original character data
+  const _sanitizeChar = (c) => {
+    let changed = false;
+    let bio = c.biology_override;
+    let id = c.identity_anchors;
+    // ── Bio age filter ──
+    if (bio) {
+      const age = parseInt(String(bio.age || '').replace(/[^0-9]/g, ''), 10) || 65;
+      if (age < 55) {
+        const RE = /deep.*(wrinkle|nasolabial|fold|carved|bag)|age.?spot|missing.*tooth|gold.*replacement|receding.*jaw|wild.*unkempt.*eyebrow|thin.*dry.*cracked.*lip|sagging|jowl|crow.*feet|liver.*spot/i;
+        const filterVal = (v) => {
+          if (!v) return v;
+          if (typeof v === 'string') return RE.test(v) ? null : v;
+          if (Array.isArray(v)) { const f = v.filter(x => !RE.test(x)); return f.length ? f : null; }
+          return v;
+        };
+        const sb = { ...bio };
+        ['wrinkle_map_tokens','nasolabial_tokens','forehead_tokens','jaw_tokens','undereye_tokens',
+         'eyebrow_tokens','lip_texture_tokens','teeth_tokens','eyelash_tokens'].forEach(k => { sb[k] = filterVal(bio[k]); });
+        bio = sb;
+        changed = true;
+      }
+    }
+    // ── Face silhouette validation ──
+    if (id?.face_silhouette) {
+      const NON_FACE = /glasses|earring|notebook|pen|hair|eyes|squint|pearl|cold|appraising/i;
+      const HAS_FACE = /face|oval|angular|round|square|heart|diamond|jaw|cheek|forehead|brow|chin|silhouette/i;
+      if (NON_FACE.test(id.face_silhouette) && !HAS_FACE.test(id.face_silhouette)) {
+        id = { ...id, face_silhouette: null };
+        changed = true;
+      }
+    }
+    return changed ? { ...c, biology_override: bio, identity_anchors: id } : c;
+  };
+  charA = _sanitizeChar(charA);
+  charB = _sanitizeChar(charB);
 
   // ── Topic context (from user input) ── must be before category detection
   const topicRu = context_ru?.trim() || '';
@@ -1779,8 +1819,9 @@ export function generate(input) {
 
   if (input_mode === 'script' && script_ru) {
     dialogueA = script_ru.A || demo.A_lines[demoIdx];
-    dialogueB = script_ru.B || demo.B_lines[demoIdx];
-    killerWord = dialogueB.split(/\s+/).pop()?.replace(/[^а-яёa-z]/gi, '') || 'панч';
+    dialogueB = script_ru.B || (soloMode ? '' : demo.B_lines[demoIdx]);
+    const kwSource = (soloMode || !dialogueB) ? dialogueA : dialogueB;
+    killerWord = kwSource.split(/\s+/).pop()?.replace(/[^а-яёa-z]/gi, '') || 'панч';
   } else if (input_mode === 'video' && video_meta) {
     // For video mode: try to extract dialogue from video metadata if available
     if (video_meta.extracted_dialogue) {
