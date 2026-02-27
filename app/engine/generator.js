@@ -1259,6 +1259,29 @@ function buildVeoPrompt(opts) {
     const si = char.speech_identity || {};
     const baseDesc = char.prompt_tokens?.character_en || castEntry?.character_en || '';
 
+    // ── AGE-AWARE TOKEN FILTER ──
+    // Prevents elderly-person defaults from contaminating young character prompts
+    const ageNum = parseInt(String(bio.age || '').replace(/[^0-9]/g, ''), 10) || 65;
+    const isYoung = ageNum < 35;
+    const isMiddle = ageNum >= 35 && ageNum < 55;
+    const ELDERLY_MARKERS = /deep.*(wrinkle|nasolabial|fold|carved|bag)|age.?spot|missing.*tooth|gold.*replacement|receding.*jaw|wild.*unkempt.*eyebrow|thin.*dry.*cracked.*lip|sagging|jowl|crow.*feet|liver.*spot/i;
+    const ageFilter = (val) => {
+      if (!isYoung && !isMiddle) return val; // elderly: keep everything
+      const str = safeArr(val);
+      if (!str) return val;
+      if (ELDERLY_MARKERS.test(str)) return null; // suppress age-inappropriate token
+      return val;
+    };
+
+    // ── FACE_SILHOUETTE VALIDATION ──
+    // Must contain face geometry, not accessories/identity items
+    const FACE_SHAPE_WORDS = /face|oval|angular|round|square|heart|diamond|jaw|cheek|forehead|brow|chin|silhouette/i;
+    const NON_FACE_WORDS = /glasses|earring|notebook|pen|hair|eyes|squint|pearl|cold|appraising/i;
+    let faceSilhouette = id.face_silhouette || null;
+    if (faceSilhouette && NON_FACE_WORDS.test(faceSilhouette) && !FACE_SHAPE_WORDS.test(faceSilhouette)) {
+      faceSilhouette = null; // bad data — skip, baseDesc already has appearance
+    }
+
     // ── BODY & FACE ──
     const body = [
       baseDesc,
@@ -1271,23 +1294,23 @@ function buildVeoPrompt(opts) {
 
     // ── FACE DETAIL ──
     const face = [
-      id.face_silhouette ? `Face shape: ${id.face_silhouette}` : null,
+      faceSilhouette ? `Face shape: ${faceSilhouette}` : null,
       bio.skin_color_tokens ? `Skin tone: ${safeArr(bio.skin_color_tokens)}` : null,
       bio.skin_tokens ? `Skin texture: ${safeArr(bio.skin_tokens)}` : null,
-      bio.wrinkle_map_tokens ? `Wrinkles: ${safeArr(bio.wrinkle_map_tokens)}` : null,
-      bio.nasolabial_tokens ? `Nasolabial: ${safeArr(bio.nasolabial_tokens)}` : null,
-      bio.forehead_tokens ? `Forehead: ${safeArr(bio.forehead_tokens)}` : null,
-      bio.jaw_tokens ? `Jaw: ${safeArr(bio.jaw_tokens)}` : null,
+      ageFilter(bio.wrinkle_map_tokens) ? `Wrinkles: ${safeArr(bio.wrinkle_map_tokens)}` : (isYoung ? null : null),
+      ageFilter(bio.nasolabial_tokens) ? `Nasolabial: ${safeArr(bio.nasolabial_tokens)}` : null,
+      ageFilter(bio.forehead_tokens) ? `Forehead: ${safeArr(bio.forehead_tokens)}` : null,
+      ageFilter(bio.jaw_tokens) ? `Jaw: ${safeArr(bio.jaw_tokens)}` : null,
       bio.cheekbone_tokens ? `Cheekbones: ${safeArr(bio.cheekbone_tokens)}` : null,
       bio.chin_tokens ? `Chin: ${safeArr(bio.chin_tokens)}` : null,
-      bio.undereye_tokens ? `Under eyes: ${safeArr(bio.undereye_tokens)}` : null,
+      ageFilter(bio.undereye_tokens) ? `Under eyes: ${safeArr(bio.undereye_tokens)}` : null,
       bio.eye_tokens ? `Eyes: ${safeArr(bio.eye_tokens)}` : null,
-      bio.eyebrow_tokens ? `Eyebrows: ${safeArr(bio.eyebrow_tokens)}` : null,
+      ageFilter(bio.eyebrow_tokens) ? `Eyebrows: ${safeArr(bio.eyebrow_tokens)}` : null,
       bio.eyelash_tokens ? `Eyelashes: ${safeArr(bio.eyelash_tokens)}` : null,
       bio.nose_tokens ? `Nose: ${safeArr(bio.nose_tokens)}` : null,
       bio.mouth_tokens ? `Mouth: ${safeArr(bio.mouth_tokens)}` : null,
-      bio.lip_texture_tokens ? `Lips: ${safeArr(bio.lip_texture_tokens)}` : null,
-      bio.teeth_tokens ? `Teeth: ${safeArr(bio.teeth_tokens)}` : null,
+      ageFilter(bio.lip_texture_tokens) ? `Lips: ${safeArr(bio.lip_texture_tokens)}` : null,
+      ageFilter(bio.teeth_tokens) ? `Teeth: ${safeArr(bio.teeth_tokens)}` : null,
       bio.hair_tokens ? `Hair: ${safeArr(bio.hair_tokens)}` : null,
       bio.facial_hair_tokens ? `Facial hair: ${safeArr(bio.facial_hair_tokens)}` : null,
       bio.ear_tokens ? `Ears: ${safeArr(bio.ear_tokens)}` : null,
@@ -1297,6 +1320,18 @@ function buildVeoPrompt(opts) {
     ].filter(Boolean);
 
     // ── WARDROBE ──
+    // Fix jewelry contradiction: if jewelry says 'none' but accessory_anchors has jewelry items, skip jewelry line
+    const accessoriesStr = safeArr(id.accessory_anchors).toLowerCase();
+    const jewelryVal = id.jewelry_anchors;
+    const hasJewelryInAccessories = /earring|necklace|bracelet|ring|pendant|brooch|pearl/i.test(accessoriesStr);
+    const jewelryIsNone = !jewelryVal || /^none/i.test(jewelryVal);
+    const showJewelry = jewelryVal && !jewelryIsNone && jewelryVal !== 'none visible';
+
+    // Wardrobe anchor is the primary outfit description — skip fabric/pattern/sleeves if they contradict
+    const mainOutfit = (id.wardrobe_anchor || wardrobe || '').toLowerCase();
+    const skipFabric = id.fabric_texture_anchor && mainOutfit && !mainOutfit.includes(id.fabric_texture_anchor.toLowerCase().split(' ')[0]);
+    const skipPattern = id.pattern_anchor && id.pattern_anchor !== 'solid color' && id.pattern_anchor !== 'no pattern' && mainOutfit && !mainOutfit.toLowerCase().includes(id.pattern_anchor.toLowerCase().split(' ')[0]);
+
     const wardrobeParts = [
       id.wardrobe_anchor || wardrobe,
       id.signature_element ? `Signature: ${id.signature_element}` : null,
@@ -1304,11 +1339,11 @@ function buildVeoPrompt(opts) {
       id.glasses_anchor && id.glasses_anchor !== 'none' ? `Glasses: ${id.glasses_anchor}` : null,
       id.headwear_anchor && id.headwear_anchor !== 'none' ? `Headwear: ${id.headwear_anchor}` : null,
       id.footwear_anchor ? `Footwear: ${id.footwear_anchor}` : null,
-      id.jewelry_anchors && id.jewelry_anchors !== 'none' ? `Jewelry: ${id.jewelry_anchors}` : null,
+      showJewelry ? `Jewelry: ${jewelryVal}` : null,
       id.nail_style_anchor && id.nail_style_anchor !== 'natural' ? `Nails: ${id.nail_style_anchor}` : null,
       id.color_palette?.length ? `Color palette: ${safeArr(id.color_palette)}` : null,
-      id.fabric_texture_anchor ? `Fabric: ${id.fabric_texture_anchor}` : null,
-      id.pattern_anchor && id.pattern_anchor !== 'solid color' ? `Pattern: ${id.pattern_anchor}` : null,
+      !skipFabric && id.fabric_texture_anchor ? `Fabric: ${id.fabric_texture_anchor}` : null,
+      !skipPattern && id.pattern_anchor && id.pattern_anchor !== 'solid color' ? `Pattern: ${id.pattern_anchor}` : null,
       id.sleeve_style_anchor ? `Sleeves: ${id.sleeve_style_anchor}` : null,
     ].filter(Boolean);
 
