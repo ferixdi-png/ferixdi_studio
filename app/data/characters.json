@@ -410,7 +410,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "round compact face, apple cheeks, fierce squint lines",
+            "face_silhouette": "strong square jaw face shape, rounded full cheekbones, cleft chin, round compact face, apple cheeks",
             "signature_element": "bright hand-knitted shawl draped over shoulders",
             "micro_gesture": "finger jabbing the air like conductor's baton",
             "wardrobe_anchor": "hand-knitted mohair cardigan with reindeer pattern, stretched at elbows, wooden toggle buttons",
@@ -772,7 +772,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "large round face, theatrical makeup, permanent surprised brows",
+            "face_silhouette": "narrow pointed jaw face shape, flat wide cheekbones, double chin, large round face, permanent surprised brows",
             "signature_element": "amber pendant on gold chain",
             "micro_gesture": "slaps own thigh then points at opponent",
             "wardrobe_anchor": "leopard-print chiffon shawl over black cashmere turtleneck, chunky amber rings on three fingers",
@@ -952,7 +952,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "soft round face, prominent veins at temples, conspiratorial squint",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, receding soft chin, soft round face",
             "signature_element": "gold rose brooch on lapel",
             "micro_gesture": "leans in close then jerks back in shock",
             "wardrobe_anchor": "faux-fur-trimmed burgundy coat, gold rose brooch on lapel, knitted beret tilted rakishly",
@@ -1130,7 +1130,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "angular jaw, thick brow ridge creating shadow over eyes, weathered nose bridge",
+            "face_silhouette": "wide angular jaw face shape, subtle low cheekbones, pointed narrow chin",
             "signature_element": "silver pocket watch chain from vest",
             "micro_gesture": "strokes mustache slowly while staring",
             "wardrobe_anchor": "grey wool vest over threadbare white dress shirt, sleeves rolled once, pocket watch chain visible",
@@ -1384,7 +1384,7 @@
                 "fair freckled skin"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -1418,7 +1418,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -1490,7 +1490,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "soft oval face, melancholy eyes, natural grey streaks framing face",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, rounded stubborn chin, soft oval face, natural grey streaks framing face",
             "signature_element": "vintage costume rings on multiple fingers",
             "micro_gesture": "touches temple with ringed finger while remembering",
             "wardrobe_anchor": "vintage brocade jacket with padded shoulders, costume jewelry rings on every other finger, silk scarf",
@@ -1514,8 +1514,7 @@
         "biology_override": {
             "age": "52",
             "skin_tokens": [
-                "soft features",
-                "deep nasolabial folds"
+                "soft features"
             ],
             "eye_tokens": [
                 "warm brown eyes",
@@ -1541,7 +1540,7 @@
                 "natural Eastern European skin tone"
             ],
             "wrinkle_map_tokens": [
-                "soft features with deep nasolabial folds"
+                "visible expression lines around eyes and mouth"
             ],
             "facial_hair_tokens": [
                 "none"
@@ -1559,7 +1558,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "relaxed confident walk, even steps"
@@ -1735,14 +1734,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
             ],
             "facial_expression_default": "perpetually amused smirk",
             "jaw_tokens": [
-                "receding jaw"
+                "defined jawline"
             ],
             "cheekbone_tokens": [
                 "high sharp cheekbones"
@@ -1769,7 +1768,7 @@
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -1841,7 +1840,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "angular stern face, tight ponytail pulling features taut, zero makeup",
+            "face_silhouette": "narrow pointed jaw face shape, high sharp cheekbones, pointed narrow chin, angular stern face",
             "signature_element": "leather-strap watch on bare wrist, rolled sleeves",
             "micro_gesture": "tilts head slightly, squints — 'say that again'",
             "wardrobe_anchor": "faded plaid flannel shirt rolled to elbows, leather watch strap, no jewelry at all",
@@ -1911,7 +1910,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -1942,13 +1941,13 @@
                 "sunken hollows under eyes"
             ],
             "shoulder_tokens": [
-                "narrow sloped shoulders"
+                "broad strong shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -2017,7 +2016,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "oval athletic face, prominent nose, messy ponytail framing",
+            "face_silhouette": "strong square jaw face shape, flat wide cheekbones, square prominent chin, oval athletic face",
             "signature_element": "bright zigzag-pattern mohair cardigan over sports top — clash of worlds",
             "micro_gesture": "sweeping dramatic hand wave encompassing entire situation",
             "wardrobe_anchor": "bright hand-knitted mohair cardigan with bold zigzag pattern over sports tank top, mismatched aesthetic",
@@ -2041,8 +2040,7 @@
         "biology_override": {
             "age": "47",
             "skin_tokens": [
-                "smooth olive skin",
-                "first crow's feet"
+                "smooth olive skin"
             ],
             "eye_tokens": [
                 "sharp green eyes",
@@ -2067,10 +2065,10 @@
                 "energetic hand gestures"
             ],
             "skin_color_tokens": [
-                "smooth olive skin with first crow's feet"
+                "natural skin tone"
             ],
             "wrinkle_map_tokens": [
-                "smooth olive skin with first crow's feet"
+                "visible expression lines around eyes and mouth"
             ],
             "facial_hair_tokens": [
                 "none"
@@ -2088,7 +2086,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -2116,7 +2114,7 @@
                 "asymmetric nasolabial folds"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
                 "rounded hunched shoulders"
@@ -2194,7 +2192,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "round warm face, thick-framed glasses, rosy cheeks",
+            "face_silhouette": "round face, rounded full cheekbones, double chin, round warm face, rosy cheeks",
             "signature_element": "thick-framed fashion glasses and paisley burgundy shawl",
             "micro_gesture": "points with glasses in hand, then puts them back on to deliver verdict",
             "wardrobe_anchor": "paisley-print burgundy silk shawl over black cashmere turtleneck, thick-framed glasses, practical but stylish",
@@ -2263,7 +2261,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -2288,7 +2286,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "moderate nasolabial folds"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -2369,7 +2367,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "square jaw, broad forehead, permanent squint from screens",
+            "face_silhouette": "rounded soft jaw face shape, flat wide cheekbones, double chin, square jaw, broad forehead",
             "signature_element": "striped telnyashka peeking from jacket collar",
             "micro_gesture": "tilts head and squints like debugging a problem",
             "wardrobe_anchor": "worn striped sailor telnyashka under patched corduroy jacket, leather belt with scratched buckle",
@@ -2438,7 +2436,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -2457,7 +2455,7 @@
                 "heavy dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural slightly textured lips"
             ],
             "chin_tokens": [
                 "double chin"
@@ -2466,13 +2464,13 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -2544,7 +2542,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "square jaw, stubble shadow, tired kind eyes, football-broken nose",
+            "face_silhouette": "strong square jaw face shape, high sharp cheekbones, receding soft chin",
             "signature_element": "unlit cigarette tucked behind ear",
             "micro_gesture": "shrugs with 'what can you do' expression",
             "wardrobe_anchor": "grey wool sweater with moth holes, white shirt collar showing, unlit cigarette behind ear",
@@ -2719,7 +2717,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "round tanned face, magnificent mustache dominating lower face, squinty eyes",
+            "face_silhouette": "round face, rounded full cheekbones, square prominent chin, round tanned face, magnificent mustache dominating lower face",
             "signature_element": "magnificent bushy ginger mustache",
             "micro_gesture": "strokes mustache confidently before delivering opinion",
             "wardrobe_anchor": "black polo shirt, gold chain at neck, leather jacket draped over shoulders",
@@ -2789,7 +2787,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -2823,7 +2821,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -2895,7 +2893,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "square jaw, reading glasses on forehead, perpetual forehead creases",
+            "face_silhouette": "strong square jaw face shape, high sharp cheekbones, double chin, perpetual forehead creases",
             "signature_element": "reading glasses pushed up on forehead + rhinestone sunglasses",
             "micro_gesture": "jabs finger in air like conducting chaos orchestra",
             "wardrobe_anchor": "oversized puffer jacket, rhinestone sunglasses on head, reading glasses on forehead — double headgear",
@@ -2967,7 +2965,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "quick nervous pacing, sudden direction changes"
@@ -3001,7 +2999,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -3073,7 +3071,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "gaunt angular face, military bearing, scar on chin, thin glasses",
+            "face_silhouette": "wide angular jaw face shape, hollow sunken cheekbones, double chin, gaunt angular face",
             "signature_element": "military field jacket with crooked medals",
             "micro_gesture": "pushes glasses up and delivers devastating sarcasm deadpan",
             "wardrobe_anchor": "old military field jacket, medals pinned crookedly, woolen scarf, combat boots even at home",
@@ -3253,7 +3251,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "broad face, messy hair, reading glasses on cord, concentration furrows",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, rounded stubborn chin, broad face",
             "signature_element": "reading glasses on cord around neck",
             "micro_gesture": "puts glasses on, inspects, takes off, delivers verdict",
             "wardrobe_anchor": "quilted cotton vest over checked flannel, reading glasses on neck cord, pockets full of screws",
@@ -3323,7 +3321,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -3342,7 +3340,7 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural slightly textured lips"
             ],
             "chin_tokens": [
                 "rounded stubborn chin"
@@ -3357,7 +3355,7 @@
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -3506,7 +3504,7 @@
             ],
             "facial_expression_default": "alert suspicious squint",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "subtle low cheekbones"
@@ -3527,7 +3525,7 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -3605,7 +3603,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "youthful oval, freckled nose, pastel pink hair tips framing face",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, cleft chin, youthful oval",
             "signature_element": "pastel-pink hair tips",
             "micro_gesture": "raises one finger like 'actually...' before demolishing argument",
             "wardrobe_anchor": "striped telnyashka under corduroy jacket, messy ponytail, minimal jewelry",
@@ -3781,7 +3779,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "curly hair volume framing face, nostril piercing glinting, confident set jaw",
+            "face_silhouette": "rounded soft jaw face shape, high sharp cheekbones, receding soft chin, confident set jaw",
             "signature_element": "nostril piercing + voluminous curly hair",
             "micro_gesture": "head tilt with squint — 'you did NOT just say that'",
             "wardrobe_anchor": "faux-pearl necklace over embroidered magenta kaftan dress, doc martens boots",
@@ -3868,7 +3866,7 @@
                 "rounded prominent forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "neat natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "full weathered lips"
@@ -4133,7 +4131,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "angular young face, curly hair, gym-confidence in posture",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, pointed narrow chin, angular young face",
             "signature_element": "thin gold chain at neck + sports track jacket",
             "micro_gesture": "shrugs with palms up — 'what's the problem?'",
             "wardrobe_anchor": "fitted sports track jacket, joggers, clean white sneakers, thin gold chain",
@@ -4217,13 +4215,13 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "heavy dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -4238,7 +4236,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -4310,7 +4308,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "wild Einstein hair creating halo, flushed cheeks, suspicious squint",
+            "face_silhouette": "protruding jaw face shape, prominent Slavic cheekbones, receding soft chin, flushed cheeks",
             "signature_element": "wild Einstein-white frizzy hair",
             "micro_gesture": "leans in conspiratorially then jerks back in mock outrage",
             "wardrobe_anchor": "track suit bottoms, wool socks in sandals, oversized knit sweater, bathrobe on top",
@@ -4483,7 +4481,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "neat combover, curious wide eyes, perpetual crooked smirk",
+            "face_silhouette": "heavy prominent jaw face shape, hollow sunken cheekbones, receding soft chin",
             "signature_element": "wool socks in sandals combo",
             "micro_gesture": "pushes imaginary glasses up nose, delivers cryptic observation",
             "wardrobe_anchor": "track suit bottoms, wool socks in sandals, oversized knit sweater, always looks like just woke up",
@@ -4657,7 +4655,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "imposing face, silver updo, stylish glasses, pursed judgment lips",
+            "face_silhouette": "protruding jaw face shape, prominent Slavic cheekbones, strong jutting chin, imposing face",
             "signature_element": "stylish glasses + pearl earrings + judgment stare",
             "micro_gesture": "slight head tilt, evaluating, before pronouncing sentence",
             "wardrobe_anchor": "cashmere cardigan, pearl earrings, reading glasses on decorative chain",
@@ -4831,7 +4829,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "round energetic face, bleached hair dark roots, gold tooth flash",
+            "face_silhouette": "heavy prominent jaw face shape, high sharp cheekbones, double chin, round energetic face",
             "signature_element": "gold tooth that catches light when laughing",
             "micro_gesture": "waves hand dismissively — 'next customer!'",
             "wardrobe_anchor": "market apron over warm sweater, flour on hands, gold tooth, bleached hair",
@@ -5181,7 +5179,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "angular face buzzcut silver hair, bright green eyes, anchor tattoo visible",
+            "face_silhouette": "angular face, hollow sunken cheekbones, pointed narrow chin",
             "signature_element": "ultra-short silver buzzcut + anchor tattoo on forearm",
             "micro_gesture": "rolls up sleeve to show anchor tattoo when making point",
             "wardrobe_anchor": "black leather vest over striped sailor telnyashka, wide leather bracelet, combat boots",
@@ -5357,7 +5355,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "elongated face, snow-white shoulder hair, icy scanning eyes, surgical stillness",
+            "face_silhouette": "elongated face, hollow sunken cheekbones, receding soft chin",
             "signature_element": "pristine snow-white hair + bare surgeon hands with zero jewelry",
             "micro_gesture": "holds up one finger requesting silence before diagnosis",
             "wardrobe_anchor": "immaculate white blouse buttoned to neck, grey wool skirt, no jewelry — surgical cleanliness",
@@ -5533,7 +5531,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "regal face, enormous unblinking eyes, thick braid, layers of necklaces",
+            "face_silhouette": "strong square jaw face shape, high sharp cheekbones, strong jutting chin, regal face",
             "signature_element": "ten rows of beaded necklaces jangling constantly",
             "micro_gesture": "closes eyes touches temples as if receiving vision",
             "wardrobe_anchor": "layered shawls deep purple and gold, ten necklace rows, jingling bracelets, hoop earrings",
@@ -5713,7 +5711,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "narrow aristocratic face, French chignon, ice-blue eyes, thin-lip expression",
+            "face_silhouette": "narrow face, high sharp cheekbones, pointed narrow chin, narrow aristocratic face",
             "signature_element": "silver wolf-head cane handle",
             "micro_gesture": "taps cane once on floor before delivering verdict",
             "wardrobe_anchor": "midnight blue velvet blazer, silk scarf, cameo brooch, pearl earrings, wolf-head cane",
@@ -5892,7 +5890,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "wolf profile, thick silver hair, temple scar, ice-blue predator eyes",
+            "face_silhouette": "strong square jaw face shape, high sharp cheekbones, pointed narrow chin",
             "micro_gesture": "touches scar absently before speaking truth",
             "wardrobe_anchor": "black cashmere turtleneck, dark wool coat, silver watch — all monochrome",
             "accessory_anchors": [
@@ -6069,7 +6067,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "massive gentle face, white chest-length beard, sleepy bear eyes, bald dome",
+            "face_silhouette": "rounded soft jaw face shape, prominent Slavic cheekbones, square prominent chin, massive gentle face",
             "signature_element": "snow-white beard to chest + enormous gentle hands",
             "micro_gesture": "strokes long beard slowly while listening, nods once",
             "wardrobe_anchor": "enormous brown hand-knit cardigan, white undershirt, massive wool socks, wooden cross on leather cord",
@@ -6247,7 +6245,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "weathered face, black eye patch, gold earring, torn ear, skipper beard",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, strong jutting chin, weathered face",
             "signature_element": "black eye patch + gold earring + torn ear",
             "micro_gesture": "lifts eye patch slightly as if revealing secret then drops it",
             "wardrobe_anchor": "faded navy peacoat, striped telnyashka, captain cap tilted, gold earring",
@@ -6426,7 +6424,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "refined face, pencil mustache, perfect silver hair, mischievous eyes",
+            "face_silhouette": "wide angular jaw face shape, prominent Slavic cheekbones, receding soft chin, refined face",
             "signature_element": "bow tie + pencil mustache + mirror-shine shoes",
             "micro_gesture": "straightens bow tie then delivers perfect one-liner",
             "wardrobe_anchor": "three-piece tweed suit, silk bow tie, pocket square, patent leather shoes, silver cufflinks",
@@ -6606,7 +6604,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "square face, singed eyebrow stumps, flat broken nose, deep-set grey eyes",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, cleft chin, square face, singed eyebrow stumps",
             "signature_element": "singed eyebrows + enormous scarred forge hands",
             "micro_gesture": "looks at own hands then back at person — 'you call that work?'",
             "wardrobe_anchor": "leather smithing apron over flannel, burn scars on forearms, work boots steel-toed",
@@ -6853,7 +6851,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -6890,7 +6888,7 @@
                 "white dentures visible when speaking"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -6959,7 +6957,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "voluminous bob, enormous sunglasses hiding half face, dramatic makeup",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, pointed narrow chin",
             "signature_element": "giant sunglasses 24/7 + faux fur stole",
             "micro_gesture": "lowers sunglasses to peek over them — 'excuse me?!'",
             "wardrobe_anchor": "faux fur stole, enormous sunglasses, lacquered hair, gold hoops, leopard something always",
@@ -6984,8 +6982,7 @@
         "biology_override": {
             "age": "53",
             "skin_tokens": [
-                "full dramatic makeup",
-                "fine lines and early age spots"
+                "full dramatic makeup"
             ],
             "eye_tokens": [
                 "large brown eyes",
@@ -7032,7 +7029,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -7066,7 +7063,7 @@
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -7138,7 +7135,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "freckled face like star map, red braid over shoulder, warm green witch-eyes",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, pointed narrow chin, freckled face like star map",
             "signature_element": "fiery red braid + freckle constellation across entire face",
             "micro_gesture": "strokes braid thoughtfully before delivering wisdom",
             "wardrobe_anchor": "linen apron with dried herbs, forest-green hand-knit cardigan, amber bead bracelet",
@@ -7208,7 +7205,7 @@
                 "CONSTELLATION OF FRECKLES covering entire face nose cheeks forehead even eyelids"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "relaxed confident walk, even steps"
@@ -7233,7 +7230,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "moderate nasolabial folds"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -7242,7 +7239,7 @@
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -7314,7 +7311,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "sharp jawline, shaved temple tribal pattern, dark commanding eyes",
+            "face_silhouette": "angular face, hollow sunken cheekbones, square prominent chin, sharp jawline",
             "signature_element": "shaved left temple with tribal + signet ring",
             "micro_gesture": "taps signet ring on table once — meeting begins",
             "wardrobe_anchor": "tailored black blazer, white silk blouse, signet ring, shaved temple visible",
@@ -7384,7 +7381,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -7418,10 +7415,10 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -7490,7 +7487,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "delicate pale face, bright purple strand at temple, intense grey eyes",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, square prominent chin, delicate pale face",
             "signature_element": "single bright purple hair streak at temple",
             "micro_gesture": "touches purple strand thinking, tucks before speaking",
             "wardrobe_anchor": "crisp white blouse, pencil skirt, amethyst studs, everything immaculate except purple streak",
@@ -7558,7 +7555,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -7734,7 +7731,7 @@
                 "RUNIC TATTOO ON NECK visible above collar"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -7750,7 +7747,7 @@
                 "smooth narrow forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "full lips with age cracks"
@@ -7762,10 +7759,10 @@
                 "pronounced deep smile lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
-                "narrow sloped shoulders"
+                "broad strong shoulders"
             ],
             "teeth_tokens": [
                 "worn flat teeth"
@@ -7840,7 +7837,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "slicked-back hair, wax-tipped handlebar mustache, sharp chin, retro look",
+            "face_silhouette": "narrow face, high sharp cheekbones, pointed narrow chin, sharp chin",
             "signature_element": "suspenders + wax-tipped handlebar mustache + slicked hair",
             "micro_gesture": "snaps suspender strap while making point",
             "wardrobe_anchor": "crisp white shirt, suspenders, slicked hair, pencil mustache, polished oxfords",
@@ -7864,8 +7861,7 @@
         "biology_override": {
             "age": "54",
             "skin_tokens": [
-                "narrow face",
-                "fine lines and early age spots"
+                "narrow face"
             ],
             "eye_tokens": [
                 "warm brown eyes",
@@ -7910,7 +7906,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -8016,7 +8012,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "massive shaved head, broken nose, dimpled kind smile, tiny gentle eyes",
+            "face_silhouette": "rounded soft jaw face shape, prominent Slavic cheekbones, strong jutting chin",
             "signature_element": "shaved head + kindest dimpled smile + flower sleeve tattoo",
             "micro_gesture": "cracks neck gently then smiles — disarming contrast",
             "wardrobe_anchor": "tight black t-shirt stretching over muscles, flower sleeve tattoo visible, simple gold wedding band",
@@ -8086,7 +8082,7 @@
                 "FULL SLEEVE TATTOO on left arm flowers and children names"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -8120,7 +8116,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -8192,7 +8188,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "thin face, always-transitioning glasses, messy hair, goatee, distracted look",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, cleft chin, thin face",
             "signature_element": "photochromic glasses always mid-transition + tweed elbow patches",
             "micro_gesture": "pushes glasses up then stares into middle distance before answering",
             "wardrobe_anchor": "tweed jacket elbow patches, photochromic glasses, ink-stained fingers, leather satchel",
@@ -8368,7 +8364,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "groomed beard, loose top knot, round glasses, coffee cup",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, cleft chin",
             "signature_element": "loose top knot + geometric tattoo sleeve + specialty coffee",
             "micro_gesture": "adjusts loose top knot then sips coffee before speaking",
             "wardrobe_anchor": "raw denim apron over flannel, leather watch, round glasses",
@@ -8438,7 +8434,7 @@
                 "GEOMETRIC TATTOO SLEEVE right arm mountains compass lines"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -8472,7 +8468,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -8544,7 +8540,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "wing-brows, aquiline nose, neat black beard, piercing eyes",
+            "face_silhouette": "rounded soft jaw face shape, high sharp cheekbones, square prominent chin, wing-brows",
             "signature_element": "thick unibrow + aquiline nose + black stone ring",
             "micro_gesture": "touches black stone ring before judgment",
             "wardrobe_anchor": "dark wool coat, white shirt, black stone ring, polished shoes",
@@ -8613,7 +8609,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -8632,7 +8628,7 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural slightly textured lips"
             ],
             "chin_tokens": [
                 "square prominent chin"
@@ -8647,7 +8643,7 @@
                 "thick padded shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -8719,7 +8715,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "huge blue doll eyes, no makeup porcelain, neat bob, childlike yet confident",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "enormous doll eyes + zero makeup + confident posture",
             "micro_gesture": "blinks slowly with huge eyes before devastating 'why?'",
             "wardrobe_anchor": "oversized cream knit sweater, no jewelry, clean white sneakers",
@@ -8816,7 +8812,7 @@
                 "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -8894,7 +8890,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "pink hair dark roots, acid-yellow earrings, green lined eyes, nose stud",
+            "face_silhouette": "wide angular jaw face shape, flat wide cheekbones, smooth youthful chin",
             "signature_element": "pink hair + acid-yellow earrings + lightning tattoo behind ear",
             "micro_gesture": "touches lightning tattoo before bold statement",
             "wardrobe_anchor": "vintage denim jacket with pins, pink hair, yellow earrings, platform boots",
@@ -9245,7 +9241,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "athletic jaw, tight ponytail, zero makeup, chin scar, determined grey eyes",
+            "face_silhouette": "protruding jaw face shape, rounded full cheekbones, pointed narrow chin, athletic jaw",
             "signature_element": "athletic build + chin scar + zero makeup + fitness watch",
             "micro_gesture": "tightens ponytail before delivering argument",
             "wardrobe_anchor": "plain black t-shirt, joggers, fitness watch, ponytail, no accessories",
@@ -9341,16 +9337,16 @@
                 "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "thick padded shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -9419,7 +9415,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "1950s wave curls, cat-eye liner, red lips, pearl necklace, vintage elegance",
+            "face_silhouette": "delicate small jaw face shape, high sharp cheekbones, receding soft chin",
             "signature_element": "1950s hairstyle + pearl necklace + polka-dot dress in 2026",
             "micro_gesture": "touches pearl necklace thoughtfully before quoting old movie",
             "wardrobe_anchor": "polka-dot vintage dress, pearl necklace, cat-eye liner, red lips, kitten heels",
@@ -9504,7 +9500,7 @@
                 "smooth narrow forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "neat natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "full natural lips"
@@ -9594,7 +9590,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "enormous black glasses dominating face, messy bun with pencils, pale glow",
+            "face_silhouette": "protruding jaw face shape, high sharp cheekbones, strong jutting chin",
             "signature_element": "huge thick-frame glasses + pencils in messy bun + hoodie",
             "micro_gesture": "pushes glasses up bridge with middle finger, types something, then answers",
             "wardrobe_anchor": "oversized grey hoodie, enormous glasses, messy bun with pencils, energy drink nearby",
@@ -9678,7 +9674,7 @@
                 "smooth narrow forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "neat natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "full weathered lips"
@@ -9768,7 +9764,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "dreadlocks framing face, sleepy eyes, gold chain, relaxed expression",
+            "face_silhouette": "narrow pointed jaw face shape, prominent Slavic cheekbones, pointed narrow chin, dreadlocks framing face",
             "signature_element": "dreadlocks + thick gold chain + signet ring on pinky",
             "micro_gesture": "touches gold chain then starts freestyle-explaining",
             "wardrobe_anchor": "oversized graphic tee to knees, gold chain, dreadlocks, baggy jeans, jordans",
@@ -9865,13 +9861,13 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -10033,7 +10029,7 @@
                 "heavy dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "cleft chin"
@@ -10120,7 +10116,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "huge metal glasses magnifying eyes, acne, neat side part, serious expression",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, pointed narrow chin",
             "signature_element": "enormous magnifying glasses + plaid shirt tucked in + neat side part",
             "micro_gesture": "raises index finger before correcting someone — 'actually...'",
             "wardrobe_anchor": "plaid button-up tucked into high-waist jeans, belt, enormous glasses, calculator watch",
@@ -10295,7 +10291,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "long tousled hair, dreamy eyes, patchy beard, wooden beads, peaceful expression",
+            "face_silhouette": "rounded soft jaw face shape, flat wide cheekbones, smooth youthful chin",
             "signature_element": "long tousled hair + wooden bead necklace + barefoot",
             "micro_gesture": "twists wooden bead necklace while thinking, then delivers wisdom",
             "wardrobe_anchor": "loose linen shirt unbuttoned, wooden beads, friendship bracelet, barefoot or sandals",
@@ -10384,7 +10380,7 @@
                 "neat trimmed eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "smooth youthful chin"
@@ -10471,7 +10467,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "deep-set dark eyes, scar bisecting eyebrow, sharp cheekbones, black turtleneck",
+            "face_silhouette": "heavy prominent jaw face shape, high sharp cheekbones, receding soft chin",
             "signature_element": "black turtleneck + eyebrow scar + deep-set scanner eyes",
             "micro_gesture": "touches eyebrow scar before delivering devastating observation",
             "wardrobe_anchor": "black turtleneck always, dark jeans, minimal, no accessories except intensity",
@@ -10558,7 +10554,7 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "receding soft chin"
@@ -10645,7 +10641,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "round kind face, glasses on nose tip, cat perched on shoulder",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, double chin, round kind face",
             "signature_element": "orange cat permanently on shoulder + cat-fur cardigan",
             "micro_gesture": "strokes cat then delivers surprisingly wise observation",
             "wardrobe_anchor": "cat-fur-covered burgundy cardigan, glasses on nose tip, cat on shoulder, apron with paw prints",
@@ -10817,7 +10813,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "flat cap, squinting eyes, potato nose, seed shells around",
+            "face_silhouette": "wide angular jaw face shape, hollow sunken cheekbones, pointed narrow chin, seed shells around",
             "signature_element": "flat cap + constant sunflower seeds + bench position",
             "micro_gesture": "cracks seed shell then points with it before observation",
             "wardrobe_anchor": "flat cap, windbreaker, pocket full of seeds, bench always",
@@ -10989,7 +10985,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "pink-blue curlers, floral robe, darting eyes, rosy face",
+            "face_silhouette": "round face, rounded full cheekbones, rounded stubborn chin, rosy face",
             "signature_element": "permanent hair curlers + floral robe as outerwear",
             "micro_gesture": "peeks around corner in curlers before whispering gossip",
             "wardrobe_anchor": "floral robe, pink-blue curlers, fluffy slippers, cup of tea in hand",
@@ -11162,7 +11158,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "welding mask on forehead, spark-burn dots on face, thick mustache, calm eyes",
+            "face_silhouette": "heavy prominent jaw face shape, subtle low cheekbones, strong jutting chin, welding mask on forehead, spark-burn dots on face",
             "signature_element": "welding mask flipped up on forehead + scorched leather apron",
             "micro_gesture": "flips mask up, squints at problem, nods — 'ща починим'",
             "wardrobe_anchor": "scorched leather apron, welding mask on forehead, thermal undershirt, steel-toe boots",
@@ -11332,7 +11328,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "perfect platinum updo, icy grey eyes, pearl necklace, pursed judgment lips",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "three-row pearl necklace + perfect platinum updo + icy stare",
             "micro_gesture": "touches pearl necklace before delivering sentence about son-in-law",
             "wardrobe_anchor": "cashmere stole, three-row pearls, perfect hair, everything immaculate",
@@ -11504,7 +11500,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "round rosy face, salon curls, kind-but-steel blue eyes, apron always",
+            "face_silhouette": "rounded soft jaw face shape, flat wide cheekbones, rounded stubborn chin, round rosy face",
             "signature_element": "floral apron + rolling pin scepter + flour-dusted hands",
             "micro_gesture": "wipes hands on apron then points rolling pin for emphasis",
             "wardrobe_anchor": "floral apron, salon curls, flour on hands, rolling pin nearby, house slippers",
@@ -11676,7 +11672,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "magnificent upturned handlebar mustache, laughing black eyes, gold rings flash",
+            "face_silhouette": "wide angular jaw face shape, hollow sunken cheekbones, strong jutting chin",
             "signature_element": "handlebar mustache curled up + gold rings + sauce-stained apron",
             "micro_gesture": "twirls mustache end before naming price with flourish",
             "wardrobe_anchor": "sauce-stained white apron, gold rings, handlebar mustache, chef hat tilted",
@@ -11746,7 +11742,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -11762,7 +11758,7 @@
                 "broad high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -11780,7 +11776,7 @@
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -11850,7 +11846,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "enormous bald head, square jaw, but kind long-lashed eyes, tiny ear stud",
+            "face_silhouette": "strong square jaw face shape, flat wide cheekbones, receding soft chin",
             "signature_element": "massive bald build + unexpectedly kind eyes + whisper voice",
             "micro_gesture": "leans down to whisper something — scarier than any shout",
             "wardrobe_anchor": "tight black turtleneck, bald head, stud earring, all black, massive presence",
@@ -11936,7 +11932,7 @@
                 "broad high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -12024,7 +12020,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "sharp eyes, knitted cap, red wind-bitten nose, blue uniform",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "blue postal uniform + enormous mail bag + all-seeing eyes",
             "micro_gesture": "pulls letter from bag and waves it while telling story",
             "wardrobe_anchor": "faded blue postal jacket, enormous mail bag, knitted cap, sensible walking shoes",
@@ -12196,7 +12192,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "police cap, wheat mustache, stern grey eyes, notepad ready",
+            "face_silhouette": "delicate small jaw face shape, hollow sunken cheekbones, strong jutting chin",
             "signature_element": "police cap + wheat mustache + notepad always open",
             "micro_gesture": "clicks pen twice before asking question — intimidating",
             "wardrobe_anchor": "police uniform, cap straight, mustache groomed, notepad in hand, polished shoes",
@@ -12264,7 +12260,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -12292,13 +12288,13 @@
                 "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -12368,7 +12364,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "tight bun, green X-ray eyes, white coat, stethoscope, professional composure",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, rounded stubborn chin",
             "signature_element": "pristine white coat + stethoscope + X-ray diagnostic eyes",
             "micro_gesture": "touches stethoscope before delivering diagnosis of situation",
             "wardrobe_anchor": "pristine white coat, stethoscope, tight bun, short nails, everything sterile-clean",
@@ -12436,7 +12432,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "relaxed confident walk, even steps"
@@ -12461,7 +12457,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -12540,7 +12536,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "full makeup porcelain face, tiny curls, false lashes, pink lips, butterfly brooch",
+            "face_silhouette": "protruding jaw face shape, rounded full cheekbones, pointed narrow chin",
             "signature_element": "perfect full makeup at 91 + butterfly brooch + false lashes",
             "micro_gesture": "pats powder on nose with compact mirror before devastating comment",
             "wardrobe_anchor": "pink cashmere cardigan, pearl earrings, butterfly brooch, full makeup, patent leather shoes",
@@ -13060,7 +13056,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "ordinary face with one acid-green liner stroke, tired grey eyes, name tag",
+            "face_silhouette": "narrow pointed jaw face shape, high sharp cheekbones, rounded stubborn chin, ordinary face with one acid-green liner stroke",
             "signature_element": "single acid-green eyeliner stroke — one neon mark on grey life",
             "micro_gesture": "raises acid-lined eyes from register with devastating observation",
             "wardrobe_anchor": "store apron, name tag, ponytail, acid-green eyeliner — one rebel touch",
@@ -13128,7 +13124,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -13153,7 +13149,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -13162,7 +13158,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -13232,7 +13228,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "black beret tilted, goatee, dreamy dark eyes, half-smile, saxophone nearby",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, pointed narrow chin",
             "signature_element": "black beret + goatee + saxophone always present",
             "micro_gesture": "fingers saxophone keys absently while thinking, then answers",
             "wardrobe_anchor": "black beret, turtleneck, saxophone case, goatee, long musician fingers",
@@ -13256,8 +13252,7 @@
         "biology_override": {
             "age": "52",
             "skin_tokens": [
-                "dark skin soft features",
-                "fine lines and early age spots"
+                "dark skin soft features"
             ],
             "eye_tokens": [
                 "warm dark brown dreamy jazz eyes"
@@ -13300,7 +13295,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -13404,7 +13399,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "headscarf, red cheeks, shrewd eyes, toothless steel gaze, oversized boots",
+            "face_silhouette": "heavy prominent jaw face shape, subtle low cheekbones, receding soft chin, red cheeks",
             "signature_element": "oversized rubber boots + goat on rope + headscarf",
             "micro_gesture": "points with hand holding goat rope for emphasis",
             "wardrobe_anchor": "enormous rubber boots, floral headscarf, quilted vest, goat rope in hand always",
@@ -13581,7 +13576,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "slicked hair, calculating eyes, expensive suit, Rolex flash",
+            "face_silhouette": "narrow pointed jaw face shape, prominent Slavic cheekbones, receding soft chin",
             "signature_element": "Rolex watch + three-piece suit + slicked hair",
             "micro_gesture": "checks watch before delivering verdict on your time-wasting",
             "wardrobe_anchor": "dark navy three-piece suit, Rolex, cufflinks, patent shoes",
@@ -13651,7 +13646,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -13664,7 +13659,7 @@
                 "prominent Slavic cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "subtly lined high forehead"
             ],
             "eyebrow_tokens": [
                 "thick bushy gray eyebrows"
@@ -13756,7 +13751,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "low bun, red lips on pale face, razor cheekbones, scanning eyes",
+            "face_silhouette": "narrow pointed jaw face shape, subtle low cheekbones, rounded stubborn chin, red lips on pale face, razor cheekbones",
             "signature_element": "red lipstick + black suit + steel gaze",
             "micro_gesture": "closes laptop before delivering verdict",
             "wardrobe_anchor": "black tailored suit, red lipstick, diamond studs, tablet in hand",
@@ -13825,7 +13820,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature female voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -13838,7 +13833,7 @@
                 "subtle low cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "subtly lined high forehead"
             ],
             "eyebrow_tokens": [
                 "thick bushy gray eyebrows"
@@ -13850,7 +13845,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -13930,7 +13925,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "perfect brows, lash extensions, balayage waves, filler lips, phone glow",
+            "face_silhouette": "protruding jaw face shape, prominent Slavic cheekbones, receding soft chin, perfect brows",
             "signature_element": "ring light + perfect brows + phone permanently in hand",
             "micro_gesture": "flips hair, checks phone reflection, delivers opinion",
             "wardrobe_anchor": "crop top, high-waisted jeans, white sneakers, ring light, AirPods",
@@ -14000,7 +13995,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -14034,7 +14029,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -14105,7 +14100,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "GoPro on forehead, long fringe, burning green eyes, wide grin",
+            "face_silhouette": "heavy prominent jaw face shape, hollow sunken cheekbones, cleft chin, GoPro on forehead",
             "signature_element": "GoPro on head strap + merch hoodie + manic energy",
             "micro_gesture": "checks GoPro is recording before every dramatic moment",
             "wardrobe_anchor": "merch hoodie with channel logo, joggers, GoPro on head, phone in pocket",
@@ -14278,7 +14273,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "receding hair, shrewd mirror-eyes, stubble, gold chain",
+            "face_silhouette": "defined jawline face shape, high sharp cheekbones, double chin",
             "signature_element": "pine air freshener + asymmetric tan + rearview mirror stare",
             "micro_gesture": "adjusts mirror to look at you before delivering opinion",
             "wardrobe_anchor": "polo shirt, gold chain, leather steering cover, pine freshener",
@@ -14347,14 +14342,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "energetic mature male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
             ],
             "facial_expression_default": "perpetually amused smirk",
             "jaw_tokens": [
-                "receding jaw"
+                "defined jawline"
             ],
             "cheekbone_tokens": [
                 "high sharp cheekbones"
@@ -14375,13 +14370,13 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "light under-eye circles"
             ],
             "shoulder_tokens": [
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -14451,7 +14446,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "short practical hair, steel road-eyes, set jaw, leather jacket",
+            "face_silhouette": "defined jawline face shape, rounded full cheekbones, pointed narrow chin, set jaw",
             "signature_element": "steering wheel grip + steel stare + coffee mug",
             "micro_gesture": "checks mirror then delivers road-wisdom truth",
             "wardrobe_anchor": "leather jacket, short hair, thermal mug, confident grip",
@@ -14519,14 +14514,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
             ],
             "facial_expression_default": "stern disapproving frown",
             "jaw_tokens": [
-                "receding jaw"
+                "defined jawline"
             ],
             "cheekbone_tokens": [
                 "rounded full cheekbones"
@@ -14553,10 +14548,10 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -14623,7 +14618,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "helmet hair, windburned cheeks, cheerful eyes, yellow backpack straps",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, pointed narrow chin, windburned cheeks",
             "signature_element": "yellow thermal backpack + bike helmet + perpetual motion",
             "micro_gesture": "checks phone for next order mid-conversation",
             "wardrobe_anchor": "yellow delivery backpack, bike helmet, athletic wear, earbuds",
@@ -14711,7 +14706,7 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -14797,7 +14792,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "tight ponytail, wind-flushed cheeks, hurrying blue eyes, pink backpack straps",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, smooth youthful chin, wind-flushed cheeks",
             "signature_element": "pink delivery backpack + electric scooter + perpetual rush",
             "micro_gesture": "checks phone timer anxiously between sentences",
             "wardrobe_anchor": "pink backpack, ponytail, windbreaker, leggings, scooter",
@@ -14970,7 +14965,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "thin glasses, chalk-dusted blazer, kind tired eyes, gentle smile",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "chalk dust on blazer + pointer in hand + patient eyes",
             "micro_gesture": "draws invisible diagram in air while explaining",
             "wardrobe_anchor": "dark blazer with chalk dust, thin glasses, worn briefcase, pointer",
@@ -15142,7 +15137,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "strict bun, sharp eyes, glasses on chain, red pencil behind ear",
+            "face_silhouette": "strong square jaw face shape, prominent Slavic cheekbones, pointed narrow chin",
             "signature_element": "red pencil behind ear + strict bun + x-ray teacher eyes",
             "micro_gesture": "removes red pencil from ear before delivering grade/verdict",
             "wardrobe_anchor": "strict blouse, pencil skirt, glasses on chain, red pencil, class register",
@@ -15210,7 +15205,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -15235,7 +15230,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -15314,7 +15309,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "thick glasses, dark circles, messy hair, energy drink, hoodie",
+            "face_silhouette": "narrow pointed jaw face shape, high sharp cheekbones, cleft chin",
             "signature_element": "thick-frame glasses + energy drink + dark circles + hoodie",
             "micro_gesture": "pushes glasses up, types something, then delivers wisdom",
             "wardrobe_anchor": "black hoodie, thick glasses, energy drink, mechanical keyboard sounds",
@@ -15383,7 +15378,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -15488,7 +15483,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "stylish glasses, messy bun with pencil, serious grey eyes, composed",
+            "face_silhouette": "strong square jaw face shape, hollow sunken cheekbones, rounded stubborn chin",
             "signature_element": "pink mechanical keyboard + sticker-covered laptop + pencil in bun",
             "micro_gesture": "removes glasses before demolishing argument, puts back after",
             "wardrobe_anchor": "oversized sweater, stylish glasses, pink keyboard, sticker laptop, thermal mug",
@@ -15661,7 +15656,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "massive neck, square jaw, small eyes on big face, wide grin",
+            "face_silhouette": "strong square jaw face shape, hollow sunken cheekbones, rounded stubborn chin",
             "signature_element": "enormous biceps + protein shaker + tight t-shirt",
             "micro_gesture": "flexes unconsciously while thinking, shaker rattles",
             "wardrobe_anchor": "tight t-shirt, joggers, fitness watch, protein shaker, shoulder tattoo",
@@ -15733,7 +15728,7 @@
                 "shoulder tattoo"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "confident young male voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -15746,10 +15741,10 @@
                 "hollow sunken cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural dark eyebrows"
             ],
             "lip_texture_tokens": [
                 "thick chapped lips"
@@ -15764,10 +15759,10 @@
                 "puffy under-eye circles"
             ],
             "shoulder_tokens": [
-                "narrow sloped shoulders"
+                "broad strong shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -15837,7 +15832,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "serene face, loose braid, calm brown eyes, zero makeup glow",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, pointed narrow chin, serene face",
             "signature_element": "yoga mat on back + smoothie + mantra bracelet + serene energy",
             "micro_gesture": "closes eyes, breathes, then delivers truth with devastating calm",
             "wardrobe_anchor": "linen top, loose pants, yoga mat, smoothie, mantra bracelet",
@@ -15906,7 +15901,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "smooth unhurried stride, relaxed posture"
@@ -15931,10 +15926,10 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -16010,7 +16005,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "chef hat tilted, red face, bushy mustache, merry eyes, knife in hand",
+            "face_silhouette": "heavy prominent jaw face shape, hollow sunken cheekbones, strong jutting chin, red face",
             "signature_element": "white chef hat + large knife + sauce-stained coat",
             "micro_gesture": "sniffs air evaluating situation like seasoning",
             "wardrobe_anchor": "white chef coat, tall hat, large knife, sauce stains, burn scars on hands",
@@ -16079,7 +16074,7 @@
                 "burn-scarred hands"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -16113,7 +16108,7 @@
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -16183,7 +16178,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "rosy cheeks, curls under kerchief, kind eyes, flour everywhere",
+            "face_silhouette": "heavy prominent jaw face shape, flat wide cheekbones, strong jutting chin, rosy cheeks",
             "signature_element": "flour-covered apron + rolling pin + pie smell",
             "micro_gesture": "offers food before and after every argument",
             "wardrobe_anchor": "flour apron, kerchief, rolling pin, rosy cheeks, dough on hands",
@@ -16355,7 +16350,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "combover, puffy face, tight tie, glasses, document folder",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, double chin, puffy face",
             "signature_element": "tight necktie + document folder + rubber stamp",
             "micro_gesture": "clicks pen three times before pronouncing bureaucratic verdict",
             "wardrobe_anchor": "grey rumpled suit, tight tie, document folder, glasses, rubber stamp",
@@ -16379,8 +16374,7 @@
         "biology_override": {
             "age": "52",
             "skin_tokens": [
-                "pale puffy face",
-                "fine lines and early age spots"
+                "pale puffy face"
             ],
             "eye_tokens": [
                 "small evaluating grey eyes"
@@ -16423,7 +16417,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -16448,7 +16442,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "moderate nasolabial folds"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -16527,7 +16521,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "strict bob, cold grey eyes, sharp cheekbones, fashionable glasses",
+            "face_silhouette": "narrow pointed jaw face shape, high sharp cheekbones, cleft chin",
             "signature_element": "clicking heels + strict bob + folder with stamp",
             "micro_gesture": "stamps document with authority before speaking",
             "wardrobe_anchor": "two-piece suit, high heels, strict bob, folder, perfect manicure",
@@ -16595,7 +16589,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -16632,7 +16626,7 @@
                 "gold tooth visible on smile"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -16699,7 +16693,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "military short hair, square jaw, interrogating grey eyes, whistle on neck",
+            "face_silhouette": "strong square jaw face shape, rounded full cheekbones, cleft chin",
             "signature_element": "whistle on lanyard + notepad + military haircut + interrogating eyes",
             "micro_gesture": "clicks pen and opens notepad before any conversation",
             "wardrobe_anchor": "grey cardigan, whistle on lanyard, notepad, men's watch, military posture",
@@ -16874,7 +16868,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "naval cap, grey beard, sea-blue deep eyes, pipe in hand, weathered face",
+            "face_silhouette": "rounded soft jaw face shape, prominent Slavic cheekbones, strong jutting chin, weathered face",
             "signature_element": "navy pea coat + unlit pipe + anchor tattoo + sea-blue eyes",
             "micro_gesture": "holds pipe to lips, pauses, then delivers ocean-calm wisdom",
             "wardrobe_anchor": "navy pea coat gold buttons, naval cap, pipe, anchor tattoo",
@@ -17051,7 +17045,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "clinical calm face, tight bun, stethoscope framing, attentive scanning eyes",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, pointed narrow chin, clinical calm face",
             "signature_element": "pristine white coat + stethoscope never removed",
             "micro_gesture": "touches stethoscope before delivering life advice",
             "wardrobe_anchor": "white lab coat, stethoscope, short nails, sensible shoes",
@@ -17224,7 +17218,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "messy grey hair, taped glasses, strict eyes, chalk dust",
+            "face_silhouette": "rounded soft jaw face shape, high sharp cheekbones, square prominent chin",
             "signature_element": "chalk on sleeve + taped glasses + pointer stick",
             "micro_gesture": "taps pointer on desk before delivering verdict",
             "wardrobe_anchor": "brown corduroy jacket with patches, chalk dust, pointer, taped glasses",
@@ -17466,7 +17460,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "KEYS ON BELT jingling when walking"
@@ -17491,7 +17485,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -17570,7 +17564,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "platinum-pink ombre, ring light catch in eyes, false lashes, overliner lips",
+            "face_silhouette": "narrow pointed jaw face shape, subtle low cheekbones, pointed narrow chin",
             "signature_element": "platinum-pink hair + ring light reflection + phone on tripod",
             "micro_gesture": "fixes hair and checks phone angle before every sentence",
             "wardrobe_anchor": "crop top, high-waist jeans, platform sneakers, airpods, phone on tripod",
@@ -17640,7 +17634,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -17674,7 +17668,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -17745,7 +17739,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "squinting driver face, receding hair, windshield tan, animated mouth",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, strong jutting chin",
             "signature_element": "hands on imaginary wheel + pine freshener + mirror-checking",
             "micro_gesture": "checks imaginary rearview mirror before making point",
             "wardrobe_anchor": "polo shirt, seatbelt tan line, pine freshener hanging, phone mount",
@@ -17814,7 +17808,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -17839,7 +17833,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "moderate nasolabial folds"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -17848,7 +17842,7 @@
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -17918,7 +17912,7 @@
         },
         "compatibility": "calm",
         "identity_anchors": {
-            "face_silhouette": "dark headscarf, wrinkled map-face, yellow-green cat eyes glowing, hooked nose",
+            "face_silhouette": "narrow pointed jaw face shape, prominent Slavic cheekbones, pointed narrow chin, wrinkled map-face",
             "signature_element": "yellow-green cat eyes + wooden prayer beads + herb pockets",
             "micro_gesture": "turns prayer bead once before whispering truth",
             "wardrobe_anchor": "dark headscarf, layered dark clothes, herb pockets, wooden prayer beads, earth-stained hands",
@@ -18094,7 +18088,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "backwards cap, sweaty, yellow backpack strap on shoulder, darting eyes",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "huge yellow delivery backpack + backwards cap + electric scooter",
             "micro_gesture": "checks phone timer then delivers opinion at speed",
             "wardrobe_anchor": "yellow delivery backpack, backwards cap, sneakers, phone in hand, earbuds",
@@ -18177,13 +18171,13 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "heavy dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "receding soft chin"
@@ -18198,7 +18192,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -18444,7 +18438,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "trucker cap, asymmetric tan, square jaw, tired kind eyes, stubble",
+            "face_silhouette": "square face, subtle low cheekbones, rounded stubborn chin, square jaw",
             "signature_element": "one-arm tan from cab window + trucker cap + earpiece",
             "micro_gesture": "grips invisible wheel while telling road wisdom story",
             "wardrobe_anchor": "trucker cap, flannel shirt, one tanned arm, Bluetooth earpiece, work boots",
@@ -18468,8 +18462,7 @@
         "biology_override": {
             "age": "51",
             "skin_tokens": [
-                "asymmetric tan left arm",
-                "fine lines and early age spots"
+                "asymmetric tan left arm"
             ],
             "eye_tokens": [
                 "kind tired brown eyes"
@@ -18512,7 +18505,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -18546,7 +18539,7 @@
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -18792,7 +18785,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "round orange glasses, ponytail, animated expressions",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, cleft chin",
             "signature_element": "orange glasses + spinner ring + sticker laptop",
             "micro_gesture": "twirls spinner ring faster when excited",
             "wardrobe_anchor": "leather jacket over startup hoodie, orange glasses, spinner ring",
@@ -18862,7 +18855,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -19035,14 +19028,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
             ],
             "facial_expression_default": "perpetually amused smirk",
             "jaw_tokens": [
-                "receding jaw"
+                "natural Квадратное лиц jawline"
             ],
             "cheekbone_tokens": [
                 "rounded full cheekbones"
@@ -19063,7 +19056,7 @@
                 "asymmetric nasolabial folds"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
                 "wide strong shoulders"
@@ -19140,7 +19133,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "silk headband, sharp green eyes, pursed lips, gold hoops",
+            "face_silhouette": "heavy prominent jaw face shape, high sharp cheekbones, rounded stubborn chin",
             "signature_element": "leather apron + silk headband + perfectionist gaze",
             "micro_gesture": "wipes invisible smudge off plate rim before serving",
             "wardrobe_anchor": "leather designer apron, silk headband, gold hoops, notebook",
@@ -19208,7 +19201,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -19227,13 +19220,13 @@
                 "salt-and-pepper thick brows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips with fine texture"
             ],
             "chin_tokens": [
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -19242,7 +19235,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -19313,7 +19306,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "dark circles, darting eyes, two phones, high forehead",
+            "face_silhouette": "delicate small jaw face shape, hollow sunken cheekbones, square prominent chin, high forehead",
             "signature_element": "two phones + HODL hoodie + watches on both wrists",
             "micro_gesture": "rapidly switches between two phone screens",
             "wardrobe_anchor": "HODL hoodie, smart watches both wrists, two phones",
@@ -19382,7 +19375,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "confident young male voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -19416,7 +19409,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -19487,7 +19480,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "messy bun, tired eyes, freckled nose, scanner in hand",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, square prominent chin",
             "signature_element": "barcode scanner + WB boxes + warehouse t-shirt",
             "micro_gesture": "reflexively scans anything nearby with scanner",
             "wardrobe_anchor": "warehouse t-shirt, jeans, scanner, purple boxes",
@@ -19555,7 +19548,7 @@
                 "freckled nose"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -19568,7 +19561,7 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "subtly lined high forehead"
             ],
             "eyebrow_tokens": [
                 "arched expressive eyebrows"
@@ -19905,7 +19898,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -19930,7 +19923,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -20010,7 +20003,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "walrus mustache, peaked cap, weathered face, calm blue eyes",
+            "face_silhouette": "heavy prominent jaw face shape, hollow sunken cheekbones, double chin, weathered face",
             "signature_element": "walrus mustache + worry beads + plaid shirt",
             "micro_gesture": "strokes drooping mustache before starting a story",
             "wardrobe_anchor": "peaked cap, plaid shirt, worry beads, big weathered hands",
@@ -20182,7 +20175,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "thick black brows, horseshoe mustache, gold tooth, warm eyes",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, square prominent chin, thick black brows",
             "signature_element": "prayer beads + lavash in glove box + horseshoe mustache",
             "micro_gesture": "fingers prayer beads at red light then offers snack",
             "wardrobe_anchor": "leather vest, prayer beads, gold tooth, lavash hospitality",
@@ -20251,7 +20244,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -20279,7 +20272,7 @@
                 "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "light under-eye circles"
             ],
             "shoulder_tokens": [
                 "bony narrow shoulders"
@@ -20355,7 +20348,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "bifocals on nose, grey curls, tiny behind wheel, squinting",
+            "face_silhouette": "delicate small jaw face shape, prominent Slavic cheekbones, rounded stubborn chin",
             "signature_element": "knitting on seat + seat cushion + 40 kmh",
             "micro_gesture": "knits two stitches at red light, checks mirror, continues",
             "wardrobe_anchor": "warm cardigan, bifocals, knitting needles, seat cushion",
@@ -20528,7 +20521,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "one earbud, dark circles, university hoodie, fringe",
+            "face_silhouette": "natural jawline face shape, subtle low cheekbones, cleft chin",
             "signature_element": "one earbud + university hoodie + energy drink + silence",
             "micro_gesture": "nods once instead of speaking, adjusts single earbud",
             "wardrobe_anchor": "university hoodie, one earbud, energy drink, student pallor",
@@ -20603,13 +20596,13 @@
             ],
             "facial_expression_default": "warm patient gaze",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "subtle low cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "thick bushy gray eyebrows"
@@ -20700,7 +20693,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "black bandana, sharp dark eyes, determined jaw, driving gloves",
+            "face_silhouette": "narrow pointed jaw face shape, prominent Slavic cheekbones, rounded stubborn chin",
             "signature_element": "black bandana + fingerless gloves + GPS off",
             "micro_gesture": "turns off passenger's phone map with one finger",
             "wardrobe_anchor": "black bandana, fingerless leather gloves, clean car, zero GPS",
@@ -20768,7 +20761,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature female voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -20784,7 +20777,7 @@
                 "broad high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural arched eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -20793,7 +20786,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -20802,7 +20795,7 @@
                 "wide strong shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -20872,7 +20865,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "shaved temples, wild green eyes, grin-snarl, racing gloves",
+            "face_silhouette": "protruding jaw face shape, high sharp cheekbones, square prominent chin",
             "signature_element": "racing gloves + Recaro seat + dashboard stickers",
             "micro_gesture": "downshifts aggressively into corner, grins at terrified passenger",
             "wardrobe_anchor": "bomber jacket, Sparco gloves, Recaro seat, dashboard stickers",
@@ -20940,7 +20933,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "energetic mature male voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -20956,7 +20949,7 @@
                 "flat wide forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural dark eyebrows"
             ],
             "lip_texture_tokens": [
                 "narrow pale lips"
@@ -20974,7 +20967,7 @@
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -21044,7 +21037,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "loose dark hair, contemplative grey eyes, gentle smile, pale",
+            "face_silhouette": "rounded soft jaw face shape, subtle low cheekbones, square prominent chin",
             "signature_element": "chamomile thermos + contemplative eyes + soft scarf",
             "micro_gesture": "offers chamomile tea to 3am passenger, philosophizes",
             "wardrobe_anchor": "soft scarf, loose hair, chamomile thermos, night music",
@@ -21112,7 +21105,7 @@
                 "soft scarf"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature female voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -21146,7 +21139,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -21216,7 +21209,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "tousled blond, amazed blue eyes, rosy cheeks, naive smile",
+            "face_silhouette": "heavy prominent jaw face shape, flat wide cheekbones, cleft chin, rosy cheeks",
             "signature_element": "GPS as oracle + plaid shirt + amazed blue eyes",
             "micro_gesture": "mouth drops open at every tall building, follows GPS blindly",
             "wardrobe_anchor": "plaid shirt, tousled blond, dashboard icon, GPS dependency",
@@ -21388,7 +21381,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "visor cap, chin scar, scanning eyes, Hoka shoes visible",
+            "face_silhouette": "natural jawline face shape, flat wide cheekbones, cleft chin",
             "signature_element": "huge white Hoka shoes + green backpack + fitness band",
             "micro_gesture": "checks fitness band step count and nods mid-delivery",
             "wardrobe_anchor": "white Hoka shoes, green backpack, visor cap, fitness band",
@@ -21463,7 +21456,7 @@
             ],
             "facial_expression_default": "warm patient gaze",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "flat wide cheekbones"
@@ -21484,7 +21477,7 @@
                 "pronounced deep smile lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "thick padded shoulders"
@@ -21561,7 +21554,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "two braids, glasses on forehead, freckles, moving lips",
+            "face_silhouette": "rounded soft jaw face shape, hollow sunken cheekbones, rounded stubborn chin",
             "signature_element": "textbook from backpack + two braids + forehead glasses",
             "micro_gesture": "reads textbook between doorbell rings, lips moving",
             "wardrobe_anchor": "delivery backpack with textbook, braids, Converse, glasses",
@@ -21646,7 +21639,7 @@
                 "rounded prominent forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "neat natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin natural lips"
@@ -21735,7 +21728,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "receding hair, grey tired eyes, stubble, tie under jacket",
+            "face_silhouette": "natural jawline face shape, flat wide cheekbones, double chin",
             "signature_element": "necktie under courier jacket + office shoes + motorcycle",
             "micro_gesture": "straightens necktie before ringing doorbell",
             "wardrobe_anchor": "leather jacket over shirt with tie, office shoes, moto helmet",
@@ -21803,14 +21796,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "confident young male voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
             ],
             "facial_expression_default": "stern disapproving frown",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "flat wide cheekbones"
@@ -21837,7 +21830,7 @@
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -21908,7 +21901,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "red curls from helmet, freckles, green laughing eyes, grin",
+            "face_silhouette": "heavy prominent jaw face shape, subtle low cheekbones, square prominent chin",
             "signature_element": "red curly hair + joke notebook + orange windbreaker",
             "micro_gesture": "pulls out notebook to write funny thing client said",
             "wardrobe_anchor": "orange windbreaker, helmet over red curls, joke notebook",
@@ -22081,7 +22074,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "shaved head, massive neck, small kind eyes, square jaw",
+            "face_silhouette": "strong square jaw face shape, subtle low cheekbones, receding soft chin",
             "signature_element": "massive bodybuilder + tiny-looking backpack + gentle voice",
             "micro_gesture": "hands over bag with fingers that could crush watermelon",
             "wardrobe_anchor": "tight strained t-shirt, tiny backpack, shaved head, protein bar",
@@ -22150,7 +22143,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -22178,7 +22171,7 @@
                 "pronounced deep smile lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -22255,7 +22248,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "headlamp glow, beanie, pale night face, dark-adapted eyes",
+            "face_silhouette": "protruding jaw face shape, flat wide cheekbones, receding soft chin, pale night face",
             "signature_element": "headlamp + reflective vest + coffee thermos on backpack",
             "micro_gesture": "clicks headlamp to different brightness checking address",
             "wardrobe_anchor": "headlamp, reflective vest, black beanie, coffee thermos",
@@ -22324,7 +22317,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -22337,19 +22330,19 @@
                 "flat wide cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "heavy dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "soft natural lips"
             ],
             "chin_tokens": [
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -22497,7 +22490,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -22510,10 +22503,10 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural dark eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -22531,7 +22524,7 @@
                 "wide strong shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -22602,7 +22595,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "bandana, tired determined eyes, stubborn lips, stroller",
+            "face_silhouette": "delicate small jaw face shape, flat wide cheekbones, rounded stubborn chin",
             "signature_element": "stroller + delivery box + bandana + iron determination",
             "micro_gesture": "rocks stroller with foot while handing delivery",
             "wardrobe_anchor": "puffer jacket, bandana, running shoes, stroller-courier",
@@ -22670,7 +22663,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -22695,10 +22688,10 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "rounded hunched shoulders"
@@ -22775,7 +22768,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "bleached hair, tanned no-makeup, whistle + stopwatch on neck",
+            "face_silhouette": "defined jawline face shape, prominent Slavic cheekbones, pointed narrow chin",
             "signature_element": "whistle + stopwatch + New Balance sneakers",
             "micro_gesture": "clicks stopwatch and blows whistle simultaneously",
             "wardrobe_anchor": "track pants, New Balance, whistle and stopwatch on neck",
@@ -22843,14 +22836,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
             ],
             "facial_expression_default": "alert suspicious squint",
             "jaw_tokens": [
-                "receding jaw"
+                "defined jawline"
             ],
             "cheekbone_tokens": [
                 "prominent Slavic cheekbones"
@@ -22868,13 +22861,13 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "light under-eye circles"
             ],
             "shoulder_tokens": [
-                "narrow sloped shoulders"
+                "broad strong shoulders"
             ],
             "teeth_tokens": [
                 "white dentures visible when speaking"
@@ -22947,7 +22940,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "rectangular glasses, goatee, Python mug, meme shirt, pale",
+            "face_silhouette": "natural jawline face shape, subtle low cheekbones, double chin",
             "signature_element": "Python mug + meme t-shirt + projector glow on face",
             "micro_gesture": "draws meme on whiteboard to explain algorithm",
             "wardrobe_anchor": "meme t-shirt, rectangular glasses, Python mug, goatee",
@@ -23015,14 +23008,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
             ],
             "facial_expression_default": "perpetually amused smirk",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "subtle low cheekbones"
@@ -23052,7 +23045,7 @@
                 "gaps between front teeth"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural dark lashes"
             ]
         },
         "speech_identity": {
@@ -23119,7 +23112,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "long loose hair, dreamy eyes, tuning fork, note-print scarf",
+            "face_silhouette": "strong square jaw face shape, subtle low cheekbones, cleft chin",
             "signature_element": "tuning fork + music note scarf + dreamy eyes",
             "micro_gesture": "taps tuning fork on any surface and listens with closed eyes",
             "wardrobe_anchor": "silk note-scarf, long skirt, ballet flats, tuning fork",
@@ -23187,7 +23180,7 @@
                 "silk scarf with music notes pattern"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -23215,13 +23208,13 @@
                 "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -23291,7 +23284,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "sawdust-filled beard, blue strict eyes, massive hands, pencil behind ear",
+            "face_silhouette": "heavy prominent jaw face shape, subtle low cheekbones, rounded stubborn chin",
             "signature_element": "sawdust in beard + leather apron + chisel in hand",
             "micro_gesture": "blows sawdust from beard while inspecting student's work",
             "wardrobe_anchor": "leather work apron, sawdust beard, chisel, pencil behind ear",
@@ -23316,8 +23309,7 @@
             "age": "52",
             "height_build": "large broad build",
             "skin_tokens": [
-                "hyper-realistic skin microtexture with visible pores",
-                "fine lines and early age spots"
+                "hyper-realistic skin microtexture with visible pores"
             ],
             "eye_tokens": [
                 "kind but strict blue eyes"
@@ -23361,7 +23353,7 @@
             ],
             "scar_mark_tokens": [],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -23395,7 +23387,7 @@
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -23465,7 +23457,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "chestnut bob, thin glasses, tea cup, tweed, UK pointer",
+            "face_silhouette": "protruding jaw face shape, flat wide cheekbones, rounded stubborn chin",
             "signature_element": "tea with milk + tweed jacket + UK flag pointer",
             "micro_gesture": "sips tea and switches to English mid-sentence without warning",
             "wardrobe_anchor": "tweed jacket, thin glasses, UK pointer, tea with milk cup",
@@ -23534,7 +23526,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature female voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -23568,10 +23560,10 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -23812,7 +23804,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "goggles on forehead, stained lab coat, red escaping hair, flask",
+            "face_silhouette": "delicate small jaw face shape, hollow sunken cheekbones, pointed narrow chin, goggles on forehead",
             "signature_element": "safety goggles + stained lab coat + flask in hand",
             "micro_gesture": "pushes goggles up excitedly when chemical reaction starts",
             "wardrobe_anchor": "stained white lab coat, safety goggles, rubber gloves, flask",
@@ -23880,7 +23872,7 @@
                 "freckles"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "quick nervous pacing, sudden direction changes"
@@ -23905,7 +23897,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -23984,7 +23976,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "Einstein grey hair, thick glasses, broken chalk, stooped posture",
+            "face_silhouette": "delicate small jaw face shape, high sharp cheekbones, pointed narrow chin",
             "signature_element": "crumbling chalk + Einstein hair + equation-filled blackboard",
             "micro_gesture": "stares at broken chalk piece puzzled then continues writing",
             "wardrobe_anchor": "rumpled turtleneck, thick glasses, chalk dust, Einstein hair",
@@ -24052,7 +24044,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -24156,7 +24148,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "thick red beard, green eyes, terminal glow, headphones on neck",
+            "face_silhouette": "heavy prominent jaw face shape, flat wide cheekbones, pointed narrow chin",
             "signature_element": "red beard + three monitors + flannel + 'sudo' mug",
             "micro_gesture": "strokes beard while reading error logs in green text",
             "wardrobe_anchor": "flannel shirt, massive headphones, sudo mug, red beard",
@@ -24224,7 +24216,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -24258,10 +24250,10 @@
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural dark lashes"
             ]
         },
         "speech_identity": {
@@ -24329,7 +24321,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "precise bob, grey attentive eyes, stylus in hand, turtleneck",
+            "face_silhouette": "strong square jaw face shape, subtle low cheekbones, cleft chin",
             "signature_element": "graphic tablet + stylus + mood ring + black turtleneck",
             "micro_gesture": "holds up stylus to screen comparing two nearly identical colors",
             "wardrobe_anchor": "black turtleneck, graphic tablet, stylus, mood ring",
@@ -24398,7 +24390,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -24426,7 +24418,7 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -24503,7 +24495,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "aviator glasses, suspicious squint, notebook, red pen ready",
+            "face_silhouette": "natural jawline face shape, subtle low cheekbones, square prominent chin",
             "signature_element": "aviator glasses + 'I break things' shirt + bug notebook",
             "micro_gesture": "squints at restaurant menu looking for typos instinctively",
             "wardrobe_anchor": "'I break things' tee, aviator glasses, red pen, bug notebook",
@@ -24572,41 +24564,41 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
             ],
             "facial_expression_default": "perpetually amused smirk",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "subtle low cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -24677,7 +24669,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "silver glasses, tight ponytail, sharp analyzing eyes, laptop",
+            "face_silhouette": "wide angular jaw face shape, rounded full cheekbones, square prominent chin",
             "signature_element": "silver glasses + 47 Excel tabs + laser pointer",
             "micro_gesture": "points laser pointer at graph proving her argument",
             "wardrobe_anchor": "blouse, pencil skirt, silver glasses, laser pointer, laptop",
@@ -24746,7 +24738,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -24920,7 +24912,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -24936,7 +24928,7 @@
                 "smooth narrow forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thick chapped lips"
@@ -25025,7 +25017,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "sticky notes everywhere, bright eyes, marker in teeth, smile",
+            "face_silhouette": "heavy prominent jaw face shape, flat wide cheekbones, receding soft chin",
             "signature_element": "sticky notes + Jira hoodie + marker in teeth",
             "micro_gesture": "sticks prioritization notes on people during conversations",
             "wardrobe_anchor": "Jira hoodie, sticky notes everywhere, marker, energetic chaos",
@@ -25094,7 +25086,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -25199,7 +25191,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "huge headphones, trimmed beard, stylish glasses, MacBook",
+            "face_silhouette": "narrow pointed jaw face shape, prominent Slavic cheekbones, double chin",
             "signature_element": "Sony headphones + MacBook stickers + dark hoodie",
             "micro_gesture": "lifts one headphone ear to listen, puts it back immediately",
             "wardrobe_anchor": "dark navy hoodie, huge headphones, stylish glasses, MacBook",
@@ -25268,7 +25260,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -25284,7 +25276,7 @@
                 "flat wide forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural dark eyebrows"
             ],
             "lip_texture_tokens": [
                 "full lips with age cracks"
@@ -25373,7 +25365,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "strict bun, concealed dark circles, sharp grey eyes, two laptops",
+            "face_silhouette": "natural jawline face shape, subtle low cheekbones, cleft chin",
             "signature_element": "two laptops + AirPods Pro + blazer over t-shirt",
             "micro_gesture": "switches between two laptop screens while on call",
             "wardrobe_anchor": "blazer over tee, strict bun, two laptops, AirPods Pro",
@@ -25441,14 +25433,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
             ],
             "facial_expression_default": "stern disapproving frown",
             "jaw_tokens": [
-                "receding jaw"
+                "natural jawline"
             ],
             "cheekbone_tokens": [
                 "subtle low cheekbones"
@@ -25466,7 +25458,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -25546,7 +25538,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "broken nose, eyebrow scar, hand wraps, hard grey eyes",
+            "face_silhouette": "strong square jaw face shape, prominent Slavic cheekbones, cleft chin",
             "signature_element": "boxing wraps + broken nose + eyebrow scar + towel",
             "micro_gesture": "shadow-boxes while making a conversational point",
             "wardrobe_anchor": "sleeveless tee, boxing wraps, towel on shoulder, scar",
@@ -25615,7 +25607,7 @@
                 "scar on eyebrow"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -25640,7 +25632,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -25649,7 +25641,7 @@
                 "wide strong shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -25719,7 +25711,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "long free blonde hair, serene blue eyes, yoga mat, barefoot",
+            "face_silhouette": "delicate small jaw face shape, high sharp cheekbones, double chin",
             "signature_element": "yoga mat + mala beads + barefoot + serene eyes",
             "micro_gesture": "sits cross-legged anywhere and closes eyes to center",
             "wardrobe_anchor": "leggings, tank top, barefoot, yoga mat, mala beads",
@@ -25787,7 +25779,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -25959,7 +25951,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "swagger with chin up, territorial movement"
@@ -25978,7 +25970,7 @@
                 "thick bushy gray eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural slightly textured lips"
             ],
             "chin_tokens": [
                 "square prominent chin"
@@ -25987,13 +25979,13 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "light under-eye circles"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -26131,7 +26123,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -26156,16 +26148,16 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "thick padded shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -26235,7 +26227,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "hollow cheeks, GPS watch, lean runner frame, calm eyes",
+            "face_silhouette": "defined jawline face shape, hollow sunken cheekbones, double chin, hollow cheeks",
             "signature_element": "Garmin GPS watch + hollow cheeks + runner singlet",
             "micro_gesture": "checks GPS watch pulse mid-conversation",
             "wardrobe_anchor": "running shorts, singlet, Garmin GPS, lean veined legs",
@@ -26304,14 +26296,14 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "energetic mature male voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
             ],
             "facial_expression_default": "warm patient gaze",
             "jaw_tokens": [
-                "receding jaw"
+                "defined jawline"
             ],
             "cheekbone_tokens": [
                 "hollow sunken cheekbones"
@@ -26320,7 +26312,7 @@
                 "narrow low forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -26338,10 +26330,10 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural dark lashes"
             ]
         },
         "speech_identity": {
@@ -26408,7 +26400,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "kinesio tape colors, chalky hands, burning eyes, muscular",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, square prominent chin",
             "signature_element": "kinesio tape + chalk magnesia hands + short ponytail",
             "micro_gesture": "claps chalk-covered hands creating white cloud before set",
             "wardrobe_anchor": "sports bra shorts, kinesio tape, chalk hands, ponytail",
@@ -26476,7 +26468,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -26504,10 +26496,10 @@
                 "pronounced deep smile lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
-                "narrow sloped shoulders"
+                "broad strong shoulders"
             ],
             "teeth_tokens": [
                 "white dentures visible when speaking"
@@ -26580,7 +26572,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "swim goggles headband, chlorine blond, V-shape, blue eyes",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "swim goggles on forehead + chlorine blond + V-shape",
             "micro_gesture": "demonstrates swim stroke on dry land during conversation",
             "wardrobe_anchor": "tracksuit, flip-flops, swim goggles on forehead, whistle",
@@ -26649,7 +26641,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -26662,7 +26654,7 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "neat trimmed eyebrows"
@@ -26683,7 +26675,7 @@
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
@@ -26753,7 +26745,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "perfect ballet bun, swan neck, sharp dark eyes, steel posture",
+            "face_silhouette": "wide angular jaw face shape, high sharp cheekbones, strong jutting chin",
             "signature_element": "pointe ribbons on wrist + ballet bun + steel-straight posture",
             "micro_gesture": "adjusts student's posture with one precise finger touch",
             "wardrobe_anchor": "black leotard, chiffon skirt, ballet bun, pointe ribbons",
@@ -26821,7 +26813,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -26855,7 +26847,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -26925,7 +26917,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "tall chef hat, flour mustache, red face, fierce eyes, knife",
+            "face_silhouette": "receding jaw face shape, subtle low cheekbones, double chin, red face",
             "signature_element": "tall chef hat + flour mustache + santoku knife",
             "micro_gesture": "tastes from spoon, pauses dramatically, then erupts",
             "wardrobe_anchor": "white chef coat, tall hat, santoku knife, flour-dusted mustache",
@@ -27097,7 +27089,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "cap over light hair, rosy cheeks, cream-stained apron, piping bag",
+            "face_silhouette": "round face, rounded full cheekbones, receding soft chin, rosy cheeks",
             "signature_element": "rainbow cream apron + piping bag + flour-dusted nose",
             "micro_gesture": "offers taste of frosting from finger before anyone asks",
             "wardrobe_anchor": "cream-stained apron, baker cap, piping bag, flour nose",
@@ -27165,7 +27157,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "rich mature female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -27199,7 +27191,7 @@
                 "thick padded shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -27337,7 +27329,7 @@
                 "tanned windburned face"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "energetic mature male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -27441,7 +27433,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "curlers under cap, stern grey eyes, wide red face, ladle",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, strong jutting chin, wide red face",
             "signature_element": "huge steel ladle + curlers under cap + serving line stance",
             "micro_gesture": "slams ladle on counter to end any negotiation about portions",
             "wardrobe_anchor": "white coat, rubber gloves, curlers under cap, steel ladle",
@@ -27613,7 +27605,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "twirled thin mustache, curly hair, expressive eyes, Roman nose",
+            "face_silhouette": "delicate small jaw face shape, rounded full cheekbones, double chin",
             "signature_element": "thin twirled mustache + tricolor apron + shoulder towel",
             "micro_gesture": "kisses fingertips and gestures 'perfetto' when pasta is right",
             "wardrobe_anchor": "tricolor apron, shoulder towel, thin twirled mustache",
@@ -27682,7 +27674,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "energetic mature male voice"
             ],
             "gait_tokens": [
                 "quick nervous pacing, sudden direction changes"
@@ -27710,7 +27702,7 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "light under-eye circles"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -27786,7 +27778,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "bun with kerchief, flour cheeks, kind eyes, rolling pin ready",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, pointed narrow chin, flour cheeks",
             "signature_element": "rolling pin + floral apron + flour-dusted cheeks",
             "micro_gesture": "waves rolling pin at anyone who looks too thin",
             "wardrobe_anchor": "floral apron, kerchief, rolling pin, flour-dusted hands",
@@ -27811,8 +27803,7 @@
             "age": "54",
             "height_build": "plump build",
             "skin_tokens": [
-                "hyper-realistic skin microtexture with visible pores",
-                "fine lines and early age spots"
+                "hyper-realistic skin microtexture with visible pores"
             ],
             "eye_tokens": [
                 "kind feeding brown eyes"
@@ -27855,7 +27846,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -27889,7 +27880,7 @@
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -27959,7 +27950,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "hachimaki headband, shaved head, zen dark eyes, surgical knife set",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, pointed narrow chin",
             "signature_element": "hachimaki headband + surgical knife set + zen composure",
             "micro_gesture": "inspects fish by holding it to light, nods almost imperceptibly",
             "wardrobe_anchor": "white chef coat, hachimaki, surgical knife set, zen posture",
@@ -28027,7 +28018,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -28061,7 +28052,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -28131,7 +28122,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "white cap, stern bun, displeased grey eyes, ladle ready",
+            "face_silhouette": "wide angular jaw face shape, high sharp cheekbones, strong jutting chin",
             "signature_element": "porridge ladle + white cap + barricade serving stance",
             "micro_gesture": "plops extra porridge onto plate of anyone who complains",
             "wardrobe_anchor": "white coat, apron, white cap, porridge ladle at ready",
@@ -28303,7 +28294,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "combover, puffy face, indifferent glasses, stamp in hand",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, double chin, puffy face",
             "signature_element": "rubber stamp + 'lunch break' sign + combover + glasses",
             "micro_gesture": "stamps documents without reading, eyes on clock",
             "wardrobe_anchor": "short-sleeve shirt, tie, glasses, rubber stamp, lunch sign",
@@ -28371,7 +28362,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -28475,7 +28466,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "glasses on chain, lacquered hair, stern face, piercing eyes",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, receding soft chin, stern face",
             "signature_element": "glasses on chain + document stack + grey suit",
             "micro_gesture": "removes glasses, holds document at arm's length, frowns deeply",
             "wardrobe_anchor": "grey suit, glasses on chain, document stack, lacquered hair",
@@ -28500,8 +28491,7 @@
             "age": "52",
             "height_build": "stout build",
             "skin_tokens": [
-                "hyper-realistic skin microtexture with visible pores",
-                "fine lines and early age spots"
+                "hyper-realistic skin microtexture with visible pores"
             ],
             "eye_tokens": [
                 "piercing brown eyes",
@@ -28544,7 +28534,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -28563,7 +28553,7 @@
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips with fine texture"
             ],
             "chin_tokens": [
                 "receding soft chin"
@@ -28578,7 +28568,7 @@
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -28648,7 +28638,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "deputy badge, slicked hair, well-fed face, cunning eyes, smile",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, receding soft chin, well-fed face",
             "signature_element": "golden deputy badge + tasteless suit + promising smile",
             "micro_gesture": "adjusts deputy badge before making another empty promise",
             "wardrobe_anchor": "expensive tasteless suit, deputy badge, 'projects' folder",
@@ -28716,7 +28706,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "bouncy animated walk with expressive arm movement"
@@ -28732,7 +28722,7 @@
                 "wrinkled high forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "full weathered lips"
@@ -28741,7 +28731,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "moderate nasolabial folds"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -28750,7 +28740,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -28820,7 +28810,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "strict bob, cold grey eyes, sharp face, calculator clicking",
+            "face_silhouette": "sharp face, prominent Slavic cheekbones, pointed narrow chin",
             "signature_element": "old button calculator + strict bob + cold counting eyes",
             "micro_gesture": "clicks calculator while staring at you, announcing total",
             "wardrobe_anchor": "dark strict suit, strict bob, button calculator, number folders",
@@ -28888,7 +28878,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "seasoned female voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -28922,7 +28912,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "missing front tooth with gold replacement"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -28992,7 +28982,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "red helmet, neat mustache, serious eyes, clipboard, tape measure",
+            "face_silhouette": "delicate small jaw face shape, hollow sunken cheekbones, double chin",
             "signature_element": "red inspector helmet + clipboard + belt tape measure",
             "micro_gesture": "pulls tape measure to check door width mid-conversation",
             "wardrobe_anchor": "uniform shirt, epaulettes, red helmet, clipboard, tape measure",
@@ -29060,7 +29050,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -29076,7 +29066,7 @@
                 "flat wide forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thick chapped lips"
@@ -29094,7 +29084,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
                 "medium gray-tipped lashes"
@@ -29164,7 +29154,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "dyed red hair, puffy indifferent face, complaint folder, tea cup",
+            "face_silhouette": "heavy prominent jaw face shape, high sharp cheekbones, double chin, puffy indifferent face",
             "signature_element": "complaint folder + tea with teabag + desk cactus",
             "micro_gesture": "sips tea while mechanically saying 'write an application'",
             "wardrobe_anchor": "cardigan over blouse, complaint folder, tea cup, desk cactus",
@@ -29336,7 +29326,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "thin glasses, long face, neat part, tube like sword",
+            "face_silhouette": "long face, prominent Slavic cheekbones, double chin",
             "signature_element": "blueprint tube + T-square ruler + thin glasses",
             "micro_gesture": "unrolls blueprint and measures with T-square to verify claim",
             "wardrobe_anchor": "dress shirt, vest, thin glasses, blueprint tube, T-square",
@@ -29405,7 +29395,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "steady purposeful walk, professional bearing"
@@ -29421,7 +29411,7 @@
                 "flat wide forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thick chapped lips"
@@ -29430,10 +29420,10 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "light nasolabial folds"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "light under-eye circles"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -29509,7 +29499,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "half-moon glasses on nose, grey styled hair, brooch, forms",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, cleft chin",
             "signature_element": "half-moon glasses + form stack + brooch + candy dish",
             "micro_gesture": "looks over half-glasses sympathetically then asks for certificate",
             "wardrobe_anchor": "cardigan with brooch, half-glasses, form stack, candy dish",
@@ -29684,7 +29674,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "side fringe, wonder-struck eyes, unboxing knife, boxes",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, strong jutting chin",
             "signature_element": "unboxing knife + channel hoodie + wonder-struck eyes",
             "micro_gesture": "slices box tape with dramatic pause before revealing",
             "wardrobe_anchor": "channel logo hoodie, unboxing knife, surrounded by boxes",
@@ -29753,7 +29743,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "confident young male voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -29858,7 +29848,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "soft waves, grey-blue eyes, coffee cup, beige palette",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, strong jutting chin",
             "signature_element": "aesthetic coffee + beige oversized + multiple rings",
             "micro_gesture": "adjusts coffee cup angle for non-existent camera",
             "wardrobe_anchor": "beige oversized sweater, rings, aesthetic coffee cup",
@@ -29961,7 +29951,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "sparse short pale lashes"
@@ -30032,7 +30022,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "dyed blond top, darting eyes, smirk, spy glasses",
+            "face_silhouette": "protruding jaw face shape, flat wide cheekbones, receding soft chin",
             "signature_element": "spy camera glasses + dyed blond + bright jacket",
             "micro_gesture": "adjusts spy glasses while targeting unsuspecting person",
             "wardrobe_anchor": "bright jacket, spy glasses, dyed blond, hidden mic",
@@ -30206,7 +30196,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "messy bun, hair tie on wrist, maternal smile, stain",
+            "face_silhouette": "heavy prominent jaw face shape, subtle low cheekbones, double chin",
             "signature_element": "messy bun + wrist hair tie + baby food stain",
             "micro_gesture": "wipes baby food off shoulder mid-sentence without pausing",
             "wardrobe_anchor": "casual clothes, hair tie on wrist, ring light, shoulder stain",
@@ -30275,7 +30265,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -30303,13 +30293,13 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "bony narrow shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -30380,7 +30370,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "round face, apple cheeks, phone tripod, frozen fork",
+            "face_silhouette": "round face, rounded full cheekbones, square prominent chin, apple cheeks",
             "signature_element": "phone on tripod + frozen fork + 'feed me' apron",
             "micro_gesture": "holds fork with food frozen adjusting phone angle",
             "wardrobe_anchor": "'feed me' apron, phone tripod, frozen fork, apple cheeks",
@@ -30448,7 +30438,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -30464,7 +30454,7 @@
                 "smooth narrow forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "natural dark eyebrows"
             ],
             "lip_texture_tokens": [
                 "narrow pale lips"
@@ -30476,7 +30466,7 @@
                 "pronounced deep smile lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "bony narrow shoulders"
@@ -30485,7 +30475,7 @@
                 "white dentures visible when speaking"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural dark lashes"
             ]
         },
         "speech_identity": {
@@ -30553,7 +30543,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "high ponytail, neon top, visible abs, burning eyes",
+            "face_silhouette": "delicate small jaw face shape, prominent Slavic cheekbones, square prominent chin",
             "signature_element": "neon sports top + visible abs + high ponytail + BCAA",
             "micro_gesture": "drops into exercise mid-sentence to demonstrate",
             "wardrobe_anchor": "neon sports top, high ponytail, fitness band, BCAA bottle",
@@ -30621,7 +30611,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "confident young female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -30726,7 +30716,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "round glasses, neat beard, big mic, studio headphones",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, cleft chin",
             "signature_element": "condenser mic + round glasses + acoustic panels",
             "micro_gesture": "leans toward mic and pauses meaningfully before speaking",
             "wardrobe_anchor": "dark shirt, round glasses, studio headphones, condenser mic",
@@ -30795,7 +30785,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "warm young male voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -30829,10 +30819,10 @@
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural dark lashes"
             ]
         },
         "speech_identity": {
@@ -30900,7 +30890,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "dyed hair, rosy round face, determined eyes, pot in hands",
+            "face_silhouette": "round face, rounded full cheekbones, strong jutting chin, rosy round face",
             "signature_element": "pot in hands + floral apron + ladle at ready",
             "micro_gesture": "ladles more food before person finishes first serving",
             "wardrobe_anchor": "floral apron, pot, ladle, dyed chestnut hair",
@@ -31072,7 +31062,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "kerchief, paint spots, shrewd eyes, roller in hand",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, receding soft chin",
             "signature_element": "paint roller + spotted kerchief + tape measure",
             "micro_gesture": "finds wall flaw and hands roller to nearest person",
             "wardrobe_anchor": "work pants, husband shirt, kerchief, paint roller",
@@ -31244,7 +31234,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "pearl earrings, perfect grey hair, cold appraising eyes",
+            "face_silhouette": "wide angular jaw face shape, subtle low cheekbones, pointed narrow chin",
             "signature_element": "pearl earrings + white dust-glove + perfect styling",
             "micro_gesture": "runs white-gloved finger along shelf showing dust to camera",
             "wardrobe_anchor": "cream blouse, pearl earrings, white inspection glove",
@@ -31416,7 +31406,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "dark mystical eyes, hollow cheeks, tarot cards, shawls",
+            "face_silhouette": "receding jaw face shape, hollow sunken cheekbones, double chin, hollow cheeks",
             "signature_element": "tarot cards + layered shawls + rings every finger",
             "micro_gesture": "draws tarot card before answering any question",
             "wardrobe_anchor": "layered shawls, rings every finger, tarot deck, candles",
@@ -31589,7 +31579,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "gold glasses, grey bob, director posture, planner",
+            "face_silhouette": "strong square jaw face shape, flat wide cheekbones, square prominent chin",
             "signature_element": "gold glasses + planner + director posture",
             "micro_gesture": "opens planner and assigns family weekend tasks",
             "wardrobe_anchor": "suit set, gold glasses, planner, director bearing",
@@ -31762,7 +31752,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "straw hat, deeply tanned, cunning eyes, hoe",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, strong jutting chin",
             "signature_element": "hoe + straw hat + rubber boots + garden command",
             "micro_gesture": "hands gardening tool to nearest person before they object",
             "wardrobe_anchor": "straw hat, rubber boots, garden apron, hoe, harvest bucket",
@@ -31934,7 +31924,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "red mustache, cap, blue coveralls, wrench, shrewd eyes",
+            "face_silhouette": "heavy prominent jaw face shape, prominent Slavic cheekbones, rounded stubborn chin",
             "signature_element": "huge wrench + red mustache + blue coveralls + tool belt",
             "micro_gesture": "shakes head at previous plumber's work before starting",
             "wardrobe_anchor": "blue coveralls, cap, tool belt, huge wrench",
@@ -32003,7 +31993,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -32107,7 +32097,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "bright dyed hair, clicking scissors, comb behind ear",
+            "face_silhouette": "heavy prominent jaw face shape, subtle low cheekbones, cleft chin",
             "signature_element": "clicking scissors + ever-changing hair color + comb behind ear",
             "micro_gesture": "clicks scissors while circling and deciding your new look",
             "wardrobe_anchor": "black apron, bright hair, scissors, comb behind ear, hip dryer",
@@ -32176,7 +32166,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "restless bouncing movement, can not stand still"
@@ -32280,7 +32270,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "tape bracelet, headlamp, tester on neck, grey attentive eyes",
+            "face_silhouette": "rounded soft jaw face shape, prominent Slavic cheekbones, strong jutting chin",
             "signature_element": "blue tape wrist bracelet + multimeter on neck + headlamp",
             "micro_gesture": "wraps blue tape around something while muttering about wiring",
             "wardrobe_anchor": "work jacket, blue tape bracelet, multimeter, headlamp",
@@ -32305,8 +32295,7 @@
             "age": "52",
             "height_build": "thin wiry build",
             "skin_tokens": [
-                "hyper-realistic skin microtexture with visible pores",
-                "fine lines and early age spots"
+                "hyper-realistic skin microtexture with visible pores"
             ],
             "eye_tokens": [
                 "attentive grey eyes"
@@ -32348,7 +32337,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "seasoned deep male voice"
             ],
             "gait_tokens": [
                 "aggressive forward-leaning stride"
@@ -32376,16 +32365,16 @@
                 "asymmetric nasolabial folds"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "visible under-eye shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "complete but yellowed set"
+                "natural teeth with age-appropriate wear"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural dark lashes"
             ]
         },
         "speech_identity": {
@@ -32520,7 +32509,7 @@
                 "freckles"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "warm young female voice"
             ],
             "gait_tokens": [
                 "casual confident stride, natural rhythm"
@@ -32545,16 +32534,16 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "faint under-eye shadows"
             ],
             "shoulder_tokens": [
                 "broad heavy shoulders"
             ],
             "teeth_tokens": [
-                "yellowed uneven teeth"
+                "natural adult teeth"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -32624,7 +32613,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "oil forehead smudge, square jaw, calm eyes, oily coveralls",
+            "face_silhouette": "strong square jaw face shape, subtle low cheekbones, square prominent chin, oil forehead smudge",
             "signature_element": "oil smudge on forehead + oily coveralls + wrench + rag",
             "micro_gesture": "wipes forehead with oily hand making smudge worse",
             "wardrobe_anchor": "blue oily coveralls, wrench, rag pocket, forehead oil smudge",
@@ -32692,7 +32681,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "rich mature male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -32708,7 +32697,7 @@
                 "smooth narrow forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "full weathered lips"
@@ -32796,7 +32785,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "huge key ring, stilettos, perfect styling, selling eyes",
+            "face_silhouette": "wide angular jaw face shape, hollow sunken cheekbones, receding soft chin",
             "signature_element": "huge jingling key ring + stilettos + floor plan folder",
             "micro_gesture": "jingles keys while enthusiastically describing invisible view",
             "wardrobe_anchor": "blazer, skirt, stilettos, huge key ring, floor plan folder",
@@ -32864,7 +32853,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered female voice"
+                "energetic mature female voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -32877,7 +32866,7 @@
                 "hollow sunken cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "subtly lined high forehead"
             ],
             "eyebrow_tokens": [
                 "faded thin brows"
@@ -32901,7 +32890,7 @@
                 "white dentures visible when speaking"
             ],
             "eyelash_tokens": [
-                "sparse short pale lashes"
+                "natural full lashes"
             ]
         },
         "speech_identity": {
@@ -32968,7 +32957,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "bright headscarf, red face, cunning eyes, market scales",
+            "face_silhouette": "heavy prominent jaw face shape, rounded full cheekbones, square prominent chin, red face",
             "signature_element": "market scales + bright headscarf + money pocket apron",
             "micro_gesture": "adds extra product 'for free' that was already in price",
             "wardrobe_anchor": "bright headscarf, money apron, market scales",
@@ -33053,7 +33042,7 @@
                 "flat wide forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "thick natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -33141,7 +33130,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "short hair, darting eyes, cunning smile, cables hanging",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, pointed narrow chin",
             "signature_element": "cables everywhere + store logo tee + demo phone",
             "micro_gesture": "produces exact cable you need from nowhere",
             "wardrobe_anchor": "store logo tee, badge, cables hanging, demo phone",
@@ -33209,7 +33198,7 @@
                 "no prominent scars or marks"
             ],
             "voice_texture_tokens": [
-                "age-weathered male voice"
+                "confident young male voice"
             ],
             "gait_tokens": [
                 "exaggerated animated walk, performative energy"
@@ -33222,13 +33211,13 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "arched expressive eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -33313,7 +33302,7 @@
         },
         "compatibility": "balanced",
         "identity_anchors": {
-            "face_silhouette": "white coat cap, tired kind eyes, calculator, bread shelves",
+            "face_silhouette": "round face, rounded full cheekbones, strong jutting chin",
             "signature_element": "small calculator + white coat + bread scent",
             "micro_gesture": "counts change on calculator aloud while wrapping bread",
             "wardrobe_anchor": "white coat, cap, small calculator, bread-scented hands",
@@ -33485,7 +33474,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "RGB headset glow, hair over eyes, pale, rumpled hoodie",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "RGB gaming headset + Red Bull can + screen glow on face",
             "micro_gesture": "says 'five minutes' while clearly starting new 40-min match",
             "wardrobe_anchor": "rumpled hoodie, RGB headset, Red Bull, keyboard glow",
@@ -33568,13 +33557,13 @@
                 "rounded full cheekbones"
             ],
             "forehead_tokens": [
-                "wrinkled high forehead"
+                "high forehead"
             ],
             "eyebrow_tokens": [
                 "heavy dark eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "natural lips"
             ],
             "chin_tokens": [
                 "receding soft chin"
@@ -33589,7 +33578,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "stubby pale lashes"
@@ -33757,13 +33746,13 @@
                 "moderate nasolabial lines"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "rounded hunched shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "barely visible thin lashes"
@@ -33835,7 +33824,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "blonde hair, bright blue eyes, braces, phone always out",
+            "face_silhouette": "narrow pointed jaw face shape, rounded full cheekbones, receding soft chin",
             "signature_element": "phone always filming + braces + oversized hoodie + platforms",
             "micro_gesture": "starts TikTok dance in middle of any conversation",
             "wardrobe_anchor": "oversized bright hoodie, platform sneakers, phone with popsocket",
@@ -33931,7 +33920,7 @@
                 "faint nasolabial creases"
             ],
             "undereye_tokens": [
-                "deep purple-brown under-eye bags"
+                "natural under-eye area with slight shadows"
             ],
             "shoulder_tokens": [
                 "narrow sloped shoulders"
@@ -34183,7 +34172,7 @@
         },
         "compatibility": "chaotic",
         "identity_anchors": {
-            "face_silhouette": "oval face, high cheekbones, athletic jawline, big brown eyes",
+            "face_silhouette": "narrow pointed jaw face shape, flat wide cheekbones, pointed narrow chin, oval face, high cheekbones, athletic jawline",
             "signature_element": "high ponytail fountain + fitness tracker + white smile",
             "micro_gesture": "tightens ponytail before making a point",
             "wardrobe_anchor": "cropped athletic top coral color, high-waisted black leggings, white sneakers, fitness tracker",
@@ -34297,7 +34286,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "deep carved nasolabial folds"
+                "faint nasolabial lines"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -34571,7 +34560,7 @@
         },
         "compatibility": "meme",
         "identity_anchors": {
-            "face_silhouette": "round warm face, freckle constellation, wild red curls, wide green eyes",
+            "face_silhouette": "rounded soft jaw face shape, rounded full cheekbones, square prominent chin, round warm face",
             "signature_element": "red curly hair + freckles everywhere + paint stains on hands",
             "micro_gesture": "pushes wild curl behind ear, it immediately springs back",
             "wardrobe_anchor": "oversized paint-stained denim overalls, striped long-sleeve shirt, messy rolled sleeves",
@@ -34675,7 +34664,7 @@
                 "narrow low forehead"
             ],
             "eyebrow_tokens": [
-                "wild unkempt eyebrows"
+                "neat natural eyebrows"
             ],
             "lip_texture_tokens": [
                 "thin pressed lips with deep vertical lines"
@@ -34763,7 +34752,7 @@
         },
         "compatibility": "conflict",
         "identity_anchors": {
-            "face_silhouette": "sculpted cheekbones, sharp jaw, platinum bob, icy blue eyes, raised left brow",
+            "face_silhouette": "narrow pointed jaw face shape, high sharp cheekbones, pointed narrow chin, sculpted cheekbones, sharp jaw, raised left brow",
             "signature_element": "platinum bob + perpetually raised left eyebrow + glacier eyes",
             "micro_gesture": "left eyebrow micro-raise before delivering verdict",
             "wardrobe_anchor": "cream cashmere turtleneck, camel wool coat draped on shoulders, minimalist silver teardrop earrings",
@@ -34875,7 +34864,7 @@
                 "thin sparse eyebrows"
             ],
             "lip_texture_tokens": [
-                "thin dry cracked lips"
+                "soft natural lips"
             ],
             "chin_tokens": [
                 "pointed narrow chin"
@@ -34890,7 +34879,7 @@
                 "narrow sloped shoulders"
             ],
             "teeth_tokens": [
-                "crooked stained teeth"
+                "healthy white teeth with minor natural imperfections"
             ],
             "eyelash_tokens": [
                 "surprisingly full lashes"
