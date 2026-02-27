@@ -3323,7 +3323,32 @@ async function callAIEngine(apiContext) {
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
-      throw new Error(err.error || `API error ${resp.status}`);
+      const errMsg = err.error || `API error ${resp.status}`;
+
+      // Auto-reauth on token errors: refresh JWT and retry once
+      if ((resp.status === 401 || /invalid token|token expired/i.test(errMsg)) && isPromoValid()) {
+        log('WARN', 'API', 'Токен истёк — обновляю...');
+        await autoAuth();
+        const freshToken = localStorage.getItem('ferixdi_jwt');
+        if (freshToken && freshToken !== token) {
+          log('OK', 'API', 'Токен обновлён — повторяю запрос');
+          const retryResp = await fetch(`${apiUrl}/api/generate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${freshToken}`,
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+          });
+          if (retryResp.ok) {
+            const retryData = await retryResp.json();
+            return retryData.ai;
+          }
+        }
+      }
+
+      throw new Error(errMsg);
     }
 
     const data = await resp.json();
@@ -7416,6 +7441,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial readiness check after all components loaded
   setTimeout(() => {
     updateReadiness();
+    if (isPromoValid()) autoAuth(); // Refresh JWT on every app load
     loadCustomCharacters();
     renderCharacters();
     populateSeriesSelects();
