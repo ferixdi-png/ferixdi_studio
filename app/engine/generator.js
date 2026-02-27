@@ -1312,7 +1312,7 @@ function buildVeoPrompt(opts) {
       ageFilter(bio.lip_texture_tokens) ? `Lips: ${safeArr(bio.lip_texture_tokens)}` : null,
       ageFilter(bio.teeth_tokens) ? `Teeth: ${safeArr(bio.teeth_tokens)}` : null,
       bio.hair_tokens ? `Hair: ${safeArr(bio.hair_tokens)}` : null,
-      bio.facial_hair_tokens ? `Facial hair: ${safeArr(bio.facial_hair_tokens)}` : null,
+      bio.facial_hair_tokens && !/^none$/i.test(safeArr(bio.facial_hair_tokens)) ? `Facial hair: ${safeArr(bio.facial_hair_tokens)}` : null,
       bio.ear_tokens ? `Ears: ${safeArr(bio.ear_tokens)}` : null,
       bio.neck_tokens ? `Neck: ${safeArr(bio.neck_tokens)}` : null,
       bio.hands_tokens ? `Hands: ${safeArr(bio.hands_tokens)}` : null,
@@ -1362,6 +1362,9 @@ function buildVeoPrompt(opts) {
       mod.joy_expression ? `Joy: ${mod.joy_expression}` : null,
       mod.blink_pattern ? `Blink: ${mod.blink_pattern}` : null,
       mod.fidget_style ? `Fidget: ${mod.fidget_style}` : null,
+      mod.thinking_expression ? `Thinking: ${mod.thinking_expression}` : null,
+      mod.eye_contact_style ? `Eye contact: ${mod.eye_contact_style}` : null,
+      mod.sad_expression ? `Sadness: ${mod.sad_expression}` : null,
     ].filter(Boolean);
 
     // ── SPEECH IDENTITY ──
@@ -1979,7 +1982,7 @@ export function generate(input) {
         shoulders: safeArr(charA.biology_override?.shoulder_tokens) || undefined,
         hands: safeArr(charA.biology_override?.hands_tokens) || undefined,
         scar_marks: safeArr(charA.biology_override?.scar_mark_tokens) || undefined,
-        facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) || undefined,
+        facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charA.biology_override?.facial_hair_tokens)) ? safeArr(charA.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
         resting_face: charA.biology_override?.facial_expression_default || undefined,
         // ── WARDROBE IDENTITY ANCHORS ──
@@ -2026,7 +2029,7 @@ export function generate(input) {
         shoulders: safeArr(charA.biology_override?.shoulder_tokens) || undefined,
         hands: safeArr(charA.biology_override?.hands_tokens) || undefined,
         scar_marks: safeArr(charA.biology_override?.scar_mark_tokens) || undefined,
-        facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) || undefined,
+        facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charA.biology_override?.facial_hair_tokens)) ? safeArr(charA.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
         resting_face: charA.biology_override?.facial_expression_default || undefined,
         // ── WARDROBE IDENTITY ANCHORS ──
@@ -2072,7 +2075,7 @@ export function generate(input) {
         shoulders: safeArr(charB.biology_override?.shoulder_tokens) || undefined,
         hands: safeArr(charB.biology_override?.hands_tokens) || undefined,
         scar_marks: safeArr(charB.biology_override?.scar_mark_tokens) || undefined,
-        facial_hair: safeArr(charB.biology_override?.facial_hair_tokens) || undefined,
+        facial_hair: safeArr(charB.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charB.biology_override?.facial_hair_tokens)) ? safeArr(charB.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charB.biology_override?.eyelash_tokens) || undefined,
         resting_face: charB.biology_override?.facial_expression_default || undefined,
         // ── WARDROBE IDENTITY ANCHORS ──
