@@ -2154,8 +2154,8 @@ export function generate(input) {
   const video_prompt_en_json = {
     cast,
     identity_anchors: {
-      A: { silhouette: anchorA.face_silhouette, element: anchorA.signature_element, gesture: anchorA.micro_gesture, wardrobe: wardrobeA },
-      B: { silhouette: anchorB.face_silhouette, element: anchorB.signature_element, gesture: anchorB.micro_gesture, wardrobe: wardrobeB },
+      A: { silhouette: anchorA.face_silhouette, element: anchorA.signature_element, gesture: anchorA.micro_gesture, wardrobe: wardrobeA, glasses: anchorA.glasses_anchor && anchorA.glasses_anchor !== 'none' ? anchorA.glasses_anchor : undefined, headwear: anchorA.headwear_anchor && anchorA.headwear_anchor !== 'none' ? anchorA.headwear_anchor : undefined, jewelry: anchorA.jewelry_anchors && anchorA.jewelry_anchors !== 'none' ? anchorA.jewelry_anchors : undefined, accessories: safeArr(anchorA.accessory_anchors) || undefined },
+      B: { silhouette: anchorB.face_silhouette, element: anchorB.signature_element, gesture: anchorB.micro_gesture, wardrobe: wardrobeB, glasses: anchorB.glasses_anchor && anchorB.glasses_anchor !== 'none' ? anchorB.glasses_anchor : undefined, headwear: anchorB.headwear_anchor && anchorB.headwear_anchor !== 'none' ? anchorB.headwear_anchor : undefined, jewelry: anchorB.jewelry_anchors && anchorB.jewelry_anchors !== 'none' ? anchorB.jewelry_anchors : undefined, accessories: safeArr(anchorB.accessory_anchors) || undefined },
       serial: { aesthetic, prop_anchor: propAnchor },
     },
     ...(topicEn ? { topic_context: topicEn } : {}),
@@ -2177,9 +2177,9 @@ export function generate(input) {
       speech_style_B: _speechStyleToEn(charB.speech_style_ru, charB.speech_pace, charB.compatibility),
       lip_sync: 'CRITICAL: mouth movements must match Russian phonemes precisely. Each syllable produces visible jaw/lip movement. Consonants: visible tongue/teeth contact. Vowels: proportional mouth opening.',
       delivery_A: `${charA.speech_pace} pace, ${vibeEnA} energy, ${charA.swear_level > 1 ? 'occasional expressive profanity as accent' : 'controlled passionate delivery'}`,
-      voice_timbre_A: `${charA.speech_pace === 'fast' ? 'high-energy, slightly shrill when agitated, voice cracks on emphasis words' : charA.speech_pace === 'slow' ? 'deep gravelly rasp, deliberate enunciation, resonant chest voice' : 'mid-range natural voice, rises in pitch with indignation'}. Age-appropriate ${cast.speaker_A.age} voice — ${charA.swear_level > 1 ? 'rough edges, lived-in vocal texture, hoarse undertone' : 'clear but weathered, slight tremor on emotional peaks'}`,
+      voice_timbre_A: safeArr(charA.biology_override?.voice_texture_tokens) || `${charA.speech_pace === 'fast' ? 'high-energy, slightly shrill when agitated, voice cracks on emphasis words' : charA.speech_pace === 'slow' ? 'deep gravelly rasp, deliberate enunciation, resonant chest voice' : 'mid-range natural voice, rises in pitch with indignation'}. Age-appropriate ${cast.speaker_A.age} voice`,
       delivery_B: `${charB.speech_pace} pace, ${vibeEnB} energy, measured buildup to killer word, voice drops for contrast`,
-      voice_timbre_B: `${charB.speech_pace === 'slow' ? 'low deliberate rumble, pauses filled with audible nose-exhale, words land like stones' : charB.speech_pace === 'fast' ? 'sharp staccato delivery, clipped consonants, rapid-fire with sudden stops for effect' : 'steady measured mid-tone, controlled volume that drops to near-whisper on killer word for devastating contrast'}. Age-appropriate ${cast.speaker_B.age} voice — worn but commanding`,
+      voice_timbre_B: safeArr(charB.biology_override?.voice_texture_tokens) || `${charB.speech_pace === 'slow' ? 'low deliberate rumble, pauses filled with audible nose-exhale, words land like stones' : charB.speech_pace === 'fast' ? 'sharp staccato delivery, clipped consonants, rapid-fire with sudden stops for effect' : 'steady measured mid-tone, controlled volume that drops to near-whisper on killer word for devastating contrast'}. Age-appropriate ${cast.speaker_B.age} voice`,
     },
     spatial: {
       positioning: 'Both characters face camera at arm\'s length distance (selfie POV). A on left, B on right. They stand/sit shoulder-to-shoulder or slightly angled toward each other (30°). Close enough to touch but not touching.',
@@ -2658,9 +2658,24 @@ ${(g.assembly_tips_ru || []).map((t, i) => `${i + 1}. ${t}`).join('\n')}`;
     const idB = cB?.prompt_tokens?.character_en;
     let photoScene = g.photo_scene_en;
     if (idA || idB) {
+      const _idLockParts = (c, id, wFallback) => {
+        const ia = c?.identity_anchors || {};
+        const bio = c?.biology_override || {};
+        const parts = [id];
+        parts.push(`Wardrobe: ${ia.wardrobe_anchor || wFallback || ''}`);
+        if (ia.signature_element) parts.push(`Signature: ${ia.signature_element}`);
+        if (ia.glasses_anchor && ia.glasses_anchor !== 'none') parts.push(`Glasses: ${ia.glasses_anchor}`);
+        if (ia.headwear_anchor && ia.headwear_anchor !== 'none') parts.push(`Headwear: ${ia.headwear_anchor}`);
+        if (ia.jewelry_anchors && ia.jewelry_anchors !== 'none') parts.push(`Jewelry: ${ia.jewelry_anchors}`);
+        if (bio.hair_tokens) parts.push(`Hair: ${safeArr(bio.hair_tokens)}`);
+        if (bio.eye_tokens) parts.push(`Eyes: ${safeArr(bio.eye_tokens)}`);
+        if (bio.scar_mark_tokens) parts.push(`Marks: ${safeArr(bio.scar_mark_tokens)}`);
+        if (bio.voice_texture_tokens) parts.push(`Voice: ${safeArr(bio.voice_texture_tokens)}`);
+        return parts.join('. ');
+      };
       const idBlock = [
-        idA ? `EXACT CHARACTER A: ${idA}. Wardrobe: ${cA.identity_anchors?.wardrobe_anchor || ctx.wardrobeA || ''}. Signature: ${cA.identity_anchors?.signature_element || ''}.` : '',
-        idB ? `EXACT CHARACTER B: ${idB}. Wardrobe: ${cB.identity_anchors?.wardrobe_anchor || ctx.wardrobeB || ''}. Signature: ${cB.identity_anchors?.signature_element || ''}.` : '',
+        idA ? `EXACT CHARACTER A: ${_idLockParts(cA, idA, ctx.wardrobeA)}.` : '',
+        idB ? `EXACT CHARACTER B: ${_idLockParts(cB, idB, ctx.wardrobeB)}.` : '',
       ].filter(Boolean).join(' ');
       photoScene += ' ' + idBlock;
     }
@@ -2932,10 +2947,25 @@ ${firstComment}
 
     // Append identity override block so Veo always gets the exact catalog descriptions
     if (canonicalA || canonicalB) {
+      const _remakeIdParts = (c, canonical, wFallback) => {
+        const ia = c?.identity_anchors || {};
+        const bio = c?.biology_override || {};
+        const parts = [`${canonical}`];
+        parts.push(`Wardrobe: ${ia.wardrobe_anchor || wFallback || ''}`);
+        if (ia.signature_element) parts.push(`Signature: ${ia.signature_element}`);
+        if (ia.glasses_anchor && ia.glasses_anchor !== 'none') parts.push(`Glasses: ${ia.glasses_anchor}`);
+        if (ia.headwear_anchor && ia.headwear_anchor !== 'none') parts.push(`Headwear: ${ia.headwear_anchor}`);
+        if (ia.jewelry_anchors && ia.jewelry_anchors !== 'none') parts.push(`Jewelry: ${ia.jewelry_anchors}`);
+        if (bio.hair_tokens) parts.push(`Hair: ${safeArr(bio.hair_tokens)}`);
+        if (bio.eye_tokens) parts.push(`Eyes: ${safeArr(bio.eye_tokens)}`);
+        if (bio.scar_mark_tokens) parts.push(`Marks: ${safeArr(bio.scar_mark_tokens)}`);
+        if (bio.voice_texture_tokens) parts.push(`Voice: ${safeArr(bio.voice_texture_tokens)}`);
+        return parts.join('. ');
+      };
       const identityBlock = [
         '\n\n[IDENTITY LOCK — EXACT CHARACTER DESCRIPTIONS (override any paraphrased versions above)]:',
-        canonicalA ? `CHARACTER A (${charA.name_ru || 'A'}): ${canonicalA}. Wardrobe: ${charA.identity_anchors?.wardrobe_anchor || ctx.wardrobeA || ''}. Signature: ${charA.identity_anchors?.signature_element || ''}.` : '',
-        canonicalB ? `CHARACTER B (${charB.name_ru || 'B'}): ${canonicalB}. Wardrobe: ${charB.identity_anchors?.wardrobe_anchor || ctx.wardrobeB || ''}. Signature: ${charB.identity_anchors?.signature_element || ''}.` : '',
+        canonicalA ? `CHARACTER A (${charA.name_ru || 'A'}): ${_remakeIdParts(charA, canonicalA, ctx.wardrobeA)}.` : '',
+        canonicalB ? `CHARACTER B (${charB.name_ru || 'B'}): ${_remakeIdParts(charB, canonicalB, ctx.wardrobeB)}.` : '',
       ].filter(Boolean).join('\n');
       remakePrompt += identityBlock;
     }
