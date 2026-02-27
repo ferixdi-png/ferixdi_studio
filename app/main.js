@@ -3588,7 +3588,7 @@ function initGenerate() {
               🔄 Попробовать снова
             </button>
           `;
-        } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized')) {
+        } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized') || apiErr.message?.toLowerCase().includes('invalid token') || apiErr.message?.toLowerCase().includes('token expired')) {
           errorTitle = 'Ошибка авторизации';
           errorDesc = 'Промо-код истёк или недействителен. Проверьте настройки.';
           errorAction = 'Введите новый промо-код в разделе «Настройки»';
