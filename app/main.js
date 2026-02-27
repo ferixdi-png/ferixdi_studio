@@ -3492,6 +3492,7 @@ function initGenerate() {
       input_mode: state.generationMode || state.inputMode,
       character1_id: state.selectedA.id,
       character2_id: state.selectedB ? state.selectedB.id : null,
+      roles_locked: true,
       context_ru: topicText,
       script_ru: state.generationMode === 'script' ? {
         A: document.getElementById('script-a')?.value || '',

@@ -1540,6 +1540,7 @@ export function generate(input) {
   const {
     input_mode = 'idea',
     character1_id, character2_id,
+    roles_locked = false,
     context_ru, script_ru, scene_hint_ru,
     category, thread_memory, video_meta,
     product_info,
@@ -1600,7 +1601,9 @@ export function generate(input) {
     warnings.push('Описание видео слишком длинное — может быть обрезано до 200 символов');
   }
 
-  const { A: charA, B: charB } = resolveRoles(rawA, rawB);
+  const { A: charA, B: charB } = roles_locked
+    ? { A: rawA, B: rawB }
+    : resolveRoles(rawA, rawB);
 
   // ── Topic context (from user input) ── must be before category detection
   const topicRu = context_ru?.trim() || '';
