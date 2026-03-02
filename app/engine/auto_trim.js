@@ -14,11 +14,11 @@ import { estimateDialogue, estimateLineDuration } from './estimator.js';
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
 const FILLER_REGEX = new RegExp(`(?<=^|\\s)(${FILLER_WORDS.join('|')})(?=\\s|$|[,\\.!?])`, 'gi');
 
-// Speaker windows (must match estimator.js)
-const SPEAKER_WINDOW = { A: 3.5, B: 4.0 };
-const SOLO_WINDOW_A = 6.7; // solo monologue: 0.6-7.3s
-const WINDOW_TOLERANCE = 1.2; // must match estimator.js
-const WORD_LIMITS = { A: 15, B: 18 };
+// Speaker windows (must match estimator.js & generator.js GRID_V2)
+const SPEAKER_WINDOW = { A: 2.8, B: 3.5 };
+const SOLO_WINDOW_A = 6.3; // solo monologue: 0.7-7.0s
+const WINDOW_TOLERANCE = 0.5; // must match estimator.js
+const WORD_LIMITS = { A: 10, B: 12 };
 const SOLO_WORD_LIMIT_A = 30;
 
 // ─── STEP 0: Remove excess pause markers ────

@@ -12,16 +12,19 @@ const REPLACEMENTS = {
 const BANNED_OVERLAY_WORDS = ['text overlay', 'subtitle', 'caption text', 'watermark', 'logo'];
 const DEVICE_WORDS = ['phone in hand', 'holding phone', 'camera visible', 'selfie stick', 'recording device'];
 
-// v2 grid boundaries
+// v2 grid boundaries — MUST match generator.js GRID_V2
 const GRID_V2 = {
-  hook:    { start: 0.0, end: 0.6 },
-  act_A:   { start: 0.6, end: 3.8 },
-  act_B:   { start: 3.8, end: 7.3 },
-  release: { start: 7.3, end: 8.0 },
+  hook:    { start: 0.0, end: 0.7 },
+  act_A:   { start: 0.7, end: 3.5 },
+  act_B:   { start: 3.5, end: 7.0 },
+  release: { start: 7.0, end: 8.0 },
 };
 
-// v2 word count limits (tightened to fit timing windows)
-const WORD_LIMITS = { A: { min: 4, max: 15 }, B: { min: 4, max: 18 } };
+// v2 word count limits — matched to generator timing windows
+// A window: 2.8s (0.7-3.5). B window: 3.5s (3.5-7.0).
+// slow 2.0 WPS → A max 5, B max 7. fast 3.0 WPS → A max 8, B max 10.
+// Conservative limits include tolerance for pauses and emphasis.
+const WORD_LIMITS = { A: { min: 4, max: 10 }, B: { min: 4, max: 12 } };
 
 export function scanBannedWords(text) {
   const warnings = [];
@@ -65,8 +68,8 @@ export function validateTimingGrid(blueprint) {
 
   // v2: Hook must end by 0.85s (0.8 + tolerance)
   const hookScene = scenes.find(s => s.segment === 'hook' || s.id === 1);
-  if (hookScene && hookScene.end > 0.65) {
-    warnings.push(`Hook ends at ${hookScene.end}s, must be ≤0.6s`);
+  if (hookScene && hookScene.end > 0.75) {
+    warnings.push(`Hook ends at ${hookScene.end}s, must be ≤0.7s`);
   }
 
   // v2: Release must have zero dialogue
@@ -75,10 +78,10 @@ export function validateTimingGrid(blueprint) {
     warnings.push('Release segment must have ZERO words (shared laugh only)');
   }
 
-  // Killer word check near 7.1s
-  const killerScene = scenes.find(s => s.start <= 7.1 && s.end >= 7.1);
+  // Killer word check near 6.8s (inside act_B, before release)
+  const killerScene = scenes.find(s => s.start <= 6.8 && s.end >= 6.8);
   if (!killerScene) {
-    warnings.push('No scene covers killer word position (~7.1s)');
+    warnings.push('No scene covers killer word position (~6.8s)');
   }
 
   return { valid: warnings.length === 0, warnings, fixes };

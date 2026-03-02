@@ -767,7 +767,103 @@ function _vibeToEn(vibe, fallback) {
   if (l.includes('гик') || l.includes('нерд')) return 'geek culture obsessive energy';
   if (l.includes('дач') || l.includes('огород')) return 'suburban gardener passion';
   if (l.includes('фермер') || l.includes('деревен')) return 'village farmer pragmatism';
-  return fallback || 'distinctive personality';
+  if (l.includes('тёщ') || l.includes('свекров')) return 'mother-in-law dominance';
+  if (l.includes('философ')) return 'philosophical contemplation';
+  if (l.includes('тих') || l.includes('молчал')) return 'quiet devastating authority';
+  if (l.includes('мудр')) return 'folk wisdom and life experience';
+  if (l.includes('сантехник') || l.includes('электрик') || l.includes('механик')) return 'blue-collar specialist confidence';
+  if (l.includes('повар') || l.includes('кухн')) return 'chef authority and kitchen dominance';
+  if (l.includes('продав') || l.includes('рыночн')) return 'market vendor hustle energy';
+  if (l.includes('курьер') || l.includes('достав')) return 'delivery hustle — speed and sarcasm';
+  if (l.includes('охран') || l.includes('вахт')) return 'security guard stoic authority';
+  if (l.includes('водител') || l.includes('такси')) return 'driver pragmatism and road wisdom';
+  if (l.includes('тренер') || l.includes('фитнес')) return 'fitness coach motivation';
+  if (l.includes('врач') || l.includes('доктор') || l.includes('медиц')) return 'medical authority and clinical calm';
+  if (l.includes('программист') || l.includes('айти') || l.includes('it-')) return 'programmer logic and dry humor';
+  if (l.includes('сосед')) return 'nosy neighbor energy';
+  if (l.includes('сын') || l.includes('геймер') || l.includes('качок')) return 'young male energy — confident and restless';
+  if (l.includes('доч') || l.includes('тикток')) return 'young female energy — sassy and digital-native';
+  if (l.includes('обзорщик') || l.includes('подкаст')) return 'content reviewer obsession';
+  if (l.includes('пранкер')) return 'prankster chaos energy';
+  if (l.includes('парикмах') || l.includes('салон')) return 'salon authority — scissors and opinions';
+  if (l.includes('риелтор')) return 'realtor smooth-talk energy';
+  if (l.includes('ветеринар')) return 'veterinarian gentle authority';
+  if (l.includes('готик') || l.includes('лунн')) return 'gothic dark aesthetic';
+  if (l.includes('модель') || l.includes('ледян')) return 'model composure — icy elegance';
+  if (l.includes('художниц') || l.includes('творч')) return 'artistic creative spirit';
+  if (l.includes('рыж')) return 'fiery redhead energy';
+  if (l.includes('денди') || l.includes('элегантн')) return 'dandy elegance';
+  if (l.includes('див') || l.includes('перформанс')) return 'dramatic diva presence';
+  if (l.includes('кузнец') || l.includes('кувалд')) return 'blacksmith raw power';
+  if (l.includes('орёл') || l.includes('авторитет')) return 'commanding eagle authority';
+  if (l.includes('рэпер') || l.includes('дред') || l.includes('фристайл')) return 'rapper swagger';
+  if (l.includes('скейтер') || l.includes('ссадин')) return 'skater rebel';
+  if (l.includes('ботаник') || l.includes('факт')) return 'bookworm nerd precision';
+  if (l.includes('кошатниц') || l.includes('кот')) return 'cat-lady warmth';
+  if (l.includes('сплетниц') || l.includes('бигуд')) return 'gossip queen';
+  if (l.includes('сварщик') || l.includes('искр')) return 'welder toughness';
+  if (l.includes('почтальон')) return 'postal carrier nostalgia';
+  if (l.includes('кассир')) return 'cashier stoic patience';
+  if (l.includes('участков')) return 'beat cop authority';
+  if (l.includes('ютуб') || l.includes('камер')) return 'YouTuber content obsession';
+  if (l.includes('самокат') || l.includes('рюкзак') || l.includes('молни')) return 'delivery speed demon';
+  if (l.includes('карандаш') || l.includes('строг')) return 'strict disciplinarian';
+  if (l.includes('клавиатур') || l.includes('стикер') || l.includes('стилус')) return 'creative tech personality';
+  if (l.includes('колпак') || l.includes('кондитер') || l.includes('шеф')) return 'chef commanding authority';
+  if (l.includes('бюрократ') || l.includes('печат')) return 'bureaucratic machine';
+  if (l.includes('депутат') || l.includes('обещан')) return 'politician performative charm';
+  if (l.includes('инспектор') || l.includes('нарушен')) return 'inspector rigid authority';
+  if (l.includes('борец') || l.includes('ковёр')) return 'wrestler raw power';
+  if (l.includes('марафон') || l.includes('кроссфит')) return 'endurance athlete grit';
+  if (l.includes('гигант') || l.includes('медвед')) return 'gentle giant warmth';
+  if (l.includes('волк') || l.includes('повязк')) return 'sea-wolf ruggedness';
+  if (l.includes('громил') || l.includes('золотое сердц')) return 'tough exterior golden heart';
+  if (l.includes('эмо') || l.includes('пирсинг')) return 'emo depth and sensitivity';
+  if (l.includes('кукл') || l.includes('жемчуг')) return 'retro doll elegance';
+  if (l.includes('перфекционист') || l.includes('прядь')) return 'perfectionist edge';
+  if (l.includes('магнат') || l.includes('нефтян')) return 'oil magnate power';
+  if (l.includes('стартап') || l.includes('питч') || l.includes('евангелист')) return 'startup evangelist energy';
+  if (l.includes('застройщик') || l.includes('каск')) return 'developer builder ambition';
+  if (l.includes('коуч') || l.includes('маркер')) return 'motivational coach energy';
+  if (l.includes('крипто') || l.includes('график')) return 'crypto trader intensity';
+  if (l.includes('дальнобой') || l.includes('сказител')) return 'long-haul storyteller';
+  if (l.includes('студент') || l.includes('наушник')) return 'student quiet observer';
+  if (l.includes('физрук') || l.includes('свисток')) return 'PE teacher drill sergeant';
+  if (l.includes('информатик') || l.includes('мемолог')) return 'computer teacher meme lord';
+  if (l.includes('музыкалк') || l.includes('камертон')) return 'music teacher dreamer';
+  if (l.includes('трудовик') || l.includes('опилк') || l.includes('стамеск')) return 'workshop teacher craftsman';
+  if (l.includes('англичанк')) return 'English teacher prim propriety';
+  if (l.includes('историк') || l.includes('1812')) return 'history teacher enthusiast';
+  if (l.includes('химичк') || l.includes('реакци')) return 'chemistry teacher enthusiasm';
+  if (l.includes('физик') || l.includes('мел') || l.includes('сферическ')) return 'physics teacher absent-minded';
+  if (l.includes('дизайнер') || l.includes('оттенок')) return 'designer perfectionist';
+  if (l.includes('тестировщик') || l.includes('баг')) return 'QA tester detective';
+  if (l.includes('аналитик') || l.includes('цифр')) return 'data analyst precision';
+  if (l.includes('сисадмин') || l.includes('кабел')) return 'sysadmin survivalist';
+  if (l.includes('продакт') || l.includes('бэклог')) return 'product manager multitasker';
+  if (l.includes('фронтендер')) return 'frontend developer focus';
+  if (l.includes('тимлид') || l.includes('созвон')) return 'team lead multitasker';
+  if (l.includes('кормилиц') || l.includes('скалк')) return 'nurturing feeder authority';
+  if (l.includes('король') || l.includes('шаурм')) return 'shawarma king hospitality';
+  if (l.includes('лайфстайл') || l.includes('бежев')) return 'lifestyle aesthete';
+  if (l.includes('бухгалтер') || l.includes('подсчитал')) return 'accountant precision — numbers and judgment';
+  if (l.includes('главнокоманд') || l.includes('подчин')) return 'commander-in-chief dominance';
+  if (l.includes('разведк') || l.includes('шепчет') || l.includes('фсб')) return 'neighborhood intelligence agent';
+  if (l.includes('генерал') || l.includes('душит забот')) return 'overprotective general';
+  if (l.includes('усатый') || l.includes('мнение')) return 'mustachioed expert — opinion on everything';
+  if (l.includes('десантник') || l.includes('ураган')) return 'retired paratrooper hurricane energy';
+  if (l.includes('мастер-на-все') || l.includes('починит')) return 'jack-of-all-trades fixer';
+  if (l.includes('терминатор') || l.includes('олимпиад')) return 'polite terminator — destroys arguments with logic';
+  if (l.includes('золотой рот') || l.includes('улыбка')) return 'golden smile charm';
+  if (l.includes('хирург') || l.includes('скальпел')) return 'surgical verbal precision';
+  if (l.includes('батя') || l.includes('подтяжк')) return 'retro dad — suspenders and old-school charm';
+  if (l.includes('спортсменк') || l.includes('мышц') || l.includes('побед')) return 'female athlete grit and victory';
+  if (l.includes('джазмен') || l.includes('саксофон') || l.includes('импровизац')) return 'jazz musician improvisational cool';
+  if (l.includes('костюм-за-миллион') || l.includes('считает время')) return 'millionaire suit — counts time and money';
+  if (l.includes('чиновниц') || l.includes('переделайте') || l.includes('папка жалоб')) return 'bureaucrat lady — paperwork and tea';
+  if (l.includes('архитектор') || l.includes('тубус')) return 'architect pedantic precision';
+  if (l.includes('пенсионный фонд') || l.includes('очки-половинк') || l.includes('справку')) return 'pension fund clerk — half-glasses and paperwork';
+  return vibe;
 }
 
 function _aestheticToEn(aes) {
@@ -784,8 +880,59 @@ function _aestheticToEn(aes) {
   if (l.includes('домашн')) return 'domestic-intimacy';
   if (l.includes('военн') || l.includes('армей')) return 'military-order';
   if (l.includes('хипстер')) return 'hipster-casual';
-  if (l.includes('базар') || l.includes('рынок')) return 'bazaar-chaos';
+  if (l.includes('базар') || l.includes('рынок') || l.includes('рыночн')) return 'bazaar-chaos';
   if (l.includes('дач')) return 'dacha-rustic';
+  if (l.includes('нуар')) return 'gritty-noir';
+  if (l.includes('реализм')) return 'gritty-realism';
+  if (l.includes('хаос')) return 'chaotic-energy';
+  if (l.includes('ночн')) return 'nocturnal-atmosphere';
+  if (l.includes('шик') || l.includes('элит') || l.includes('люкс')) return 'chic-elegance';
+  if (l.includes('городск')) return 'urban-grit';
+  if (l.includes('портов')) return 'port-town-roughness';
+  if (l.includes('больничн') || l.includes('стерильн') || l.includes('чистот')) return 'clinical-sterility';
+  if (l.includes('спортивн') || l.includes('стадион')) return 'athletic-energy';
+  if (l.includes('кухн')) return 'kitchen-drama';
+  if (l.includes('офис') || l.includes('корпорат') || l.includes('коворкинг')) return 'office-corporate';
+  if (l.includes('школьн') || l.includes('кабинет')) return 'institutional-school';
+  if (l.includes('серверн') || l.includes('бункер')) return 'server-room-bunker';
+  if (l.includes('студи')) return 'studio-creative';
+  if (l.includes('квартир') || l.includes('комнат')) return 'apartment-intimate';
+  if (l.includes('подъезд') || l.includes('район')) return 'stairwell-grit';
+  if (l.includes('магазин') || l.includes('маркетплейс')) return 'retail-chaos';
+  if (l.includes('зал') || l.includes('ринг') || l.includes('бокс') || l.includes('бассейн')) return 'gym-athletic';
+  if (l.includes('гараж')) return 'garage-workshop';
+  if (l.includes('стройк')) return 'construction-site-raw';
+  if (l.includes('трасс') || l.includes('пробк') || l.includes('дорог') || l.includes('кабин')) return 'road-journey';
+  if (l.includes('доставк') || l.includes('курьер')) return 'delivery-hustle';
+  if (l.includes('мфц') || l.includes('паспорт') || l.includes('налогов') || l.includes('администрац') || l.includes('жкх') || l.includes('пенсион')) return 'bureaucratic-institution';
+  if (l.includes('богемн') || l.includes('винтаж')) return 'bohemian-vintage';
+  if (l.includes('петербург') || l.includes('москов')) return 'imperial-Russian-elegance';
+  if (l.includes('кавказ')) return 'Caucasian-warmth';
+  if (l.includes('девяност')) return '90s-post-Soviet-raw';
+  if (l.includes('трейдинг') || l.includes('бизнес') || l.includes('имперск') || l.includes('делов')) return 'business-power';
+  if (l.includes('творческ') || l.includes('худож')) return 'creative-artistic';
+  if (l.includes('готик') || l.includes('лунн')) return 'dark-gothic';
+  if (l.includes('проходн') || l.includes('подвал') || l.includes('щиток')) return 'industrial-gritty';
+  if (l.includes('клиник') || l.includes('салон')) return 'clean-professional';
+  if (l.includes('скандинав')) return 'Scandinavian-noir';
+  if (l.includes('хип-хоп') || l.includes('скейт')) return 'street-urban';
+  if (l.includes('фестивал')) return 'festival-vibe';
+  if (l.includes('джаз') || l.includes('клуб')) return 'jazz-club-atmosphere';
+  if (l.includes('мастерск') || l.includes('кузнеч')) return 'workshop-craft';
+  if (l.includes('столов')) return 'cafeteria-communal';
+  if (l.includes('мангал') || l.includes('пикник')) return 'outdoor-grill';
+  if (l.includes('родительск') || l.includes('чат')) return 'parental-group-chat';
+  if (l.includes('травян') || l.includes('аптек')) return 'herbal-apothecary';
+  if (l.includes('университет') || l.includes('пыль')) return 'academic-dusty';
+  if (l.includes('кукольн')) return 'dollhouse-kitsch';
+  if (l.includes('тренинг') || l.includes('конференц')) return 'conference-corporate';
+  if (l.includes('карт') || l.includes('пешком')) return 'city-exploration';
+  if (l.includes('дрифт')) return 'drift-adrenaline';
+  if (l.includes('кафе') || l.includes('ресторан') || l.includes('эстетик')) return 'cafe-aesthetic';
+  if (l.includes('улиц') || l.includes('пранк')) return 'street-prank';
+  if (l.includes('блог') || l.includes('рилс') || l.includes('распаков') || l.includes('контент')) return 'content-creator-space';
+  if (l.includes('дом') || l.includes('штаб')) return 'home-headquarters';
+  if (l.includes('деревня') || l.includes('в-городе')) return 'village-in-city';
   return 'authentic domestic realism';
 }
 
@@ -1158,8 +1305,8 @@ function buildTimingGridV2(hookObj, releaseObj) {
     tolerance_s: 0.2,
     grid: [
       { segment: 'hook', ...GRID_V2.hook, action_en: hookObj.action_en, audio: hookObj.audio },
-      { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers pompous provocation (8-15 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
-      { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (8-18 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
+      { segment: 'act_A', ...GRID_V2.act_A, action_en: 'Speaker A delivers pompous provocation (4-10 words), animated gestures, direct camera gaze', other: 'B silent: sealed lips, jaw still, eyes/micro-reactions only' },
+      { segment: 'act_B', ...GRID_V2.act_B, action_en: 'Speaker B responds with punchline (4-12 words), measured delivery building to killer word near end', other: 'A frozen in pose, mouth closed' },
       { segment: 'release', ...GRID_V2.release, action_en: releaseObj.action_en, audio: releaseObj.audio, note: 'ZERO words, shared laughter only' },
     ],
   };
@@ -1646,8 +1793,8 @@ export function generate(input) {
   
   // Validate script content
   if (input_mode === 'script' && script_ru) {
-    const maxWordsA = soloMode ? 30 : 15;
-    const maxWordsB = 18;
+    const maxWordsA = soloMode ? 30 : 10;
+    const maxWordsB = 12;
     if (script_ru.A && script_ru.A.split(/\s+/).length > maxWordsA) {
       warnings.push(`Реплика A слишком длинная (${script_ru.A.split(/\s+/).length} слов, макс ${maxWordsA}) — может быть обрезана`);
     }
@@ -1872,7 +2019,7 @@ export function generate(input) {
   } else if (input_mode === 'meme') {
     // Meme mode: placeholder — real output (frame0_prompt, animation_prompt) comes from Gemini
     dialogueA = demo.A_lines[demoIdx];
-    dialogueB = soloMode ? null : demo.B_lines[demoIdx];
+    dialogueB = soloMode ? '' : demo.B_lines[demoIdx];
     killerWord = demo.killer_word;
   } else {
     // Default idea mode
@@ -1926,8 +2073,8 @@ export function generate(input) {
 
   // ── Safety: scan banned words — SKIP for video mode (preserve original verbatim) ──
   if (!isPreserveMode) {
-    const safeA = scanBannedWords(dialogueA);
-    const safeB = scanBannedWords(dialogueB);
+    const safeA = scanBannedWords(dialogueA || '');
+    const safeB = scanBannedWords(dialogueB || '');
     dialogueA = safeA.text;
     dialogueB = safeB.text;
     if (safeA.fixes.length) autoFixes.push(...safeA.fixes);
@@ -1947,8 +2094,8 @@ export function generate(input) {
         .trim();
       return cleaned;
     };
-    const cleanA = stripDashes(dialogueA);
-    const cleanB = stripDashes(dialogueB);
+    const cleanA = stripDashes(dialogueA || '');
+    const cleanB = stripDashes(dialogueB || '');
     if (cleanA !== dialogueA) { autoFixes.push('Убраны тире из реплики A (непроизносимые символы)'); dialogueA = cleanA; }
     if (cleanB !== dialogueB) { autoFixes.push('Убраны тире из реплики B (непроизносимые символы)'); dialogueB = cleanB; }
   }
@@ -2405,14 +2552,14 @@ export function generate(input) {
 
 [0.70–3.50] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
   «${dialogueA}»
-  💬 Темп: ${charA.speech_pace} | Слов: 6-10 (${charA.speech_pace === 'slow' ? 'макс 7' : charA.speech_pace === 'fast' ? 'до 10' : '7-9'}) | Окно: 2.8с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
+  💬 Темп: ${charA.speech_pace} | Слов: 4-10 (${charA.speech_pace === 'slow' ? 'макс 5' : charA.speech_pace === 'fast' ? 'до 8-10' : '5-7'}) | Окно: 2.8с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
   🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   🚫 Рот B: СТРОГО ЗАКРЫТ — только микро-мимика (side-eye, ноздри, бровь)
 
 [3.50–7.00] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
   «${dialogueB}»
-  💬 Темп: ${charB.speech_pace} | Слов: 6-12 (${charB.speech_pace === 'slow' ? 'макс 8' : charB.speech_pace === 'fast' ? 'до 12' : '8-10'}) | Окно: 3.5с | паузы = сила
+  💬 Темп: ${charB.speech_pace} | Слов: 4-12 (${charB.speech_pace === 'slow' ? 'макс 7' : charB.speech_pace === 'fast' ? 'до 10-12' : '6-8'}) | Окно: 3.5с | паузы = сила
   🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
   💥 KILLER WORD «${killerWord}» → ближе к 6.8s
   🚫 Рот A: СТРОГО ЗАКРЫТ — замирает в пафосной позе
@@ -2508,15 +2655,15 @@ ${engage.firstComment}
       { id: 3, segment: 'release', action: releaseObj.action_en, speaker: 'A', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charA.modifiers?.laugh_style || 'smirk to camera'}, solo reaction` },
     ] : [
       { id: 1, segment: 'hook', action: mergedHookObj.action_en, speaker: 'A', start: GRID_V2.hook.start, end: GRID_V2.hook.end, dialogue_ru: '', speech_hints: `${mergedHookObj.audio}, ${charA.modifiers?.hook_style || 'attention grab'}` },
-      { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 6-10 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
-      { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 6-12 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
+      { id: 2, segment: 'act_A', action: `${charA.vibe_archetype || 'Provocateur'} delivers ${charA.speech_pace === 'fast' ? 'rapid-fire indignation' : charA.speech_pace === 'slow' ? 'slow-burn provocation' : 'passionate provocation'}`, speaker: 'A', start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, dialogue_ru: dialogueA, speech_hints: `${charA.speech_pace} pace, 4-10 words, ${charA.swear_level > 1 ? 'expressive accent' : 'controlled'}, B sealed, ${anchorA.micro_gesture || 'emphatic gestures'}` },
+      { id: 3, segment: 'act_B', action: `${charB.vibe_archetype || 'Grounded responder'} delivers ${charB.speech_pace === 'slow' ? 'devastating measured punchline' : charB.speech_pace === 'fast' ? 'rapid-fire killer response' : 'controlled punchline buildup'}`, speaker: 'B', start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, dialogue_ru: dialogueB, speech_hints: `${charB.speech_pace} pace, 4-12 words, killer word "${killerWord}" near end, A frozen, ${anchorB.micro_gesture || 'subtle gesture on punchline'}` },
       { id: 4, segment: 'release', action: releaseObj.action_en, speaker: 'both', start: GRID_V2.release.start, end: GRID_V2.release.end, dialogue_ru: '', speech_hints: `zero words, ${charB.modifiers?.laugh_style || 'natural laugh'}, shared laugh` },
     ],
     dialogue_segments: soloMode ? [
       { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_B.end, word_range: '15-30' },
     ] : [
-      { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '6-10' },
-      { speaker: 'B', text_ru: dialogueB, start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, word_range: '6-12' },
+      { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '4-10' },
+      { speaker: 'B', text_ru: dialogueB, start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, word_range: '4-12' },
     ],
     timing_grid: {
       total: 8.0,
@@ -3053,8 +3200,8 @@ ${firstComment}
   // Warn if Gemini's dialogue is too long for timing windows
   // VIDEO/SCRIPT mode: higher threshold (warn only, never block — dialogue is verbatim from original)
   const isRemake = ctx.remake_mode || ctx.input_mode === 'video' || ctx.input_mode === 'script';
-  const maxA = isRemake ? 25 : 15;
-  const maxB = isRemake ? 30 : 18;
+  const maxA = isRemake ? 25 : 10;
+  const maxB = isRemake ? 30 : 12;
   const validateWordCount = (text, maxWords, label) => {
     if (!text || text === '—') return null;
     const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(Boolean).length;

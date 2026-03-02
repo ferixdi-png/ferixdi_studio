@@ -1372,8 +1372,7 @@ function selectGenerationMode(mode) {
       idea: '💡 Своя идея',
       suggested: '📚 Готовые идеи',
       script: '📝 Свой диалог',
-      video: '🎥 По видео',
-      meme: '🎭 Мем-ремейк'
+      video: '🎥 По видео'
     };
     nameEl.textContent = modeNames[mode] || mode;
     continueBtn.disabled = false;
@@ -1386,8 +1385,7 @@ function selectGenerationMode(mode) {
         idea: '💡 На следующем шаге опишите свою идею, затем выберете персонажей.',
         suggested: '📚 На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
         script: '📝 На следующем шаге напишите реплики для персонажей. Реплика B опциональна для соло-ролика.',
-        video: '🎥 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка.',
-        meme: '🎭 Загрузите мем/видео и опишите что на нём. Получите промпт Frame 0 + анимацию для Kling 2.6.',
+        video: '🎥 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка. Персонажи опциональны — можно просто скопировать креатив.',
       };
       const hint = hints[mode] || '';
       if (hint) {
@@ -1419,7 +1417,6 @@ function updateModeSpecificUI(mode) {
   document.getElementById('remix-suggested')?.classList.add('hidden');
   document.getElementById('remix-script')?.classList.add('hidden');
   document.getElementById('remix-video')?.classList.add('hidden');
-  document.getElementById('remix-meme')?.classList.add('hidden');
 
   // Show relevant mode elements
   if (mode === 'idea') {
@@ -1440,9 +1437,6 @@ function updateModeSpecificUI(mode) {
     document.getElementById('mode-video')?.classList.remove('hidden');
     document.getElementById('remix-video')?.classList.remove('hidden');
     initVideoDropzoneMain();
-  } else if (mode === 'meme') {
-    document.getElementById('remix-meme')?.classList.remove('hidden');
-    initMemeDropzone();
   }
 
   log('INFO', 'РЕЖИМ', `Выбран режим: ${mode}`);
@@ -2059,82 +2053,6 @@ function initVideoDropzoneMain() {
   fileInput.addEventListener('change', () => { if (fileInput.files.length) handleVideoFile(fileInput.files[0]); });
 }
 
-// ─── MEME DROPZONE ──────────────────────────
-function initMemeDropzone() {
-  const dropzone = document.getElementById('meme-dropzone');
-  const fileInput = document.getElementById('meme-file-input');
-  if (!dropzone || !fileInput || dropzone._initialized) return;
-  dropzone._initialized = true;
-
-  dropzone.addEventListener('click', () => fileInput.click());
-  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = '#f43f5e'; });
-  dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
-  dropzone.addEventListener('drop', (e) => {
-    e.preventDefault(); dropzone.style.borderColor = '';
-    if (e.dataTransfer.files.length) handleMemeFile(e.dataTransfer.files[0]);
-  });
-  fileInput.addEventListener('change', () => { if (fileInput.files.length) handleMemeFile(fileInput.files[0]); });
-
-  // Update readiness on context input
-  document.getElementById('meme-context')?.addEventListener('input', () => setTimeout(updateReadiness, 100));
-}
-
-function handleMemeFile(file) {
-  const isImage = file.type.startsWith('image/');
-  const isVideo = file.type.startsWith('video/');
-  if (!isImage && !isVideo) { log('WARN', 'МЕМ', 'Поддерживаются только изображения и видео'); return; }
-  if (file.size > 50 * 1024 * 1024) { log('WARN', 'МЕМ', 'Файл больше 50 MB'); return; }
-
-  state._memeFileName = file.name;
-  state._memeFileMime = file.type;
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    const base64 = reader.result.split(',')[1];
-    if (isImage) {
-      state._memeImageBase64 = base64;
-      state._memeFileBase64 = null;
-      // Show preview
-      const preview = document.getElementById('meme-preview');
-      const img = document.getElementById('meme-preview-img');
-      if (preview && img) { img.src = reader.result; preview.classList.remove('hidden'); }
-    } else {
-      state._memeFileBase64 = base64;
-      state._memeImageBase64 = null;
-      document.getElementById('meme-preview')?.classList.add('hidden');
-      // Extract cover frame from video
-      const url = URL.createObjectURL(file);
-      const vid = document.createElement('video');
-      vid.preload = 'auto'; vid.muted = true;
-      vid.onloadeddata = () => { vid.currentTime = Math.min(1, vid.duration * 0.25); };
-      vid.onseeked = () => {
-        try {
-          const c = document.createElement('canvas');
-          c.width = Math.min(vid.videoWidth, 640);
-          c.height = Math.round(c.width * (vid.videoHeight / vid.videoWidth));
-          c.getContext('2d').drawImage(vid, 0, 0, c.width, c.height);
-          state._memeImageBase64 = c.toDataURL('image/jpeg', 0.8).split(',')[1];
-          const preview = document.getElementById('meme-preview');
-          const img = document.getElementById('meme-preview-img');
-          if (preview && img) { img.src = c.toDataURL('image/jpeg', 0.8); preview.classList.remove('hidden'); }
-        } catch (e) { log('WARN', 'МЕМ', 'Не удалось захватить кадр'); }
-        URL.revokeObjectURL(url);
-      };
-      vid.src = url;
-    }
-
-    const metaEl = document.getElementById('meme-meta');
-    if (metaEl) {
-      metaEl.classList.remove('hidden');
-      metaEl.innerHTML = `<span class="text-emerald-400">✓</span> ${isImage ? '🖼️' : '🎥'} ${escapeHtml(file.name)} · ${(file.size / 1024 / 1024).toFixed(1)} MB`;
-    }
-
-    log('OK', 'МЕМ', `Загружен: ${file.name} (${isImage ? 'изображение' : 'видео'})`);
-    updateReadiness();
-  };
-  reader.readAsDataURL(file);
-}
-
 // ─── VIDEO URL FETCH (removed — now using external download services) ───
 function initVideoUrlFetch() {
   // No-op: Instagram downloads handled via external links
@@ -2240,9 +2158,6 @@ function _hasContent() {
   if (state.generationMode === 'video') {
     return !!state.videoMeta;
   }
-  if (state.generationMode === 'meme') {
-    return !!(document.getElementById('meme-context')?.value?.trim()) && !!(state._memeFileBase64 || state._memeImageBase64);
-  }
   return false;
 }
 
@@ -2257,12 +2172,11 @@ function _contentLabel() {
   }
   if (state.generationMode === 'script') return 'Диалог готов';
   if (state.generationMode === 'video') return state.videoMeta ? `Видео: ${state.videoMeta.name}` : '';
-  if (state.generationMode === 'meme') return state._memeFileName ? `Мем: ${state._memeFileName}` : '';
   return '';
 }
 
 function _modeLabel(m) {
-  return { idea: '💡 Своя идея', suggested: '📚 Готовые идеи', script: '📝 Свой диалог', video: '🎥 По видео', meme: '🎭 Мем-ремейк' }[m] || m;
+  return { idea: '💡 Своя идея', suggested: '📚 Готовые идеи', script: '📝 Свой диалог', video: '🎥 По видео' }[m] || m;
 }
 
 function _updateCheckItem(elId, ok, label, hint, onClick) {
@@ -2846,46 +2760,12 @@ function displayResult(result) {
     return;
   }
 
-  // ── MEME MODE: custom display ──
-  if (result.meme_result) {
-    const m = result.meme_result;
-    document.getElementById('gen-results').classList.remove('hidden');
-    showGenStatus('', 'hidden');
-    // Use veo tab for frame0, photo tab for animation, ru tab for full package
-    document.getElementById('veo-prompt-text').textContent = m.frame0_prompt_en || '(Промпт не сгенерирован)';
-    document.querySelector('#tab-photo pre').textContent = m.animation_prompt_en || '(Промпт анимации не сгенерирован)';
-    document.querySelector('#tab-video pre').textContent = JSON.stringify(m, null, 2);
-    document.querySelector('#tab-ru pre').textContent = result.ru_package;
-    document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(result.blueprint_json, null, 2);
-    // Rename tabs for meme mode and activate veo (Frame 0) tab
-    const tabBtns = document.querySelectorAll('#gen-results .mode-btn');
-    tabBtns.forEach(b => {
-      if (b.dataset.tab === 'veo') { b.textContent = '📸 Frame 0'; b.classList.add('active'); }
-      else if (b.dataset.tab === 'photo') { b.textContent = '🎬 Анимация'; b.classList.remove('active'); }
-      else if (b.dataset.tab === 'video') { b.textContent = '📦 JSON'; b.classList.remove('active'); }
-      else if (b.dataset.tab === 'ru') { b.textContent = '🎭 Полный пакет'; b.classList.remove('active'); }
-      else if (b.dataset.tab === 'insta') { b.style.display = 'none'; b.classList.remove('active'); }
-      else b.classList.remove('active');
-    });
-    // Show veo tab, hide all others
-    ['veo', 'photo', 'video', 'insta', 'ru', 'blueprint'].forEach(t => {
-      document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== 'veo');
-    });
-    // Hide panels not applicable for meme mode
-    document.getElementById('translate-panel')?.classList.add('hidden');
-    document.getElementById('ab-testing-panel')?.classList.add('hidden');
-    document.getElementById('gen-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    log('OK', 'MEME', 'Мем-ремейк готов: Frame 0 + анимация + вирусная упаковка');
-    showNotification('🎭 Мем-ремейк готов! Скопируй Frame 0 → Imagen, потом анимацию → Kling 2.6', 'success');
-    return;
-  }
-
-  // Restore default tab names and visibility (may have been renamed/hidden by meme mode)
+  // Restore default tab names and visibility
   const _tabDefaults = { veo: '🎬 Промпт для Veo', photo: '📸 Фото (кадр 0)', video: '📋 Видео JSON', insta: '📱 Инста', ru: '🇷🇺 Пост', blueprint: '⚙️ План' };
   document.querySelectorAll('#gen-results .mode-btn').forEach(b => {
     if (b.dataset.tab && _tabDefaults[b.dataset.tab]) {
       b.textContent = _tabDefaults[b.dataset.tab];
-      b.style.display = ''; // Restore insta tab hidden by meme mode
+      b.style.display = '';
     }
   });
 
@@ -3294,19 +3174,6 @@ async function callAIEngine(apiContext) {
     payload.video_cover_mime = 'image/jpeg';
   }
 
-  // Attach meme image/video for meme-remake mode
-  if (state.generationMode === 'meme') {
-    if (state._memeFileBase64) {
-      payload.meme_file = state._memeFileBase64;
-      payload.meme_file_mime = state._memeFileMime || 'video/mp4';
-    }
-    if (state._memeImageBase64) {
-      payload.meme_image = state._memeImageBase64;
-      payload.meme_image_mime = 'image/jpeg';
-    }
-    payload.meme_context = document.getElementById('meme-context')?.value?.trim() || '';
-  }
-
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 90_000); // 90s timeout
 
@@ -3458,18 +3325,6 @@ function initGenerate() {
       return;
     }
     
-    if (state.generationMode === 'meme') {
-      if (!state._memeImageBase64 && !state._memeFileBase64) {
-        showGenStatus('⚠️ Загрузите мем или видео-референс', 'text-orange-400');
-        document.getElementById('remix-meme')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-      if (!(document.getElementById('meme-context')?.value?.trim())) {
-        showGenStatus('⚠️ Опишите что происходит на мем/видео', 'text-orange-400');
-        return;
-      }
-    }
-    
     // Validate location selection (optional but recommended)
     if (!state.selectedLocation) {
       // Location is optional, but we should inform user
@@ -3536,8 +3391,6 @@ function initGenerate() {
       characters: state.characters,
       locations: state.locations,
       selected_location_id: state.selectedLocation,
-      // Meme mode data
-      meme_context: state.generationMode === 'meme' ? (document.getElementById('meme-context')?.value?.trim() || '') : null,
     };
     // Clear override after reading — only applies to this single regeneration
     state._dialogueOverride = null;
@@ -4279,17 +4132,17 @@ function updateEditorEstimates() {
   const wordsA = inputA.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
 
   if (isSolo) {
-    // Solo mode: monologue uses 6.4s window (0.6–7.0)
-    const overA = estA.duration > 7.6; // 6.4s window + 1.2s tolerance
+    // Solo mode: monologue uses 6.3s window (0.7–7.0)
+    const overA = estA.duration > 6.8; // 6.3s window + 0.5s tolerance
     const risk = overA ? 'high' : estA.duration > 5.5 ? 'medium' : 'low';
 
-    document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 30 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 7.6с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 30 ? ' — много' : ''}</span>`;
+    document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 30 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 6.8с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 30 ? ' — много' : ''}</span>`;
     const estBEl = document.getElementById('editor-est-b');
     if (estBEl) estBEl.innerHTML = '<span class="text-gray-600">— соло —</span>';
 
     const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
     const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
-    document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Монолог: ${estA.duration.toFixed(2)}с / 6.4с ${riskLabel}</span>`;
+    document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Монолог: ${estA.duration.toFixed(2)}с / 6.3с ${riskLabel}</span>`;
 
     const badge = document.getElementById('editor-timing-badge');
     if (badge) {
@@ -4304,16 +4157,16 @@ function updateEditorEstimates() {
     const total = estA.duration + estB.duration;
     const wordsB = inputB.value.replace(/\|/g, '').trim().split(/\s+/).filter(w => w.length > 0).length;
 
-    const overA = estA.duration > 4.7; // 3.5s window + 1.2s tolerance (speech flex)
-    const overB = estB.duration > 5.2; // 4.0s window + 1.2s tolerance
-    const risk = total > 8.5 || overA || overB ? 'high' : total > 7.0 ? 'medium' : 'low';
+    const overA = estA.duration > 3.3; // 2.8s window + 0.5s tolerance
+    const overB = estB.duration > 4.0; // 3.5s window + 0.5s tolerance
+    const risk = total > 7.3 || overA || overB ? 'high' : total > 6.0 ? 'medium' : 'low';
 
-    document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 15 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 4.7с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 15 ? ' — много' : ''}</span>`;
-    document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 18 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 5.2с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 18 ? ' — много' : ''}</span>`;
+    document.getElementById('editor-est-a').innerHTML = `<span class="${overA ? 'text-red-400' : wordsA > 10 ? 'text-orange-400' : 'text-gray-500'}">${estA.duration}с / 3.3с · ${wordsA} слов${overA ? ' — НЕ ВЛЕЗЕТ!' : wordsA > 10 ? ' — много' : ''}</span>`;
+    document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 12 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 4.0с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 12 ? ' — много' : ''}</span>`;
 
     const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
     const riskLabel = risk === 'high' ? '🚨 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '⚠️ БЛИЗКО' : '✓ ОК';
-    document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 7.5с ${riskLabel}</span>`;
+    document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 6.3с ${riskLabel}</span>`;
 
     const badge = document.getElementById('editor-timing-badge');
     if (badge) {
@@ -5419,12 +5272,9 @@ function resetAll() {
   state.referenceStyle = null;
   state.lastResult = null;
   state.category = null;
-  // Free heavy base64 blobs (video up to 50MB, meme up to 10MB)
+  // Free heavy base64 blobs (video up to 50MB)
   state._videoFileBase64 = null;
   state._videoFileMime = null;
-  state._memeFileBase64 = null;
-  state._memeFileMime = null;
-  state._memeImageBase64 = null;
   
   // Clear UI inputs
   const inputs = ['idea-input', 'idea-input-custom', 'script-a', 'script-b', 'scene-hint', 'product-description'];

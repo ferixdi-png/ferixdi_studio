@@ -1,20 +1,21 @@
 /**
  * FERIXDI Studio — Duration Estimator v2
  * Оценка длительности RU реплик для 8s grid v2
- * Per-speaker window limits: A=3.5s, B=4.0s (with 1.2s tolerance)
+ * Per-speaker window limits: A=2.8s, B=3.5s (with 0.5s tolerance)
  */
 
-const PACE_WPS = { slow: 2.8, normal: 3.5, fast: 4.2 };
+const PACE_WPS = { slow: 2.0, normal: 2.5, fast: 3.0 };
 const LONG_WORD_THRESHOLD = 8;
 const LONG_WORD_PENALTY = 0.08;
 const FILLER_WORDS = ['ну', 'вот', 'это', 'типа', 'короче', 'значит', 'так', 'ладно', 'кстати', 'вообще', 'просто', 'даже', 'тоже', 'ещё', 'уже'];
 const FILLER_PENALTY = 0.06;
 const SHORT_PUNCH_BONUS = -0.1;
 const PAUSE_MARKER_DURATION = 0.2;
-// v2 speaker window limits (seconds of speech available)
-const SPEAKER_WINDOW = { A: 3.5, B: 4.0 };
-const WINDOW_TOLERANCE = 1.2; // windows flex — if A finishes early, B gets extra time. Real speech fits more than estimates.
-const TOTAL_SPEECH_BUDGET = SPEAKER_WINDOW.A + SPEAKER_WINDOW.B; // 7.5s total
+// v2 speaker window limits — MUST match generator.js GRID_V2
+// A: 0.7-3.5 = 2.8s, B: 3.5-7.0 = 3.5s
+const SPEAKER_WINDOW = { A: 2.8, B: 3.5 };
+const WINDOW_TOLERANCE = 0.5; // small flex for natural speech variation
+const TOTAL_SPEECH_BUDGET = SPEAKER_WINDOW.A + SPEAKER_WINDOW.B; // 6.3s total
 
 export function estimateLineDuration(text, pace = 'normal') {
   if (!text || !text.trim()) return { duration: 0, wordCount: 0, details: [] };
@@ -69,9 +70,9 @@ export function estimateDialogue(lines, options = {}) {
 
   // Solo mode detection: single line with speaker A
   const isSolo = lines.length === 1 && lines[0]?.speaker === 'A';
-  // Solo monologue window: 0.6-7.3s = 6.7s
-  const SOLO_WINDOW_A = 6.7;
-  const SOLO_SPEECH_BUDGET = 6.7;
+  // Solo monologue window: 0.7-7.0s = 6.3s
+  const SOLO_WINDOW_A = 6.3;
+  const SOLO_SPEECH_BUDGET = 6.3;
 
   for (const line of lines) {
     const est = estimateLineDuration(line.text, line.pace || 'normal');
@@ -124,11 +125,11 @@ export function estimateDialogue(lines, options = {}) {
       if (longW.length > 0) {
         trimmingSuggestions.push(`Заменить длинные слова «${longW.join(', ')}» у ${entry.speaker} на короткие`);
       }
-      if (entry.speaker === 'A' && words.length > 16) {
-        trimmingSuggestions.push(`Сократить A до 8-15 слов (сейчас ${words.length})`);
+      if (entry.speaker === 'A' && words.length > 10) {
+        trimmingSuggestions.push(`Сократить A до 4-10 слов (сейчас ${words.length})`);
       }
-      if (entry.speaker === 'B' && words.length > 19) {
-        trimmingSuggestions.push(`Сократить B до 8-18 слов (сейчас ${words.length})`);
+      if (entry.speaker === 'B' && words.length > 12) {
+        trimmingSuggestions.push(`Сократить B до 4-12 слов (сейчас ${words.length})`);
       }
     }
     if (trimmingSuggestions.length === 0) {
@@ -146,10 +147,10 @@ export function estimateDialogue(lines, options = {}) {
 export function getSegmentTimings(total) {
   const t = Math.min(total, 8.0);
   return {
-    hook: { start: 0.0, end: 0.6 },
-    speakerA: { start: 0.6, end: 3.8 },
-    speakerB: { start: 3.8, end: 7.3 },
-    release: { start: 7.3, end: t },
-    killerWord: 7.1,
+    hook: { start: 0.0, end: 0.7 },
+    speakerA: { start: 0.7, end: 3.5 },
+    speakerB: { start: 3.5, end: 7.0 },
+    release: { start: 7.0, end: t },
+    killerWord: 6.8,
   };
 }
