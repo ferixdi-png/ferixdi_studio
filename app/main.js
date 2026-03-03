@@ -1355,8 +1355,7 @@ function selectGenerationMode(mode) {
       idea: 'ring-cyan-500',
       suggested: 'ring-emerald-500',
       script: 'ring-purple-500', 
-      video: 'ring-amber-500',
-      meme: 'ring-rose-500'
+      video: 'ring-amber-500'
     };
     selectedCard.classList.add('ring-2', colors[mode] || 'ring-cyan-500');
   }
@@ -1371,7 +1370,7 @@ function selectGenerationMode(mode) {
     const modeNames = {
       idea: '💡 Своя идея',
       suggested: '📚 Готовые идеи',
-      script: '📝 Свой диалог',
+      script: '📝 Свой диалог / монолог',
       video: '🎥 По видео'
     };
     nameEl.textContent = modeNames[mode] || mode;
@@ -1384,7 +1383,7 @@ function selectGenerationMode(mode) {
       const hints = {
         idea: '💡 На следующем шаге опишите свою идею, затем выберете персонажей.',
         suggested: '📚 На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
-        script: '📝 На следующем шаге напишите реплики для персонажей. Реплика B опциональна для соло-ролика.',
+        script: '📝 Напишите свой диалог (A + B) или монолог (только A). Оставьте B пустым для соло.',
         video: '🎥 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка. Персонажи опциональны — можно просто скопировать креатив.',
       };
       const hint = hints[mode] || '';
