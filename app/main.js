@@ -3130,6 +3130,10 @@ function populateDialogueEditor(result) {
   if (inputA && lineA) inputA.value = lineA.text_ru;
   if (inputB && lineB) inputB.value = lineB.text_ru;
 
+  // Store initial dialogue for edit tracking (insta tab sync)
+  if (!ctx._prevDialogueA && lineA) ctx._prevDialogueA = lineA.text_ru;
+  if (!ctx._prevDialogueB && lineB) ctx._prevDialogueB = lineB.text_ru;
+
   // Hide B editor row in solo mode
   const bRow = inputB?.closest('.space-y-2, .flex, div')?.parentElement;
   const labelA = inputA?.previousElementSibling || inputA?.closest('div')?.querySelector('label');
@@ -4116,6 +4120,44 @@ function applyDialogueUpdate(newA, newB) {
   if (ctx.dialogueA !== undefined) ctx.dialogueA = newA;
   if (ctx.dialogueB !== undefined) ctx.dialogueB = newB;
   if (ctx.killerWord !== undefined) ctx.killerWord = killerWord;
+
+  // ── Sync Insta tab with new dialogue ──
+  // Update share_bait, caption, and other insta content that references dialogue
+  const result = state.lastResult;
+  if (result) {
+    const oldA = ctx._prevDialogueA || '';
+    const oldB = ctx._prevDialogueB || '';
+    const engage = result.log?.engagement;
+    const instaPack = result.log?.instagram_pack;
+
+    // Replace old dialogue fragments in insta content
+    const replaceDialogue = (text) => {
+      if (!text || typeof text !== 'string') return text;
+      let updated = text;
+      if (oldA && newA && oldA !== newA) updated = updated.split(oldA).join(newA);
+      if (oldB && newB && oldB !== newB) updated = updated.split(oldB).join(newB);
+      return updated;
+    };
+
+    if (engage) {
+      if (engage.share_bait) engage.share_bait = replaceDialogue(engage.share_bait);
+      if (engage.viral_title) engage.viral_title = replaceDialogue(engage.viral_title);
+      if (engage.pin_comment) engage.pin_comment = replaceDialogue(engage.pin_comment);
+      if (engage.first_comment) engage.first_comment = replaceDialogue(engage.first_comment);
+    }
+    if (instaPack) {
+      if (instaPack.caption) instaPack.caption = replaceDialogue(instaPack.caption);
+      if (instaPack.engagement_tip) instaPack.engagement_tip = replaceDialogue(instaPack.engagement_tip);
+      if (instaPack.hook_texts) instaPack.hook_texts = instaPack.hook_texts.map(h => replaceDialogue(h));
+    }
+
+    // Re-render insta tab
+    populateInstaTab(result);
+  }
+
+  // Store current dialogue for next edit comparison
+  ctx._prevDialogueA = newA;
+  ctx._prevDialogueB = newB;
 }
 
 // ─── DIALOGUE EDITOR ────────────────────
