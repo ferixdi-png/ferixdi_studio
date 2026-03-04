@@ -1423,7 +1423,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
         contents: [{ parts }],
         generationConfig: {
           temperature: requestedVariants > 0 ? 0.9 : 0.82,
-          maxOutputTokens: requestedVariants > 0 ? 6144 : 4096,
+          maxOutputTokens: requestedVariants > 0 ? 12288 : 8192,
           responseMimeType: 'application/json',
         },
       };
@@ -1452,6 +1452,10 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
         }
 
         text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const finishReason = data.candidates?.[0]?.finishReason;
+        if (finishReason && finishReason !== 'STOP') {
+          console.warn(`Gemini finishReason: ${finishReason} (attempt ${attempt + 1}) — text length: ${text?.length || 0}`);
+        }
         if (text) break;
 
         lastError = 'AI не вернул контент';
@@ -1493,7 +1497,10 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
         }
       }
       if (!geminiResult) {
-        console.error('Gemini JSON parse error — all extraction methods failed:', text.slice(0, 500));
+        console.error('Gemini JSON parse error — all extraction methods failed.');
+        console.error('Response finishReason:', data.candidates?.[0]?.finishReason);
+        console.error('Response text (first 800 chars):', text.slice(0, 800));
+        console.error('Response text (last 200 chars):', text.slice(-200));
         return res.status(422).json({ error: 'AI вернул невалидный JSON. Попробуйте ещё раз.' });
       }
     }
