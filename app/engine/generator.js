@@ -1562,8 +1562,11 @@ function buildVeoPrompt(opts) {
     if (wardrobeParts.length) sections.push('Wearing: ' + wardrobeParts.join('. '));
     if (behavior.length) sections.push(behavior.join('. '));
     if (speech.length) sections.push(speech.join('. '));
-    sections.push('hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail');
-    return sections.join('. ');
+    const joined = sections.join('. ');
+    if (!/hyper-realistic skin/i.test(joined)) {
+      return joined + '. hyper-realistic skin microtexture with visible pores, natural imperfections, photorealistic detail';
+    }
+    return joined;
   };
 
   const fullCharA = buildVeoCharBlock(charA, wardrobeA, cast.speaker_A);
@@ -1574,7 +1577,7 @@ function buildVeoPrompt(opts) {
   const ageNumB = parseInt(String(charB.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
 
   // Camera style
-  const camStyle = 'Smartphone video, 9:16 vertical portrait, medium shot (waist-up framing — NOT close-up talking heads). Device INVISIBLE — hands busy with props. Handheld micro-jitter and breathing oscillation. RAW phone aesthetic: sensor noise ISO 800-1600, blown highlights, JPEG artifacts. Computational portrait-mode bokeh on background.';
+  const camStyle = 'Smartphone video shot on iPhone 15 Pro, 9:16 vertical portrait, medium shot (waist-up framing — NOT close-up talking heads). Device INVISIBLE — hands busy with props. Handheld micro-jitter 0.8-2px at 2-5Hz, breathing oscillation, pulse tremor. RAW phone aesthetic: sensor noise ISO 800-1600, blown highlights on forehead/nose bridge, JPEG compression artifacts at 88% quality, slight lens flare from environmental light. Computational portrait-mode bokeh on background — smooth artificial blur with occasional depth-map edge errors on hair/ears. Slight barrel distortion at frame edges (24mm equivalent). Auto white-balance drift ±150K. ZERO text/overlays in frame.';
 
   // Location brief — use full location for richer setting
   const locBrief = location.split(',').slice(0, 3).join(',').trim();
@@ -1727,14 +1730,16 @@ function buildVeoPrompt(opts) {
   lines.push('');
 
   // Style/negative
-  lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, age-appropriate skin detail (${ageDescA === 'elderly' || ageDescB === 'elderly' ? 'wrinkles, age marks for elderly' : ageDescA === 'young' && ageDescB === 'young' ? 'natural imperfections, minor blemishes for young skin' : 'fine lines, natural imperfections'}). Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality — authentic raw phone video.`);
+  lines.push(`Style: Hyper-realistic smartphone footage INDISTINGUISHABLE from a real iPhone selfie video. CRITICAL ANTI-AI REALISM: visible skin pores at 35cm distance, uneven skin tone across face zones (pinker cheeks, oilier T-zone, darker under-eyes), asymmetric facial features, individual hair strands at temples catching light, age-appropriate skin detail (${ageDescA === 'elderly' || ageDescB === 'elderly' ? 'deep wrinkles, age spots, sagging skin texture, visible veins on hands for elderly' : ageDescA === 'young' && ageDescB === 'young' ? 'natural imperfections, minor blemishes, acne scars, uneven pigmentation for young skin' : 'fine lines, natural imperfections, slight sun damage'}). Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance drifting ±150K. NOT studio quality — authentic raw phone video. SKIN MUST NOT look plastic, airbrushed, smooth, waxy, or uniformly colored. Each face must have 5+ distinct color zones. Fabric must show individual thread texture at close range.`);
   lines.push('');
-  lines.push(`CRITICAL — ZERO TEXT IN VIDEO: Absolutely no text overlays, no subtitles, no captions, no speech bubbles, no name tags, no title cards, no watermarks, no logos, no UI elements, no borders, no filters, no REC badge, no timestamp, no timecode. The video frame must contain ONLY the scene with characters — not a single letter, digit, or graphic overlay of any kind. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
+  lines.push(`CRITICAL — ZERO TEXT IN VIDEO: Absolutely no text overlays, no subtitles, no captions, no speech bubbles, no name tags, no title cards, no watermarks, no logos, no UI elements, no borders, no filters, no REC badge, no timestamp, no timecode. The video frame must contain ONLY the scene with characters — not a single letter, digit, or graphic overlay of any kind.`);
+  lines.push(`CRITICAL — ANTI-AI REALISM MANDATE: No plastic or airbrushed skin — skin must show pores, imperfections, uneven tone. No studio lighting — only environmental light sources. No perfectly smooth surfaces — every texture shows grain/weave/wear. No symmetrical faces — real faces are asymmetric. No uniform skin color — face has 5+ distinct color zones (forehead lighter, cheeks pinker, nose reddest, under-eye darker, chin neutral). No rubber/wax skin appearance. No identical texture on both characters. Flyaway hairs catching backlight. Visible fabric weave at close range. The video must be INDISTINGUISHABLE from real iPhone footage.`);
 
   // Topic context
   if (topicRu) {
     lines.push('');
-    lines.push(`The argument topic: ${cat.en} — ${topicRu}.`);
+    const charNames = soloMode ? charA.name_ru : `${charA.name_ru} vs ${charB.name_ru}`;
+    lines.push(`The argument topic: ${cat.en} — ${charNames}: ${topicRu} [KILLER WORD: "${killerWord}"]`);
   }
 
   // Product placement
