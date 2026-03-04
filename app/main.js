@@ -3,7 +3,7 @@
  * Космический хакерский командный центр для ремикса видео
  */
 
-import { generate, getRandomCategory, mergeGeminiResult } from './engine/generator.js';
+import { generate, getRandomCategory, mergeAIResult } from './engine/generator.js';
 import { estimateDialogue, estimateLineDuration } from './engine/estimator.js';
 import { autoTrim } from './engine/auto_trim.js';
 import { historyCache } from './engine/history_cache.js';
@@ -1855,7 +1855,7 @@ function handleVideoFile(file) {
   video.muted = true;
   video.playsInline = true;
 
-  // Read the actual video file as base64 for Gemini multimodal input
+  // Read the actual video file as base64 for AI multimodal input
   const reader = new FileReader();
   reader.onload = () => {
     const videoBase64 = reader.result.split(',')[1]; // strip data:video/mp4;base64, prefix
@@ -3434,7 +3434,7 @@ function initGenerate() {
       try {
         const aiData = await callAIEngine(localResult._apiContext);
         if (aiData) {
-          const merged = mergeGeminiResult(localResult, aiData);
+          const merged = mergeAIResult(localResult, aiData);
           log('OK', 'AI', 'Промпт и сюжет готовы');
           updatePreflightStatus('✅ Готово · Промпт собран — скопируй и вставь в Google Flow', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
           saveGenerationHistory(merged);
@@ -3693,7 +3693,7 @@ function initTranslate() {
 
       // Update Veo prompt (both DOM and state)
       // REMAKE mode: veo_prompt is already remake_veo_prompt_en (fully English, ultra-detailed)
-      // — do NOT overwrite with re-translated version that Gemini may paraphrase/shorten
+      // — do NOT overwrite with re-translated version that AI may paraphrase/shorten
       if (en.veo_prompt_en && !result.is_remake) {
         result.veo_prompt = en.veo_prompt_en;
         const veoEl = document.getElementById('veo-prompt-text');
@@ -6387,7 +6387,7 @@ async function generateABVariants() {
     const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
 
     const ctx = state.lastResult._apiContext;
-    // ab_variants=2 tells server to ask Gemini for 2 extra variants in a SINGLE request
+    // ab_variants=2 tells server to ask AI for 2 extra variants in a SINGLE request
     const payload = { context: ctx, ab_variants: 2 };
 
     // Attach product/video if available (same as callAIEngine)

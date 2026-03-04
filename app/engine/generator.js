@@ -1092,7 +1092,7 @@ function buildCameraPreset() {
 }
 
 // ─── CINEMATOGRAPHY CONTRACT (12 production pillars) ───
-// Everything the user does NOT choose — Gemini decides using this contract.
+// Everything the user does NOT choose — AI engine decides using this contract.
 // Calibrated for SMARTPHONE FRONT-CAMERA realism — the gold standard is "indistinguishable from a real selfie video".
 function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, hookObj, releaseObj, propAnchor) {
   return {
@@ -1253,7 +1253,7 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
 }
 
 // ─── REMAKE INSTRUCTION BUILDER ──────────────
-// When user provides a video reference, build a detailed instruction for Gemini
+// When user provides a video reference, build a detailed instruction for AI engine
 // to recreate the video's vibe, structure, and dialogue with our characters
 function buildRemakeInstruction(video_meta, charA, charB) {
   const parts = [];
@@ -1876,7 +1876,7 @@ export function generate(input) {
   const topicRu = context_ru?.trim() || '';
   const sceneHint = scene_hint_ru?.trim() || '';
 
-  // Category: random structural hint for location/props — Gemini picks the real one
+  // Category: random structural hint for location/props — AI engine picks the real one
   let cat = category || pickRandom(HUMOR_CATEGORIES, rng);
 
   // topicRu and sceneHint already declared above (before category detection)
@@ -2361,10 +2361,10 @@ export function generate(input) {
     ...(sceneHint ? { scene_reference: `Visual/structural reference from source video: "${sceneHint}". Adapt the energy and pacing but keep original characters and dialogue.` } : {}),
     dialogue: {
       CRITICAL_INSTRUCTION: input_mode === 'script'
-        ? 'The user provided their OWN dialogue below. Gemini MUST USE the user\'s lines as-is (dialogue_A_ru / dialogue_B_ru). You may ONLY adjust 1-2 words for timing fit. Do NOT rewrite or replace the user\'s script. Generate killer_word from the last impactful word of B\'s line.'
+        ? 'The user provided their OWN dialogue below. AI engine MUST USE the user\'s lines as-is (dialogue_A_ru / dialogue_B_ru). You may ONLY adjust 1-2 words for timing fit. Do NOT rewrite or replace the user\'s script. Generate killer_word from the last impactful word of B\'s line.'
         : input_mode === 'video'
-        ? 'This is REMAKE MODE — the dialogue below is from the ORIGINAL VIDEO. Gemini MUST preserve it VERBATIM (90-95% of words). Only change character names/pronouns to fit our cast. Do NOT invent a new dialogue. killer_word = last impactful word from B\'s original line.'
-        : 'Gemini MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
+        ? 'This is REMAKE MODE — the dialogue below is from the ORIGINAL VIDEO. AI engine MUST preserve it VERBATIM (90-95% of words). Only change character names/pronouns to fit our cast. Do NOT invent a new dialogue. killer_word = last impactful word from B\'s original line.'
+        : 'AI engine MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
       example_format_only: {
         example_A_ru: dialogueA,
         example_B_ru: dialogueB,
@@ -2755,40 +2755,40 @@ ${engage.firstComment}
     auto_fixes: [...autoFixes, ...validation.auto_fixes],
     duration_estimate: estimate,
     qc_gate: qc,
-    // Context for API mode — sent to server for Gemini refinement
+    // Context for API mode — sent to server for AI refinement
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
       input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode, enableLaughter,
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       dialogue_override: dialogue_override || null,
-      // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
+      // Fallback dialogue for mergeAIResult when AI doesn't return dialogue
       dialogueA, dialogueB, killerWord,
-      // Remake instruction — when video reference is provided, Gemini must replicate it
+      // Remake instruction — when video reference is provided, AI must replicate it
       remake_mode: !!(video_meta?.url || video_meta?.title || video_meta?.cover_base64),
       remake_instruction: (video_meta?.url || video_meta?.title || video_meta?.cover_base64) ? buildRemakeInstruction(video_meta, charA, charB) : null,
     },
   };
 }
 
-// ─── MERGE GEMINI RESULT INTO LOCAL TEMPLATE ──
-// Takes local generation (structural) + Gemini output (creative) → merged result
-export function mergeGeminiResult(localResult, geminiData) {
-  if (!geminiData) return localResult;
+// ─── MERGE AI RESULT INTO LOCAL TEMPLATE ──
+// Takes local generation (structural) + AI engine output (creative) → merged result
+export function mergeAIResult(localResult, aiData) {
+  if (!aiData) return localResult;
 
   const ctx = localResult._apiContext;
-  const g = geminiData;
+  const g = aiData;
 
   // Deep clone to avoid mutating original
   const r = JSON.parse(JSON.stringify(localResult));
 
-  // ── 0. Humor category: Gemini invents its own category ──
+  // ── 0. Humor category: AI engine invents its own category ──
   if (g.humor_category_ru) {
     r.log.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
     ctx.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
   }
 
-  // ── 1. Photo prompt: replace scene with Gemini's ultra-detailed version ──
+  // ── 1. Photo prompt: replace scene with AI engine's ultra-detailed version ──
   if (g.photo_scene_en) {
     // ── IDENTITY LOCK: append canonical character_en to photo scene ──
     const cA = ctx.charA;
@@ -2821,8 +2821,8 @@ export function mergeGeminiResult(localResult, geminiData) {
     r.photo_prompt_en_json.scene = photoScene;
   }
 
-  // ── 2. Video prompt: replace dialogue (Gemini generates fresh lines) ──
-  // If dialogue_override is set, user explicitly chose this dialogue — skip Gemini's
+  // ── 2. Video prompt: replace dialogue (AI engine generates fresh lines) ──
+  // If dialogue_override is set, user explicitly chose this dialogue — skip AI engine's
   const hasDialogueOverride = !!(ctx.dialogue_override?.A);
   if (!hasDialogueOverride) {
     if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
@@ -2884,8 +2884,8 @@ export function mergeGeminiResult(localResult, geminiData) {
     }
   }
 
-  // ── 6. Rebuild RU package with Gemini's creative content ──
-  // If dialogue_override, prefer user's edited dialogue over Gemini's
+  // ── 6. Rebuild RU package with AI engine's creative content ──
+  // If dialogue_override, prefer user's edited dialogue over AI engine's
   const dA = hasDialogueOverride ? (ctx.dialogueA || '—') : (g.dialogue_A_ru || ctx.dialogueA || '—');
   const dB = hasDialogueOverride ? (ctx.dialogueB || '—') : (g.dialogue_B_ru || ctx.dialogueB || '—');
   const kw = hasDialogueOverride ? (r.blueprint_json?.killer_word || '—') : (g.killer_word || '—');
@@ -2901,7 +2901,7 @@ export function mergeGeminiResult(localResult, geminiData) {
     : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
     : '⚖️ Сбалансированная пара';
 
-  // Engagement from Gemini
+  // Engagement from AI engine
   const viralTitle = g.viral_title_ru || r.log?.engagement?.viral_title || '';
   const shareBait = g.share_bait_ru || r.log?.engagement?.share_bait || '';
   const pinComment = g.pin_comment_ru || r.log?.engagement?.pin_comment || '';
@@ -2912,12 +2912,12 @@ export function mergeGeminiResult(localResult, geminiData) {
     ? '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'solo'
     : '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
 
-  // ── Merge Gemini's product_in_frame_en if available (richer than local description) ──
+  // ── Merge AI engine's product_in_frame_en if available (richer than local description) ──
   if (g.product_in_frame_en && ctx.product_info) {
     ctx.product_info.description_en = g.product_in_frame_en;
   }
 
-  // Instagram Pack from Gemini
+  // Instagram Pack from AI engine
   const instaAnalysis = g.insta_analysis_ru || (isSolo ? {
     plot: `${charA.name_ru} выдаёт монолог про ${ctx.category?.ru || 'тему'} — прямо в камеру, без фильтров.`,
     punchline: `Killer word «${kw}» в конце переворачивает весь смысл сказанного.`,
@@ -3065,18 +3065,18 @@ ${firstComment}
 • Товар остаётся видимым на протяжении всего ролика
 • Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
 
-  // ── 6a-sync. Sync _apiContext fallback dialogue with Gemini's values ──
+  // ── 6a-sync. Sync _apiContext fallback dialogue with AI engine's values ──
   // Without this, _apiContext.dialogueA/B retain stale local placeholders
   r._apiContext.dialogueA = dA;
   r._apiContext.dialogueB = dB;
   r._apiContext.killerWord = kw;
 
-  // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
-  // In REMAKE mode: if Gemini provided remake_veo_prompt_en (visual copy of original video),
+  // ── 6b. Rebuild Veo 3.1 prompt with AI engine's creative dialogue ──
+  // In REMAKE mode: if AI engine provided remake_veo_prompt_en (visual copy of original video),
   // use it directly — it describes the SAME scene/action as the original, not a generic dialogue template.
   if (g.remake_veo_prompt_en && ctx.remake_mode) {
     // ── IDENTITY LOCK ENFORCEMENT ──
-    // Gemini paraphrases character descriptions instead of copying verbatim.
+    // AI engine paraphrases character descriptions instead of copying verbatim.
     // Inject canonical character_en from catalog to guarantee identity consistency.
     const charA = ctx.charA;
     const charB = ctx.charB;
@@ -3110,7 +3110,7 @@ ${firstComment}
     }
 
     // ── DIALOGUE INJECTION ──
-    // Gemini's remake prompt describes actions but omits actual spoken words.
+    // AI engine's remake prompt describes actions but omits actual spoken words.
     // Veo needs the exact Russian lines for lip-sync.
     const isSoloRemake = ctx.soloMode || (charA && charB && charA.id === charB.id);
     const dialogueBlock = [
@@ -3148,7 +3148,7 @@ ${firstComment}
   }
 
   // ── 7. Post-merge dialogue validation ──
-  // Warn if Gemini's dialogue is too long for timing windows
+  // Warn if AI engine's dialogue is too long for timing windows
   // VIDEO/SCRIPT mode: higher threshold (warn only, never block — dialogue is verbatim from original)
   const isRemake = ctx.remake_mode || ctx.input_mode === 'video' || ctx.input_mode === 'script';
   const maxA = isRemake ? 25 : 10;
@@ -3165,8 +3165,8 @@ ${firstComment}
   if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
 
   // ── 8. Update log ──
-  r.log.generator_version = '2.0-gemini';
-  r.log.gemini_model = 'gemini-2.0-flash';
+  r.log.generator_version = '2.0-ferixdi';
+  r.log.ai_engine = 'ferixdi-ai-v3';
   if (g.viral_title_ru) r.log.engagement.viral_title = g.viral_title_ru;
   if (g.share_bait_ru) r.log.engagement.share_bait = g.share_bait_ru;
   if (g.pin_comment_ru) r.log.engagement.pin_comment = g.pin_comment_ru;
