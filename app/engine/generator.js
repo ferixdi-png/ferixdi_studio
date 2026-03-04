@@ -1723,7 +1723,10 @@ function buildVeoPrompt(opts) {
     : locLower.includes('bathroom') || locLower.includes('ванн') ? 'dripping tap, pipe gurgle, tile echo, extractor fan hum'
     : locLower.includes('bedroom') || locLower.includes('спальн') ? 'wall clock tick, muffled TV from neighbors, fabric rustle, radiator click'
     : locLower.includes('office') || locLower.includes('офис') ? 'keyboard clicking, air conditioning hum, printer whirring, muffled phone ringing'
-    : locLower.includes('store') || locLower.includes('магазин') || locLower.includes('shop') ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
+    : locLower.includes('food court') || locLower.includes('фудкорт') ? 'crowd chatter, tray clatter, distant kitchen clang, sizzling grill, cash register beep, muzak speakers overhead, chair scraping on tile'
+    : locLower.includes('cafe') || locLower.includes('кафе') || locLower.includes('restaurant') || locLower.includes('ресторан') ? 'espresso machine hiss, cup clink on saucer, muffled conversation, door chime, distant plate clatter'
+    : locLower.includes('mall') || locLower.includes('тц') || locLower.includes('торгов') ? 'crowd murmur, escalator hum, distant PA announcement, shoe steps on marble, muzak echo'
+    : locLower.includes('store') || locLower.includes('магазин') || locLower.includes('supermarket') ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
     : locLower.includes('corridor') || locLower.includes('коридор') || locLower.includes('hallway') ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
     : 'subtle room ambiance, quiet hum, occasional creak, distant muffled sounds';
   lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Minimum 2 specific micro-sounds from this location. Fabric rustle on every movement. Audible inhale before each speaking turn. Saliva clicks on т/к/п/д consonants, lip smack, tongue contact on л/н. Laughter 20-30% louder — raspy, contagious. No music.`);
@@ -1738,8 +1741,14 @@ function buildVeoPrompt(opts) {
   // Topic context
   if (topicRu) {
     lines.push('');
-    const charNames = soloMode ? charA.name_ru : `${charA.name_ru} vs ${charB.name_ru}`;
-    lines.push(`The argument topic: ${cat.en} — ${charNames}: ${topicRu} [KILLER WORD: "${killerWord}"]`);
+    // Avoid duplicating character names if AI already included them in topicRu
+    const nameA = charA.name_ru || '';
+    const nameB = charB.name_ru || '';
+    const topicHasNames = nameA && topicRu.includes(nameA);
+    const topicHasKW = /\[KILLER WORD/i.test(topicRu);
+    const prefix = topicHasNames ? `${cat.en}: ` : (soloMode ? `${cat.en} — ${nameA}: ` : `${cat.en} — ${nameA} vs ${nameB}: `);
+    const suffix = topicHasKW ? '' : ` [KILLER WORD: "${killerWord}"]`;
+    lines.push(`The argument topic: ${prefix}${topicRu}${suffix}`);
   }
 
   // Product placement
