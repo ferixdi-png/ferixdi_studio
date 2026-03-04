@@ -3394,6 +3394,7 @@ function initGenerate() {
       characters: state.characters,
       locations: state.locations,
       selected_location_id: state.selectedLocation,
+      enableLaughter: document.getElementById('laugh-toggle')?.checked !== false,
     };
     // Clear override after reading — only applies to this single regeneration
     state._dialogueOverride = null;

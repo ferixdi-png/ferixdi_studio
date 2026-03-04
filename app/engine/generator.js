@@ -1656,8 +1656,12 @@ function buildVeoPrompt(opts) {
     lines.push('');
     lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end of the monologue.`);
     lines.push('');
-    const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
-    lines.push(`Character bursts into genuine laughter — ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
+    if (enableLaughter) {
+      const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
+      lines.push(`Character bursts into genuine laughter — ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
+    } else {
+      lines.push(`Character finishes speaking with a confident expression — holds eye contact with camera, slight nod. No laughter. The monologue ends on the punchline word "${killerWord}". Brief pause, then video cuts.`);
+    }
   } else {
     // ── DUO MODE: two characters dialogue ──
     const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
@@ -1683,9 +1687,13 @@ function buildVeoPrompt(opts) {
       lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
     }
     lines.push('');
-    const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
-    const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
-    lines.push(`Both burst into genuine raspy laughter — both lean into each other, shoulders shaking, ${laughA} from A, ${laughB} from B. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. Warm shared moment.`);
+    if (enableLaughter) {
+      const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
+      const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
+      lines.push(`Both burst into genuine raspy laughter — both lean into each other, shoulders shaking, ${laughA} from A, ${laughB} from B. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. Warm shared moment.`);
+    } else {
+      lines.push(`A stares at B in stunned silence after the punchline "${killerWord}". No laughter. Tension holds — frozen expressions, micro-reactions only. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. The dialogue simply ends.`);
+    }
   }
   lines.push('');
 
@@ -1758,6 +1766,7 @@ export function generate(input) {
     product_info,
     reference_style,
     dialogue_override,
+    enableLaughter = true,
     options = {}, seed = Date.now().toString(),
     characters = [],
     locations = [],
@@ -2374,7 +2383,9 @@ export function generate(input) {
       hook: `tension spike — ${mergedHookObj.action_en}, ${vibeEnA} initiates with signature energy`,
       act_A: `escalation — ${nameEnA} (A) builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${nameEnB} (B) simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
       act_B: `reversal — ${nameEnB} (B) delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${nameEnA} (A). ${nameEnA} freezes mid-gesture.`,
-      release: `catharsis — ${releaseObj.action_en}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`,
+      release: enableLaughter
+        ? `catharsis — ${releaseObj.action_en}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`
+        : `cold ending — stunned silence after punchline "${killerWord}". No laughter. Frozen expressions, tension holds. Rewatch-bait: ambiguous micro-expression in last 0.3s.`,
     },
     vibe: {
       dynamic: `${nameEnA} (A, ${vibeEnA}) → ${nameEnB} (B, ${vibeEnB})`,
@@ -2434,7 +2445,7 @@ export function generate(input) {
       breathing: 'audible inhale before each speaking turn, exhale on emphasis words',
       overlap_policy: 'STRICTLY FORBIDDEN. Gap 0.15-0.25s silence stitch between speakers. No simultaneous speech ever.',
       mouth_rule: 'Non-speaking character: sealed lips, jaw completely still, NO micro-movements of mouth. Eye tracking and subtle facial micro-expressions ONLY.',
-      laugh: 'louder than dialogue peak by 20-30%, no digital clipping, raspy and contagious, bodies visibly shaking',
+      laugh: enableLaughter ? 'louder than dialogue peak by 20-30%, no digital clipping, raspy and contagious, bodies visibly shaking' : 'NO LAUGHTER in this video. The scene ends in silence after the punchline. No giggling, no chuckling, no smirking sounds.',
       foley: 'table/surface impacts if hook involves slap, object rattle on impact, fabric whoosh on dramatic gesture',
     },
     safety: {
@@ -2517,8 +2528,8 @@ export function generate(input) {
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   💥 KILLER WORD «${killerWord}» → ближе к 6.8s
 
-[7.00–8.00] 😏 RELEASE: реакция/пауза/хриплый смех
-  🎭 Финал: ${charA.modifiers?.laugh_style || 'усмешка в камеру'}`
+[7.00–8.00] ${enableLaughter ? '😂' : '😏'} RELEASE: ${enableLaughter ? 'реакция/пауза/хриплый смех' : 'речь заканчивается, тишина — без смеха'}
+  🎭 Финал: ${enableLaughter ? (charA.modifiers?.laugh_style || 'усмешка в камеру') : 'уверенное выражение, взгляд в камеру, без смеха'}`
   : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
 ═══════════════════════════════════════════
 📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
@@ -2559,10 +2570,10 @@ export function generate(input) {
   💥 KILLER WORD «${killerWord}» → ближе к 6.8s
   🚫 Рот A: СТРОГО ЗАКРЫТ — замирает в пафосной позе
 
-[7.00–8.00] 😂 RELEASE: ${releaseObj.action_ru}
-  🔊 Общий заразительный «хриплый» смех. Тряска камеры. Rewatch-bait 0.3с
+[7.00–8.00] ${enableLaughter ? '😂' : '🤐'} RELEASE: ${enableLaughter ? releaseObj.action_ru : 'тишина после панчлайна — без смеха'}
+${enableLaughter ? `  🔊 Общий заразительный «хриплый» смех. Тряска камеры. Rewatch-bait 0.3с
   🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
-  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
+  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}` : `  🔇 БЕЗ СМЕХА. Замершие выражения лиц. Rewatch-bait 0.3с`}
 
 ═══════════════════════════════════════════
 
@@ -2740,7 +2751,7 @@ ${engage.firstComment}
     // Context for API mode — sent to server for Gemini refinement
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
-      input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode,
+      input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode, enableLaughter,
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       dialogue_override: dialogue_override || null,
@@ -2942,8 +2953,8 @@ export function mergeGeminiResult(localResult, geminiData) {
   🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
   💥 KILLER WORD «${kw}» → ближе к 6.8s
 
-[7.00–8.00] 😏 RELEASE: реакция/пауза/хриплый смех
-  🎭 Финал: ${charA.modifiers?.laugh_style || 'усмешка в камеру'}`
+[7.00–8.00] ${ctx.enableLaughter ? '😂' : '😏'} RELEASE: ${ctx.enableLaughter ? 'реакция/пауза/хриплый смех' : 'речь заканчивается, тишина — без смеха'}
+  🎭 Финал: ${ctx.enableLaughter ? (charA.modifiers?.laugh_style || 'усмешка в камеру') : 'уверенное выражение, без смеха'}`
 
   : `🎬 ${ctx.remake_mode ? 'РЕМЕЙК' : 'ДИАЛОГ'} С ТАЙМИНГАМИ (FERIXDI AI Production)
 ═══════════════════════════════════════════
@@ -2980,10 +2991,10 @@ ${dA2 ? `
   «${dA2}»
   💬 1-4 слова, короткая финальная фраза
 ` : ''}
-[7.00–8.00] 😂 RELEASE: ${ctx.releaseAction.action_ru}
-  🔊 Общий заразительный «хриплый» смех. Тряска камеры. Rewatch-bait в последние 0.3с
+[7.00–8.00] ${ctx.enableLaughter ? '😂' : '🤐'} RELEASE: ${ctx.enableLaughter ? ctx.releaseAction.action_ru : 'тишина после панчлайна — без смеха'}
+${ctx.enableLaughter ? `  🔊 Общий заразительный «хриплый» смех. Тряска камеры. Rewatch-bait в последние 0.3с
   🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
-  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}
+  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}` : `  🔇 БЕЗ СМЕХА. Замершие выражения лиц. Rewatch-bait 0.3с`}
 
 ═══════════════════════════════════════════
 

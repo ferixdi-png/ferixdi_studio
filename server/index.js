@@ -395,7 +395,7 @@ function buildAIPrompt(ctx) {
   const { charA, charB, category, topic_ru, scene_hint, input_mode, video_meta,
     product_info, location, wardrobeA, wardrobeB, propAnchor, lightingMood,
     hookAction, releaseAction, aesthetic, script_ru, cinematography,
-    remake_mode, remake_instruction, thread_memory, soloMode } = ctx;
+    remake_mode, remake_instruction, thread_memory, soloMode, enableLaughter } = ctx;
 
   // ── THREAD MEMORY BLOCK (anti-repeat) ──
   let threadBlock = '';
@@ -1235,7 +1235,7 @@ ${soloMode ? `  "dialogue_A_ru": "15-30 слов монолог, макс 2 си
     "hook_en": "0.0-0.7s: ${remake_mode ? 'СКОПИРУЙ тип хука из оригинала + signature micro_gesture A. Стоп-скролл' : 'стоп-скролл, описание на английском'}",
 ${soloMode ? `    "monologue_en": "0.7-7.0s: описание монолога на английском — один персонаж, прямо в камеру, killer word ≈ 6.8s",` : `    "act_A_en": "0.7-3.5s: ${remake_mode ? 'СКОПИРУЙ темп и паузы из оригинала + micro_gesture A, B РОТ СТРОГО ЗАКРЫТ' : 'B РОТ СТРОГО ЗАКРЫТ, описание на английском'}",
     "act_B_en": "3.5-7.0s: ${remake_mode ? 'СКОПИРУЙ ритм доставки killer word из оригинала + A РОТ СТРОГО ЗАКРЫТ, пафосная поза' : 'A РОТ СТРОГО ЗАКРЫТ, KW≈6.8s, описание на английском'}",`}
-    "release_en": "7.0-8.0s: ${remake_mode ? 'СКОПИРУЙ тип финала из оригинала + laugh_style обоих если в оригинале смех. Rewatch-bait 0.3s' : scene_hint ? 'ФИНАЛ СОГЛАСНО ИНСТРУКЦИИ ПОЛЬЗОВАТЕЛЯ (см. выше). Если пользователь указал без смеха — НЕ ПИШИ смех. Rewatch-bait 0.3s' : 'хриплый смех, тряска камеры, rewatch-bait 0.3s'}"
+    "release_en": "7.0-8.0s: ${!enableLaughter ? 'БЕЗ СМЕХА. Речь заканчивается, тишина. Замершие выражения лиц после панчлайна. Rewatch-bait 0.3s. НЕ ПИШИ смех, хихиканье, усмешки — ТОЛЬКО тишина' : remake_mode ? 'СКОПИРУЙ тип финала из оригинала + laugh_style обоих если в оригинале смех. Rewatch-bait 0.3s' : scene_hint ? 'ФИНАЛ СОГЛАСНО ИНСТРУКЦИИ ПОЛЬЗОВАТЕЛЯ (см. выше). Если пользователь указал без смеха — НЕ ПИШИ смех. Rewatch-bait 0.3s' : 'хриплый смех, тряска камеры, rewatch-bait 0.3s'}"
   },
   "video_atmosphere_en": "${remake_mode ? 'СКОПИРУЙ атмосферу оригинала: звуки локации, реверб по размеру помещения, room tone, шорохи, фоновый шум. 80-120 слов EN' : '80-100 слов на английском'}",
   "viral_title_ru": "заголовок на русском",
