@@ -1,7 +1,7 @@
-/**
- * FERIXDI Studio — Generator v2
- * Production Contract: Veo 3.1 • 8s • Handheld Selfie Feel
- * Universal character adapter — работает с любой парой из каталога
+﻿/**
+ * FERIXDI Studio вЂ” Generator v2
+ * Production Contract: Veo 3.1 вЂў 8s вЂў Handheld Selfie Feel
+ * Universal character adapter вЂ” СЂР°Р±РѕС‚Р°РµС‚ СЃ Р»СЋР±РѕР№ РїР°СЂРѕР№ РёР· РєР°С‚Р°Р»РѕРіР°
  */
 
 import { estimateDialogue } from './estimator.js';
@@ -9,7 +9,7 @@ import { runAllValidations, scanBannedWords } from './validators.js';
 import { autoTrim } from './auto_trim.js';
 import { historyCache } from './history_cache.js';
 
-// ─── V2 TIMING GRID ─────────────────────────
+// в”Ђв”Ђв”Ђ V2 TIMING GRID в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const GRID_V2 = {
   hook:    { start: 0.0, end: 0.7 },
   act_A:   { start: 0.7, end: 3.5 },
@@ -17,7 +17,7 @@ const GRID_V2 = {
   release: { start: 7.0, end: 8.0 },
 };
 
-// ─── LOCATIONS (fallback — used when no external locations loaded) ──
+// в”Ђв”Ђв”Ђ LOCATIONS (fallback вЂ” used when no external locations loaded) в”Ђв”Ђ
 const FALLBACK_LOCATIONS = [
   'Weathered wooden barn interior, hay bales, single dusty lightbulb swinging, cracks of sunlight through planks',
   'Old bathhouse interior, fogged mirrors, wooden benches, copper ladle, steam wisps in backlight',
@@ -29,30 +29,30 @@ const FALLBACK_LOCATIONS = [
   'Park bench near pond with pigeons, birch trees, distant accordion music, golden hour light',
 ];
 
-// ─── HOOK ACTIONS v2 ─────────────────────────
+// в”Ђв”Ђв”Ђ HOOK ACTIONS v2 в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const HOOK_ACTIONS = [
-  { action_en: 'sharp finger jab at lens, near-miss touch, finger trembling with rage', action_ru: 'Палец в камеру, почти касаясь линзы, палец дрожит от злости', audio: 'mechanical trigger + sharp inhale' },
-  { action_en: 'knuckle rap on invisible screen, leaning forward with intensity', action_ru: 'Стук костяшками по «стеклу», наклон вперёд', audio: 'knocking + surprised gasp' },
-  { action_en: 'abrupt lean-in to camera, face filling 80% of frame, eyes wide', action_ru: 'Резкий наклон к камере, лицо заполняет кадр, глаза широко', audio: 'cloth rustle + tense exhale' },
-  { action_en: 'slap on table surface, objects rattle and jump, hand stays flat', action_ru: 'Удар ладонью по столу, предметы подпрыгивают', audio: 'table slap + glass rattle + sharp exhale' },
-  { action_en: 'dramatic removal of glasses with one hand, stare directly into lens', action_ru: 'Драматичное снятие очков одной рукой, взгляд прямо в камеру', audio: 'fabric whoosh + stare-down silence' },
-  { action_en: 'phone thrust at camera showing screen, arm fully extended, screen glowing', action_ru: 'Тычет телефоном в камеру, рука вытянута, экран светится', audio: 'phone buzz + sharp gasp' },
-  { action_en: 'both hands slam on table simultaneously, body jolts forward', action_ru: 'Обе ладони по столу одновременно, тело дёргается вперёд', audio: 'double impact + dishes rattle + sharp inhale' },
-  { action_en: 'grabs other person by sleeve, pulls them toward camera', action_ru: 'Хватает другого за рукав, тянет к камере', audio: 'fabric grab + startled yelp' },
-  { action_en: 'throws hands up in disbelief, mouth drops open, eyes bulging', action_ru: 'Вскидывает руки в шоке, рот открыт, глаза выпучены', audio: 'whoosh of arms + exasperated gasp' },
-  { action_en: 'leans back, crosses arms, slow deliberate head shake with narrowed eyes', action_ru: 'Откидывается назад, скрещивает руки, медленно качает головой', audio: 'chair creak + slow nose exhale + fabric shift' },
+  { action_en: 'sharp finger jab at lens, near-miss touch, finger trembling with rage', action_ru: 'РџР°Р»РµС† РІ РєР°РјРµСЂСѓ, РїРѕС‡С‚Рё РєР°СЃР°СЏСЃСЊ Р»РёРЅР·С‹, РїР°Р»РµС† РґСЂРѕР¶РёС‚ РѕС‚ Р·Р»РѕСЃС‚Рё', audio: 'mechanical trigger + sharp inhale' },
+  { action_en: 'knuckle rap on invisible screen, leaning forward with intensity', action_ru: 'РЎС‚СѓРє РєРѕСЃС‚СЏС€РєР°РјРё РїРѕ В«СЃС‚РµРєР»СѓВ», РЅР°РєР»РѕРЅ РІРїРµСЂС‘Рґ', audio: 'knocking + surprised gasp' },
+  { action_en: 'abrupt lean-in to camera, face filling 80% of frame, eyes wide', action_ru: 'Р РµР·РєРёР№ РЅР°РєР»РѕРЅ Рє РєР°РјРµСЂРµ, Р»РёС†Рѕ Р·Р°РїРѕР»РЅСЏРµС‚ РєР°РґСЂ, РіР»Р°Р·Р° С€РёСЂРѕРєРѕ', audio: 'cloth rustle + tense exhale' },
+  { action_en: 'slap on table surface, objects rattle and jump, hand stays flat', action_ru: 'РЈРґР°СЂ Р»Р°РґРѕРЅСЊСЋ РїРѕ СЃС‚РѕР»Сѓ, РїСЂРµРґРјРµС‚С‹ РїРѕРґРїСЂС‹РіРёРІР°СЋС‚', audio: 'table slap + glass rattle + sharp exhale' },
+  { action_en: 'dramatic removal of glasses with one hand, stare directly into lens', action_ru: 'Р”СЂР°РјР°С‚РёС‡РЅРѕРµ СЃРЅСЏС‚РёРµ РѕС‡РєРѕРІ РѕРґРЅРѕР№ СЂСѓРєРѕР№, РІР·РіР»СЏРґ РїСЂСЏРјРѕ РІ РєР°РјРµСЂСѓ', audio: 'fabric whoosh + stare-down silence' },
+  { action_en: 'phone thrust at camera showing screen, arm fully extended, screen glowing', action_ru: 'РўС‹С‡РµС‚ С‚РµР»РµС„РѕРЅРѕРј РІ РєР°РјРµСЂСѓ, СЂСѓРєР° РІС‹С‚СЏРЅСѓС‚Р°, СЌРєСЂР°РЅ СЃРІРµС‚РёС‚СЃСЏ', audio: 'phone buzz + sharp gasp' },
+  { action_en: 'both hands slam on table simultaneously, body jolts forward', action_ru: 'РћР±Рµ Р»Р°РґРѕРЅРё РїРѕ СЃС‚РѕР»Сѓ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ, С‚РµР»Рѕ РґС‘СЂРіР°РµС‚СЃСЏ РІРїРµСЂС‘Рґ', audio: 'double impact + dishes rattle + sharp inhale' },
+  { action_en: 'grabs other person by sleeve, pulls them toward camera', action_ru: 'РҐРІР°С‚Р°РµС‚ РґСЂСѓРіРѕРіРѕ Р·Р° СЂСѓРєР°РІ, С‚СЏРЅРµС‚ Рє РєР°РјРµСЂРµ', audio: 'fabric grab + startled yelp' },
+  { action_en: 'throws hands up in disbelief, mouth drops open, eyes bulging', action_ru: 'Р’СЃРєРёРґС‹РІР°РµС‚ СЂСѓРєРё РІ С€РѕРєРµ, СЂРѕС‚ РѕС‚РєСЂС‹С‚, РіР»Р°Р·Р° РІС‹РїСѓС‡РµРЅС‹', audio: 'whoosh of arms + exasperated gasp' },
+  { action_en: 'leans back, crosses arms, slow deliberate head shake with narrowed eyes', action_ru: 'РћС‚РєРёРґС‹РІР°РµС‚СЃСЏ РЅР°Р·Р°Рґ, СЃРєСЂРµС‰РёРІР°РµС‚ СЂСѓРєРё, РјРµРґР»РµРЅРЅРѕ РєР°С‡Р°РµС‚ РіРѕР»РѕРІРѕР№', audio: 'chair creak + slow nose exhale + fabric shift' },
 ];
 
-// ─── RELEASE ACTIONS v2 ──────────────────────
+// в”Ђв”Ђв”Ђ RELEASE ACTIONS v2 в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const RELEASE_ACTIONS = [
-  { action_en: 'shared raspy wheeze-laugh, camera shakes from body tremor', action_ru: 'Общий хриплый смех, камера трясётся от тряски тела', audio: 'overlapping wheeze-laughs, gasping inhales, camera mic rumble from hand shake' },
-  { action_en: 'A slaps own knee, B doubles over, tears forming', action_ru: 'A хлопает по колену, B сгибается пополам, слёзы', audio: 'knee slap impact, strained laughing exhale, sniffling tears' },
-  { action_en: 'both lean into each other laughing, brief embrace', action_ru: 'Оба заваливаются друг на друга от смеха', audio: 'fabric collision rustle, dual belly-laugh, affectionate shoulder pat' },
-  { action_en: 'A covers mouth suppressing laugh, B slow triumphant grin', action_ru: 'A зажимает рот, B медленная победная ухмылка', audio: 'muffled snort through fingers, quiet satisfied chuckle, nose exhale' },
-  { action_en: 'synchronized head-throw-back cackle, camera jolts', action_ru: 'Синхронный хохот с запрокинутой головой', audio: 'explosive dual cackle, chair creak from lean-back, camera mic peak (near-clip)' },
+  { action_en: 'shared raspy wheeze-laugh, camera shakes from body tremor', action_ru: 'РћР±С‰РёР№ С…СЂРёРїР»С‹Р№ СЃРјРµС…, РєР°РјРµСЂР° С‚СЂСЏСЃС‘С‚СЃСЏ РѕС‚ С‚СЂСЏСЃРєРё С‚РµР»Р°', audio: 'overlapping wheeze-laughs, gasping inhales, camera mic rumble from hand shake' },
+  { action_en: 'A slaps own knee, B doubles over, tears forming', action_ru: 'A С…Р»РѕРїР°РµС‚ РїРѕ РєРѕР»РµРЅСѓ, B СЃРіРёР±Р°РµС‚СЃСЏ РїРѕРїРѕР»Р°Рј, СЃР»С‘Р·С‹', audio: 'knee slap impact, strained laughing exhale, sniffling tears' },
+  { action_en: 'both lean into each other laughing, brief embrace', action_ru: 'РћР±Р° Р·Р°РІР°Р»РёРІР°СЋС‚СЃСЏ РґСЂСѓРі РЅР° РґСЂСѓРіР° РѕС‚ СЃРјРµС…Р°', audio: 'fabric collision rustle, dual belly-laugh, affectionate shoulder pat' },
+  { action_en: 'A covers mouth suppressing laugh, B slow triumphant grin', action_ru: 'A Р·Р°Р¶РёРјР°РµС‚ СЂРѕС‚, B РјРµРґР»РµРЅРЅР°СЏ РїРѕР±РµРґРЅР°СЏ СѓС…РјС‹Р»РєР°', audio: 'muffled snort through fingers, quiet satisfied chuckle, nose exhale' },
+  { action_en: 'synchronized head-throw-back cackle, camera jolts', action_ru: 'РЎРёРЅС…СЂРѕРЅРЅС‹Р№ С…РѕС…РѕС‚ СЃ Р·Р°РїСЂРѕРєРёРЅСѓС‚РѕР№ РіРѕР»РѕРІРѕР№', audio: 'explosive dual cackle, chair creak from lean-back, camera mic peak (near-clip)' },
 ];
 
-// ─── SERIAL PROP ANCHORS ─────────────────────
+// в”Ђв”Ђв”Ђ SERIAL PROP ANCHORS в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const PROP_ANCHORS = [
   'old brass samovar with tarnished patina and wooden handles',
   'dented aluminum bucket with water condensation',
@@ -68,45 +68,45 @@ const PROP_ANCHORS = [
   'folded newspaper with visible Cyrillic headline',
 ];
 
-// ─── CATEGORY → LOCATION ID PREFERENCES ─────
+// в”Ђв”Ђв”Ђ CATEGORY в†’ LOCATION ID PREFERENCES в”Ђв”Ђв”Ђв”Ђв”Ђ
 // Maps category to preferred location IDs from locations.json
 const LOCATION_CATEGORY_MAP = {
-  'Бытовой абсурд': ['soviet_kitchen', 'balcony', 'cellar', 'communal_corridor', 'elevator'],
-  'AI и технологии': ['soviet_kitchen', 'stairwell', 'balcony', 'garage', 'school_corridor'],
-  'Цены и инфляция': ['bazaar', 'soviet_kitchen', 'stairwell', 'pharmacy', 'post_office'],
-  'Отношения': ['soviet_kitchen', 'park_bench', 'balcony', 'dacha_veranda', 'fishing_spot'],
-  'Разрыв поколений': ['soviet_kitchen', 'attic', 'balcony', 'playground', 'school_corridor', 'cemetery_bench'],
-  'ЖКХ и коммуналка': ['stairwell', 'balcony', 'soviet_kitchen', 'elevator', 'communal_corridor', 'laundry_room'],
-  'Здоровье и поликлиника': ['polyclinic', 'stairwell', 'soviet_kitchen', 'pharmacy', 'park_bench'],
-  'Соцсети и тренды': ['balcony', 'soviet_kitchen', 'park_bench', 'playground', 'marshrutka'],
-  'Дача и огород': ['greenhouse', 'garden', 'barn', 'dacha_veranda', 'dacha_kitchen', 'chicken_coop'],
-  'Транспорт и пробки': ['marshrutka', 'stairwell', 'park_bench', 'bus_stop', 'train_station'],
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': ['soviet_kitchen', 'balcony', 'cellar', 'communal_corridor', 'elevator'],
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': ['soviet_kitchen', 'stairwell', 'balcony', 'garage', 'school_corridor'],
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': ['bazaar', 'soviet_kitchen', 'stairwell', 'pharmacy', 'post_office'],
+  'РћС‚РЅРѕС€РµРЅРёСЏ': ['soviet_kitchen', 'park_bench', 'balcony', 'dacha_veranda', 'fishing_spot'],
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': ['soviet_kitchen', 'attic', 'balcony', 'playground', 'school_corridor', 'cemetery_bench'],
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': ['stairwell', 'balcony', 'soviet_kitchen', 'elevator', 'communal_corridor', 'laundry_room'],
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': ['polyclinic', 'stairwell', 'soviet_kitchen', 'pharmacy', 'park_bench'],
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': ['balcony', 'soviet_kitchen', 'park_bench', 'playground', 'marshrutka'],
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': ['greenhouse', 'garden', 'barn', 'dacha_veranda', 'dacha_kitchen', 'chicken_coop'],
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': ['marshrutka', 'stairwell', 'park_bench', 'bus_stop', 'train_station'],
 };
 
-// ─── CATEGORY → PROP PREFERENCES ────────────
+// в”Ђв”Ђв”Ђ CATEGORY в†’ PROP PREFERENCES в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const PROP_HINTS = {
-  'Бытовой абсурд': ['cracked enamel kettle with chipped blue-white pattern', 'ceramic sugar bowl with missing lid, spoon inside'],
-  'AI и технологии': ['vintage Rigonda radio with bakelite knobs', 'wall-mounted rotary phone with coiled cord'],
-  'Цены и инфляция': ['folded newspaper with visible Cyrillic headline', 'ceramic sugar bowl with missing lid, spoon inside'],
-  'Отношения': ['heavy glass ashtray with Soviet-era etching', 'wall-mounted rotary phone with coiled cord'],
-  'Разрыв поколений': ['vintage Rigonda radio with bakelite knobs', 'dog-eared wall calendar from previous year'],
-  'ЖКХ и коммуналка': ['cracked enamel kettle with chipped blue-white pattern', 'old brass samovar with tarnished patina and wooden handles'],
-  'Здоровье и поликлиника': ['dog-eared wall calendar from previous year', 'folded newspaper with visible Cyrillic headline'],
-  'Соцсети и тренды': ['heavy glass ashtray with Soviet-era etching', 'folded newspaper with visible Cyrillic headline'],
-  'Дача и огород': ['rusted tin watering can with bent spout', 'dented aluminum bucket with water condensation'],
-  'Транспорт и пробки': ['folded newspaper with visible Cyrillic headline', 'heavy glass ashtray with Soviet-era etching'],
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': ['cracked enamel kettle with chipped blue-white pattern', 'ceramic sugar bowl with missing lid, spoon inside'],
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': ['vintage Rigonda radio with bakelite knobs', 'wall-mounted rotary phone with coiled cord'],
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': ['folded newspaper with visible Cyrillic headline', 'ceramic sugar bowl with missing lid, spoon inside'],
+  'РћС‚РЅРѕС€РµРЅРёСЏ': ['heavy glass ashtray with Soviet-era etching', 'wall-mounted rotary phone with coiled cord'],
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': ['vintage Rigonda radio with bakelite knobs', 'dog-eared wall calendar from previous year'],
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': ['cracked enamel kettle with chipped blue-white pattern', 'old brass samovar with tarnished patina and wooden handles'],
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': ['dog-eared wall calendar from previous year', 'folded newspaper with visible Cyrillic headline'],
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': ['heavy glass ashtray with Soviet-era etching', 'folded newspaper with visible Cyrillic headline'],
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': ['rusted tin watering can with bent spout', 'dented aluminum bucket with water condensation'],
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': ['folded newspaper with visible Cyrillic headline', 'heavy glass ashtray with Soviet-era etching'],
 };
 
-// ─── LIGHTING VARIATIONS BY LOCATION TYPE ───
+// в”Ђв”Ђв”Ђ LIGHTING VARIATIONS BY LOCATION TYPE в”Ђв”Ђв”Ђ
 // Each preset: smartphone-grade realism with explicit source count, direction, shadow softness, overexposure budget, color temp
 const LIGHTING_MOODS = [
   {
-    style: 'warm amber backlight through dusty window, single dominant source camera-right at 45°, hard-to-medium shadows cast left, golden dust motes in light beams',
+    style: 'warm amber backlight through dusty window, single dominant source camera-right at 45В°, hard-to-medium shadows cast left, golden dust motes in light beams',
     mood: 'nostalgic warmth',
     sources: '1 dominant (window backlight) + 1 ambient fill (wall bounce). No other lights.',
-    direction: 'Key light from camera-right at 45° through window; fill is diffuse wall bounce from left.',
-    shadow_softness: 'medium-hard — shadow edges visible under nose and cheekbones, diffused at 15-20% feather, NOT razor-sharp.',
-    overexposure_budget: 'Allow +1.5 EV on window, +0.5 EV on forehead/nose bridge highlight — this is natural smartphone clipping.',
+    direction: 'Key light from camera-right at 45В° through window; fill is diffuse wall bounce from left.',
+    shadow_softness: 'medium-hard вЂ” shadow edges visible under nose and cheekbones, diffused at 15-20% feather, NOT razor-sharp.',
+    overexposure_budget: 'Allow +1.5 EV on window, +0.5 EV on forehead/nose bridge highlight вЂ” this is natural smartphone clipping.',
     color_temp: '3200-3500K warm amber. Shadows lean slightly blue (natural daylight mix).',
   },
   {
@@ -114,25 +114,25 @@ const LIGHTING_MOODS = [
     mood: 'sterile tension',
     sources: '1 dominant (ceiling fluorescent tube) + 1 weak ambient (corridor light bleeding through doorframe).',
     direction: 'Key light directly overhead, slightly forward; creates raccoon-eye shadows under brow ridge.',
-    shadow_softness: 'soft-flat — minimal shadow contrast, characteristic of diffuse overhead tube. Subtle chin shadow only.',
-    overexposure_budget: 'Allow +0.3 EV on forehead only. Fluorescent rarely clips — image should feel slightly underlit.',
-    color_temp: '4500-5000K with green shift (+5 on green channel). Skin looks slightly sallow — this is correct.',
+    shadow_softness: 'soft-flat вЂ” minimal shadow contrast, characteristic of diffuse overhead tube. Subtle chin shadow only.',
+    overexposure_budget: 'Allow +0.3 EV on forehead only. Fluorescent rarely clips вЂ” image should feel slightly underlit.',
+    color_temp: '4500-5000K with green shift (+5 on green channel). Skin looks slightly sallow вЂ” this is correct.',
   },
   {
     style: 'dappled natural light through foliage, shifting leaf-shadow patterns on faces, warm sunlight mixed with cool shade',
     mood: 'organic chaos',
     sources: '1 dominant (direct sun through leaves) + 1 fill (open sky from above/behind). Dappled pattern on faces.',
-    direction: 'Sun high camera-left at 60°, leaf pattern breaks the light into moving spots on faces.',
-    shadow_softness: 'mixed — sharp leaf shadow edges overlaid on soft ambient fill. Complex light-dark pattern across cheeks.',
+    direction: 'Sun high camera-left at 60В°, leaf pattern breaks the light into moving spots on faces.',
+    shadow_softness: 'mixed вЂ” sharp leaf shadow edges overlaid on soft ambient fill. Complex light-dark pattern across cheeks.',
     overexposure_budget: 'Allow +2.0 EV in sun spots on fabric/hair. Skin spots +0.8 EV max. Shade areas correctly exposed.',
-    color_temp: '5500K in sun spots, 6500K in shade — dual temp is natural and correct for outdoor dappled.',
+    color_temp: '5500K in sun spots, 6500K in shade вЂ” dual temp is natural and correct for outdoor dappled.',
   },
   {
     style: 'single bare bulb overhead, harsh directional light from above-center, deep eye-socket shadows, warm tungsten',
     mood: 'dramatic intimacy',
     sources: '1 only (bare filament bulb on ceiling). Zero fill. Shadows are DEEP and real.',
     direction: 'Directly overhead, slightly toward camera. Creates strong nose shadow, chin shadow, eye-socket pools.',
-    shadow_softness: 'hard — small point source means crisp shadow edges. Under-nose shadow clearly defined.',
+    shadow_softness: 'hard вЂ” small point source means crisp shadow edges. Under-nose shadow clearly defined.',
     overexposure_budget: 'Allow +1.0 EV on top-of-head, +0.5 EV on nose/forehead. Lower face 1-2 stops darker than forehead.',
     color_temp: '2700-3000K deep warm tungsten. Everything amber-orange. Shadows go brownish-black, not blue.',
   },
@@ -141,17 +141,17 @@ const LIGHTING_MOODS = [
     mood: 'calm before storm',
     sources: '1 dominant (large overcast window left) + 1 ambient (room bounce from right wall). Ratio ~3:1.',
     direction: 'Broad soft key from camera-left window; fill from room bounce. Shadows present but gentle.',
-    shadow_softness: 'very soft — large source means gradual falloff. Shadow under nose barely visible, cheek shadow smooth gradient.',
-    overexposure_budget: 'Allow +0.5 EV on window-side cheek. Almost no clipping — overcast light is inherently balanced.',
+    shadow_softness: 'very soft вЂ” large source means gradual falloff. Shadow under nose barely visible, cheek shadow smooth gradient.',
+    overexposure_budget: 'Allow +0.5 EV on window-side cheek. Almost no clipping вЂ” overcast light is inherently balanced.',
     color_temp: '5800-6200K neutral-cool. Slight blue undertone in shadows. Skin reads accurate, no warmth.',
   },
   {
     style: 'late golden hour sun streaming horizontally through doorframe, one-sided warm blast, strong shadow side on far face',
     mood: 'golden confrontation',
     sources: '1 dominant (low sun through door/window) + 1 weak fill (ambient sky from behind camera).',
-    direction: 'Hard horizontal key from camera-left at 15° above horizon. B-side face half in shadow.',
-    shadow_softness: 'medium — low sun is moderately hard. Clear nose shadow, defined jaw shadow on shadow side.',
-    overexposure_budget: 'Allow +2.5 EV on direct sun patch (fabric/wall). Skin highlight on sun side +1.0 EV — golden glow.',
+    direction: 'Hard horizontal key from camera-left at 15В° above horizon. B-side face half in shadow.',
+    shadow_softness: 'medium вЂ” low sun is moderately hard. Clear nose shadow, defined jaw shadow on shadow side.',
+    overexposure_budget: 'Allow +2.5 EV on direct sun patch (fabric/wall). Skin highlight on sun side +1.0 EV вЂ” golden glow.',
     color_temp: '2800-3200K deep gold on sun side. Shadow side reads 5500K blue-ish from sky fill. Dual temp = golden hour.',
   },
   {
@@ -159,570 +159,570 @@ const LIGHTING_MOODS = [
     mood: 'domestic tension',
     sources: '1 warm overhead (ceiling fixture, 3200K) + 1 cool side fill (TV/screen glow, 7000K blue).',
     direction: 'Warm key from overhead slightly behind; cool fill from camera-right low (TV bounce on face).',
-    shadow_softness: 'medium-soft — overhead is diffuse fixture, TV bounce is broad. Two overlapping soft shadow sets.',
+    shadow_softness: 'medium-soft вЂ” overhead is diffuse fixture, TV bounce is broad. Two overlapping soft shadow sets.',
     overexposure_budget: 'Allow +0.5 EV on warm-lit forehead. Cool side may clip on reflective surfaces only.',
-    color_temp: 'DUAL: 3200K warm dominant + 7000K cool fill. Split lighting on face — warm cheek left, blue tint right.',
+    color_temp: 'DUAL: 3200K warm dominant + 7000K cool fill. Split lighting on face вЂ” warm cheek left, blue tint right.',
   },
   {
     style: 'bright midday outdoor shade, open sky overhead as giant softbox, reflected ground bounce from below, very even',
     mood: 'exposed clarity',
     sources: '1 dominant (open sky above) + 1 fill (ground bounce from pavement/dirt). Very even ratio.',
     direction: 'Overhead from sky, fill from below-camera via ground reflection. Minimal shadows, bright.',
-    shadow_softness: 'minimal — sky is enormous soft source. Only subtle shadows under chin and brow ridge.',
-    overexposure_budget: 'Allow +0.3 EV on top of head/shoulders. Sky in background +3.0 EV blown — this is normal for phones.',
+    shadow_softness: 'minimal вЂ” sky is enormous soft source. Only subtle shadows under chin and brow ridge.',
+    overexposure_budget: 'Allow +0.3 EV on top of head/shoulders. Sky in background +3.0 EV blown вЂ” this is normal for phones.',
     color_temp: '5500-6000K neutral. Clean accurate color. Skin reads true. Slight warmth from ground bounce.',
   },
 ];
 
 const HUMOR_CATEGORIES = [
-  { ru: 'Бытовой абсурд', en: 'Domestic absurdity' },
-  { ru: 'AI и технологии', en: 'AI and technology' },
-  { ru: 'Цены и инфляция', en: 'Prices and inflation' },
-  { ru: 'Отношения', en: 'Relationships' },
-  { ru: 'Разрыв поколений', en: 'Generation gap' },
-  { ru: 'ЖКХ и коммуналка', en: 'Housing utilities drama' },
-  { ru: 'Здоровье и поликлиника', en: 'Health and polyclinic' },
-  { ru: 'Соцсети и тренды', en: 'Social media trends' },
-  { ru: 'Дача и огород', en: 'Dacha and gardening' },
-  { ru: 'Транспорт и пробки', en: 'Transport and traffic' },
+  { ru: 'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ', en: 'Domestic absurdity' },
+  { ru: 'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё', en: 'AI and technology' },
+  { ru: 'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ', en: 'Prices and inflation' },
+  { ru: 'РћС‚РЅРѕС€РµРЅРёСЏ', en: 'Relationships' },
+  { ru: 'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№', en: 'Generation gap' },
+  { ru: 'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°', en: 'Housing utilities drama' },
+  { ru: 'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°', en: 'Health and polyclinic' },
+  { ru: 'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹', en: 'Social media trends' },
+  { ru: 'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ', en: 'Dacha and gardening' },
+  { ru: 'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё', en: 'Transport and traffic' },
 ];
 
-// ─── HASHTAG ENGINE ─────────────────────────
-// Instagram strategy 2026: 3-5 больших (>1M), 5-8 средних (100K-1M), 5-7 маленьких (<100K)
-// Никакого спама типа #funny #comedy #viral — алгоритм даунрейтит
-// Все теги РЕЛЕВАНТНЫ контенту
+// в”Ђв”Ђв”Ђ HASHTAG ENGINE в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// Instagram strategy 2026: 3-5 Р±РѕР»СЊС€РёС… (>1M), 5-8 СЃСЂРµРґРЅРёС… (100K-1M), 5-7 РјР°Р»РµРЅСЊРєРёС… (<100K)
+// РќРёРєР°РєРѕРіРѕ СЃРїР°РјР° С‚РёРїР° #funny #comedy #viral вЂ” Р°Р»РіРѕСЂРёС‚Рј РґР°СѓРЅСЂРµР№С‚РёС‚
+// Р’СЃРµ С‚РµРіРё Р Р•Р›Р•Р’РђРќРўРќР« РєРѕРЅС‚РµРЅС‚Сѓ
 
 const HASHTAGS_BY_CATEGORY = {
-  'Бытовой абсурд': {
-    niche: ['#бытоваядрама', '#жизажесть', '#абсурдреальности', '#этонормально', '#бытовуха', '#кухонныевойны'],
-    mid:   ['#жиза', '#ржунемогу', '#смешнодослёз', '#жизненно', '#правдажизни'],
-    big:   ['#юмордня', '#рилс', '#русскийюмор'],
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': {
+    niche: ['#Р±С‹С‚РѕРІР°СЏРґСЂР°РјР°', '#Р¶РёР·Р°Р¶РµСЃС‚СЊ', '#Р°Р±СЃСѓСЂРґСЂРµР°Р»СЊРЅРѕСЃС‚Рё', '#СЌС‚РѕРЅРѕСЂРјР°Р»СЊРЅРѕ', '#Р±С‹С‚РѕРІСѓС…Р°', '#РєСѓС…РѕРЅРЅС‹РµРІРѕР№РЅС‹'],
+    mid:   ['#Р¶РёР·Р°', '#СЂР¶СѓРЅРµРјРѕРіСѓ', '#СЃРјРµС€РЅРѕРґРѕСЃР»С‘Р·', '#Р¶РёР·РЅРµРЅРЅРѕ', '#РїСЂР°РІРґР°Р¶РёР·РЅРё'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#СЂСѓСЃСЃРєРёР№СЋРјРѕСЂ'],
   },
-  'AI и технологии': {
-    niche: ['#нейросетьпротивбабки', '#ииvsчеловек', '#роботызаменят', '#технологиибудущего', '#chatgptпорусски', '#нейросетиприколы'],
-    mid:   ['#искусственныйинтеллект', '#технологии', '#будущеенаступило', '#нейросеть', '#aihumor'],
-    big:   ['#юмордня', '#рилс', '#технологии2026'],
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': {
+    niche: ['#РЅРµР№СЂРѕСЃРµС‚СЊРїСЂРѕС‚РёРІР±Р°Р±РєРё', '#РёРёvsС‡РµР»РѕРІРµРє', '#СЂРѕР±РѕС‚С‹Р·Р°РјРµРЅСЏС‚', '#С‚РµС…РЅРѕР»РѕРіРёРёР±СѓРґСѓС‰РµРіРѕ', '#chatgptРїРѕСЂСѓСЃСЃРєРё', '#РЅРµР№СЂРѕСЃРµС‚РёРїСЂРёРєРѕР»С‹'],
+    mid:   ['#РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№РёРЅС‚РµР»Р»РµРєС‚', '#С‚РµС…РЅРѕР»РѕРіРёРё', '#Р±СѓРґСѓС‰РµРµРЅР°СЃС‚СѓРїРёР»Рѕ', '#РЅРµР№СЂРѕСЃРµС‚СЊ', '#aihumor'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#С‚РµС…РЅРѕР»РѕРіРёРё2026'],
   },
-  'Цены и инфляция': {
-    niche: ['#ценыохренели', '#инфляциядня', '#дорожевсё', '#продуктыподорожали', '#ценник2026', '#экономимвместе'],
-    mid:   ['#цены', '#инфляция', '#дорого', '#магазин', '#продукты'],
-    big:   ['#юмордня', '#рилс', '#жиза'],
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': {
+    niche: ['#С†РµРЅС‹РѕС…СЂРµРЅРµР»Рё', '#РёРЅС„Р»СЏС†РёСЏРґРЅСЏ', '#РґРѕСЂРѕР¶РµРІСЃС‘', '#РїСЂРѕРґСѓРєС‚С‹РїРѕРґРѕСЂРѕР¶Р°Р»Рё', '#С†РµРЅРЅРёРє2026', '#СЌРєРѕРЅРѕРјРёРјРІРјРµСЃС‚Рµ'],
+    mid:   ['#С†РµРЅС‹', '#РёРЅС„Р»СЏС†РёСЏ', '#РґРѕСЂРѕРіРѕ', '#РјР°РіР°Р·РёРЅ', '#РїСЂРѕРґСѓРєС‚С‹'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#Р¶РёР·Р°'],
   },
-  'Отношения': {
-    niche: ['#мужикитакие', '#женщинытакие', '#отношенияэто', '#парочки', '#любовьпорусски', '#свиданиеприколы'],
-    mid:   ['#отношения', '#любовь', '#парень', '#семья', '#муж'],
-    big:   ['#юмордня', '#рилс', '#правдажизни'],
+  'РћС‚РЅРѕС€РµРЅРёСЏ': {
+    niche: ['#РјСѓР¶РёРєРёС‚Р°РєРёРµ', '#Р¶РµРЅС‰РёРЅС‹С‚Р°РєРёРµ', '#РѕС‚РЅРѕС€РµРЅРёСЏСЌС‚Рѕ', '#РїР°СЂРѕС‡РєРё', '#Р»СЋР±РѕРІСЊРїРѕСЂСѓСЃСЃРєРё', '#СЃРІРёРґР°РЅРёРµРїСЂРёРєРѕР»С‹'],
+    mid:   ['#РѕС‚РЅРѕС€РµРЅРёСЏ', '#Р»СЋР±РѕРІСЊ', '#РїР°СЂРµРЅСЊ', '#СЃРµРјСЊСЏ', '#РјСѓР¶'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#РїСЂР°РІРґР°Р¶РёР·РЅРё'],
   },
-  'Разрыв поколений': {
-    niche: ['#поколениезумеров', '#окейбумер', '#бабкаvsвнучка', '#молодёжьтакая', '#старшеепоколение', '#конфликтпоколений'],
-    mid:   ['#поколения', '#молодёжь', '#бабушка', '#внуки', '#зумеры'],
-    big:   ['#юмордня', '#рилс', '#жизненно'],
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': {
+    niche: ['#РїРѕРєРѕР»РµРЅРёРµР·СѓРјРµСЂРѕРІ', '#РѕРєРµР№Р±СѓРјРµСЂ', '#Р±Р°Р±РєР°vsРІРЅСѓС‡РєР°', '#РјРѕР»РѕРґС‘Р¶СЊС‚Р°РєР°СЏ', '#СЃС‚Р°СЂС€РµРµРїРѕРєРѕР»РµРЅРёРµ', '#РєРѕРЅС„Р»РёРєС‚РїРѕРєРѕР»РµРЅРёР№'],
+    mid:   ['#РїРѕРєРѕР»РµРЅРёСЏ', '#РјРѕР»РѕРґС‘Р¶СЊ', '#Р±Р°Р±СѓС€РєР°', '#РІРЅСѓРєРё', '#Р·СѓРјРµСЂС‹'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#Р¶РёР·РЅРµРЅРЅРѕ'],
   },
-  'ЖКХ и коммуналка': {
-    niche: ['#жкхприколы', '#коммуналкагорит', '#управляющаякомпания', '#квитанциякосмос', '#отоплениевключили', '#соседиснизу'],
-    mid:   ['#жкх', '#коммуналка', '#квартира', '#соседи', '#счётзакоммуналку'],
-    big:   ['#юмордня', '#рилс', '#жиза'],
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': {
+    niche: ['#Р¶РєС…РїСЂРёРєРѕР»С‹', '#РєРѕРјРјСѓРЅР°Р»РєР°РіРѕСЂРёС‚', '#СѓРїСЂР°РІР»СЏСЋС‰Р°СЏРєРѕРјРїР°РЅРёСЏ', '#РєРІРёС‚Р°РЅС†РёСЏРєРѕСЃРјРѕСЃ', '#РѕС‚РѕРїР»РµРЅРёРµРІРєР»СЋС‡РёР»Рё', '#СЃРѕСЃРµРґРёСЃРЅРёР·Сѓ'],
+    mid:   ['#Р¶РєС…', '#РєРѕРјРјСѓРЅР°Р»РєР°', '#РєРІР°СЂС‚РёСЂР°', '#СЃРѕСЃРµРґРё', '#СЃС‡С‘С‚Р·Р°РєРѕРјРјСѓРЅР°Р»РєСѓ'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#Р¶РёР·Р°'],
   },
-  'Здоровье и поликлиника': {
-    niche: ['#поликлиникаприколы', '#очередьквврачу', '#докторсказал', '#медицинапорусски', '#рецептотбабки', '#здоровьенекупишь'],
-    mid:   ['#поликлиника', '#врач', '#здоровье', '#медицина', '#больница'],
-    big:   ['#юмордня', '#рилс', '#правдажизни'],
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': {
+    niche: ['#РїРѕР»РёРєР»РёРЅРёРєР°РїСЂРёРєРѕР»С‹', '#РѕС‡РµСЂРµРґСЊРєРІРІСЂР°С‡Сѓ', '#РґРѕРєС‚РѕСЂСЃРєР°Р·Р°Р»', '#РјРµРґРёС†РёРЅР°РїРѕСЂСѓСЃСЃРєРё', '#СЂРµС†РµРїС‚РѕС‚Р±Р°Р±РєРё', '#Р·РґРѕСЂРѕРІСЊРµРЅРµРєСѓРїРёС€СЊ'],
+    mid:   ['#РїРѕР»РёРєР»РёРЅРёРєР°', '#РІСЂР°С‡', '#Р·РґРѕСЂРѕРІСЊРµ', '#РјРµРґРёС†РёРЅР°', '#Р±РѕР»СЊРЅРёС†Р°'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#РїСЂР°РІРґР°Р¶РёР·РЅРё'],
   },
-  'Соцсети и тренды': {
-    niche: ['#блогерыприколы', '#тиктокеры', '#подписчики', '#контентмейкер', '#хайпдня', '#рилсмейкер'],
-    mid:   ['#соцсети', '#блогер', '#тренды', '#инстаграм', '#контент'],
-    big:   ['#юмордня', '#рилс', '#тренды2026'],
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': {
+    niche: ['#Р±Р»РѕРіРµСЂС‹РїСЂРёРєРѕР»С‹', '#С‚РёРєС‚РѕРєРµСЂС‹', '#РїРѕРґРїРёСЃС‡РёРєРё', '#РєРѕРЅС‚РµРЅС‚РјРµР№РєРµСЂ', '#С…Р°Р№РїРґРЅСЏ', '#СЂРёР»СЃРјРµР№РєРµСЂ'],
+    mid:   ['#СЃРѕС†СЃРµС‚Рё', '#Р±Р»РѕРіРµСЂ', '#С‚СЂРµРЅРґС‹', '#РёРЅСЃС‚Р°РіСЂР°Рј', '#РєРѕРЅС‚РµРЅС‚'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#С‚СЂРµРЅРґС‹2026'],
   },
-  'Дача и огород': {
-    niche: ['#дачаприколы', '#огородникам', '#помидорнаядрама', '#соседподаче', '#урожай2026', '#грядкивойны'],
-    mid:   ['#дача', '#огород', '#урожай', '#сад', '#дачнаяжизнь'],
-    big:   ['#юмордня', '#рилс', '#лето'],
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': {
+    niche: ['#РґР°С‡Р°РїСЂРёРєРѕР»С‹', '#РѕРіРѕСЂРѕРґРЅРёРєР°Рј', '#РїРѕРјРёРґРѕСЂРЅР°СЏРґСЂР°РјР°', '#СЃРѕСЃРµРґРїРѕРґР°С‡Рµ', '#СѓСЂРѕР¶Р°Р№2026', '#РіСЂСЏРґРєРёРІРѕР№РЅС‹'],
+    mid:   ['#РґР°С‡Р°', '#РѕРіРѕСЂРѕРґ', '#СѓСЂРѕР¶Р°Р№', '#СЃР°Рґ', '#РґР°С‡РЅР°СЏР¶РёР·РЅСЊ'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#Р»РµС‚Рѕ'],
   },
-  'Транспорт и пробки': {
-    niche: ['#пробкимосквы', '#маршруткаприколы', '#самокатвсгород', '#водителиприколы', '#общественныйтранспорт', '#парковкадрама'],
-    mid:   ['#пробки', '#транспорт', '#метро', '#самокат', '#водитель'],
-    big:   ['#юмордня', '#рилс', '#москва'],
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': {
+    niche: ['#РїСЂРѕР±РєРёРјРѕСЃРєРІС‹', '#РјР°СЂС€СЂСѓС‚РєР°РїСЂРёРєРѕР»С‹', '#СЃР°РјРѕРєР°С‚РІСЃРіРѕСЂРѕРґ', '#РІРѕРґРёС‚РµР»РёРїСЂРёРєРѕР»С‹', '#РѕР±С‰РµСЃС‚РІРµРЅРЅС‹Р№С‚СЂР°РЅСЃРїРѕСЂС‚', '#РїР°СЂРєРѕРІРєР°РґСЂР°РјР°'],
+    mid:   ['#РїСЂРѕР±РєРё', '#С‚СЂР°РЅСЃРїРѕСЂС‚', '#РјРµС‚СЂРѕ', '#СЃР°РјРѕРєР°С‚', '#РІРѕРґРёС‚РµР»СЊ'],
+    big:   ['#СЋРјРѕСЂРґРЅСЏ', '#СЂРёР»СЃ', '#РјРѕСЃРєРІР°'],
   },
 };
 
-// Evergreen теги — подмешиваются всегда (2-3 шт)
+// Evergreen С‚РµРіРё вЂ” РїРѕРґРјРµС€РёРІР°СЋС‚СЃСЏ РІСЃРµРіРґР° (2-3 С€С‚)
 const EVERGREEN_TAGS = [
-  '#рекомендации', '#попалвреки', '#залетевреки',
-  '#рилсы', '#короткоевидео', '#вирусноевидео',
-  '#смешноевидео', '#приколы2026', '#юмор',
+  '#СЂРµРєРѕРјРµРЅРґР°С†РёРё', '#РїРѕРїР°Р»РІСЂРµРєРё', '#Р·Р°Р»РµС‚РµРІСЂРµРєРё',
+  '#СЂРёР»СЃС‹', '#РєРѕСЂРѕС‚РєРѕРµРІРёРґРµРѕ', '#РІРёСЂСѓСЃРЅРѕРµРІРёРґРµРѕ',
+  '#СЃРјРµС€РЅРѕРµРІРёРґРµРѕ', '#РїСЂРёРєРѕР»С‹2026', '#СЋРјРѕСЂ',
 ];
 
-// Персонажные теги по группам
+// РџРµСЂСЃРѕРЅР°Р¶РЅС‹Рµ С‚РµРіРё РїРѕ РіСЂСѓРїРїР°Рј
 const GROUP_HASHTAGS = {
-  'бабки':      ['#бабкажжёт', '#бабушкасказала', '#бабкиогонь', '#старшеепоколение'],
-  'деды':       ['#дедсказал', '#дедмудрость', '#старыйдарусский', '#дедовскийюмор'],
-  'мамы':       ['#мамасказала', '#мамаправа', '#материнскийинстинкт', '#мамыпоймут'],
-  'папы':       ['#папасказал', '#папашутит', '#отецмолодец', '#папиныприколы'],
-  'дочери':     ['#дочкатакая', '#дочьvsmama', '#молодёжь', '#поколениеальфа'],
-  'сыновья':    ['#сынтакой', '#сынvsотец', '#пацаны', '#сынок'],
-  'тёщи':       ['#тёщаогонь', '#тёщасказала', '#зятьвшоке', '#тёщаvsзять'],
-  'свекрови':   ['#свекровь', '#свекровьсказала', '#невесткавшоке', '#семейныедрамы'],
-  'соседи':     ['#соседиприколы', '#соседтакой', '#подъезднаядрама', '#соседискандал'],
-  'продавцы':   ['#продавщица', '#магазинприколы', '#накассе', '#покупательвшоке'],
-  'врачи':      ['#докторприколы', '#врачсказал', '#медикишутят', '#диагнозюмор'],
-  'учителя':    ['#учительница', '#школаприколы', '#учитель', '#урокжизни'],
-  'блогеры':    ['#блогерша', '#инстаблогер', '#блогерыприколы', '#контентмейкер'],
-  'таксисты':   ['#таксист', '#яндекстакси', '#водительтакси', '#поездкаприколы'],
-  'бизнесмены': ['#бизнесмен', '#бизнесприколы', '#предприниматель', '#стартап'],
-  'студенты':   ['#студент', '#универ', '#сессия', '#студенческийюмор'],
-  'пенсионеры': ['#пенсионер', '#пенсия', '#пенсионерыжгут', '#старшеепоколение'],
-  'чиновники':  ['#чиновники', '#бюрократия', '#госуслуги', '#мфц'],
-  'фитнес':     ['#фитнесюмор', '#зож', '#тренировка', '#фитнестренер'],
-  'кошатницы':  ['#кошатница', '#котики', '#кошкиправят', '#котомама'],
-  'экстремалы': ['#экстрим', '#адреналин', '#экстремал', '#безбашенный'],
+  'Р±Р°Р±РєРё':      ['#Р±Р°Р±РєР°Р¶Р¶С‘С‚', '#Р±Р°Р±СѓС€РєР°СЃРєР°Р·Р°Р»Р°', '#Р±Р°Р±РєРёРѕРіРѕРЅСЊ', '#СЃС‚Р°СЂС€РµРµРїРѕРєРѕР»РµРЅРёРµ'],
+  'РґРµРґС‹':       ['#РґРµРґСЃРєР°Р·Р°Р»', '#РґРµРґРјСѓРґСЂРѕСЃС‚СЊ', '#СЃС‚Р°СЂС‹Р№РґР°СЂСѓСЃСЃРєРёР№', '#РґРµРґРѕРІСЃРєРёР№СЋРјРѕСЂ'],
+  'РјР°РјС‹':       ['#РјР°РјР°СЃРєР°Р·Р°Р»Р°', '#РјР°РјР°РїСЂР°РІР°', '#РјР°С‚РµСЂРёРЅСЃРєРёР№РёРЅСЃС‚РёРЅРєС‚', '#РјР°РјС‹РїРѕР№РјСѓС‚'],
+  'РїР°РїС‹':       ['#РїР°РїР°СЃРєР°Р·Р°Р»', '#РїР°РїР°С€СѓС‚РёС‚', '#РѕС‚РµС†РјРѕР»РѕРґРµС†', '#РїР°РїРёРЅС‹РїСЂРёРєРѕР»С‹'],
+  'РґРѕС‡РµСЂРё':     ['#РґРѕС‡РєР°С‚Р°РєР°СЏ', '#РґРѕС‡СЊvsmama', '#РјРѕР»РѕРґС‘Р¶СЊ', '#РїРѕРєРѕР»РµРЅРёРµР°Р»СЊС„Р°'],
+  'СЃС‹РЅРѕРІСЊСЏ':    ['#СЃС‹РЅС‚Р°РєРѕР№', '#СЃС‹РЅvsРѕС‚РµС†', '#РїР°С†Р°РЅС‹', '#СЃС‹РЅРѕРє'],
+  'С‚С‘С‰Рё':       ['#С‚С‘С‰Р°РѕРіРѕРЅСЊ', '#С‚С‘С‰Р°СЃРєР°Р·Р°Р»Р°', '#Р·СЏС‚СЊРІС€РѕРєРµ', '#С‚С‘С‰Р°vsР·СЏС‚СЊ'],
+  'СЃРІРµРєСЂРѕРІРё':   ['#СЃРІРµРєСЂРѕРІСЊ', '#СЃРІРµРєСЂРѕРІСЊСЃРєР°Р·Р°Р»Р°', '#РЅРµРІРµСЃС‚РєР°РІС€РѕРєРµ', '#СЃРµРјРµР№РЅС‹РµРґСЂР°РјС‹'],
+  'СЃРѕСЃРµРґРё':     ['#СЃРѕСЃРµРґРёРїСЂРёРєРѕР»С‹', '#СЃРѕСЃРµРґС‚Р°РєРѕР№', '#РїРѕРґСЉРµР·РґРЅР°СЏРґСЂР°РјР°', '#СЃРѕСЃРµРґРёСЃРєР°РЅРґР°Р»'],
+  'РїСЂРѕРґР°РІС†С‹':   ['#РїСЂРѕРґР°РІС‰РёС†Р°', '#РјР°РіР°Р·РёРЅРїСЂРёРєРѕР»С‹', '#РЅР°РєР°СЃСЃРµ', '#РїРѕРєСѓРїР°С‚РµР»СЊРІС€РѕРєРµ'],
+  'РІСЂР°С‡Рё':      ['#РґРѕРєС‚РѕСЂРїСЂРёРєРѕР»С‹', '#РІСЂР°С‡СЃРєР°Р·Р°Р»', '#РјРµРґРёРєРёС€СѓС‚СЏС‚', '#РґРёР°РіРЅРѕР·СЋРјРѕСЂ'],
+  'СѓС‡РёС‚РµР»СЏ':    ['#СѓС‡РёС‚РµР»СЊРЅРёС†Р°', '#С€РєРѕР»Р°РїСЂРёРєРѕР»С‹', '#СѓС‡РёС‚РµР»СЊ', '#СѓСЂРѕРєР¶РёР·РЅРё'],
+  'Р±Р»РѕРіРµСЂС‹':    ['#Р±Р»РѕРіРµСЂС€Р°', '#РёРЅСЃС‚Р°Р±Р»РѕРіРµСЂ', '#Р±Р»РѕРіРµСЂС‹РїСЂРёРєРѕР»С‹', '#РєРѕРЅС‚РµРЅС‚РјРµР№РєРµСЂ'],
+  'С‚Р°РєСЃРёСЃС‚С‹':   ['#С‚Р°РєСЃРёСЃС‚', '#СЏРЅРґРµРєСЃС‚Р°РєСЃРё', '#РІРѕРґРёС‚РµР»СЊС‚Р°РєСЃРё', '#РїРѕРµР·РґРєР°РїСЂРёРєРѕР»С‹'],
+  'Р±РёР·РЅРµСЃРјРµРЅС‹': ['#Р±РёР·РЅРµСЃРјРµРЅ', '#Р±РёР·РЅРµСЃРїСЂРёРєРѕР»С‹', '#РїСЂРµРґРїСЂРёРЅРёРјР°С‚РµР»СЊ', '#СЃС‚Р°СЂС‚Р°Рї'],
+  'СЃС‚СѓРґРµРЅС‚С‹':   ['#СЃС‚СѓРґРµРЅС‚', '#СѓРЅРёРІРµСЂ', '#СЃРµСЃСЃРёСЏ', '#СЃС‚СѓРґРµРЅС‡РµСЃРєРёР№СЋРјРѕСЂ'],
+  'РїРµРЅСЃРёРѕРЅРµСЂС‹': ['#РїРµРЅСЃРёРѕРЅРµСЂ', '#РїРµРЅСЃРёСЏ', '#РїРµРЅСЃРёРѕРЅРµСЂС‹Р¶РіСѓС‚', '#СЃС‚Р°СЂС€РµРµРїРѕРєРѕР»РµРЅРёРµ'],
+  'С‡РёРЅРѕРІРЅРёРєРё':  ['#С‡РёРЅРѕРІРЅРёРєРё', '#Р±СЋСЂРѕРєСЂР°С‚РёСЏ', '#РіРѕСЃСѓСЃР»СѓРіРё', '#РјС„С†'],
+  'С„РёС‚РЅРµСЃ':     ['#С„РёС‚РЅРµСЃСЋРјРѕСЂ', '#Р·РѕР¶', '#С‚СЂРµРЅРёСЂРѕРІРєР°', '#С„РёС‚РЅРµСЃС‚СЂРµРЅРµСЂ'],
+  'РєРѕС€Р°С‚РЅРёС†С‹':  ['#РєРѕС€Р°С‚РЅРёС†Р°', '#РєРѕС‚РёРєРё', '#РєРѕС€РєРёРїСЂР°РІСЏС‚', '#РєРѕС‚РѕРјР°РјР°'],
+  'СЌРєСЃС‚СЂРµРјР°Р»С‹': ['#СЌРєСЃС‚СЂРёРј', '#Р°РґСЂРµРЅР°Р»РёРЅ', '#СЌРєСЃС‚СЂРµРјР°Р»', '#Р±РµР·Р±Р°С€РµРЅРЅС‹Р№'],
 };
 
-// ─── VIRAL TITLES ───────────────────────────
-// Hook-формулы: вопрос / шок / незавершённость / провокация
+// в”Ђв”Ђв”Ђ VIRAL TITLES в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// Hook-С„РѕСЂРјСѓР»С‹: РІРѕРїСЂРѕСЃ / С€РѕРє / РЅРµР·Р°РІРµСЂС€С‘РЅРЅРѕСЃС‚СЊ / РїСЂРѕРІРѕРєР°С†РёСЏ
 const VIRAL_TITLES = {
-  'Бытовой абсурд': [
-    'Она реально это сказала при всех...',
-    'Когда {A} узнала правду — лицо бесценно 💀',
-    'Вот поэтому с {A} лучше не спорить',
-    '{A} vs здравый смысл: 0-1 🤣',
-    'Последние слова {B} убили наповал',
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': [
+    'РћРЅР° СЂРµР°Р»СЊРЅРѕ СЌС‚Рѕ СЃРєР°Р·Р°Р»Р° РїСЂРё РІСЃРµС…...',
+    'РљРѕРіРґР° {A} СѓР·РЅР°Р»Р° РїСЂР°РІРґСѓ вЂ” Р»РёС†Рѕ Р±РµСЃС†РµРЅРЅРѕ рџ’Ђ',
+    'Р’РѕС‚ РїРѕСЌС‚РѕРјСѓ СЃ {A} Р»СѓС‡С€Рµ РЅРµ СЃРїРѕСЂРёС‚СЊ',
+    '{A} vs Р·РґСЂР°РІС‹Р№ СЃРјС‹СЃР»: 0-1 рџ¤Ј',
+    'РџРѕСЃР»РµРґРЅРёРµ СЃР»РѕРІР° {B} СѓР±РёР»Рё РЅР°РїРѕРІР°Р»',
   ],
-  'AI и технологии': [
-    '{A} впервые узнала про нейросети... и понеслось 💀',
-    'Когда {B} объяснил что такое AI простыми словами',
-    'Реакция {A} на искусственный интеллект — БЕСЦЕННО',
-    '{B} одной фразой уничтожил весь технопрогресс',
-    'Покажи это тому кто боится что роботы заменят людей',
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': [
+    '{A} РІРїРµСЂРІС‹Рµ СѓР·РЅР°Р»Р° РїСЂРѕ РЅРµР№СЂРѕСЃРµС‚Рё... Рё РїРѕРЅРµСЃР»РѕСЃСЊ рџ’Ђ',
+    'РљРѕРіРґР° {B} РѕР±СЉСЏСЃРЅРёР» С‡С‚Рѕ С‚Р°РєРѕРµ AI РїСЂРѕСЃС‚С‹РјРё СЃР»РѕРІР°РјРё',
+    'Р РµР°РєС†РёСЏ {A} РЅР° РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№ РёРЅС‚РµР»Р»РµРєС‚ вЂ” Р‘Р•РЎР¦Р•РќРќРћ',
+    '{B} РѕРґРЅРѕР№ С„СЂР°Р·РѕР№ СѓРЅРёС‡С‚РѕР¶РёР» РІРµСЃСЊ С‚РµС…РЅРѕРїСЂРѕРіСЂРµСЃСЃ',
+    'РџРѕРєР°Р¶Рё СЌС‚Рѕ С‚РѕРјСѓ РєС‚Рѕ Р±РѕРёС‚СЃСЏ С‡С‚Рѕ СЂРѕР±РѕС‚С‹ Р·Р°РјРµРЅСЏС‚ Р»СЋРґРµР№',
   ],
-  'Цены и инфляция': [
-    '{A} зашла в магазин и ахнула... 😱',
-    'Когда {B} вспомнил цены из 90-х — {A} в шоке',
-    'Цены 2026: {A} не может поверить',
-    'Одна фраза {B} про цены заставит тебя плакать и смеяться одновременно',
-    'Вот почему {A} больше не ходит в магазин',
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': [
+    '{A} Р·Р°С€Р»Р° РІ РјР°РіР°Р·РёРЅ Рё Р°С…РЅСѓР»Р°... рџ±',
+    'РљРѕРіРґР° {B} РІСЃРїРѕРјРЅРёР» С†РµРЅС‹ РёР· 90-С… вЂ” {A} РІ С€РѕРєРµ',
+    'Р¦РµРЅС‹ 2026: {A} РЅРµ РјРѕР¶РµС‚ РїРѕРІРµСЂРёС‚СЊ',
+    'РћРґРЅР° С„СЂР°Р·Р° {B} РїСЂРѕ С†РµРЅС‹ Р·Р°СЃС‚Р°РІРёС‚ С‚РµР±СЏ РїР»Р°РєР°С‚СЊ Рё СЃРјРµСЏС‚СЊСЃСЏ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ',
+    'Р’РѕС‚ РїРѕС‡РµРјСѓ {A} Р±РѕР»СЊС€Рµ РЅРµ С…РѕРґРёС‚ РІ РјР°РіР°Р·РёРЅ',
   ],
-  'Отношения': [
-    'Когда {A} показала переписку — {B} всё объяснил одной фразой 💀',
-    '{B} рассказал как раньше ухаживали — девочки, вы не готовы',
-    'Идеальный ответ {B} на жалобы про современных мужиков',
-    '{A} описала современные отношения — {B} в ауте',
-    'Показал маме — она плакала от смеха',
+  'РћС‚РЅРѕС€РµРЅРёСЏ': [
+    'РљРѕРіРґР° {A} РїРѕРєР°Р·Р°Р»Р° РїРµСЂРµРїРёСЃРєСѓ вЂ” {B} РІСЃС‘ РѕР±СЉСЏСЃРЅРёР» РѕРґРЅРѕР№ С„СЂР°Р·РѕР№ рџ’Ђ',
+    '{B} СЂР°СЃСЃРєР°Р·Р°Р» РєР°Рє СЂР°РЅСЊС€Рµ СѓС…Р°Р¶РёРІР°Р»Рё вЂ” РґРµРІРѕС‡РєРё, РІС‹ РЅРµ РіРѕС‚РѕРІС‹',
+    'РРґРµР°Р»СЊРЅС‹Р№ РѕС‚РІРµС‚ {B} РЅР° Р¶Р°Р»РѕР±С‹ РїСЂРѕ СЃРѕРІСЂРµРјРµРЅРЅС‹С… РјСѓР¶РёРєРѕРІ',
+    '{A} РѕРїРёСЃР°Р»Р° СЃРѕРІСЂРµРјРµРЅРЅС‹Рµ РѕС‚РЅРѕС€РµРЅРёСЏ вЂ” {B} РІ Р°СѓС‚Рµ',
+    'РџРѕРєР°Р·Р°Р» РјР°РјРµ вЂ” РѕРЅР° РїР»Р°РєР°Р»Р° РѕС‚ СЃРјРµС…Р°',
   ],
-  'Разрыв поколений': [
-    '{A} узнала чем занимается внучка — реакция 💀',
-    'Когда {B} объяснил молодёжь одной фразой',
-    '{A} vs Reels: бой века',
-    'Вот так {B} видит поколение Z',
-    'Покажи бабушке — проверь реакцию 🤣',
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': [
+    '{A} СѓР·РЅР°Р»Р° С‡РµРј Р·Р°РЅРёРјР°РµС‚СЃСЏ РІРЅСѓС‡РєР° вЂ” СЂРµР°РєС†РёСЏ рџ’Ђ',
+    'РљРѕРіРґР° {B} РѕР±СЉСЏСЃРЅРёР» РјРѕР»РѕРґС‘Р¶СЊ РѕРґРЅРѕР№ С„СЂР°Р·РѕР№',
+    '{A} vs Reels: Р±РѕР№ РІРµРєР°',
+    'Р’РѕС‚ С‚Р°Рє {B} РІРёРґРёС‚ РїРѕРєРѕР»РµРЅРёРµ Z',
+    'РџРѕРєР°Р¶Рё Р±Р°Р±СѓС€РєРµ вЂ” РїСЂРѕРІРµСЂСЊ СЂРµР°РєС†РёСЋ рџ¤Ј',
   ],
-  'ЖКХ и коммуналка': [
-    '{A} получила квитанцию — сядьте 😱',
-    'Ответ {B} на счёт за ЖКХ — гениально',
-    'Вот почему {A} воюет с управляющей компанией',
-    '{B} про коммуналку — больно но смешно',
-    'Скинь это в чат дома — соседи оценят',
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': [
+    '{A} РїРѕР»СѓС‡РёР»Р° РєРІРёС‚Р°РЅС†РёСЋ вЂ” СЃСЏРґСЊС‚Рµ рџ±',
+    'РћС‚РІРµС‚ {B} РЅР° СЃС‡С‘С‚ Р·Р° Р–РљРҐ вЂ” РіРµРЅРёР°Р»СЊРЅРѕ',
+    'Р’РѕС‚ РїРѕС‡РµРјСѓ {A} РІРѕСЋРµС‚ СЃ СѓРїСЂР°РІР»СЏСЋС‰РµР№ РєРѕРјРїР°РЅРёРµР№',
+    '{B} РїСЂРѕ РєРѕРјРјСѓРЅР°Р»РєСѓ вЂ” Р±РѕР»СЊРЅРѕ РЅРѕ СЃРјРµС€РЅРѕ',
+    'РЎРєРёРЅСЊ СЌС‚Рѕ РІ С‡Р°С‚ РґРѕРјР° вЂ” СЃРѕСЃРµРґРё РѕС†РµРЅСЏС‚',
   ],
-  'Здоровье и поликлиника': [
-    '{A} после визита к врачу — я плакал 💀',
-    'Когда {B} поставил диагноз лучше доктора',
-    'Реакция {A} на совет врача — ЗОЛОТО',
-    '{B} одной фразой описал всю медицину',
-    'Покажи знакомому врачу — оценит 🤣',
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': [
+    '{A} РїРѕСЃР»Рµ РІРёР·РёС‚Р° Рє РІСЂР°С‡Сѓ вЂ” СЏ РїР»Р°РєР°Р» рџ’Ђ',
+    'РљРѕРіРґР° {B} РїРѕСЃС‚Р°РІРёР» РґРёР°РіРЅРѕР· Р»СѓС‡С€Рµ РґРѕРєС‚РѕСЂР°',
+    'Р РµР°РєС†РёСЏ {A} РЅР° СЃРѕРІРµС‚ РІСЂР°С‡Р° вЂ” Р—РћР›РћРўРћ',
+    '{B} РѕРґРЅРѕР№ С„СЂР°Р·РѕР№ РѕРїРёСЃР°Р» РІСЃСЋ РјРµРґРёС†РёРЅСѓ',
+    'РџРѕРєР°Р¶Рё Р·РЅР°РєРѕРјРѕРјСѓ РІСЂР°С‡Сѓ вЂ” РѕС†РµРЅРёС‚ рџ¤Ј',
   ],
-  'Соцсети и тренды': [
-    '{A} узнала что такое подписчики — реакция 💀',
-    'Когда {B} объяснил суть блогинга одной фразой',
-    '{A} vs Instagram: кто кого',
-    'Ответ {B} про миллион подписчиков — гениально',
-    'Скинь блогеру — пусть прозреет 🤣',
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': [
+    '{A} СѓР·РЅР°Р»Р° С‡С‚Рѕ С‚Р°РєРѕРµ РїРѕРґРїРёСЃС‡РёРєРё вЂ” СЂРµР°РєС†РёСЏ рџ’Ђ',
+    'РљРѕРіРґР° {B} РѕР±СЉСЏСЃРЅРёР» СЃСѓС‚СЊ Р±Р»РѕРіРёРЅРіР° РѕРґРЅРѕР№ С„СЂР°Р·РѕР№',
+    '{A} vs Instagram: РєС‚Рѕ РєРѕРіРѕ',
+    'РћС‚РІРµС‚ {B} РїСЂРѕ РјРёР»Р»РёРѕРЅ РїРѕРґРїРёСЃС‡РёРєРѕРІ вЂ” РіРµРЅРёР°Р»СЊРЅРѕ',
+    'РЎРєРёРЅСЊ Р±Р»РѕРіРµСЂСѓ вЂ” РїСѓСЃС‚СЊ РїСЂРѕР·СЂРµРµС‚ рџ¤Ј',
   ],
-  'Дача и огород': [
-    '{A} обнаружила что случилось с помидорами 😱',
-    'Версия {B} кто сожрал урожай — я рыдал',
-    '{A} vs огород: вечная битва',
-    'Когда {B} объяснил суть дачной жизни одной фразой',
-    'Скинь дачнику — точно узнает себя 🤣',
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': [
+    '{A} РѕР±РЅР°СЂСѓР¶РёР»Р° С‡С‚Рѕ СЃР»СѓС‡РёР»РѕСЃСЊ СЃ РїРѕРјРёРґРѕСЂР°РјРё рџ±',
+    'Р’РµСЂСЃРёСЏ {B} РєС‚Рѕ СЃРѕР¶СЂР°Р» СѓСЂРѕР¶Р°Р№ вЂ” СЏ СЂС‹РґР°Р»',
+    '{A} vs РѕРіРѕСЂРѕРґ: РІРµС‡РЅР°СЏ Р±РёС‚РІР°',
+    'РљРѕРіРґР° {B} РѕР±СЉСЏСЃРЅРёР» СЃСѓС‚СЊ РґР°С‡РЅРѕР№ Р¶РёР·РЅРё РѕРґРЅРѕР№ С„СЂР°Р·РѕР№',
+    'РЎРєРёРЅСЊ РґР°С‡РЅРёРєСѓ вЂ” С‚РѕС‡РЅРѕ СѓР·РЅР°РµС‚ СЃРµР±СЏ рџ¤Ј',
   ],
-  'Транспорт и пробки': [
-    '{A} простояла в пробке 2 часа — и вот что сказала 💀',
-    'Когда {B} сравнил транспорт — {A} в шоке',
-    '{A} vs общественный транспорт: 0-1',
-    'Ответ {B} про пробки заставит плакать водителей',
-    'Скинь тому кто каждый день стоит в пробке 🤣',
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': [
+    '{A} РїСЂРѕСЃС‚РѕСЏР»Р° РІ РїСЂРѕР±РєРµ 2 С‡Р°СЃР° вЂ” Рё РІРѕС‚ С‡С‚Рѕ СЃРєР°Р·Р°Р»Р° рџ’Ђ',
+    'РљРѕРіРґР° {B} СЃСЂР°РІРЅРёР» С‚СЂР°РЅСЃРїРѕСЂС‚ вЂ” {A} РІ С€РѕРєРµ',
+    '{A} vs РѕР±С‰РµСЃС‚РІРµРЅРЅС‹Р№ С‚СЂР°РЅСЃРїРѕСЂС‚: 0-1',
+    'РћС‚РІРµС‚ {B} РїСЂРѕ РїСЂРѕР±РєРё Р·Р°СЃС‚Р°РІРёС‚ РїР»Р°РєР°С‚СЊ РІРѕРґРёС‚РµР»РµР№',
+    'РЎРєРёРЅСЊ С‚РѕРјСѓ РєС‚Рѕ РєР°Р¶РґС‹Р№ РґРµРЅСЊ СЃС‚РѕРёС‚ РІ РїСЂРѕР±РєРµ рџ¤Ј',
   ],
 };
 
-// ─── PIN COMMENTS (ЗАКРЕПЫ) — байт на пересылку ──
+// в”Ђв”Ђв”Ђ PIN COMMENTS (Р—РђРљР Р•РџР«) вЂ” Р±Р°Р№С‚ РЅР° РїРµСЂРµСЃС‹Р»РєСѓ в”Ђв”Ђ
 const PIN_COMMENTS = {
-  'Бытовой абсурд': [
-    'Отправь тому, у кого дома такой же цирк 🎪😂',
-    'Скинь маме — она точно скажет «это про нас» 💀',
-    'Тег подругу у которой так же дома 👇',
-    'Кто узнал свою семью — ставь 🔥',
-    'Перешли в семейный чат и жди реакцию 📱',
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': [
+    'РћС‚РїСЂР°РІСЊ С‚РѕРјСѓ, Сѓ РєРѕРіРѕ РґРѕРјР° С‚Р°РєРѕР№ Р¶Рµ С†РёСЂРє рџЋЄрџ‚',
+    'РЎРєРёРЅСЊ РјР°РјРµ вЂ” РѕРЅР° С‚РѕС‡РЅРѕ СЃРєР°Р¶РµС‚ В«СЌС‚Рѕ РїСЂРѕ РЅР°СЃВ» рџ’Ђ',
+    'РўРµРі РїРѕРґСЂСѓРіСѓ Сѓ РєРѕС‚РѕСЂРѕР№ С‚Р°Рє Р¶Рµ РґРѕРјР° рџ‘‡',
+    'РљС‚Рѕ СѓР·РЅР°Р» СЃРІРѕСЋ СЃРµРјСЊСЋ вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РІ СЃРµРјРµР№РЅС‹Р№ С‡Р°С‚ Рё Р¶РґРё СЂРµР°РєС†РёСЋ рџ“±',
   ],
-  'AI и технологии': [
-    'Отправь тому, кто до сих пор боится нейросетей 🤖😂',
-    'Скинь бабушке и сними реакцию на камеру 💀',
-    'Тег друга который думает что AI — это ерунда 👇',
-    'Кто согласен с {B} — ставь 🔥',
-    'Перешли тому, кто говорит «роботы нас заменят» 📱',
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': [
+    'РћС‚РїСЂР°РІСЊ С‚РѕРјСѓ, РєС‚Рѕ РґРѕ СЃРёС… РїРѕСЂ Р±РѕРёС‚СЃСЏ РЅРµР№СЂРѕСЃРµС‚РµР№ рџ¤–рџ‚',
+    'РЎРєРёРЅСЊ Р±Р°Р±СѓС€РєРµ Рё СЃРЅРёРјРё СЂРµР°РєС†РёСЋ РЅР° РєР°РјРµСЂСѓ рџ’Ђ',
+    'РўРµРі РґСЂСѓРіР° РєРѕС‚РѕСЂС‹Р№ РґСѓРјР°РµС‚ С‡С‚Рѕ AI вЂ” СЌС‚Рѕ РµСЂСѓРЅРґР° рџ‘‡',
+    'РљС‚Рѕ СЃРѕРіР»Р°СЃРµРЅ СЃ {B} вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё С‚РѕРјСѓ, РєС‚Рѕ РіРѕРІРѕСЂРёС‚ В«СЂРѕР±РѕС‚С‹ РЅР°СЃ Р·Р°РјРµРЅСЏС‚В» рџ“±',
   ],
-  'Цены и инфляция': [
-    'Отправь тому, кто сегодня был в магазине 🛒😭',
-    'Скинь маме — она подтвердит каждое слово 💀',
-    'Тег того, кто помнит цены из 90-х 👇',
-    'Кто уже плачет на кассе — ставь 🔥',
-    'Перешли в рабочий чат — все поймут 📱',
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': [
+    'РћС‚РїСЂР°РІСЊ С‚РѕРјСѓ, РєС‚Рѕ СЃРµРіРѕРґРЅСЏ Р±С‹Р» РІ РјР°РіР°Р·РёРЅРµ рџ›’рџ­',
+    'РЎРєРёРЅСЊ РјР°РјРµ вЂ” РѕРЅР° РїРѕРґС‚РІРµСЂРґРёС‚ РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ рџ’Ђ',
+    'РўРµРі С‚РѕРіРѕ, РєС‚Рѕ РїРѕРјРЅРёС‚ С†РµРЅС‹ РёР· 90-С… рџ‘‡',
+    'РљС‚Рѕ СѓР¶Рµ РїР»Р°С‡РµС‚ РЅР° РєР°СЃСЃРµ вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РІ СЂР°Р±РѕС‡РёР№ С‡Р°С‚ вЂ” РІСЃРµ РїРѕР№РјСѓС‚ рџ“±',
   ],
-  'Отношения': [
-    'Отправь подруге которая жалуется на мужиков 💅😂',
-    'Скинь парню — пусть учится 💀',
-    'Тег того, кто так же переписывается 👇',
-    'Кто узнал себя — ставь 🔥',
-    'Перешли в женский чат и считай реакции 📱',
+  'РћС‚РЅРѕС€РµРЅРёСЏ': [
+    'РћС‚РїСЂР°РІСЊ РїРѕРґСЂСѓРіРµ РєРѕС‚РѕСЂР°СЏ Р¶Р°Р»СѓРµС‚СЃСЏ РЅР° РјСѓР¶РёРєРѕРІ рџ’…рџ‚',
+    'РЎРєРёРЅСЊ РїР°СЂРЅСЋ вЂ” РїСѓСЃС‚СЊ СѓС‡РёС‚СЃСЏ рџ’Ђ',
+    'РўРµРі С‚РѕРіРѕ, РєС‚Рѕ С‚Р°Рє Р¶Рµ РїРµСЂРµРїРёСЃС‹РІР°РµС‚СЃСЏ рџ‘‡',
+    'РљС‚Рѕ СѓР·РЅР°Р» СЃРµР±СЏ вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РІ Р¶РµРЅСЃРєРёР№ С‡Р°С‚ Рё СЃС‡РёС‚Р°Р№ СЂРµР°РєС†РёРё рџ“±',
   ],
-  'Разрыв поколений': [
-    'Скинь это бабушке — снимай реакцию на камеру 📱😂',
-    'Отправь в семейный чат — бабушка оценит 💀',
-    'Тег бумера и зумера одновременно 👇',
-    'Кто слышал такое от старших — ставь 🔥',
-    'Перешли внукам — или бабушке — кому смелее 📱',
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': [
+    'РЎРєРёРЅСЊ СЌС‚Рѕ Р±Р°Р±СѓС€РєРµ вЂ” СЃРЅРёРјР°Р№ СЂРµР°РєС†РёСЋ РЅР° РєР°РјРµСЂСѓ рџ“±рџ‚',
+    'РћС‚РїСЂР°РІСЊ РІ СЃРµРјРµР№РЅС‹Р№ С‡Р°С‚ вЂ” Р±Р°Р±СѓС€РєР° РѕС†РµРЅРёС‚ рџ’Ђ',
+    'РўРµРі Р±СѓРјРµСЂР° Рё Р·СѓРјРµСЂР° РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ рџ‘‡',
+    'РљС‚Рѕ СЃР»С‹С€Р°Р» С‚Р°РєРѕРµ РѕС‚ СЃС‚Р°СЂС€РёС… вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РІРЅСѓРєР°Рј вЂ” РёР»Рё Р±Р°Р±СѓС€РєРµ вЂ” РєРѕРјСѓ СЃРјРµР»РµРµ рџ“±',
   ],
-  'ЖКХ и коммуналка': [
-    'Скинь в чат дома — соседи поймут 🏠😂',
-    'Отправь управляющей компании 💀',
-    'Тег соседа, который тоже в шоке от квитанций 👇',
-    'Кто платит за ЖКХ — ставь 🔥 (то есть все)',
-    'Перешли тому, кто жалуется на батареи 📱',
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': [
+    'РЎРєРёРЅСЊ РІ С‡Р°С‚ РґРѕРјР° вЂ” СЃРѕСЃРµРґРё РїРѕР№РјСѓС‚ рџЏ рџ‚',
+    'РћС‚РїСЂР°РІСЊ СѓРїСЂР°РІР»СЏСЋС‰РµР№ РєРѕРјРїР°РЅРёРё рџ’Ђ',
+    'РўРµРі СЃРѕСЃРµРґР°, РєРѕС‚РѕСЂС‹Р№ С‚РѕР¶Рµ РІ С€РѕРєРµ РѕС‚ РєРІРёС‚Р°РЅС†РёР№ рџ‘‡',
+    'РљС‚Рѕ РїР»Р°С‚РёС‚ Р·Р° Р–РљРҐ вЂ” СЃС‚Р°РІСЊ рџ”Ґ (С‚Рѕ РµСЃС‚СЊ РІСЃРµ)',
+    'РџРµСЂРµС€Р»Рё С‚РѕРјСѓ, РєС‚Рѕ Р¶Р°Р»СѓРµС‚СЃСЏ РЅР° Р±Р°С‚Р°СЂРµРё рџ“±',
   ],
-  'Здоровье и поликлиника': [
-    'Скинь знакомому врачу — пусть оценит 🏥😂',
-    'Отправь тому, кто ненавидит очереди в поликлинике 💀',
-    'Тег друга который гуглит все симптомы 👇',
-    'Кто лечился по интернету — ставь 🔥',
-    'Перешли маме — она скажет «мне тоже так сказали» 📱',
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': [
+    'РЎРєРёРЅСЊ Р·РЅР°РєРѕРјРѕРјСѓ РІСЂР°С‡Сѓ вЂ” РїСѓСЃС‚СЊ РѕС†РµРЅРёС‚ рџЏҐрџ‚',
+    'РћС‚РїСЂР°РІСЊ С‚РѕРјСѓ, РєС‚Рѕ РЅРµРЅР°РІРёРґРёС‚ РѕС‡РµСЂРµРґРё РІ РїРѕР»РёРєР»РёРЅРёРєРµ рџ’Ђ',
+    'РўРµРі РґСЂСѓРіР° РєРѕС‚РѕСЂС‹Р№ РіСѓРіР»РёС‚ РІСЃРµ СЃРёРјРїС‚РѕРјС‹ рџ‘‡',
+    'РљС‚Рѕ Р»РµС‡РёР»СЃСЏ РїРѕ РёРЅС‚РµСЂРЅРµС‚Сѓ вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РјР°РјРµ вЂ” РѕРЅР° СЃРєР°Р¶РµС‚ В«РјРЅРµ С‚РѕР¶Рµ С‚Р°Рє СЃРєР°Р·Р°Р»РёВ» рџ“±',
   ],
-  'Соцсети и тренды': [
-    'Скинь блогеру — пусть прозреет 📱😂',
-    'Отправь тому, кто снимает рилсы вместо уборки 💀',
-    'Тег друга с подписчиками больше чем у тебя 👇',
-    'Кто сидит в телефоне 24/7 — ставь 🔥 (все ставим)',
-    'Перешли контент-мейкеру и жди ответ 📱',
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': [
+    'РЎРєРёРЅСЊ Р±Р»РѕРіРµСЂСѓ вЂ” РїСѓСЃС‚СЊ РїСЂРѕР·СЂРµРµС‚ рџ“±рџ‚',
+    'РћС‚РїСЂР°РІСЊ С‚РѕРјСѓ, РєС‚Рѕ СЃРЅРёРјР°РµС‚ СЂРёР»СЃС‹ РІРјРµСЃС‚Рѕ СѓР±РѕСЂРєРё рџ’Ђ',
+    'РўРµРі РґСЂСѓРіР° СЃ РїРѕРґРїРёСЃС‡РёРєР°РјРё Р±РѕР»СЊС€Рµ С‡РµРј Сѓ С‚РµР±СЏ рџ‘‡',
+    'РљС‚Рѕ СЃРёРґРёС‚ РІ С‚РµР»РµС„РѕРЅРµ 24/7 вЂ” СЃС‚Р°РІСЊ рџ”Ґ (РІСЃРµ СЃС‚Р°РІРёРј)',
+    'РџРµСЂРµС€Р»Рё РєРѕРЅС‚РµРЅС‚-РјРµР№РєРµСЂСѓ Рё Р¶РґРё РѕС‚РІРµС‚ рџ“±',
   ],
-  'Дача и огород': [
-    'Скинь в дачный чат — кто-то узнает себя 🌱😂',
-    'Отправь бабушке-огороднице 💀',
-    'Тег соседа по даче 👇',
-    'Кто потерял урожай — ставь 🔥',
-    'Перешли в семейный чат дачников 📱',
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': [
+    'РЎРєРёРЅСЊ РІ РґР°С‡РЅС‹Р№ С‡Р°С‚ вЂ” РєС‚Рѕ-С‚Рѕ СѓР·РЅР°РµС‚ СЃРµР±СЏ рџЊ±рџ‚',
+    'РћС‚РїСЂР°РІСЊ Р±Р°Р±СѓС€РєРµ-РѕРіРѕСЂРѕРґРЅРёС†Рµ рџ’Ђ',
+    'РўРµРі СЃРѕСЃРµРґР° РїРѕ РґР°С‡Рµ рџ‘‡',
+    'РљС‚Рѕ РїРѕС‚РµСЂСЏР» СѓСЂРѕР¶Р°Р№ вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РІ СЃРµРјРµР№РЅС‹Р№ С‡Р°С‚ РґР°С‡РЅРёРєРѕРІ рџ“±',
   ],
-  'Транспорт и пробки': [
-    'Скинь тому, кто прямо сейчас стоит в пробке 🚗😂',
-    'Отправь другу-водителю — он поймёт 💀',
-    'Тег того, кто ездит на самокате 👇',
-    'Кто стоял 2 часа в пробке — ставь 🔥',
-    'Перешли в рабочий чат — все опаздывающие оценят 📱',
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': [
+    'РЎРєРёРЅСЊ С‚РѕРјСѓ, РєС‚Рѕ РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ СЃС‚РѕРёС‚ РІ РїСЂРѕР±РєРµ рџљ—рџ‚',
+    'РћС‚РїСЂР°РІСЊ РґСЂСѓРіСѓ-РІРѕРґРёС‚РµР»СЋ вЂ” РѕРЅ РїРѕР№РјС‘С‚ рџ’Ђ',
+    'РўРµРі С‚РѕРіРѕ, РєС‚Рѕ РµР·РґРёС‚ РЅР° СЃР°РјРѕРєР°С‚Рµ рџ‘‡',
+    'РљС‚Рѕ СЃС‚РѕСЏР» 2 С‡Р°СЃР° РІ РїСЂРѕР±РєРµ вЂ” СЃС‚Р°РІСЊ рџ”Ґ',
+    'РџРµСЂРµС€Р»Рё РІ СЂР°Р±РѕС‡РёР№ С‡Р°С‚ вЂ” РІСЃРµ РѕРїР°Р·РґС‹РІР°СЋС‰РёРµ РѕС†РµРЅСЏС‚ рџ“±',
   ],
 };
 
-// ─── FIRST COMMENTS — провокация для вовлечения ──
+// в”Ђв”Ђв”Ђ FIRST COMMENTS вЂ” РїСЂРѕРІРѕРєР°С†РёСЏ РґР»СЏ РІРѕРІР»РµС‡РµРЅРёСЏ в”Ђв”Ђ
 const FIRST_COMMENTS = {
-  'Бытовой абсурд': [
-    'А у вас дома так же? Или только у меня? 😂',
-    'Кто прав — {A} или {B}? Жду в комментах 👇',
-    '{B} конечно жёстко ответил... но ведь правда? 🤔',
-    'Мой сосед — 1 в 1 как {A} 💀 У кого так же?',
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': [
+    'Рђ Сѓ РІР°СЃ РґРѕРјР° С‚Р°Рє Р¶Рµ? РР»Рё С‚РѕР»СЊРєРѕ Сѓ РјРµРЅСЏ? рџ‚',
+    'РљС‚Рѕ РїСЂР°РІ вЂ” {A} РёР»Рё {B}? Р–РґСѓ РІ РєРѕРјРјРµРЅС‚Р°С… рџ‘‡',
+    '{B} РєРѕРЅРµС‡РЅРѕ Р¶С‘СЃС‚РєРѕ РѕС‚РІРµС‚РёР»... РЅРѕ РІРµРґСЊ РїСЂР°РІРґР°? рџ¤”',
+    'РњРѕР№ СЃРѕСЃРµРґ вЂ” 1 РІ 1 РєР°Рє {A} рџ’Ђ РЈ РєРѕРіРѕ С‚Р°Рє Р¶Рµ?',
   ],
-  'AI и технологии': [
-    'Нейросети реально заменят всех или {A} права? 🤔',
-    'Кто больше прав — {A} или {B}? 👇',
-    'Моя бабушка такое же сказала когда увидела ChatGPT 💀',
-    'А ваши родители знают что такое AI? Расскажите 👇',
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': [
+    'РќРµР№СЂРѕСЃРµС‚Рё СЂРµР°Р»СЊРЅРѕ Р·Р°РјРµРЅСЏС‚ РІСЃРµС… РёР»Рё {A} РїСЂР°РІР°? рџ¤”',
+    'РљС‚Рѕ Р±РѕР»СЊС€Рµ РїСЂР°РІ вЂ” {A} РёР»Рё {B}? рџ‘‡',
+    'РњРѕСЏ Р±Р°Р±СѓС€РєР° С‚Р°РєРѕРµ Р¶Рµ СЃРєР°Р·Р°Р»Р° РєРѕРіРґР° СѓРІРёРґРµР»Р° ChatGPT рџ’Ђ',
+    'Рђ РІР°С€Рё СЂРѕРґРёС‚РµР»Рё Р·РЅР°СЋС‚ С‡С‚Рѕ С‚Р°РєРѕРµ AI? Р Р°СЃСЃРєР°Р¶РёС‚Рµ рџ‘‡',
   ],
-  'Цены и инфляция': [
-    'Сколько у вас молоко стоит? Давайте сравним 👇💀',
-    '{A} права или мы уже привыкли? 🤔',
-    'Помните сколько стоил хлеб 10 лет назад? 😭',
-    'У кого ещё шок от цен в 2026? 👇',
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': [
+    'РЎРєРѕР»СЊРєРѕ Сѓ РІР°СЃ РјРѕР»РѕРєРѕ СЃС‚РѕРёС‚? Р”Р°РІР°Р№С‚Рµ СЃСЂР°РІРЅРёРј рџ‘‡рџ’Ђ',
+    '{A} РїСЂР°РІР° РёР»Рё РјС‹ СѓР¶Рµ РїСЂРёРІС‹РєР»Рё? рџ¤”',
+    'РџРѕРјРЅРёС‚Рµ СЃРєРѕР»СЊРєРѕ СЃС‚РѕРёР» С…Р»РµР± 10 Р»РµС‚ РЅР°Р·Р°Рґ? рџ­',
+    'РЈ РєРѕРіРѕ РµС‰С‘ С€РѕРє РѕС‚ С†РµРЅ РІ 2026? рџ‘‡',
   ],
-  'Отношения': [
-    '{B} прав? Или сейчас другие времена? 🤔',
-    'Девочки, ваш так же пишет? 👇😂',
-    'Кто согласен с {B} — лайк, кто с {A} — коммент 👇',
-    'Покажите это своему парню — и напишите его реакцию 💀',
+  'РћС‚РЅРѕС€РµРЅРёСЏ': [
+    '{B} РїСЂР°РІ? РР»Рё СЃРµР№С‡Р°СЃ РґСЂСѓРіРёРµ РІСЂРµРјРµРЅР°? рџ¤”',
+    'Р”РµРІРѕС‡РєРё, РІР°С€ С‚Р°Рє Р¶Рµ РїРёС€РµС‚? рџ‘‡рџ‚',
+    'РљС‚Рѕ СЃРѕРіР»Р°СЃРµРЅ СЃ {B} вЂ” Р»Р°Р№Рє, РєС‚Рѕ СЃ {A} вЂ” РєРѕРјРјРµРЅС‚ рџ‘‡',
+    'РџРѕРєР°Р¶РёС‚Рµ СЌС‚Рѕ СЃРІРѕРµРјСѓ РїР°СЂРЅСЋ вЂ” Рё РЅР°РїРёС€РёС‚Рµ РµРіРѕ СЂРµР°РєС†РёСЋ рџ’Ђ',
   ],
-  'Разрыв поколений': [
-    'Вы больше {A} или {B}? 🤔 Честно!',
-    'Покажите бабушке и снимите реакцию 📱👇',
-    'Зумеры vs бумеры — вечная битва. Кто прав? 👇',
-    'Моя бабушка сказала то же самое слово в слово 💀',
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': [
+    'Р’С‹ Р±РѕР»СЊС€Рµ {A} РёР»Рё {B}? рџ¤” Р§РµСЃС‚РЅРѕ!',
+    'РџРѕРєР°Р¶РёС‚Рµ Р±Р°Р±СѓС€РєРµ Рё СЃРЅРёРјРёС‚Рµ СЂРµР°РєС†РёСЋ рџ“±рџ‘‡',
+    'Р—СѓРјРµСЂС‹ vs Р±СѓРјРµСЂС‹ вЂ” РІРµС‡РЅР°СЏ Р±РёС‚РІР°. РљС‚Рѕ РїСЂР°РІ? рџ‘‡',
+    'РњРѕСЏ Р±Р°Р±СѓС€РєР° СЃРєР°Р·Р°Р»Р° С‚Рѕ Р¶Рµ СЃР°РјРѕРµ СЃР»РѕРІРѕ РІ СЃР»РѕРІРѕ рџ’Ђ',
   ],
-  'ЖКХ и коммуналка': [
-    'Сколько вы платите за коммуналку? Давайте сравним 👇💀',
-    '{A} права, и вы это знаете 😤',
-    'У кого батареи тоже холодные? 👇🥶',
-    'Напишите сумму вашей квитанции — сравним кто больше страдает 💀',
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': [
+    'РЎРєРѕР»СЊРєРѕ РІС‹ РїР»Р°С‚РёС‚Рµ Р·Р° РєРѕРјРјСѓРЅР°Р»РєСѓ? Р”Р°РІР°Р№С‚Рµ СЃСЂР°РІРЅРёРј рџ‘‡рџ’Ђ',
+    '{A} РїСЂР°РІР°, Рё РІС‹ СЌС‚Рѕ Р·РЅР°РµС‚Рµ рџ¤',
+    'РЈ РєРѕРіРѕ Р±Р°С‚Р°СЂРµРё С‚РѕР¶Рµ С…РѕР»РѕРґРЅС‹Рµ? рџ‘‡рџҐ¶',
+    'РќР°РїРёС€РёС‚Рµ СЃСѓРјРјСѓ РІР°С€РµР№ РєРІРёС‚Р°РЅС†РёРё вЂ” СЃСЂР°РІРЅРёРј РєС‚Рѕ Р±РѕР»СЊС€Рµ СЃС‚СЂР°РґР°РµС‚ рџ’Ђ',
   ],
-  'Здоровье и поликлиника': [
-    'Вам тоже так врач говорил? 👇😂',
-    '{B} жёстко, но правда же? 💀',
-    'У кого были приколы в поликлинике? Рассказывайте 👇',
-    'Гуглите симптомы или идёте к врачу? Честно 🤔',
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': [
+    'Р’Р°Рј С‚РѕР¶Рµ С‚Р°Рє РІСЂР°С‡ РіРѕРІРѕСЂРёР»? рџ‘‡рџ‚',
+    '{B} Р¶С‘СЃС‚РєРѕ, РЅРѕ РїСЂР°РІРґР° Р¶Рµ? рџ’Ђ',
+    'РЈ РєРѕРіРѕ Р±С‹Р»Рё РїСЂРёРєРѕР»С‹ РІ РїРѕР»РёРєР»РёРЅРёРєРµ? Р Р°СЃСЃРєР°Р·С‹РІР°Р№С‚Рµ рџ‘‡',
+    'Р“СѓРіР»РёС‚Рµ СЃРёРјРїС‚РѕРјС‹ РёР»Рё РёРґС‘С‚Рµ Рє РІСЂР°С‡Сѓ? Р§РµСЃС‚РЅРѕ рџ¤”',
   ],
-  'Соцсети и тренды': [
-    'У кого ребёнок тоже «контент-мейкер»? 👇😂',
-    '{B} правда или жёстко? 🤔',
-    'Сколько времени в день сидите в телефоне? Честно 👇',
-    'Блогеры — это работа или нет? Погнали спорить 👇🔥',
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': [
+    'РЈ РєРѕРіРѕ СЂРµР±С‘РЅРѕРє С‚РѕР¶Рµ В«РєРѕРЅС‚РµРЅС‚-РјРµР№РєРµСЂВ»? рџ‘‡рџ‚',
+    '{B} РїСЂР°РІРґР° РёР»Рё Р¶С‘СЃС‚РєРѕ? рџ¤”',
+    'РЎРєРѕР»СЊРєРѕ РІСЂРµРјРµРЅРё РІ РґРµРЅСЊ СЃРёРґРёС‚Рµ РІ С‚РµР»РµС„РѕРЅРµ? Р§РµСЃС‚РЅРѕ рџ‘‡',
+    'Р‘Р»РѕРіРµСЂС‹ вЂ” СЌС‚Рѕ СЂР°Р±РѕС‚Р° РёР»Рё РЅРµС‚? РџРѕРіРЅР°Р»Рё СЃРїРѕСЂРёС‚СЊ рџ‘‡рџ”Ґ',
   ],
-  'Дача и огород': [
-    'У кого соседи тоже такие? 👇😂',
-    'Ваш урожай в этом году — оцените от 1 до 10 🍅',
-    '{A} реально так переживает за помидоры? А вы? 👇',
-    'Дачники поймут. Кто не дачник — не поймёт 🤷‍♂️',
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': [
+    'РЈ РєРѕРіРѕ СЃРѕСЃРµРґРё С‚РѕР¶Рµ С‚Р°РєРёРµ? рџ‘‡рџ‚',
+    'Р’Р°С€ СѓСЂРѕР¶Р°Р№ РІ СЌС‚РѕРј РіРѕРґСѓ вЂ” РѕС†РµРЅРёС‚Рµ РѕС‚ 1 РґРѕ 10 рџЌ…',
+    '{A} СЂРµР°Р»СЊРЅРѕ С‚Р°Рє РїРµСЂРµР¶РёРІР°РµС‚ Р·Р° РїРѕРјРёРґРѕСЂС‹? Рђ РІС‹? рџ‘‡',
+    'Р”Р°С‡РЅРёРєРё РїРѕР№РјСѓС‚. РљС‚Рѕ РЅРµ РґР°С‡РЅРёРє вЂ” РЅРµ РїРѕР№РјС‘С‚ рџ¤·вЂЌв™‚пёЏ',
   ],
-  'Транспорт и пробки': [
-    'Сколько вы стоите в пробках в день? 👇⏰',
-    '{B} прав — самокат реально быстрее? 🤔',
-    'Водители vs пешеходы — кто страдает больше? 👇',
-    'Напишите свой рекорд пробки в часах 💀',
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': [
+    'РЎРєРѕР»СЊРєРѕ РІС‹ СЃС‚РѕРёС‚Рµ РІ РїСЂРѕР±РєР°С… РІ РґРµРЅСЊ? рџ‘‡вЏ°',
+    '{B} РїСЂР°РІ вЂ” СЃР°РјРѕРєР°С‚ СЂРµР°Р»СЊРЅРѕ Р±С‹СЃС‚СЂРµРµ? рџ¤”',
+    'Р’РѕРґРёС‚РµР»Рё vs РїРµС€РµС…РѕРґС‹ вЂ” РєС‚Рѕ СЃС‚СЂР°РґР°РµС‚ Р±РѕР»СЊС€Рµ? рџ‘‡',
+    'РќР°РїРёС€РёС‚Рµ СЃРІРѕР№ СЂРµРєРѕСЂРґ РїСЂРѕР±РєРё РІ С‡Р°СЃР°С… рџ’Ђ',
   ],
 };
 
-// ─── SHARE BAIT — описание видео для пересылки ──
-// Короткая фраза в контексте видео, которая заставляет переслать другу
+// в”Ђв”Ђв”Ђ SHARE BAIT вЂ” РѕРїРёСЃР°РЅРёРµ РІРёРґРµРѕ РґР»СЏ РїРµСЂРµСЃС‹Р»РєРё в”Ђв”Ђ
+// РљРѕСЂРѕС‚РєР°СЏ С„СЂР°Р·Р° РІ РєРѕРЅС‚РµРєСЃС‚Рµ РІРёРґРµРѕ, РєРѕС‚РѕСЂР°СЏ Р·Р°СЃС‚Р°РІР»СЏРµС‚ РїРµСЂРµСЃР»Р°С‚СЊ РґСЂСѓРіСѓ
 const SHARE_BAITS = {
-  'Бытовой абсурд': [
-    'Когда {A} узнала правду — последняя фраза {B} убила 💀',
-    'Скинь маме — она скажет «это точно про нас» 😂',
-    '{A} и {B} разнесли всё за 8 секунд, последнее слово решает',
-    'Перешли тому кто поймёт — тут каждое слово в точку',
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': [
+    'РљРѕРіРґР° {A} СѓР·РЅР°Р»Р° РїСЂР°РІРґСѓ вЂ” РїРѕСЃР»РµРґРЅСЏСЏ С„СЂР°Р·Р° {B} СѓР±РёР»Р° рџ’Ђ',
+    'РЎРєРёРЅСЊ РјР°РјРµ вЂ” РѕРЅР° СЃРєР°Р¶РµС‚ В«СЌС‚Рѕ С‚РѕС‡РЅРѕ РїСЂРѕ РЅР°СЃВ» рџ‚',
+    '{A} Рё {B} СЂР°Р·РЅРµСЃР»Рё РІСЃС‘ Р·Р° 8 СЃРµРєСѓРЅРґ, РїРѕСЃР»РµРґРЅРµРµ СЃР»РѕРІРѕ СЂРµС€Р°РµС‚',
+    'РџРµСЂРµС€Р»Рё С‚РѕРјСѓ РєС‚Рѕ РїРѕР№РјС‘С‚ вЂ” С‚СѓС‚ РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ РІ С‚РѕС‡РєСѓ',
   ],
-  'AI и технологии': [
-    '{A} впервые узнала про нейросети — реакция и ответ {B} это золото 💀',
-    'Скинь тому кто боится что роботы заменят людей 🤖😂',
-    'Бабка vs искусственный интеллект — кто победил смотри до конца',
-    'Перешли айтишнику — он либо заплачет либо заржёт',
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': [
+    '{A} РІРїРµСЂРІС‹Рµ СѓР·РЅР°Р»Р° РїСЂРѕ РЅРµР№СЂРѕСЃРµС‚Рё вЂ” СЂРµР°РєС†РёСЏ Рё РѕС‚РІРµС‚ {B} СЌС‚Рѕ Р·РѕР»РѕС‚Рѕ рџ’Ђ',
+    'РЎРєРёРЅСЊ С‚РѕРјСѓ РєС‚Рѕ Р±РѕРёС‚СЃСЏ С‡С‚Рѕ СЂРѕР±РѕС‚С‹ Р·Р°РјРµРЅСЏС‚ Р»СЋРґРµР№ рџ¤–рџ‚',
+    'Р‘Р°Р±РєР° vs РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№ РёРЅС‚РµР»Р»РµРєС‚ вЂ” РєС‚Рѕ РїРѕР±РµРґРёР» СЃРјРѕС‚СЂРё РґРѕ РєРѕРЅС†Р°',
+    'РџРµСЂРµС€Р»Рё Р°Р№С‚РёС€РЅРёРєСѓ вЂ” РѕРЅ Р»РёР±Рѕ Р·Р°РїР»Р°С‡РµС‚ Р»РёР±Рѕ Р·Р°СЂР¶С‘С‚',
   ],
-  'Цены и инфляция': [
-    '{A} зашла в магазин и ответ {B} про цены — это боль всей страны 💀',
-    'Скинь маме после магазина — она подтвердит каждое слово 😭',
-    'Когда узнал цены в 2026 — последняя фраза всё объясняет',
-    'Перешли тому кто сегодня был на кассе — узнает себя',
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': [
+    '{A} Р·Р°С€Р»Р° РІ РјР°РіР°Р·РёРЅ Рё РѕС‚РІРµС‚ {B} РїСЂРѕ С†РµРЅС‹ вЂ” СЌС‚Рѕ Р±РѕР»СЊ РІСЃРµР№ СЃС‚СЂР°РЅС‹ рџ’Ђ',
+    'РЎРєРёРЅСЊ РјР°РјРµ РїРѕСЃР»Рµ РјР°РіР°Р·РёРЅР° вЂ” РѕРЅР° РїРѕРґС‚РІРµСЂРґРёС‚ РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ рџ­',
+    'РљРѕРіРґР° СѓР·РЅР°Р» С†РµРЅС‹ РІ 2026 вЂ” РїРѕСЃР»РµРґРЅСЏСЏ С„СЂР°Р·Р° РІСЃС‘ РѕР±СЉСЏСЃРЅСЏРµС‚',
+    'РџРµСЂРµС€Р»Рё С‚РѕРјСѓ РєС‚Рѕ СЃРµРіРѕРґРЅСЏ Р±С‹Р» РЅР° РєР°СЃСЃРµ вЂ” СѓР·РЅР°РµС‚ СЃРµР±СЏ',
   ],
-  'Отношения': [
-    '{A} описала современные отношения — ответ {B} это приговор 💀',
-    'Скинь подруге — она скажет «это про моего» 😂',
-    'Когда {B} объяснил суть отношений одной фразой — смотри до конца',
-    'Перешли в женский чат — там оценят последнее слово',
+  'РћС‚РЅРѕС€РµРЅРёСЏ': [
+    '{A} РѕРїРёСЃР°Р»Р° СЃРѕРІСЂРµРјРµРЅРЅС‹Рµ РѕС‚РЅРѕС€РµРЅРёСЏ вЂ” РѕС‚РІРµС‚ {B} СЌС‚Рѕ РїСЂРёРіРѕРІРѕСЂ рџ’Ђ',
+    'РЎРєРёРЅСЊ РїРѕРґСЂСѓРіРµ вЂ” РѕРЅР° СЃРєР°Р¶РµС‚ В«СЌС‚Рѕ РїСЂРѕ РјРѕРµРіРѕВ» рџ‚',
+    'РљРѕРіРґР° {B} РѕР±СЉСЏСЃРЅРёР» СЃСѓС‚СЊ РѕС‚РЅРѕС€РµРЅРёР№ РѕРґРЅРѕР№ С„СЂР°Р·РѕР№ вЂ” СЃРјРѕС‚СЂРё РґРѕ РєРѕРЅС†Р°',
+    'РџРµСЂРµС€Р»Рё РІ Р¶РµРЅСЃРєРёР№ С‡Р°С‚ вЂ” С‚Р°Рј РѕС†РµРЅСЏС‚ РїРѕСЃР»РµРґРЅРµРµ СЃР»РѕРІРѕ',
   ],
-  'Разрыв поколений': [
-    '{A} узнала чем занимается молодёжь — реакция бесценна 💀',
-    'Скинь бабушке и сними её реакцию на видео 📱😂',
-    'Бумер vs зумер за 8 секунд — кто победил решай сам',
-    'Перешли в семейный чат — бабушка узнает себя',
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': [
+    '{A} СѓР·РЅР°Р»Р° С‡РµРј Р·Р°РЅРёРјР°РµС‚СЃСЏ РјРѕР»РѕРґС‘Р¶СЊ вЂ” СЂРµР°РєС†РёСЏ Р±РµСЃС†РµРЅРЅР° рџ’Ђ',
+    'РЎРєРёРЅСЊ Р±Р°Р±СѓС€РєРµ Рё СЃРЅРёРјРё РµС‘ СЂРµР°РєС†РёСЋ РЅР° РІРёРґРµРѕ рџ“±рџ‚',
+    'Р‘СѓРјРµСЂ vs Р·СѓРјРµСЂ Р·Р° 8 СЃРµРєСѓРЅРґ вЂ” РєС‚Рѕ РїРѕР±РµРґРёР» СЂРµС€Р°Р№ СЃР°Рј',
+    'РџРµСЂРµС€Р»Рё РІ СЃРµРјРµР№РЅС‹Р№ С‡Р°С‚ вЂ” Р±Р°Р±СѓС€РєР° СѓР·РЅР°РµС‚ СЃРµР±СЏ',
   ],
-  'ЖКХ и коммуналка': [
-    '{A} получила квитанцию — ответ {B} это крик души всего дома 💀',
-    'Скинь соседям — они ровно так же реагируют 🏠😂',
-    'Когда увидел счёт за ЖКХ — последняя фраза решает',
-    'Перешли в домовой чат — все поймут',
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': [
+    '{A} РїРѕР»СѓС‡РёР»Р° РєРІРёС‚Р°РЅС†РёСЋ вЂ” РѕС‚РІРµС‚ {B} СЌС‚Рѕ РєСЂРёРє РґСѓС€Рё РІСЃРµРіРѕ РґРѕРјР° рџ’Ђ',
+    'РЎРєРёРЅСЊ СЃРѕСЃРµРґСЏРј вЂ” РѕРЅРё СЂРѕРІРЅРѕ С‚Р°Рє Р¶Рµ СЂРµР°РіРёСЂСѓСЋС‚ рџЏ рџ‚',
+    'РљРѕРіРґР° СѓРІРёРґРµР» СЃС‡С‘С‚ Р·Р° Р–РљРҐ вЂ” РїРѕСЃР»РµРґРЅСЏСЏ С„СЂР°Р·Р° СЂРµС€Р°РµС‚',
+    'РџРµСЂРµС€Р»Рё РІ РґРѕРјРѕРІРѕР№ С‡Р°С‚ вЂ” РІСЃРµ РїРѕР№РјСѓС‚',
   ],
-  'Здоровье и поликлиника': [
-    '{A} после поликлиники — ответ {B} это диагноз всей медицине 💀',
-    'Скинь знакомому врачу — пусть оценит точность 🏥😂',
-    'Когда {B} поставил диагноз точнее доктора — смотри до конца',
-    'Перешли маме — она скажет «мне тоже так сказали»',
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': [
+    '{A} РїРѕСЃР»Рµ РїРѕР»РёРєР»РёРЅРёРєРё вЂ” РѕС‚РІРµС‚ {B} СЌС‚Рѕ РґРёР°РіРЅРѕР· РІСЃРµР№ РјРµРґРёС†РёРЅРµ рџ’Ђ',
+    'РЎРєРёРЅСЊ Р·РЅР°РєРѕРјРѕРјСѓ РІСЂР°С‡Сѓ вЂ” РїСѓСЃС‚СЊ РѕС†РµРЅРёС‚ С‚РѕС‡РЅРѕСЃС‚СЊ рџЏҐрџ‚',
+    'РљРѕРіРґР° {B} РїРѕСЃС‚Р°РІРёР» РґРёР°РіРЅРѕР· С‚РѕС‡РЅРµРµ РґРѕРєС‚РѕСЂР° вЂ” СЃРјРѕС‚СЂРё РґРѕ РєРѕРЅС†Р°',
+    'РџРµСЂРµС€Р»Рё РјР°РјРµ вЂ” РѕРЅР° СЃРєР°Р¶РµС‚ В«РјРЅРµ С‚РѕР¶Рµ С‚Р°Рє СЃРєР°Р·Р°Р»РёВ»',
   ],
-  'Соцсети и тренды': [
-    '{A} узнала что такое блогинг — ответ {B} уничтожил 💀',
-    'Скинь другу-блогеру — пусть прозреет 📱😂',
-    'Бабка vs инстаграм за 8 секунд — кто кого',
-    'Перешли контент-мейкеру — последнее слово для него',
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': [
+    '{A} СѓР·РЅР°Р»Р° С‡С‚Рѕ С‚Р°РєРѕРµ Р±Р»РѕРіРёРЅРі вЂ” РѕС‚РІРµС‚ {B} СѓРЅРёС‡С‚РѕР¶РёР» рџ’Ђ',
+    'РЎРєРёРЅСЊ РґСЂСѓРіСѓ-Р±Р»РѕРіРµСЂСѓ вЂ” РїСѓСЃС‚СЊ РїСЂРѕР·СЂРµРµС‚ рџ“±рџ‚',
+    'Р‘Р°Р±РєР° vs РёРЅСЃС‚Р°РіСЂР°Рј Р·Р° 8 СЃРµРєСѓРЅРґ вЂ” РєС‚Рѕ РєРѕРіРѕ',
+    'РџРµСЂРµС€Р»Рё РєРѕРЅС‚РµРЅС‚-РјРµР№РєРµСЂСѓ вЂ” РїРѕСЃР»РµРґРЅРµРµ СЃР»РѕРІРѕ РґР»СЏ РЅРµРіРѕ',
   ],
-  'Дача и огород': [
-    '{A} обнаружила что случилось с урожаем — ответ {B} это шедевр 💀',
-    'Скинь в дачный чат — кто-то точно узнает себя 🌱😂',
-    'Когда огород важнее всего — последняя фраза решает',
-    'Перешли бабушке-огороднице — она оценит',
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': [
+    '{A} РѕР±РЅР°СЂСѓР¶РёР»Р° С‡С‚Рѕ СЃР»СѓС‡РёР»РѕСЃСЊ СЃ СѓСЂРѕР¶Р°РµРј вЂ” РѕС‚РІРµС‚ {B} СЌС‚Рѕ С€РµРґРµРІСЂ рџ’Ђ',
+    'РЎРєРёРЅСЊ РІ РґР°С‡РЅС‹Р№ С‡Р°С‚ вЂ” РєС‚Рѕ-С‚Рѕ С‚РѕС‡РЅРѕ СѓР·РЅР°РµС‚ СЃРµР±СЏ рџЊ±рџ‚',
+    'РљРѕРіРґР° РѕРіРѕСЂРѕРґ РІР°Р¶РЅРµРµ РІСЃРµРіРѕ вЂ” РїРѕСЃР»РµРґРЅСЏСЏ С„СЂР°Р·Р° СЂРµС€Р°РµС‚',
+    'РџРµСЂРµС€Р»Рё Р±Р°Р±СѓС€РєРµ-РѕРіРѕСЂРѕРґРЅРёС†Рµ вЂ” РѕРЅР° РѕС†РµРЅРёС‚',
   ],
-  'Транспорт и пробки': [
-    '{A} простояла в пробке — ответ {B} это голос каждого водителя 💀',
-    'Скинь тому кто прямо сейчас стоит в пробке 🚗😂',
-    'Когда {B} описал транспорт одной фразой — боль',
-    'Перешли другу-водителю — он поймёт с первого слова',
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': [
+    '{A} РїСЂРѕСЃС‚РѕСЏР»Р° РІ РїСЂРѕР±РєРµ вЂ” РѕС‚РІРµС‚ {B} СЌС‚Рѕ РіРѕР»РѕСЃ РєР°Р¶РґРѕРіРѕ РІРѕРґРёС‚РµР»СЏ рџ’Ђ',
+    'РЎРєРёРЅСЊ С‚РѕРјСѓ РєС‚Рѕ РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ СЃС‚РѕРёС‚ РІ РїСЂРѕР±РєРµ рџљ—рџ‚',
+    'РљРѕРіРґР° {B} РѕРїРёСЃР°Р» С‚СЂР°РЅСЃРїРѕСЂС‚ РѕРґРЅРѕР№ С„СЂР°Р·РѕР№ вЂ” Р±РѕР»СЊ',
+    'РџРµСЂРµС€Р»Рё РґСЂСѓРіСѓ-РІРѕРґРёС‚РµР»СЋ вЂ” РѕРЅ РїРѕР№РјС‘С‚ СЃ РїРµСЂРІРѕРіРѕ СЃР»РѕРІР°',
   ],
 };
 
-// ─── DEMO DIALOGUES (TIMING-SAFE) ──────────
+// в”Ђв”Ђв”Ђ DEMO DIALOGUES (TIMING-SAFE) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 // Rules: A = 5-7 words, 0-1 pause | B = 5-8 words, 0-1 pause
-// At slow(2.0 WPS): 7w = 3.5s → over A(2.8s), so slow chars need ≤5w
-// At normal(2.5 WPS): 7w/2.5 = 2.8s ✓ | 8w/2.5 = 3.2s ✓ for B
-// At fast(3.0 WPS): 7w/3.0 = 2.33s ✓ | 8w/3.0 = 2.67s ✓
+// At slow(2.0 WPS): 7w = 3.5s в†’ over A(2.8s), so slow chars need в‰¤5w
+// At normal(2.5 WPS): 7w/2.5 = 2.8s вњ“ | 8w/2.5 = 3.2s вњ“ for B
+// At fast(3.0 WPS): 7w/3.0 = 2.33s вњ“ | 8w/3.0 = 2.67s вњ“
 // Max 1 pause(+0.3s) per line. Total speech must fit 6.3s (A+B windows)
 // COMEDY RULES:
 // 1. A = emotional explosion, repetition for emphasis, rhetorical questions
 // 2. B = calm devastating reversal, unexpected angle, killer word LAST
 // 3. Killer word must REFRAME the entire argument (surprise + logic)
-// 4. NO "Зато..." pattern spam — each B response uses different comedy technique
+// 4. NO "Р—Р°С‚Рѕ..." pattern spam вЂ” each B response uses different comedy technique
 // 5. Comedy techniques: absurd comparison, callback, status reversal, deadpan logic, escalation flip
 // 6. Every line must work as standalone viral quote
-// 7. NO dashes, NO hyphens — only | for pauses
+// 7. NO dashes, NO hyphens вЂ” only | for pauses
 const DEMO_DIALOGUES = {
-  'Бытовой абсурд': {
+  'Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ': {
     A_lines: [
-      'Хлеб теперь КВАДРАТНЫЙ! Квадратный!',
-      'Пульт опять в холодильнике! Третий раз!',
-      'Соль кончилась! Кто доел СОЛЬ?!',
-      'Тапки мои кто надел?! Мои тапки!',
+      'РҐР»РµР± С‚РµРїРµСЂСЊ РљР’РђР”Р РђРўРќР«Р™! РљРІР°РґСЂР°С‚РЅС‹Р№!',
+      'РџСѓР»СЊС‚ РѕРїСЏС‚СЊ РІ С…РѕР»РѕРґРёР»СЊРЅРёРєРµ! РўСЂРµС‚РёР№ СЂР°Р·!',
+      'РЎРѕР»СЊ РєРѕРЅС‡РёР»Р°СЃСЊ! РљС‚Рѕ РґРѕРµР» РЎРћР›Р¬?!',
+      'РўР°РїРєРё РјРѕРё РєС‚Рѕ РЅР°РґРµР»?! РњРѕРё С‚Р°РїРєРё!',
     ],
     B_lines: [
-      'Земля тоже не круглая | живёшь.',
-      'Ты туда и масло кладёшь | привычка.',
-      'Ты её в чай сыпала | стаканами.',
-      'Собака второй день в них ходит | молчи.',
+      'Р—РµРјР»СЏ С‚РѕР¶Рµ РЅРµ РєСЂСѓРіР»Р°СЏ | Р¶РёРІС‘С€СЊ.',
+      'РўС‹ С‚СѓРґР° Рё РјР°СЃР»Рѕ РєР»Р°РґС‘С€СЊ | РїСЂРёРІС‹С‡РєР°.',
+      'РўС‹ РµС‘ РІ С‡Р°Р№ СЃС‹РїР°Р»Р° | СЃС‚Р°РєР°РЅР°РјРё.',
+      'РЎРѕР±Р°РєР° РІС‚РѕСЂРѕР№ РґРµРЅСЊ РІ РЅРёС… С…РѕРґРёС‚ | РјРѕР»С‡Рё.',
     ],
-    killer_word: 'живёшь'
+    killer_word: 'Р¶РёРІС‘С€СЊ'
   },
-  'AI и технологии': {
+  'AI Рё С‚РµС…РЅРѕР»РѕРіРёРё': {
     A_lines: [
-      'Твой интеллект мне борщ сварит?!',
-      'Она с телефоном разговаривает! Вслух!',
-      'Робот пылесос умнее тебя стал!',
-      'Холодильник сам продукты заказал! Сам!',
+      'РўРІРѕР№ РёРЅС‚РµР»Р»РµРєС‚ РјРЅРµ Р±РѕСЂС‰ СЃРІР°СЂРёС‚?!',
+      'РћРЅР° СЃ С‚РµР»РµС„РѕРЅРѕРј СЂР°Р·РіРѕРІР°СЂРёРІР°РµС‚! Р’СЃР»СѓС…!',
+      'Р РѕР±РѕС‚ РїС‹Р»РµСЃРѕСЃ СѓРјРЅРµРµ С‚РµР±СЏ СЃС‚Р°Р»!',
+      'РҐРѕР»РѕРґРёР»СЊРЅРёРє СЃР°Рј РїСЂРѕРґСѓРєС‚С‹ Р·Р°РєР°Р·Р°Р»! РЎР°Рј!',
     ],
     B_lines: [
-      'Он уже внуков воспитывает | заметила?',
-      'А ты с телевизором тридцать лет | нормально.',
-      'Он хотя бы работает | каждый день.',
-      'Он хоть знает что нам надо | а ты?',
+      'РћРЅ СѓР¶Рµ РІРЅСѓРєРѕРІ РІРѕСЃРїРёС‚С‹РІР°РµС‚ | Р·Р°РјРµС‚РёР»Р°?',
+      'Рђ С‚С‹ СЃ С‚РµР»РµРІРёР·РѕСЂРѕРј С‚СЂРёРґС†Р°С‚СЊ Р»РµС‚ | РЅРѕСЂРјР°Р»СЊРЅРѕ.',
+      'РћРЅ С…РѕС‚СЏ Р±С‹ СЂР°Р±РѕС‚Р°РµС‚ | РєР°Р¶РґС‹Р№ РґРµРЅСЊ.',
+      'РћРЅ С…РѕС‚СЊ Р·РЅР°РµС‚ С‡С‚Рѕ РЅР°Рј РЅР°РґРѕ | Р° С‚С‹?',
     ],
-    killer_word: 'заметила'
+    killer_word: 'Р·Р°РјРµС‚РёР»Р°'
   },
-  'Цены и инфляция': {
+  'Р¦РµРЅС‹ Рё РёРЅС„Р»СЏС†РёСЏ': {
     A_lines: [
-      'Молоко! Восемьсот рублей! МОЛОКО!',
-      'Яйца по триста! Десяток! ЯЙЦА!',
-      'Сыр дороже мяса! Сыр! Обычный!',
-      'Картошка как ананас стоит! Картошка!',
+      'РњРѕР»РѕРєРѕ! Р’РѕСЃРµРјСЊСЃРѕС‚ СЂСѓР±Р»РµР№! РњРћР›РћРљРћ!',
+      'РЇР№С†Р° РїРѕ С‚СЂРёСЃС‚Р°! Р”РµСЃСЏС‚РѕРє! РЇР™Р¦Рђ!',
+      'РЎС‹СЂ РґРѕСЂРѕР¶Рµ РјСЏСЃР°! РЎС‹СЂ! РћР±С‹С‡РЅС‹Р№!',
+      'РљР°СЂС‚РѕС€РєР° РєР°Рє Р°РЅР°РЅР°СЃ СЃС‚РѕРёС‚! РљР°СЂС‚РѕС€РєР°!',
     ],
     B_lines: [
-      'В девяносто третьем я квартиру | за столько купил.',
-      'Курица теперь живёт лучше | пенсионера.',
-      'Скоро сыр по паспорту | будут выдавать.',
-      'Ананас дешевле | вот и думай.',
+      'Р’ РґРµРІСЏРЅРѕСЃС‚Рѕ С‚СЂРµС‚СЊРµРј СЏ РєРІР°СЂС‚РёСЂСѓ | Р·Р° СЃС‚РѕР»СЊРєРѕ РєСѓРїРёР».',
+      'РљСѓСЂРёС†Р° С‚РµРїРµСЂСЊ Р¶РёРІС‘С‚ Р»СѓС‡С€Рµ | РїРµРЅСЃРёРѕРЅРµСЂР°.',
+      'РЎРєРѕСЂРѕ СЃС‹СЂ РїРѕ РїР°СЃРїРѕСЂС‚Сѓ | Р±СѓРґСѓС‚ РІС‹РґР°РІР°С‚СЊ.',
+      'РђРЅР°РЅР°СЃ РґРµС€РµРІР»Рµ | РІРѕС‚ Рё РґСѓРјР°Р№.',
     ],
-    killer_word: 'пенсионера'
+    killer_word: 'РїРµРЅСЃРёРѕРЅРµСЂР°'
   },
-  'Отношения': {
+  'РћС‚РЅРѕС€РµРЅРёСЏ': {
     A_lines: [
-      'Он пишет «привет как дела» | ухаживание?!',
-      'Муж пять лет одно и то же | «ты права»!',
-      'Цветы последний раз на похоронах видела!',
-      'Он мне на годовщину | носки подарил!',
+      'РћРЅ РїРёС€РµС‚ В«РїСЂРёРІРµС‚ РєР°Рє РґРµР»Р°В» | СѓС…Р°Р¶РёРІР°РЅРёРµ?!',
+      'РњСѓР¶ РїСЏС‚СЊ Р»РµС‚ РѕРґРЅРѕ Рё С‚Рѕ Р¶Рµ | В«С‚С‹ РїСЂР°РІР°В»!',
+      'Р¦РІРµС‚С‹ РїРѕСЃР»РµРґРЅРёР№ СЂР°Р· РЅР° РїРѕС…РѕСЂРѕРЅР°С… РІРёРґРµР»Р°!',
+      'РћРЅ РјРЅРµ РЅР° РіРѕРґРѕРІС‰РёРЅСѓ | РЅРѕСЃРєРё РїРѕРґР°СЂРёР»!',
     ],
     B_lines: [
-      'Раньше мужик забор чинил | вот любовь.',
-      'Умный мужик | зачем спорить с победителем.',
-      'Значит ты живая | уже комплимент.',
-      'Тёплые хоть? Значит | думал.',
+      'Р Р°РЅСЊС€Рµ РјСѓР¶РёРє Р·Р°Р±РѕСЂ С‡РёРЅРёР» | РІРѕС‚ Р»СЋР±РѕРІСЊ.',
+      'РЈРјРЅС‹Р№ РјСѓР¶РёРє | Р·Р°С‡РµРј СЃРїРѕСЂРёС‚СЊ СЃ РїРѕР±РµРґРёС‚РµР»РµРј.',
+      'Р—РЅР°С‡РёС‚ С‚С‹ Р¶РёРІР°СЏ | СѓР¶Рµ РєРѕРјРїР»РёРјРµРЅС‚.',
+      'РўС‘РїР»С‹Рµ С…РѕС‚СЊ? Р—РЅР°С‡РёС‚ | РґСѓРјР°Р».',
     ],
-    killer_word: 'любовь'
+    killer_word: 'Р»СЋР±РѕРІСЊ'
   },
-  'Разрыв поколений': {
+  'Р Р°Р·СЂС‹РІ РїРѕРєРѕР»РµРЅРёР№': {
     A_lines: [
-      'Внучка теперь «контент мейкер» | чё это?!',
-      'Внук говорит «ок бумер» | мне! Бабке!',
-      'Она весь день в телефоне! Весь день!',
-      'Внук за лайки работает! За ЛАЙКИ!',
+      'Р’РЅСѓС‡РєР° С‚РµРїРµСЂСЊ В«РєРѕРЅС‚РµРЅС‚ РјРµР№РєРµСЂВ» | С‡С‘ СЌС‚Рѕ?!',
+      'Р’РЅСѓРє РіРѕРІРѕСЂРёС‚ В«РѕРє Р±СѓРјРµСЂВ» | РјРЅРµ! Р‘Р°Р±РєРµ!',
+      'РћРЅР° РІРµСЃСЊ РґРµРЅСЊ РІ С‚РµР»РµС„РѕРЅРµ! Р’РµСЃСЊ РґРµРЅСЊ!',
+      'Р’РЅСѓРє Р·Р° Р»Р°Р№РєРё СЂР°Р±РѕС‚Р°РµС‚! Р—Р° Р›РђР™РљР!',
     ],
     B_lines: [
-      'Ты тоже ничего не делаешь | только красиво.',
-      'Бумер построил дом | где твой вайфай.',
-      'А ты весь день в окно | тоже экран.',
-      'Ты за трудодни работала | тоже не деньги.',
+      'РўС‹ С‚РѕР¶Рµ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС€СЊ | С‚РѕР»СЊРєРѕ РєСЂР°СЃРёРІРѕ.',
+      'Р‘СѓРјРµСЂ РїРѕСЃС‚СЂРѕРёР» РґРѕРј | РіРґРµ С‚РІРѕР№ РІР°Р№С„Р°Р№.',
+      'Рђ С‚С‹ РІРµСЃСЊ РґРµРЅСЊ РІ РѕРєРЅРѕ | С‚РѕР¶Рµ СЌРєСЂР°РЅ.',
+      'РўС‹ Р·Р° С‚СЂСѓРґРѕРґРЅРё СЂР°Р±РѕС‚Р°Р»Р° | С‚РѕР¶Рµ РЅРµ РґРµРЅСЊРіРё.',
     ],
-    killer_word: 'вайфай'
+    killer_word: 'РІР°Р№С„Р°Р№'
   },
-  'ЖКХ и коммуналка': {
+  'Р–РљРҐ Рё РєРѕРјРјСѓРЅР°Р»РєР°': {
     A_lines: [
-      'Отопление шесть тыщ | батарея ледяная!',
-      'Лифт опять сдох! Шестой этаж пешком!',
-      'Вода ржавая! Платим за ржавчину!',
-      'Счёт пришёл | я думала ипотека!',
+      'РћС‚РѕРїР»РµРЅРёРµ С€РµСЃС‚СЊ С‚С‹С‰ | Р±Р°С‚Р°СЂРµСЏ Р»РµРґСЏРЅР°СЏ!',
+      'Р›РёС„С‚ РѕРїСЏС‚СЊ СЃРґРѕС…! РЁРµСЃС‚РѕР№ СЌС‚Р°Р¶ РїРµС€РєРѕРј!',
+      'Р’РѕРґР° СЂР¶Р°РІР°СЏ! РџР»Р°С‚РёРј Р·Р° СЂР¶Р°РІС‡РёРЅСѓ!',
+      'РЎС‡С‘С‚ РїСЂРёС€С‘Р» | СЏ РґСѓРјР°Р»Р° РёРїРѕС‚РµРєР°!',
     ],
     B_lines: [
-      'Душу тебе давно натопили | бесплатно.',
-      'Ноги зато какие | фитнес и не надо.',
-      'Ржавчина полезная | железо в организме.',
-      'Ипотека дешевле | я проверял.',
+      'Р”СѓС€Сѓ С‚РµР±Рµ РґР°РІРЅРѕ РЅР°С‚РѕРїРёР»Рё | Р±РµСЃРїР»Р°С‚РЅРѕ.',
+      'РќРѕРіРё Р·Р°С‚Рѕ РєР°РєРёРµ | С„РёС‚РЅРµСЃ Рё РЅРµ РЅР°РґРѕ.',
+      'Р Р¶Р°РІС‡РёРЅР° РїРѕР»РµР·РЅР°СЏ | Р¶РµР»РµР·Рѕ РІ РѕСЂРіР°РЅРёР·РјРµ.',
+      'РРїРѕС‚РµРєР° РґРµС€РµРІР»Рµ | СЏ РїСЂРѕРІРµСЂСЏР».',
     ],
-    killer_word: 'бесплатно'
+    killer_word: 'Р±РµСЃРїР»Р°С‚РЅРѕ'
   },
-  'Здоровье и поликлиника': {
+  'Р—РґРѕСЂРѕРІСЊРµ Рё РїРѕР»РёРєР»РёРЅРёРєР°': {
     A_lines: [
-      'Врач говорит ГУГЛИТЕ! Серьёзно?!',
-      'К врачу запись через месяц | месяц!',
-      'Таблетки дороже чем сама болезнь!',
-      'Врач посмотрел и говорит | ну бывает!',
+      'Р’СЂР°С‡ РіРѕРІРѕСЂРёС‚ Р“РЈР“Р›РРўР•! РЎРµСЂСЊС‘Р·РЅРѕ?!',
+      'Рљ РІСЂР°С‡Сѓ Р·Р°РїРёСЃСЊ С‡РµСЂРµР· РјРµСЃСЏС† | РјРµСЃСЏС†!',
+      'РўР°Р±Р»РµС‚РєРё РґРѕСЂРѕР¶Рµ С‡РµРј СЃР°РјР° Р±РѕР»РµР·РЅСЊ!',
+      'Р’СЂР°С‡ РїРѕСЃРјРѕС‚СЂРµР» Рё РіРѕРІРѕСЂРёС‚ | РЅСѓ Р±С‹РІР°РµС‚!',
     ],
     B_lines: [
-      'Хорошо не сказал спроси нейросеть | похоронит.',
-      'Естественный отбор | кто дожил тот здоров.',
-      'Болезнь бесплатная | а ты жалуешься.',
-      'Правильно чего зря лечить | пройдёт.',
+      'РҐРѕСЂРѕС€Рѕ РЅРµ СЃРєР°Р·Р°Р» СЃРїСЂРѕСЃРё РЅРµР№СЂРѕСЃРµС‚СЊ | РїРѕС…РѕСЂРѕРЅРёС‚.',
+      'Р•СЃС‚РµСЃС‚РІРµРЅРЅС‹Р№ РѕС‚Р±РѕСЂ | РєС‚Рѕ РґРѕР¶РёР» С‚РѕС‚ Р·РґРѕСЂРѕРІ.',
+      'Р‘РѕР»РµР·РЅСЊ Р±РµСЃРїР»Р°С‚РЅР°СЏ | Р° С‚С‹ Р¶Р°Р»СѓРµС€СЊСЃСЏ.',
+      'РџСЂР°РІРёР»СЊРЅРѕ С‡РµРіРѕ Р·СЂСЏ Р»РµС‡РёС‚СЊ | РїСЂРѕР№РґС‘С‚.',
     ],
-    killer_word: 'похоронит'
+    killer_word: 'РїРѕС…РѕСЂРѕРЅРёС‚'
   },
-  'Соцсети и тренды': {
+  'РЎРѕС†СЃРµС‚Рё Рё С‚СЂРµРЅРґС‹': {
     A_lines: [
-      'Миллион подписчиков | а посуду не моет!',
-      'Она еду час фоткает! Суп остыл!',
-      'Селфи двести штук! Двести одинаковых!',
-      'Она с фильтром себя не узнаёт!',
+      'РњРёР»Р»РёРѕРЅ РїРѕРґРїРёСЃС‡РёРєРѕРІ | Р° РїРѕСЃСѓРґСѓ РЅРµ РјРѕРµС‚!',
+      'РћРЅР° РµРґСѓ С‡Р°СЃ С„РѕС‚РєР°РµС‚! РЎСѓРї РѕСЃС‚С‹Р»!',
+      'РЎРµР»С„Рё РґРІРµСЃС‚Рё С€С‚СѓРє! Р”РІРµСЃС‚Рё РѕРґРёРЅР°РєРѕРІС‹С…!',
+      'РћРЅР° СЃ С„РёР»СЊС‚СЂРѕРј СЃРµР±СЏ РЅРµ СѓР·РЅР°С‘С‚!',
     ],
     B_lines: [
-      'Миллион смотрят как не моет | и лайкают.',
-      'Суп твой теперь звезда | а ты нет.',
-      'Двести попыток и всё равно не то | талант.',
-      'Без фильтра никто не узнаёт | прогресс.',
+      'РњРёР»Р»РёРѕРЅ СЃРјРѕС‚СЂСЏС‚ РєР°Рє РЅРµ РјРѕРµС‚ | Рё Р»Р°Р№РєР°СЋС‚.',
+      'РЎСѓРї С‚РІРѕР№ С‚РµРїРµСЂСЊ Р·РІРµР·РґР° | Р° С‚С‹ РЅРµС‚.',
+      'Р”РІРµСЃС‚Рё РїРѕРїС‹С‚РѕРє Рё РІСЃС‘ СЂР°РІРЅРѕ РЅРµ С‚Рѕ | С‚Р°Р»Р°РЅС‚.',
+      'Р‘РµР· С„РёР»СЊС‚СЂР° РЅРёРєС‚Рѕ РЅРµ СѓР·РЅР°С‘С‚ | РїСЂРѕРіСЂРµСЃСЃ.',
     ],
-    killer_word: 'лайкают'
+    killer_word: 'Р»Р°Р№РєР°СЋС‚'
   },
-  'Дача и огород': {
+  'Р”Р°С‡Р° Рё РѕРіРѕСЂРѕРґ': {
     A_lines: [
-      'Помидоры сожрали! Все до единого!',
-      'Сосед забор передвинул! На полметра!',
-      'Кроты весь огород перекопали! Кроты!',
-      'Урожай весь сгнил! Весь! Под дождём!',
+      'РџРѕРјРёРґРѕСЂС‹ СЃРѕР¶СЂР°Р»Рё! Р’СЃРµ РґРѕ РµРґРёРЅРѕРіРѕ!',
+      'РЎРѕСЃРµРґ Р·Р°Р±РѕСЂ РїРµСЂРµРґРІРёРЅСѓР»! РќР° РїРѕР»РјРµС‚СЂР°!',
+      'РљСЂРѕС‚С‹ РІРµСЃСЊ РѕРіРѕСЂРѕРґ РїРµСЂРµРєРѕРїР°Р»Рё! РљСЂРѕС‚С‹!',
+      'РЈСЂРѕР¶Р°Р№ РІРµСЃСЊ СЃРіРЅРёР»! Р’РµСЃСЊ! РџРѕРґ РґРѕР¶РґС‘Рј!',
     ],
     B_lines: [
-      'Михалыч теперь веган | ему положено.',
-      'Его совесть растёт | в нашу сторону.',
-      'Бесплатные работники | скажи спасибо.',
-      'Дождь бесплатный | а ты платила? Нет.',
+      'РњРёС…Р°Р»С‹С‡ С‚РµРїРµСЂСЊ РІРµРіР°РЅ | РµРјСѓ РїРѕР»РѕР¶РµРЅРѕ.',
+      'Р•РіРѕ СЃРѕРІРµСЃС‚СЊ СЂР°СЃС‚С‘С‚ | РІ РЅР°С€Сѓ СЃС‚РѕСЂРѕРЅСѓ.',
+      'Р‘РµСЃРїР»Р°С‚РЅС‹Рµ СЂР°Р±РѕС‚РЅРёРєРё | СЃРєР°Р¶Рё СЃРїР°СЃРёР±Рѕ.',
+      'Р”РѕР¶РґСЊ Р±РµСЃРїР»Р°С‚РЅС‹Р№ | Р° С‚С‹ РїР»Р°С‚РёР»Р°? РќРµС‚.',
     ],
-    killer_word: 'положено'
+    killer_word: 'РїРѕР»РѕР¶РµРЅРѕ'
   },
-  'Транспорт и пробки': {
+  'РўСЂР°РЅСЃРїРѕСЂС‚ Рё РїСЂРѕР±РєРё': {
     A_lines: [
-      'Два часа стояла! Самокат обогнал!',
-      'Двести рублей за пятьсот метров! Такси!',
-      'Автобус ушёл! Перед носом! Перед!',
-      'В метро как селёдки! Дышать нечем!',
+      'Р”РІР° С‡Р°СЃР° СЃС‚РѕСЏР»Р°! РЎР°РјРѕРєР°С‚ РѕР±РѕРіРЅР°Р»!',
+      'Р”РІРµСЃС‚Рё СЂСѓР±Р»РµР№ Р·Р° РїСЏС‚СЊСЃРѕС‚ РјРµС‚СЂРѕРІ! РўР°РєСЃРё!',
+      'РђРІС‚РѕР±СѓСЃ СѓС€С‘Р»! РџРµСЂРµРґ РЅРѕСЃРѕРј! РџРµСЂРµРґ!',
+      'Р’ РјРµС‚СЂРѕ РєР°Рє СЃРµР»С‘РґРєРё! Р”С‹С€Р°С‚СЊ РЅРµС‡РµРј!',
     ],
     B_lines: [
-      'Самокат транспорт будущего | ты прошлого.',
-      'Пешком бесплатно | а ты принципиальная.',
-      'Нос у тебя длинный | вот и перед.',
-      'Селёдка молчит а ты нет | разница.',
+      'РЎР°РјРѕРєР°С‚ С‚СЂР°РЅСЃРїРѕСЂС‚ Р±СѓРґСѓС‰РµРіРѕ | С‚С‹ РїСЂРѕС€Р»РѕРіРѕ.',
+      'РџРµС€РєРѕРј Р±РµСЃРїР»Р°С‚РЅРѕ | Р° С‚С‹ РїСЂРёРЅС†РёРїРёР°Р»СЊРЅР°СЏ.',
+      'РќРѕСЃ Сѓ С‚РµР±СЏ РґР»РёРЅРЅС‹Р№ | РІРѕС‚ Рё РїРµСЂРµРґ.',
+      'РЎРµР»С‘РґРєР° РјРѕР»С‡РёС‚ Р° С‚С‹ РЅРµС‚ | СЂР°Р·РЅРёС†Р°.',
     ],
-    killer_word: 'прошлого'
+    killer_word: 'РїСЂРѕС€Р»РѕРіРѕ'
   },
 };
 
-// ─── UTILS ───────────────────────────────────
+// в”Ђв”Ђв”Ђ UTILS в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 function seededRandom(seed) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) { h = ((h << 5) - h + seed.charCodeAt(i)) | 0; }
@@ -743,126 +743,126 @@ function pickN(arr, n, rng) {
   return result;
 }
 
-// ─── RUSSIAN → ENGLISH HELPERS (for video_prompt_en_json) ───
+// в”Ђв”Ђв”Ђ RUSSIAN в†’ ENGLISH HELPERS (for video_prompt_en_json) в”Ђв”Ђв”Ђ
 function _vibeToEn(vibe, fallback) {
   if (!vibe) return fallback || 'distinctive personality';
   if (!/[\u0400-\u04FF]/.test(vibe)) return vibe;
   const l = vibe.toLowerCase();
-  if (l.includes('провокатор')) return 'provocateur';
-  if (l.includes('база') || l.includes('основ')) return 'grounded responder';
-  if (l.includes('инфлюенс') || l.includes('блогер') || l.includes('кольцев')) return 'influencer 24/7 — ring light and endless content';
-  if (l.includes('меланхол') || l.includes('театр')) return 'theatrical melancholic — every word deliberate';
-  if (l.includes('профессор') || l.includes('учёный') || l.includes('учит')) return 'professorial authority';
-  if (l.includes('хаот') || l.includes('взрыв')) return 'chaotic explosive energy';
-  if (l.includes('спокой') || l.includes('дзен')) return 'zen-like calm — devastating quiet power';
-  if (l.includes('хипст') || l.includes('модн')) return 'hipster trendsetter — ironic detachment';
-  if (l.includes('силач') || l.includes('брут')) return 'brute force simplicity';
-  if (l.includes('солд') || l.includes('воен') || l.includes('полковн')) return 'military precision and discipline';
-  if (l.includes('торгов') || l.includes('бизнес')) return 'street-smart hustler energy';
-  if (l.includes('бабк') || l.includes('бабуш')) return 'grandma wisdom with sharp tongue';
-  if (l.includes('дед')) return 'grumpy grandpa authority';
-  if (l.includes('мам') || l.includes('домохоз')) return 'protective mother energy';
-  if (l.includes('царств') || l.includes('короле')) return 'regal commanding presence';
-  if (l.includes('босс') || l.includes('директ')) return 'CEO power and authority';
-  if (l.includes('гик') || l.includes('нерд')) return 'geek culture obsessive energy';
-  if (l.includes('дач') || l.includes('огород')) return 'suburban gardener passion';
-  if (l.includes('фермер') || l.includes('деревен')) return 'village farmer pragmatism';
-  if (l.includes('тёщ') || l.includes('свекров')) return 'mother-in-law dominance';
-  if (l.includes('философ')) return 'philosophical contemplation';
-  if (l.includes('тих') || l.includes('молчал')) return 'quiet devastating authority';
-  if (l.includes('мудр')) return 'folk wisdom and life experience';
-  if (l.includes('сантехник') || l.includes('электрик') || l.includes('механик')) return 'blue-collar specialist confidence';
-  if (l.includes('повар') || l.includes('кухн')) return 'chef authority and kitchen dominance';
-  if (l.includes('продав') || l.includes('рыночн')) return 'market vendor hustle energy';
-  if (l.includes('курьер') || l.includes('достав')) return 'delivery hustle — speed and sarcasm';
-  if (l.includes('охран') || l.includes('вахт')) return 'security guard stoic authority';
-  if (l.includes('водител') || l.includes('такси')) return 'driver pragmatism and road wisdom';
-  if (l.includes('тренер') || l.includes('фитнес')) return 'fitness coach motivation';
-  if (l.includes('врач') || l.includes('доктор') || l.includes('медиц')) return 'medical authority and clinical calm';
-  if (l.includes('программист') || l.includes('айти') || l.includes('it-')) return 'programmer logic and dry humor';
-  if (l.includes('сосед')) return 'nosy neighbor energy';
-  if (l.includes('сын') || l.includes('геймер') || l.includes('качок')) return 'young male energy — confident and restless';
-  if (l.includes('доч') || l.includes('тикток')) return 'young female energy — sassy and digital-native';
-  if (l.includes('обзорщик') || l.includes('подкаст')) return 'content reviewer obsession';
-  if (l.includes('пранкер')) return 'prankster chaos energy';
-  if (l.includes('парикмах') || l.includes('салон')) return 'salon authority — scissors and opinions';
-  if (l.includes('риелтор')) return 'realtor smooth-talk energy';
-  if (l.includes('ветеринар')) return 'veterinarian gentle authority';
-  if (l.includes('готик') || l.includes('лунн')) return 'gothic dark aesthetic';
-  if (l.includes('модель') || l.includes('ледян')) return 'model composure — icy elegance';
-  if (l.includes('художниц') || l.includes('творч')) return 'artistic creative spirit';
-  if (l.includes('рыж')) return 'fiery redhead energy';
-  if (l.includes('денди') || l.includes('элегантн')) return 'dandy elegance';
-  if (l.includes('див') || l.includes('перформанс')) return 'dramatic diva presence';
-  if (l.includes('кузнец') || l.includes('кувалд')) return 'blacksmith raw power';
-  if (l.includes('орёл') || l.includes('авторитет')) return 'commanding eagle authority';
-  if (l.includes('рэпер') || l.includes('дред') || l.includes('фристайл')) return 'rapper swagger';
-  if (l.includes('скейтер') || l.includes('ссадин')) return 'skater rebel';
-  if (l.includes('ботаник') || l.includes('факт')) return 'bookworm nerd precision';
-  if (l.includes('кошатниц') || l.includes('кот')) return 'cat-lady warmth';
-  if (l.includes('сплетниц') || l.includes('бигуд')) return 'gossip queen';
-  if (l.includes('сварщик') || l.includes('искр')) return 'welder toughness';
-  if (l.includes('почтальон')) return 'postal carrier nostalgia';
-  if (l.includes('кассир')) return 'cashier stoic patience';
-  if (l.includes('участков')) return 'beat cop authority';
-  if (l.includes('ютуб') || l.includes('камер')) return 'YouTuber content obsession';
-  if (l.includes('самокат') || l.includes('рюкзак') || l.includes('молни')) return 'delivery speed demon';
-  if (l.includes('карандаш') || l.includes('строг')) return 'strict disciplinarian';
-  if (l.includes('клавиатур') || l.includes('стикер') || l.includes('стилус')) return 'creative tech personality';
-  if (l.includes('колпак') || l.includes('кондитер') || l.includes('шеф')) return 'chef commanding authority';
-  if (l.includes('бюрократ') || l.includes('печат')) return 'bureaucratic machine';
-  if (l.includes('депутат') || l.includes('обещан')) return 'politician performative charm';
-  if (l.includes('инспектор') || l.includes('нарушен')) return 'inspector rigid authority';
-  if (l.includes('борец') || l.includes('ковёр')) return 'wrestler raw power';
-  if (l.includes('марафон') || l.includes('кроссфит')) return 'endurance athlete grit';
-  if (l.includes('гигант') || l.includes('медвед')) return 'gentle giant warmth';
-  if (l.includes('волк') || l.includes('повязк')) return 'sea-wolf ruggedness';
-  if (l.includes('громил') || l.includes('золотое сердц')) return 'tough exterior golden heart';
-  if (l.includes('эмо') || l.includes('пирсинг')) return 'emo depth and sensitivity';
-  if (l.includes('кукл') || l.includes('жемчуг')) return 'retro doll elegance';
-  if (l.includes('перфекционист') || l.includes('прядь')) return 'perfectionist edge';
-  if (l.includes('магнат') || l.includes('нефтян')) return 'oil magnate power';
-  if (l.includes('стартап') || l.includes('питч') || l.includes('евангелист')) return 'startup evangelist energy';
-  if (l.includes('застройщик') || l.includes('каск')) return 'developer builder ambition';
-  if (l.includes('коуч') || l.includes('маркер')) return 'motivational coach energy';
-  if (l.includes('крипто') || l.includes('график')) return 'crypto trader intensity';
-  if (l.includes('дальнобой') || l.includes('сказител')) return 'long-haul storyteller';
-  if (l.includes('студент') || l.includes('наушник')) return 'student quiet observer';
-  if (l.includes('физрук') || l.includes('свисток')) return 'PE teacher drill sergeant';
-  if (l.includes('информатик') || l.includes('мемолог')) return 'computer teacher meme lord';
-  if (l.includes('музыкалк') || l.includes('камертон')) return 'music teacher dreamer';
-  if (l.includes('трудовик') || l.includes('опилк') || l.includes('стамеск')) return 'workshop teacher craftsman';
-  if (l.includes('англичанк')) return 'English teacher prim propriety';
-  if (l.includes('историк') || l.includes('1812')) return 'history teacher enthusiast';
-  if (l.includes('химичк') || l.includes('реакци')) return 'chemistry teacher enthusiasm';
-  if (l.includes('физик') || l.includes('мел') || l.includes('сферическ')) return 'physics teacher absent-minded';
-  if (l.includes('дизайнер') || l.includes('оттенок')) return 'designer perfectionist';
-  if (l.includes('тестировщик') || l.includes('баг')) return 'QA tester detective';
-  if (l.includes('аналитик') || l.includes('цифр')) return 'data analyst precision';
-  if (l.includes('сисадмин') || l.includes('кабел')) return 'sysadmin survivalist';
-  if (l.includes('продакт') || l.includes('бэклог')) return 'product manager multitasker';
-  if (l.includes('фронтендер')) return 'frontend developer focus';
-  if (l.includes('тимлид') || l.includes('созвон')) return 'team lead multitasker';
-  if (l.includes('кормилиц') || l.includes('скалк')) return 'nurturing feeder authority';
-  if (l.includes('король') || l.includes('шаурм')) return 'shawarma king hospitality';
-  if (l.includes('лайфстайл') || l.includes('бежев')) return 'lifestyle aesthete';
-  if (l.includes('бухгалтер') || l.includes('подсчитал')) return 'accountant precision — numbers and judgment';
-  if (l.includes('главнокоманд') || l.includes('подчин')) return 'commander-in-chief dominance';
-  if (l.includes('разведк') || l.includes('шепчет') || l.includes('фсб')) return 'neighborhood intelligence agent';
-  if (l.includes('генерал') || l.includes('душит забот')) return 'overprotective general';
-  if (l.includes('усатый') || l.includes('мнение')) return 'mustachioed expert — opinion on everything';
-  if (l.includes('десантник') || l.includes('ураган')) return 'retired paratrooper hurricane energy';
-  if (l.includes('мастер-на-все') || l.includes('починит')) return 'jack-of-all-trades fixer';
-  if (l.includes('терминатор') || l.includes('олимпиад')) return 'polite terminator — destroys arguments with logic';
-  if (l.includes('золотой рот') || l.includes('улыбка')) return 'golden smile charm';
-  if (l.includes('хирург') || l.includes('скальпел')) return 'surgical verbal precision';
-  if (l.includes('батя') || l.includes('подтяжк')) return 'retro dad — suspenders and old-school charm';
-  if (l.includes('спортсменк') || l.includes('мышц') || l.includes('побед')) return 'female athlete grit and victory';
-  if (l.includes('джазмен') || l.includes('саксофон') || l.includes('импровизац')) return 'jazz musician improvisational cool';
-  if (l.includes('костюм-за-миллион') || l.includes('считает время')) return 'millionaire suit — counts time and money';
-  if (l.includes('чиновниц') || l.includes('переделайте') || l.includes('папка жалоб')) return 'bureaucrat lady — paperwork and tea';
-  if (l.includes('архитектор') || l.includes('тубус')) return 'architect pedantic precision';
-  if (l.includes('пенсионный фонд') || l.includes('очки-половинк') || l.includes('справку')) return 'pension fund clerk — half-glasses and paperwork';
+  if (l.includes('РїСЂРѕРІРѕРєР°С‚РѕСЂ')) return 'provocateur';
+  if (l.includes('Р±Р°Р·Р°') || l.includes('РѕСЃРЅРѕРІ')) return 'grounded responder';
+  if (l.includes('РёРЅС„Р»СЋРµРЅСЃ') || l.includes('Р±Р»РѕРіРµСЂ') || l.includes('РєРѕР»СЊС†РµРІ')) return 'influencer 24/7 вЂ” ring light and endless content';
+  if (l.includes('РјРµР»Р°РЅС…РѕР»') || l.includes('С‚РµР°С‚СЂ')) return 'theatrical melancholic вЂ” every word deliberate';
+  if (l.includes('РїСЂРѕС„РµСЃСЃРѕСЂ') || l.includes('СѓС‡С‘РЅС‹Р№') || l.includes('СѓС‡РёС‚')) return 'professorial authority';
+  if (l.includes('С…Р°РѕС‚') || l.includes('РІР·СЂС‹РІ')) return 'chaotic explosive energy';
+  if (l.includes('СЃРїРѕРєРѕР№') || l.includes('РґР·РµРЅ')) return 'zen-like calm вЂ” devastating quiet power';
+  if (l.includes('С…РёРїСЃС‚') || l.includes('РјРѕРґРЅ')) return 'hipster trendsetter вЂ” ironic detachment';
+  if (l.includes('СЃРёР»Р°С‡') || l.includes('Р±СЂСѓС‚')) return 'brute force simplicity';
+  if (l.includes('СЃРѕР»Рґ') || l.includes('РІРѕРµРЅ') || l.includes('РїРѕР»РєРѕРІРЅ')) return 'military precision and discipline';
+  if (l.includes('С‚РѕСЂРіРѕРІ') || l.includes('Р±РёР·РЅРµСЃ')) return 'street-smart hustler energy';
+  if (l.includes('Р±Р°Р±Рє') || l.includes('Р±Р°Р±СѓС€')) return 'grandma wisdom with sharp tongue';
+  if (l.includes('РґРµРґ')) return 'grumpy grandpa authority';
+  if (l.includes('РјР°Рј') || l.includes('РґРѕРјРѕС…РѕР·')) return 'protective mother energy';
+  if (l.includes('С†Р°СЂСЃС‚РІ') || l.includes('РєРѕСЂРѕР»Рµ')) return 'regal commanding presence';
+  if (l.includes('Р±РѕСЃСЃ') || l.includes('РґРёСЂРµРєС‚')) return 'CEO power and authority';
+  if (l.includes('РіРёРє') || l.includes('РЅРµСЂРґ')) return 'geek culture obsessive energy';
+  if (l.includes('РґР°С‡') || l.includes('РѕРіРѕСЂРѕРґ')) return 'suburban gardener passion';
+  if (l.includes('С„РµСЂРјРµСЂ') || l.includes('РґРµСЂРµРІРµРЅ')) return 'village farmer pragmatism';
+  if (l.includes('С‚С‘С‰') || l.includes('СЃРІРµРєСЂРѕРІ')) return 'mother-in-law dominance';
+  if (l.includes('С„РёР»РѕСЃРѕС„')) return 'philosophical contemplation';
+  if (l.includes('С‚РёС…') || l.includes('РјРѕР»С‡Р°Р»')) return 'quiet devastating authority';
+  if (l.includes('РјСѓРґСЂ')) return 'folk wisdom and life experience';
+  if (l.includes('СЃР°РЅС‚РµС…РЅРёРє') || l.includes('СЌР»РµРєС‚СЂРёРє') || l.includes('РјРµС…Р°РЅРёРє')) return 'blue-collar specialist confidence';
+  if (l.includes('РїРѕРІР°СЂ') || l.includes('РєСѓС…РЅ')) return 'chef authority and kitchen dominance';
+  if (l.includes('РїСЂРѕРґР°РІ') || l.includes('СЂС‹РЅРѕС‡РЅ')) return 'market vendor hustle energy';
+  if (l.includes('РєСѓСЂСЊРµСЂ') || l.includes('РґРѕСЃС‚Р°РІ')) return 'delivery hustle вЂ” speed and sarcasm';
+  if (l.includes('РѕС…СЂР°РЅ') || l.includes('РІР°С…С‚')) return 'security guard stoic authority';
+  if (l.includes('РІРѕРґРёС‚РµР»') || l.includes('С‚Р°РєСЃРё')) return 'driver pragmatism and road wisdom';
+  if (l.includes('С‚СЂРµРЅРµСЂ') || l.includes('С„РёС‚РЅРµСЃ')) return 'fitness coach motivation';
+  if (l.includes('РІСЂР°С‡') || l.includes('РґРѕРєС‚РѕСЂ') || l.includes('РјРµРґРёС†')) return 'medical authority and clinical calm';
+  if (l.includes('РїСЂРѕРіСЂР°РјРјРёСЃС‚') || l.includes('Р°Р№С‚Рё') || l.includes('it-')) return 'programmer logic and dry humor';
+  if (l.includes('СЃРѕСЃРµРґ')) return 'nosy neighbor energy';
+  if (l.includes('СЃС‹РЅ') || l.includes('РіРµР№РјРµСЂ') || l.includes('РєР°С‡РѕРє')) return 'young male energy вЂ” confident and restless';
+  if (l.includes('РґРѕС‡') || l.includes('С‚РёРєС‚РѕРє')) return 'young female energy вЂ” sassy and digital-native';
+  if (l.includes('РѕР±Р·РѕСЂС‰РёРє') || l.includes('РїРѕРґРєР°СЃС‚')) return 'content reviewer obsession';
+  if (l.includes('РїСЂР°РЅРєРµСЂ')) return 'prankster chaos energy';
+  if (l.includes('РїР°СЂРёРєРјР°С…') || l.includes('СЃР°Р»РѕРЅ')) return 'salon authority вЂ” scissors and opinions';
+  if (l.includes('СЂРёРµР»С‚РѕСЂ')) return 'realtor smooth-talk energy';
+  if (l.includes('РІРµС‚РµСЂРёРЅР°СЂ')) return 'veterinarian gentle authority';
+  if (l.includes('РіРѕС‚РёРє') || l.includes('Р»СѓРЅРЅ')) return 'gothic dark aesthetic';
+  if (l.includes('РјРѕРґРµР»СЊ') || l.includes('Р»РµРґСЏРЅ')) return 'model composure вЂ” icy elegance';
+  if (l.includes('С…СѓРґРѕР¶РЅРёС†') || l.includes('С‚РІРѕСЂС‡')) return 'artistic creative spirit';
+  if (l.includes('СЂС‹Р¶')) return 'fiery redhead energy';
+  if (l.includes('РґРµРЅРґРё') || l.includes('СЌР»РµРіР°РЅС‚РЅ')) return 'dandy elegance';
+  if (l.includes('РґРёРІ') || l.includes('РїРµСЂС„РѕСЂРјР°РЅСЃ')) return 'dramatic diva presence';
+  if (l.includes('РєСѓР·РЅРµС†') || l.includes('РєСѓРІР°Р»Рґ')) return 'blacksmith raw power';
+  if (l.includes('РѕСЂС‘Р»') || l.includes('Р°РІС‚РѕСЂРёС‚РµС‚')) return 'commanding eagle authority';
+  if (l.includes('СЂСЌРїРµСЂ') || l.includes('РґСЂРµРґ') || l.includes('С„СЂРёСЃС‚Р°Р№Р»')) return 'rapper swagger';
+  if (l.includes('СЃРєРµР№С‚РµСЂ') || l.includes('СЃСЃР°РґРёРЅ')) return 'skater rebel';
+  if (l.includes('Р±РѕС‚Р°РЅРёРє') || l.includes('С„Р°РєС‚')) return 'bookworm nerd precision';
+  if (l.includes('РєРѕС€Р°С‚РЅРёС†') || l.includes('РєРѕС‚')) return 'cat-lady warmth';
+  if (l.includes('СЃРїР»РµС‚РЅРёС†') || l.includes('Р±РёРіСѓРґ')) return 'gossip queen';
+  if (l.includes('СЃРІР°СЂС‰РёРє') || l.includes('РёСЃРєСЂ')) return 'welder toughness';
+  if (l.includes('РїРѕС‡С‚Р°Р»СЊРѕРЅ')) return 'postal carrier nostalgia';
+  if (l.includes('РєР°СЃСЃРёСЂ')) return 'cashier stoic patience';
+  if (l.includes('СѓС‡Р°СЃС‚РєРѕРІ')) return 'beat cop authority';
+  if (l.includes('СЋС‚СѓР±') || l.includes('РєР°РјРµСЂ')) return 'YouTuber content obsession';
+  if (l.includes('СЃР°РјРѕРєР°С‚') || l.includes('СЂСЋРєР·Р°Рє') || l.includes('РјРѕР»РЅРё')) return 'delivery speed demon';
+  if (l.includes('РєР°СЂР°РЅРґР°С€') || l.includes('СЃС‚СЂРѕРі')) return 'strict disciplinarian';
+  if (l.includes('РєР»Р°РІРёР°С‚СѓСЂ') || l.includes('СЃС‚РёРєРµСЂ') || l.includes('СЃС‚РёР»СѓСЃ')) return 'creative tech personality';
+  if (l.includes('РєРѕР»РїР°Рє') || l.includes('РєРѕРЅРґРёС‚РµСЂ') || l.includes('С€РµС„')) return 'chef commanding authority';
+  if (l.includes('Р±СЋСЂРѕРєСЂР°С‚') || l.includes('РїРµС‡Р°С‚')) return 'bureaucratic machine';
+  if (l.includes('РґРµРїСѓС‚Р°С‚') || l.includes('РѕР±РµС‰Р°РЅ')) return 'politician performative charm';
+  if (l.includes('РёРЅСЃРїРµРєС‚РѕСЂ') || l.includes('РЅР°СЂСѓС€РµРЅ')) return 'inspector rigid authority';
+  if (l.includes('Р±РѕСЂРµС†') || l.includes('РєРѕРІС‘СЂ')) return 'wrestler raw power';
+  if (l.includes('РјР°СЂР°С„РѕРЅ') || l.includes('РєСЂРѕСЃСЃС„РёС‚')) return 'endurance athlete grit';
+  if (l.includes('РіРёРіР°РЅС‚') || l.includes('РјРµРґРІРµРґ')) return 'gentle giant warmth';
+  if (l.includes('РІРѕР»Рє') || l.includes('РїРѕРІСЏР·Рє')) return 'sea-wolf ruggedness';
+  if (l.includes('РіСЂРѕРјРёР»') || l.includes('Р·РѕР»РѕС‚РѕРµ СЃРµСЂРґС†')) return 'tough exterior golden heart';
+  if (l.includes('СЌРјРѕ') || l.includes('РїРёСЂСЃРёРЅРі')) return 'emo depth and sensitivity';
+  if (l.includes('РєСѓРєР»') || l.includes('Р¶РµРјС‡СѓРі')) return 'retro doll elegance';
+  if (l.includes('РїРµСЂС„РµРєС†РёРѕРЅРёСЃС‚') || l.includes('РїСЂСЏРґСЊ')) return 'perfectionist edge';
+  if (l.includes('РјР°РіРЅР°С‚') || l.includes('РЅРµС„С‚СЏРЅ')) return 'oil magnate power';
+  if (l.includes('СЃС‚Р°СЂС‚Р°Рї') || l.includes('РїРёС‚С‡') || l.includes('РµРІР°РЅРіРµР»РёСЃС‚')) return 'startup evangelist energy';
+  if (l.includes('Р·Р°СЃС‚СЂРѕР№С‰РёРє') || l.includes('РєР°СЃРє')) return 'developer builder ambition';
+  if (l.includes('РєРѕСѓС‡') || l.includes('РјР°СЂРєРµСЂ')) return 'motivational coach energy';
+  if (l.includes('РєСЂРёРїС‚Рѕ') || l.includes('РіСЂР°С„РёРє')) return 'crypto trader intensity';
+  if (l.includes('РґР°Р»СЊРЅРѕР±РѕР№') || l.includes('СЃРєР°Р·РёС‚РµР»')) return 'long-haul storyteller';
+  if (l.includes('СЃС‚СѓРґРµРЅС‚') || l.includes('РЅР°СѓС€РЅРёРє')) return 'student quiet observer';
+  if (l.includes('С„РёР·СЂСѓРє') || l.includes('СЃРІРёСЃС‚РѕРє')) return 'PE teacher drill sergeant';
+  if (l.includes('РёРЅС„РѕСЂРјР°С‚РёРє') || l.includes('РјРµРјРѕР»РѕРі')) return 'computer teacher meme lord';
+  if (l.includes('РјСѓР·С‹РєР°Р»Рє') || l.includes('РєР°РјРµСЂС‚РѕРЅ')) return 'music teacher dreamer';
+  if (l.includes('С‚СЂСѓРґРѕРІРёРє') || l.includes('РѕРїРёР»Рє') || l.includes('СЃС‚Р°РјРµСЃРє')) return 'workshop teacher craftsman';
+  if (l.includes('Р°РЅРіР»РёС‡Р°РЅРє')) return 'English teacher prim propriety';
+  if (l.includes('РёСЃС‚РѕСЂРёРє') || l.includes('1812')) return 'history teacher enthusiast';
+  if (l.includes('С…РёРјРёС‡Рє') || l.includes('СЂРµР°РєС†Рё')) return 'chemistry teacher enthusiasm';
+  if (l.includes('С„РёР·РёРє') || l.includes('РјРµР»') || l.includes('СЃС„РµСЂРёС‡РµСЃРє')) return 'physics teacher absent-minded';
+  if (l.includes('РґРёР·Р°Р№РЅРµСЂ') || l.includes('РѕС‚С‚РµРЅРѕРє')) return 'designer perfectionist';
+  if (l.includes('С‚РµСЃС‚РёСЂРѕРІС‰РёРє') || l.includes('Р±Р°Рі')) return 'QA tester detective';
+  if (l.includes('Р°РЅР°Р»РёС‚РёРє') || l.includes('С†РёС„СЂ')) return 'data analyst precision';
+  if (l.includes('СЃРёСЃР°РґРјРёРЅ') || l.includes('РєР°Р±РµР»')) return 'sysadmin survivalist';
+  if (l.includes('РїСЂРѕРґР°РєС‚') || l.includes('Р±СЌРєР»РѕРі')) return 'product manager multitasker';
+  if (l.includes('С„СЂРѕРЅС‚РµРЅРґРµСЂ')) return 'frontend developer focus';
+  if (l.includes('С‚РёРјР»РёРґ') || l.includes('СЃРѕР·РІРѕРЅ')) return 'team lead multitasker';
+  if (l.includes('РєРѕСЂРјРёР»РёС†') || l.includes('СЃРєР°Р»Рє')) return 'nurturing feeder authority';
+  if (l.includes('РєРѕСЂРѕР»СЊ') || l.includes('С€Р°СѓСЂРј')) return 'shawarma king hospitality';
+  if (l.includes('Р»Р°Р№С„СЃС‚Р°Р№Р»') || l.includes('Р±РµР¶РµРІ')) return 'lifestyle aesthete';
+  if (l.includes('Р±СѓС…РіР°Р»С‚РµСЂ') || l.includes('РїРѕРґСЃС‡РёС‚Р°Р»')) return 'accountant precision вЂ” numbers and judgment';
+  if (l.includes('РіР»Р°РІРЅРѕРєРѕРјР°РЅРґ') || l.includes('РїРѕРґС‡РёРЅ')) return 'commander-in-chief dominance';
+  if (l.includes('СЂР°Р·РІРµРґРє') || l.includes('С€РµРїС‡РµС‚') || l.includes('С„СЃР±')) return 'neighborhood intelligence agent';
+  if (l.includes('РіРµРЅРµСЂР°Р»') || l.includes('РґСѓС€РёС‚ Р·Р°Р±РѕС‚')) return 'overprotective general';
+  if (l.includes('СѓСЃР°С‚С‹Р№') || l.includes('РјРЅРµРЅРёРµ')) return 'mustachioed expert вЂ” opinion on everything';
+  if (l.includes('РґРµСЃР°РЅС‚РЅРёРє') || l.includes('СѓСЂР°РіР°РЅ')) return 'retired paratrooper hurricane energy';
+  if (l.includes('РјР°СЃС‚РµСЂ-РЅР°-РІСЃРµ') || l.includes('РїРѕС‡РёРЅРёС‚')) return 'jack-of-all-trades fixer';
+  if (l.includes('С‚РµСЂРјРёРЅР°С‚РѕСЂ') || l.includes('РѕР»РёРјРїРёР°Рґ')) return 'polite terminator вЂ” destroys arguments with logic';
+  if (l.includes('Р·РѕР»РѕС‚РѕР№ СЂРѕС‚') || l.includes('СѓР»С‹Р±РєР°')) return 'golden smile charm';
+  if (l.includes('С…РёСЂСѓСЂРі') || l.includes('СЃРєР°Р»СЊРїРµР»')) return 'surgical verbal precision';
+  if (l.includes('Р±Р°С‚СЏ') || l.includes('РїРѕРґС‚СЏР¶Рє')) return 'retro dad вЂ” suspenders and old-school charm';
+  if (l.includes('СЃРїРѕСЂС‚СЃРјРµРЅРє') || l.includes('РјС‹С€С†') || l.includes('РїРѕР±РµРґ')) return 'female athlete grit and victory';
+  if (l.includes('РґР¶Р°Р·РјРµРЅ') || l.includes('СЃР°РєСЃРѕС„РѕРЅ') || l.includes('РёРјРїСЂРѕРІРёР·Р°С†')) return 'jazz musician improvisational cool';
+  if (l.includes('РєРѕСЃС‚СЋРј-Р·Р°-РјРёР»Р»РёРѕРЅ') || l.includes('СЃС‡РёС‚Р°РµС‚ РІСЂРµРјСЏ')) return 'millionaire suit вЂ” counts time and money';
+  if (l.includes('С‡РёРЅРѕРІРЅРёС†') || l.includes('РїРµСЂРµРґРµР»Р°Р№С‚Рµ') || l.includes('РїР°РїРєР° Р¶Р°Р»РѕР±')) return 'bureaucrat lady вЂ” paperwork and tea';
+  if (l.includes('Р°СЂС…РёС‚РµРєС‚РѕСЂ') || l.includes('С‚СѓР±СѓСЃ')) return 'architect pedantic precision';
+  if (l.includes('РїРµРЅСЃРёРѕРЅРЅС‹Р№ С„РѕРЅРґ') || l.includes('РѕС‡РєРё-РїРѕР»РѕРІРёРЅРє') || l.includes('СЃРїСЂР°РІРєСѓ')) return 'pension fund clerk вЂ” half-glasses and paperwork';
   return vibe;
 }
 
@@ -870,69 +870,69 @@ function _aestheticToEn(aes) {
   if (!aes) return 'authentic domestic realism';
   if (!/[\u0400-\u04FF]/.test(aes)) return aes;
   const l = aes.toLowerCase();
-  if (l.includes('инстаграм') || l.includes('instagram')) return 'instagram-reality';
-  if (l.includes('деревен') || l.includes('уют')) return 'cozy-village-VIP';
-  if (l.includes('совет') || l.includes('ностальг')) return 'soviet-nostalgia';
-  if (l.includes('гламур') || l.includes('роскош')) return 'glamorous-excess';
-  if (l.includes('панк') || l.includes('неон')) return 'neon-punk';
-  if (l.includes('минимал')) return 'urban-minimalism';
-  if (l.includes('ретро')) return 'retro-charm';
-  if (l.includes('домашн')) return 'domestic-intimacy';
-  if (l.includes('военн') || l.includes('армей')) return 'military-order';
-  if (l.includes('хипстер')) return 'hipster-casual';
-  if (l.includes('базар') || l.includes('рынок') || l.includes('рыночн')) return 'bazaar-chaos';
-  if (l.includes('дач')) return 'dacha-rustic';
-  if (l.includes('нуар')) return 'gritty-noir';
-  if (l.includes('реализм')) return 'gritty-realism';
-  if (l.includes('хаос')) return 'chaotic-energy';
-  if (l.includes('ночн')) return 'nocturnal-atmosphere';
-  if (l.includes('шик') || l.includes('элит') || l.includes('люкс')) return 'chic-elegance';
-  if (l.includes('городск')) return 'urban-grit';
-  if (l.includes('портов')) return 'port-town-roughness';
-  if (l.includes('больничн') || l.includes('стерильн') || l.includes('чистот')) return 'clinical-sterility';
-  if (l.includes('спортивн') || l.includes('стадион')) return 'athletic-energy';
-  if (l.includes('кухн')) return 'kitchen-drama';
-  if (l.includes('офис') || l.includes('корпорат') || l.includes('коворкинг')) return 'office-corporate';
-  if (l.includes('школьн') || l.includes('кабинет')) return 'institutional-school';
-  if (l.includes('серверн') || l.includes('бункер')) return 'server-room-bunker';
-  if (l.includes('студи')) return 'studio-creative';
-  if (l.includes('квартир') || l.includes('комнат')) return 'apartment-intimate';
-  if (l.includes('подъезд') || l.includes('район')) return 'stairwell-grit';
-  if (l.includes('магазин') || l.includes('маркетплейс')) return 'retail-chaos';
-  if (l.includes('зал') || l.includes('ринг') || l.includes('бокс') || l.includes('бассейн')) return 'gym-athletic';
-  if (l.includes('гараж')) return 'garage-workshop';
-  if (l.includes('стройк')) return 'construction-site-raw';
-  if (l.includes('трасс') || l.includes('пробк') || l.includes('дорог') || l.includes('кабин')) return 'road-journey';
-  if (l.includes('доставк') || l.includes('курьер')) return 'delivery-hustle';
-  if (l.includes('мфц') || l.includes('паспорт') || l.includes('налогов') || l.includes('администрац') || l.includes('жкх') || l.includes('пенсион')) return 'bureaucratic-institution';
-  if (l.includes('богемн') || l.includes('винтаж')) return 'bohemian-vintage';
-  if (l.includes('петербург') || l.includes('москов')) return 'imperial-Russian-elegance';
-  if (l.includes('кавказ')) return 'Caucasian-warmth';
-  if (l.includes('девяност')) return '90s-post-Soviet-raw';
-  if (l.includes('трейдинг') || l.includes('бизнес') || l.includes('имперск') || l.includes('делов')) return 'business-power';
-  if (l.includes('творческ') || l.includes('худож')) return 'creative-artistic';
-  if (l.includes('готик') || l.includes('лунн')) return 'dark-gothic';
-  if (l.includes('проходн') || l.includes('подвал') || l.includes('щиток')) return 'industrial-gritty';
-  if (l.includes('клиник') || l.includes('салон')) return 'clean-professional';
-  if (l.includes('скандинав')) return 'Scandinavian-noir';
-  if (l.includes('хип-хоп') || l.includes('скейт')) return 'street-urban';
-  if (l.includes('фестивал')) return 'festival-vibe';
-  if (l.includes('джаз') || l.includes('клуб')) return 'jazz-club-atmosphere';
-  if (l.includes('мастерск') || l.includes('кузнеч')) return 'workshop-craft';
-  if (l.includes('столов')) return 'cafeteria-communal';
-  if (l.includes('мангал') || l.includes('пикник')) return 'outdoor-grill';
-  if (l.includes('родительск') || l.includes('чат')) return 'parental-group-chat';
-  if (l.includes('травян') || l.includes('аптек')) return 'herbal-apothecary';
-  if (l.includes('университет') || l.includes('пыль')) return 'academic-dusty';
-  if (l.includes('кукольн')) return 'dollhouse-kitsch';
-  if (l.includes('тренинг') || l.includes('конференц')) return 'conference-corporate';
-  if (l.includes('карт') || l.includes('пешком')) return 'city-exploration';
-  if (l.includes('дрифт')) return 'drift-adrenaline';
-  if (l.includes('кафе') || l.includes('ресторан') || l.includes('эстетик')) return 'cafe-aesthetic';
-  if (l.includes('улиц') || l.includes('пранк')) return 'street-prank';
-  if (l.includes('блог') || l.includes('рилс') || l.includes('распаков') || l.includes('контент')) return 'content-creator-space';
-  if (l.includes('дом') || l.includes('штаб')) return 'home-headquarters';
-  if (l.includes('деревня') || l.includes('в-городе')) return 'village-in-city';
+  if (l.includes('РёРЅСЃС‚Р°РіСЂР°Рј') || l.includes('instagram')) return 'instagram-reality';
+  if (l.includes('РґРµСЂРµРІРµРЅ') || l.includes('СѓСЋС‚')) return 'cozy-village-VIP';
+  if (l.includes('СЃРѕРІРµС‚') || l.includes('РЅРѕСЃС‚Р°Р»СЊРі')) return 'soviet-nostalgia';
+  if (l.includes('РіР»Р°РјСѓСЂ') || l.includes('СЂРѕСЃРєРѕС€')) return 'glamorous-excess';
+  if (l.includes('РїР°РЅРє') || l.includes('РЅРµРѕРЅ')) return 'neon-punk';
+  if (l.includes('РјРёРЅРёРјР°Р»')) return 'urban-minimalism';
+  if (l.includes('СЂРµС‚СЂРѕ')) return 'retro-charm';
+  if (l.includes('РґРѕРјР°С€РЅ')) return 'domestic-intimacy';
+  if (l.includes('РІРѕРµРЅРЅ') || l.includes('Р°СЂРјРµР№')) return 'military-order';
+  if (l.includes('С…РёРїСЃС‚РµСЂ')) return 'hipster-casual';
+  if (l.includes('Р±Р°Р·Р°СЂ') || l.includes('СЂС‹РЅРѕРє') || l.includes('СЂС‹РЅРѕС‡РЅ')) return 'bazaar-chaos';
+  if (l.includes('РґР°С‡')) return 'dacha-rustic';
+  if (l.includes('РЅСѓР°СЂ')) return 'gritty-noir';
+  if (l.includes('СЂРµР°Р»РёР·Рј')) return 'gritty-realism';
+  if (l.includes('С…Р°РѕСЃ')) return 'chaotic-energy';
+  if (l.includes('РЅРѕС‡РЅ')) return 'nocturnal-atmosphere';
+  if (l.includes('С€РёРє') || l.includes('СЌР»РёС‚') || l.includes('Р»СЋРєСЃ')) return 'chic-elegance';
+  if (l.includes('РіРѕСЂРѕРґСЃРє')) return 'urban-grit';
+  if (l.includes('РїРѕСЂС‚РѕРІ')) return 'port-town-roughness';
+  if (l.includes('Р±РѕР»СЊРЅРёС‡РЅ') || l.includes('СЃС‚РµСЂРёР»СЊРЅ') || l.includes('С‡РёСЃС‚РѕС‚')) return 'clinical-sterility';
+  if (l.includes('СЃРїРѕСЂС‚РёРІРЅ') || l.includes('СЃС‚Р°РґРёРѕРЅ')) return 'athletic-energy';
+  if (l.includes('РєСѓС…РЅ')) return 'kitchen-drama';
+  if (l.includes('РѕС„РёСЃ') || l.includes('РєРѕСЂРїРѕСЂР°С‚') || l.includes('РєРѕРІРѕСЂРєРёРЅРі')) return 'office-corporate';
+  if (l.includes('С€РєРѕР»СЊРЅ') || l.includes('РєР°Р±РёРЅРµС‚')) return 'institutional-school';
+  if (l.includes('СЃРµСЂРІРµСЂРЅ') || l.includes('Р±СѓРЅРєРµСЂ')) return 'server-room-bunker';
+  if (l.includes('СЃС‚СѓРґРё')) return 'studio-creative';
+  if (l.includes('РєРІР°СЂС‚РёСЂ') || l.includes('РєРѕРјРЅР°С‚')) return 'apartment-intimate';
+  if (l.includes('РїРѕРґСЉРµР·Рґ') || l.includes('СЂР°Р№РѕРЅ')) return 'stairwell-grit';
+  if (l.includes('РјР°РіР°Р·РёРЅ') || l.includes('РјР°СЂРєРµС‚РїР»РµР№СЃ')) return 'retail-chaos';
+  if (l.includes('Р·Р°Р»') || l.includes('СЂРёРЅРі') || l.includes('Р±РѕРєСЃ') || l.includes('Р±Р°СЃСЃРµР№РЅ')) return 'gym-athletic';
+  if (l.includes('РіР°СЂР°Р¶')) return 'garage-workshop';
+  if (l.includes('СЃС‚СЂРѕР№Рє')) return 'construction-site-raw';
+  if (l.includes('С‚СЂР°СЃСЃ') || l.includes('РїСЂРѕР±Рє') || l.includes('РґРѕСЂРѕРі') || l.includes('РєР°Р±РёРЅ')) return 'road-journey';
+  if (l.includes('РґРѕСЃС‚Р°РІРє') || l.includes('РєСѓСЂСЊРµСЂ')) return 'delivery-hustle';
+  if (l.includes('РјС„С†') || l.includes('РїР°СЃРїРѕСЂС‚') || l.includes('РЅР°Р»РѕРіРѕРІ') || l.includes('Р°РґРјРёРЅРёСЃС‚СЂР°С†') || l.includes('Р¶РєС…') || l.includes('РїРµРЅСЃРёРѕРЅ')) return 'bureaucratic-institution';
+  if (l.includes('Р±РѕРіРµРјРЅ') || l.includes('РІРёРЅС‚Р°Р¶')) return 'bohemian-vintage';
+  if (l.includes('РїРµС‚РµСЂР±СѓСЂРі') || l.includes('РјРѕСЃРєРѕРІ')) return 'imperial-Russian-elegance';
+  if (l.includes('РєР°РІРєР°Р·')) return 'Caucasian-warmth';
+  if (l.includes('РґРµРІСЏРЅРѕСЃС‚')) return '90s-post-Soviet-raw';
+  if (l.includes('С‚СЂРµР№РґРёРЅРі') || l.includes('Р±РёР·РЅРµСЃ') || l.includes('РёРјРїРµСЂСЃРє') || l.includes('РґРµР»РѕРІ')) return 'business-power';
+  if (l.includes('С‚РІРѕСЂС‡РµСЃРє') || l.includes('С…СѓРґРѕР¶')) return 'creative-artistic';
+  if (l.includes('РіРѕС‚РёРє') || l.includes('Р»СѓРЅРЅ')) return 'dark-gothic';
+  if (l.includes('РїСЂРѕС…РѕРґРЅ') || l.includes('РїРѕРґРІР°Р»') || l.includes('С‰РёС‚РѕРє')) return 'industrial-gritty';
+  if (l.includes('РєР»РёРЅРёРє') || l.includes('СЃР°Р»РѕРЅ')) return 'clean-professional';
+  if (l.includes('СЃРєР°РЅРґРёРЅР°РІ')) return 'Scandinavian-noir';
+  if (l.includes('С…РёРї-С…РѕРї') || l.includes('СЃРєРµР№С‚')) return 'street-urban';
+  if (l.includes('С„РµСЃС‚РёРІР°Р»')) return 'festival-vibe';
+  if (l.includes('РґР¶Р°Р·') || l.includes('РєР»СѓР±')) return 'jazz-club-atmosphere';
+  if (l.includes('РјР°СЃС‚РµСЂСЃРє') || l.includes('РєСѓР·РЅРµС‡')) return 'workshop-craft';
+  if (l.includes('СЃС‚РѕР»РѕРІ')) return 'cafeteria-communal';
+  if (l.includes('РјР°РЅРіР°Р»') || l.includes('РїРёРєРЅРёРє')) return 'outdoor-grill';
+  if (l.includes('СЂРѕРґРёС‚РµР»СЊСЃРє') || l.includes('С‡Р°С‚')) return 'parental-group-chat';
+  if (l.includes('С‚СЂР°РІСЏРЅ') || l.includes('Р°РїС‚РµРє')) return 'herbal-apothecary';
+  if (l.includes('СѓРЅРёРІРµСЂСЃРёС‚РµС‚') || l.includes('РїС‹Р»СЊ')) return 'academic-dusty';
+  if (l.includes('РєСѓРєРѕР»СЊРЅ')) return 'dollhouse-kitsch';
+  if (l.includes('С‚СЂРµРЅРёРЅРі') || l.includes('РєРѕРЅС„РµСЂРµРЅС†')) return 'conference-corporate';
+  if (l.includes('РєР°СЂС‚') || l.includes('РїРµС€РєРѕРј')) return 'city-exploration';
+  if (l.includes('РґСЂРёС„С‚')) return 'drift-adrenaline';
+  if (l.includes('РєР°С„Рµ') || l.includes('СЂРµСЃС‚РѕСЂР°РЅ') || l.includes('СЌСЃС‚РµС‚РёРє')) return 'cafe-aesthetic';
+  if (l.includes('СѓР»РёС†') || l.includes('РїСЂР°РЅРє')) return 'street-prank';
+  if (l.includes('Р±Р»РѕРі') || l.includes('СЂРёР»СЃ') || l.includes('СЂР°СЃРїР°РєРѕРІ') || l.includes('РєРѕРЅС‚РµРЅС‚')) return 'content-creator-space';
+  if (l.includes('РґРѕРј') || l.includes('С€С‚Р°Р±')) return 'home-headquarters';
+  if (l.includes('РґРµСЂРµРІРЅСЏ') || l.includes('РІ-РіРѕСЂРѕРґРµ')) return 'village-in-city';
   return 'authentic domestic realism';
 }
 
@@ -949,59 +949,59 @@ function _speechStyleToEn(styleRu, pace, compat) {
   return `${p}. ${c}. Authentic Russian speech with age-appropriate patterns.`;
 }
 
-// ─── ENGAGEMENT BUILDER ─────────────────────
+// в”Ђв”Ђв”Ђ ENGAGEMENT BUILDER в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 function buildEngagement(catRu, charA, charB, rng, soloMode = false) {
   const nameA = charA.name_ru;
   const nameB = soloMode ? nameA : charB.name_ru;
   const fill = (s) => s.replace(/\{A\}/g, nameA).replace(/\{B\}/g, nameB);
 
-  // ── Hashtags: 3-layer mix ──
-  const catTags = HASHTAGS_BY_CATEGORY[catRu] || HASHTAGS_BY_CATEGORY['Бытовой абсурд'];
+  // в”Ђв”Ђ Hashtags: 3-layer mix в”Ђв”Ђ
+  const catTags = HASHTAGS_BY_CATEGORY[catRu] || HASHTAGS_BY_CATEGORY['Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ'];
   const niche = pickN(catTags.niche, 5, rng);
   const mid = pickN(catTags.mid, 4, rng);
   const big = pickN(catTags.big, 2, rng);
   const evergreen = pickN(EVERGREEN_TAGS, 3, rng);
 
-  // Персонажные теги
+  // РџРµСЂСЃРѕРЅР°Р¶РЅС‹Рµ С‚РµРіРё
   const grpA = GROUP_HASHTAGS[charA.group] || [];
   const grpB = soloMode ? [] : (GROUP_HASHTAGS[charB.group] || []);
   const charTags = pickN([...new Set([...grpA, ...grpB])], 3, rng);
 
-  // Уникальный тег серии
+  // РЈРЅРёРєР°Р»СЊРЅС‹Р№ С‚РµРі СЃРµСЂРёРё
   const seriesTag = soloMode
     ? '#' + nameA.replace(/\s+/g, '').toLowerCase() + 'solo'
     : '#' + nameA.replace(/\s+/g, '').toLowerCase() + 'vs' + nameB.replace(/\s+/g, '').toLowerCase();
 
-  // Сборка: niche(5) + mid(4) + charTags(3) + big(2) + evergreen(3) + series(1) = ~18 тегов (идеально для IG)
+  // РЎР±РѕСЂРєР°: niche(5) + mid(4) + charTags(3) + big(2) + evergreen(3) + series(1) = ~18 С‚РµРіРѕРІ (РёРґРµР°Р»СЊРЅРѕ РґР»СЏ IG)
   const allTags = [...niche, ...mid, ...charTags, ...big, ...evergreen, seriesTag];
-  // Дедупликация
+  // Р”РµРґСѓРїР»РёРєР°С†РёСЏ
   const hashtags = [...new Set(allTags)].slice(0, 25);
 
-  // ── Viral title ──
-  const titlePool = VIRAL_TITLES[catRu] || VIRAL_TITLES['Бытовой абсурд'];
+  // в”Ђв”Ђ Viral title в”Ђв”Ђ
+  const titlePool = VIRAL_TITLES[catRu] || VIRAL_TITLES['Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ'];
   // In solo mode, filter out titles that reference {B} as a separate character
   const soloSafeTitles = soloMode ? titlePool.filter(t => !t.includes('{B}')) : titlePool;
   const viralTitle = fill(pickRandom(soloSafeTitles.length ? soloSafeTitles : titlePool, rng));
 
-  // ── Pin comment ──
-  const pinPool = PIN_COMMENTS[catRu] || PIN_COMMENTS['Бытовой абсурд'];
+  // в”Ђв”Ђ Pin comment в”Ђв”Ђ
+  const pinPool = PIN_COMMENTS[catRu] || PIN_COMMENTS['Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ'];
   const soloSafePins = soloMode ? pinPool.filter(t => !t.includes('{B}')) : pinPool;
   const pinComment = fill(pickRandom(soloSafePins.length ? soloSafePins : pinPool, rng));
 
-  // ── First comment (для вовлечения) ──
-  const fcPool = FIRST_COMMENTS[catRu] || FIRST_COMMENTS['Бытовой абсурд'];
+  // в”Ђв”Ђ First comment (РґР»СЏ РІРѕРІР»РµС‡РµРЅРёСЏ) в”Ђв”Ђ
+  const fcPool = FIRST_COMMENTS[catRu] || FIRST_COMMENTS['Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ'];
   const soloSafeFc = soloMode ? fcPool.filter(t => !t.includes('{B}')) : fcPool;
   const firstComment = fill(pickRandom(soloSafeFc.length ? soloSafeFc : fcPool, rng));
 
-  // ── Share bait (описание видео для пересылки) ──
-  const sbPool = SHARE_BAITS[catRu] || SHARE_BAITS['Бытовой абсурд'];
+  // в”Ђв”Ђ Share bait (РѕРїРёСЃР°РЅРёРµ РІРёРґРµРѕ РґР»СЏ РїРµСЂРµСЃС‹Р»РєРё) в”Ђв”Ђ
+  const sbPool = SHARE_BAITS[catRu] || SHARE_BAITS['Р‘С‹С‚РѕРІРѕР№ Р°Р±СЃСѓСЂРґ'];
   const soloSafeSb = soloMode ? sbPool.filter(t => !t.includes('{B}')) : sbPool;
   const shareBait = fill(pickRandom(soloSafeSb.length ? soloSafeSb : sbPool, rng));
 
   return { hashtags, viralTitle, pinComment, firstComment, shareBait, seriesTag };
 }
 
-// ─── UNIVERSAL ROLE ADAPTER ──────────────────
+// в”Ђв”Ђв”Ђ UNIVERSAL ROLE ADAPTER в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 // Maps any character pair to A/B roles based on their data.
 // A = more expressive/provocative; B = more grounded/rational.
 // User manual assignment (role_default) takes priority.
@@ -1011,7 +1011,7 @@ function resolveRoles(charA, charB) {
   if (charA.role_default === 'B' && charB.role_default === 'A') return { A: charB, B: charA };
 
   // Auto-assign: compute expressiveness score
-  // Higher score → role A (provocateur)
+  // Higher score в†’ role A (provocateur)
   const score = (c) => {
     let s = 0;
     if (c.speech_pace === 'fast') s += 3;
@@ -1032,7 +1032,7 @@ function resolveRoles(charA, charB) {
   return { A: charA, B: charB };
 }
 
-// ─── CAST CONTRACT BUILDER (universal) ───────
+// в”Ђв”Ђв”Ђ CAST CONTRACT BUILDER (universal) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 function buildCastContract(charA, charB) {
   const buildBiology = (char, role) => {
     const bio = char.biology_override || {};
@@ -1064,84 +1064,84 @@ function buildCastContract(charA, charB) {
   return {
     speaker_A: buildBiology(charA, 'A'),
     speaker_B: buildBiology(charB, 'B'),
-    relationship: 'BAND — insults target SITUATION only, never each other',
+    relationship: 'BAND вЂ” insults target SITUATION only, never each other',
   };
 }
 
-// ─── CAMERA & REALISM PRESET (v2) ────────────
+// в”Ђв”Ђв”Ђ CAMERA & REALISM PRESET (v2) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 function buildCameraPreset() {
   return {
     pov: 'held at arm\'s length, front-facing portrait look, device INVISIBLE',
     distance: 'close enough to read skin microtexture, both faces in frame',
     artifacts: [
       'handheld micro-jitter (NEVER perfectly still)',
-      'subtle exposure breathing (±0.2 EV drift)',
+      'subtle exposure breathing (В±0.2 EV drift)',
       'mild rolling shutter only on quick micro-moves',
-      'brief autofocus hunt ≤0.15s on lens approach',
+      'brief autofocus hunt в‰¤0.15s on lens approach',
     ],
     realism_anchors: [
       'slight sensor noise in shadows (ISO 800-1600)',
       'mild JPEG compression artifacts (quality 85-92%)',
-      'imperfect white balance drift (±200K)',
+      'imperfect white balance drift (В±200K)',
       'micro motion blur on sharp gesture (finger/slap)',
       'realistic shadowing under nose/cheekbones/brow ridge',
     ],
-    ANTI_PLASTIC_MANDATE: 'CRITICAL: Faces must NEVER look plastic, waxy, smooth, or AI-generated. Every face MUST have: visible pores (especially nose/cheeks), age-appropriate skin texture (wrinkles and age spots for elderly, fine lines for middle-aged, natural imperfections for young), uneven skin tone, slight oily sheen on T-zone, asymmetric features (one eye slightly different from other), natural skin imperfections (moles, minor redness). Skin must look like REAL human skin photographed on a phone, not rendered by AI. If the face looks "too perfect" or "too smooth" — it is WRONG.',
-    ANTI_ROBOT_MANDATE: 'CRITICAL: All movement must be ORGANIC and HUMAN. No robotic transitions, no mechanical head turns, no perfectly timed gestures. Every movement has: slight delay/anticipation before action, natural acceleration/deceleration curves, micro-tremor from muscles, weight and momentum (heavy body parts move slower). Facial expressions must flow naturally — eyebrows lead, then eyes, then mouth. Emotions build gradually, never snap on/off. Breathing affects ALL movement. Intonation rises and falls naturally with emotion, voice cracks on intense moments, slight hoarseness from shouting.',
+    ANTI_PLASTIC_MANDATE: 'CRITICAL: Faces must NEVER look plastic, waxy, smooth, or AI-generated. Every face MUST have: visible pores (especially nose/cheeks), age-appropriate skin texture (wrinkles and age spots for elderly, fine lines for middle-aged, natural imperfections for young), uneven skin tone, slight oily sheen on T-zone, asymmetric features (one eye slightly different from other), natural skin imperfections (moles, minor redness). Skin must look like REAL human skin photographed on a phone, not rendered by AI. If the face looks "too perfect" or "too smooth" вЂ” it is WRONG.',
+    ANTI_ROBOT_MANDATE: 'CRITICAL: All movement must be ORGANIC and HUMAN. No robotic transitions, no mechanical head turns, no perfectly timed gestures. Every movement has: slight delay/anticipation before action, natural acceleration/deceleration curves, micro-tremor from muscles, weight and momentum (heavy body parts move slower). Facial expressions must flow naturally вЂ” eyebrows lead, then eyes, then mouth. Emotions build gradually, never snap on/off. Breathing affects ALL movement. Intonation rises and falls naturally with emotion, voice cracks on intense moments, slight hoarseness from shouting.',
   };
 }
 
-// ─── CINEMATOGRAPHY CONTRACT (12 production pillars) ───
-// Everything the user does NOT choose — Gemini decides using this contract.
-// Calibrated for SMARTPHONE FRONT-CAMERA realism — the gold standard is "indistinguishable from a real selfie video".
+// в”Ђв”Ђв”Ђ CINEMATOGRAPHY CONTRACT (12 production pillars) в”Ђв”Ђв”Ђ
+// Everything the user does NOT choose вЂ” Gemini decides using this contract.
+// Calibrated for SMARTPHONE FRONT-CAMERA realism вЂ” the gold standard is "indistinguishable from a real selfie video".
 function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, hookObj, releaseObj, propAnchor) {
   return {
-    // ── 1. LIGHTING ──────────────────────────────
+    // в”Ђв”Ђ 1. LIGHTING в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     lighting: {
       directive: 'Lighting is the single biggest realism factor. REAL smartphone footage has ONE dominant environmental source + ambient fill. No studio lights exist in this world.',
       primary_source: lightingMood.style,
       mood: lightingMood.mood,
       source_count: lightingMood.sources || 'One dominant source + one soft fill bounce from environment. Never more than two. NEVER ring light or studio softbox.',
       source_direction: lightingMood.direction || 'Key light from environment (window/lamp/overhead); fill is indirect bounce from nearest wall/ceiling.',
-      shadow_quality: lightingMood.shadow_softness || 'Soft but PRESENT shadows under nose, cheekbones, chin, brow ridge. Shadow edges 15-25% feathered — NOT razor-sharp, NOT invisible.',
-      skin_highlights: lightingMood.overexposure_budget || 'Allow +0.5 EV overexposure on skin highlights (forehead, nose bridge). This is NORMAL for smartphone sensors — do NOT flatten. Slight specular sheen on T-zone (oily skin).',
+      shadow_quality: lightingMood.shadow_softness || 'Soft but PRESENT shadows under nose, cheekbones, chin, brow ridge. Shadow edges 15-25% feathered вЂ” NOT razor-sharp, NOT invisible.',
+      skin_highlights: lightingMood.overexposure_budget || 'Allow +0.5 EV overexposure on skin highlights (forehead, nose bridge). This is NORMAL for smartphone sensors вЂ” do NOT flatten. Slight specular sheen on T-zone (oily skin).',
       color_temperature: lightingMood.color_temp || 'Lock WB to dominant source. Indoor warm: 3200-3800K. Fluorescent: 4500-5000K. Daylight: 5500-6000K.',
-      smartphone_behavior: 'Phone auto-exposure targets faces → background may clip or crush. This is CORRECT behavior. Slight exposure hunting (±0.2 EV drift over 8s) is realistic. Face brightness should be ~70% histogram.',
-      consistency: 'Light direction and color temp MUST NOT change during 8 seconds. Intensity may drift ±5% (clouds, flickering fluorescent). No sudden jumps.',
+      smartphone_behavior: 'Phone auto-exposure targets faces в†’ background may clip or crush. This is CORRECT behavior. Slight exposure hunting (В±0.2 EV drift over 8s) is realistic. Face brightness should be ~70% histogram.',
+      consistency: 'Light direction and color temp MUST NOT change during 8 seconds. Intensity may drift В±5% (clouds, flickering fluorescent). No sudden jumps.',
       forbidden: 'No flat frontal beauty lighting, no ring light catch-lights, no studio rim/hair light, no colored RGB gels, no dual-key setups, no perfectly even illumination.',
     },
 
-    // ── 2. OPTICS & DISTANCE ─────────────────────
+    // в”Ђв”Ђ 2. OPTICS & DISTANCE в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     optics: {
       directive: 'This is a SMARTPHONE FRONT CAMERA, not a cinema camera. The optical signature must match: wide-angle close-up with computational bokeh.',
       focal_length: '24-28mm equivalent (smartphone front camera native). Slight wide-angle barrel distortion on edges is CORRECT and expected. Faces at center are relatively undistorted.',
-      aperture: 'f/1.9-f/2.2 physical aperture (phone sensor). Computational portrait mode adds bokeh to background — result is sharp faces with 15-25% gaussian-ish background blur. NOT cinema bokeh (no hexagonal highlights).',
+      aperture: 'f/1.9-f/2.2 physical aperture (phone sensor). Computational portrait mode adds bokeh to background вЂ” result is sharp faces with 15-25% gaussian-ish background blur. NOT cinema bokeh (no hexagonal highlights).',
       distance_to_subject: '35-60cm from lens to face (arm\'s length selfie distance). Close enough to see individual pores, far enough for two faces without extreme fish-eye.',
-      depth_of_field: 'Smartphone DOF: both faces sharp (they\'re roughly in the same plane at 35-60cm). Background separates via computational blur starting ~30cm behind subjects. Bokeh is slightly artificial/smooth — this is CORRECT for phones.',
+      depth_of_field: 'Smartphone DOF: both faces sharp (they\'re roughly in the same plane at 35-60cm). Background separates via computational blur starting ~30cm behind subjects. Bokeh is slightly artificial/smooth вЂ” this is CORRECT for phones.',
       sensor_signature: 'Small smartphone sensor: visible luminance noise in shadows (ISO 400-1600 equivalent), slight color noise in dark areas, limited dynamic range (10-12 stops), JPEG compression artifacts at 85-92% quality.',
       lens_flaws: 'Slight purple fringing on high-contrast edges (backlight). Minor chromatic aberration in corners. Faint lens flare if strong light source in frame. These imperfections = authenticity.',
       series_lock: 'EVERY episode uses the same phone-camera look. Same focal length, same distance, same computational bokeh style. This is the visual fingerprint.',
     },
 
-    // ── 3. CAMERA MOVEMENT ───────────────────────
+    // в”Ђв”Ђ 3. CAMERA MOVEMENT в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     camera_movement: {
       directive: 'One person holds a phone at arm\'s length. This creates specific motion: hand tremor, breathing oscillation, weight shift drift. NOT smooth, NOT static, NOT gimbal.',
       base_motion: 'Constant micro-jitter: 0.8-2px random drift at 2-5Hz. This is hand tremor + breathing + pulse. Slightly more on Y-axis (vertical) than X. NEVER perfectly still for >0.3s.',
-      breathing_oscillation: 'Slow 0.3-0.5px vertical oscillation at 0.25-0.33Hz (15-20 breaths/min). The holder breathes — camera rises and falls slightly with chest.',
-      hook_motion: '0.0-0.7s: slight push-in (2-3% scale increase) + micro-rotation. Stop-scroll moment — sudden movement or sharp inhale. Device INVISIBLE.',
-      act_A_motion: '0.7-3.5s: subtle drift toward A (naturally tracks the speaker). 0.5-1° rotation over 2.8s. Jitter increases slightly as A gets animated.',
+      breathing_oscillation: 'Slow 0.3-0.5px vertical oscillation at 0.25-0.33Hz (15-20 breaths/min). The holder breathes вЂ” camera rises and falls slightly with chest.',
+      hook_motion: '0.0-0.7s: slight push-in (2-3% scale increase) + micro-rotation. Stop-scroll moment вЂ” sudden movement or sharp inhale. Device INVISIBLE.',
+      act_A_motion: '0.7-3.5s: subtle drift toward A (naturally tracks the speaker). 0.5-1В° rotation over 2.8s. Jitter increases slightly as A gets animated.',
       act_B_motion: '3.5-7.0s: micro-reframe toward B. Possible brief 0.1s autofocus hunt as phone re-acquires B\'s face. Slight pull-back (holder unconsciously leans back from B\'s intensity).',
-      release_motion: '7.0-8.0s: camera shakes 3-6px at 6-10Hz from raspy laughter body tremor. Brief tilt (5-8°). Rewatch-bait micro-expression in last 0.3s.',
-      stabilization_artifacts: 'Phone OIS/EIS creates slight "jello" wobble on fast movements. Rolling shutter visible on quick jerks (vertical lines lean 2-3°). These are MARKERS of real phone footage.',
+      release_motion: '7.0-8.0s: camera shakes 3-6px at 6-10Hz from raspy laughter body tremor. Brief tilt (5-8В°). Rewatch-bait micro-expression in last 0.3s.',
+      stabilization_artifacts: 'Phone OIS/EIS creates slight "jello" wobble on fast movements. Rolling shutter visible on quick jerks (vertical lines lean 2-3В°). These are MARKERS of real phone footage.',
       forbidden: 'No smooth dolly/crane/gimbal moves. No rack focus pulls. No cinematic camera work. No perfectly static tripod shots. No drone. This is a HAND holding a PHONE.',
     },
 
-    // ── 4. MICRO-MOVEMENT TEMPO ──────────────────
+    // в”Ђв”Ђ 4. MICRO-MOVEMENT TEMPO в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     micro_movements: {
-      directive: 'ALIVE vs MANNEQUIN. Real people NEVER stop moving. Every 0.5-1.5 seconds, something changes — blink, breath, twitch, shift. Absence of micro-movement is the #1 AI tell.',
+      directive: 'ALIVE vs MANNEQUIN. Real people NEVER stop moving. Every 0.5-1.5 seconds, something changes вЂ” blink, breath, twitch, shift. Absence of micro-movement is the #1 AI tell.',
       blink_rate: 'Natural blink: every 3-5s baseline. During heated speech: every 2-3s. Hard blinks on emphasis words. Listening character: slower 4-6s blinks. NEVER unblinking >5s. Both lids close simultaneously, 100-200ms duration.',
       breathing: 'Visible chest/shoulder rise every 3-4s. Speaking: breathing syncs with pauses (inhale between phrases, exhale on first word). Listening: slow steady rhythm. Deep preparation inhale 0.3s before their turn.',
-      head_micro_turns: 'Tiny 1-3° tilts/rotations every 2-4s. Speaking character: animated 5-10° range, nods for emphasis, head follows gesture direction. Listening: minimal, weighted nods on key words, slight skeptical head-cock.',
+      head_micro_turns: 'Tiny 1-3В° tilts/rotations every 2-4s. Speaking character: animated 5-10В° range, nods for emphasis, head follows gesture direction. Listening: minimal, weighted nods on key words, slight skeptical head-cock.',
       facial_micro_expressions: 'Every 1-2 seconds SOMETHING fires: eyebrow micro-raise (1-2mm), nostril flare on emphasis, jaw clench/release, lip corner twitch, cheek muscle pulse, forehead furrow shift. These are INVOLUNTARY and asymmetric.',
       weight_shifts: 'Body weight shifts every 4-6s. Shoulder adjustments. Finger movements if gesturing (fidgeting when listening). Clothing responds to movement (sleeve shifts, collar adjusts). Weight on one foot then other.',
       hand_micro_movements: 'Hands NEVER frozen: gesturing (speaker), fidgeting/adjusting (listener), finger curling/uncurling, rubbing thumb against finger, adjusting glasses/hair/collar. At minimum one hand movement every 3-5s.',
@@ -1149,46 +1149,46 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       forbidden: 'No mannequin freeze (>1.5s without ANY visible movement anywhere on body). No hyperactive puppet twitching. No mirror-symmetry between characters. No synchronized movements (they are NOT choreographed).',
     },
 
-    // ── 5. FACE & LIP STABILITY ──────────────────
+    // в”Ђв”Ђ 5. FACE & LIP STABILITY в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     face_stability: {
-      directive: 'Mouth ALWAYS visible and unobstructed. This is the #1 prerequisite for believable lip-sync. If mouth is hidden/turned → illusion breaks.',
+      directive: 'Mouth ALWAYS visible and unobstructed. This is the #1 prerequisite for believable lip-sync. If mouth is hidden/turned в†’ illusion breaks.',
       mouth_visibility: 'CRITICAL: Lower face (mouth, chin, jaw) in frame and unobstructed for 100% of video. No hand over mouth except brief gesture (<0.3s). No hair/scarf/collar covering lips. No prop blocking jaw.',
-      head_rotation_limit: 'Maximum 25° yaw from camera at any time. During active speech: keep within 15° of front-facing. Beyond 25°: far-side lips invisible → lip-sync catastrophe.',
-      head_tilt_limit: 'Maximum 10° roll (head tilt). Maximum 15° pitch (nod). Combined rotation budget: sqrt(yaw² + roll² + pitch²) < 30°. Head must feel MOBILE but never turn away.',
+      head_rotation_limit: 'Maximum 25В° yaw from camera at any time. During active speech: keep within 15В° of front-facing. Beyond 25В°: far-side lips invisible в†’ lip-sync catastrophe.',
+      head_tilt_limit: 'Maximum 10В° roll (head tilt). Maximum 15В° pitch (nod). Combined rotation budget: sqrt(yawВІ + rollВІ + pitchВІ) < 30В°. Head must feel MOBILE but never turn away.',
       hair_and_accessories: 'No bangs/fringe over lips. No thick mustache obscuring lip line (if character has mustache: trimmed clear of lip edge). No sunglasses blocking eye area. Glasses: clear lenses only, frame above mouth.',
       jaw_tracking: 'Every Russian syllable = visible jaw movement. Consonants t/d/p/b/m/n (Russian equivalents) = clear lip closure/contact. Vowels a/o/u = proportional jaw opening (a = wide, u = pursed). Speed matches speech pace. Jaw moves DOWN, not just lips moving.',
       non_speaking_mouth: 'NOT speaking = mouth FIRMLY SEALED. Jaw immobile. Lips softly pressed. NO phantom movements, NO mouthing along, NO chewing, NO lip-licking (unless character-motivated brief moment). ONLY subtle lip-pressure changes from emotion.',
       front_camera_face_lock: 'Phone front camera has face-tracking AF. Face should always be the sharpest element. If head moves, focus follows with 50-100ms lag (realistic AF tracking delay).',
     },
 
-    // ── 6. EYES & GAZE ──────────────────────────
+    // в”Ђв”Ђ 6. EYES & GAZE в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     gaze: {
       directive: 'Eyes create the hypnotic connection. In selfie video, "looking at camera" = "looking into viewer\'s eyes". This is the most powerful retention tool.',
       hook_gaze: '0.0-0.7s: A locks DIRECT EYE CONTACT with camera lens. Pupil-to-lens alignment. Challenging, urgent, pulling viewer in. Stop-scroll stare. STRONGEST hook possible.',
       act_A_gaze: '0.7-3.5s: A maintains 70% camera contact (speaking TO viewer), 30% quick glances at B. B: MOUTH STRICTLY CLOSED, side-eye at A (60%), occasional slow blink, pupils tracking A\'s gestures.',
       act_B_gaze: '3.5-7.0s: B locks camera (80% direct) for punchline delivery. On killer word (~6.8s): maximum eye intensity, slight squint. A: MOUTH STRICTLY CLOSED, eyes progressively widen (shock), dart between B and camera at 2-3Hz.',
-      release_gaze: '7.0-8.0s: gaze releases — both look at each other (warm recognition), raspy laugh. Rewatch-bait: ambiguous micro-expression in last 0.3s.',
+      release_gaze: '7.0-8.0s: gaze releases вЂ” both look at each other (warm recognition), raspy laugh. Rewatch-bait: ambiguous micro-expression in last 0.3s.',
       pupil_detail: 'Pupils: 3-5mm diameter (adjusting to light). Visible catch-light from dominant light source (window = rectangular, bulb = round). Wet glint on sclera. Thin red vessels visible at 35cm. Iris texture visible.',
-      micro_saccades: 'Tiny rapid eye movements every 0.5-1.5s — eyes NEVER perfectly still. These 0.5-1° micro-jumps are involuntary and are the single biggest "alive eyes" signal. Without them, eyes look like glass.',
-      smartphone_eye_contact: 'Front camera is 2-5cm ABOVE the screen. True "camera eye contact" means looking slightly UP. Most people look at screen (their own face) → gaze is 2-3° below lens. Mix both: 60% at lens (contact), 40% at screen (natural).',
+      micro_saccades: 'Tiny rapid eye movements every 0.5-1.5s вЂ” eyes NEVER perfectly still. These 0.5-1В° micro-jumps are involuntary and are the single biggest "alive eyes" signal. Without them, eyes look like glass.',
+      smartphone_eye_contact: 'Front camera is 2-5cm ABOVE the screen. True "camera eye contact" means looking slightly UP. Most people look at screen (their own face) в†’ gaze is 2-3В° below lens. Mix both: 60% at lens (contact), 40% at screen (natural).',
       forbidden: 'No dead fixed stare (>2s without any eye movement). No cross-eyed. No rolled-back eyes. No simultaneous identical eye movements. No perfectly centered pupils (natural resting gaze drifts).',
     },
 
-    // ── 7. FRAME CLEANLINESS ─────────────────────
+    // в”Ђв”Ђ 7. FRAME CLEANLINESS в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     frame_cleanliness: {
-      directive: 'Real selfie video has 3-5 clear elements: faces, clothes, one object, blurred background. Not a production design showcase — a person\'s actual environment.',
+      directive: 'Real selfie video has 3-5 clear elements: faces, clothes, one object, blurred background. Not a production design showcase вЂ” a person\'s actual environment.',
       foreground: 'Characters occupy 60-70% of vertical frame. Nothing between camera and faces except air (and possibly a gesturing hand briefly crossing frame).',
-      midground: `1 prop anchor: ${propAnchor} — at arm\'s length behind characters, in computational bokeh blur (recognizable shape, fuzzy edges). Provides context.`,
-      background: '2-3 environmental details in deep bokeh. Recognizable as shapes/colors but NOT sharp. A wall, a shelf, a window — NOT a detailed set. Smartphone portrait mode makes background deliberately simple.',
-      headroom: '5-10% of frame above heads. Characters slightly below center (natural selfie composition — arm extends slightly up). No chin-crop, no forehead-crop.',
+      midground: `1 prop anchor: ${propAnchor} вЂ” at arm\'s length behind characters, in computational bokeh blur (recognizable shape, fuzzy edges). Provides context.`,
+      background: '2-3 environmental details in deep bokeh. Recognizable as shapes/colors but NOT sharp. A wall, a shelf, a window вЂ” NOT a detailed set. Smartphone portrait mode makes background deliberately simple.',
+      headroom: '5-10% of frame above heads. Characters slightly below center (natural selfie composition вЂ” arm extends slightly up). No chin-crop, no forehead-crop.',
       aspect_ratio: '9:16 vertical (portrait mode). This is non-negotiable for Instagram Reels. Characters fill the vertical frame. Horizontal detail is naturally limited by the narrow width.',
-      forbidden: 'ABSOLUTELY NO text overlays, NO subtitles, NO captions, NO letters/numbers on screen, NO REC badge, NO timestamp, NO timecode, NO frames, NO borders, NO watermarks, NO logos, NO UI elements, NO phones/screens visible, NO mirror reflections showing camera, NO graphic overlays of any kind. Image/video must be CLEAN — only the scene with characters, ZERO visual overlays. No more than 5 distinct visual elements total. CLUTTERED = FAKE, CLEAN = REAL.',
+      forbidden: 'ABSOLUTELY NO text overlays, NO subtitles, NO captions, NO letters/numbers on screen, NO REC badge, NO timestamp, NO timecode, NO frames, NO borders, NO watermarks, NO logos, NO UI elements, NO phones/screens visible, NO mirror reflections showing camera, NO graphic overlays of any kind. Image/video must be CLEAN вЂ” only the scene with characters, ZERO visual overlays. No more than 5 distinct visual elements total. CLUTTERED = FAKE, CLEAN = REAL.',
       detail_budget: 'Visual element cap: 2 faces + 2 wardrobe reads + 1 prop + 2 background shapes = 7 maximum. Every extra item competes with faces for attention and reduces realism.',
     },
 
-    // ── 8. WARDROBE & TEXTURES ───────────────────
+    // в”Ђв”Ђ 8. WARDROBE & TEXTURES в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     textures: {
-      directive: 'Texture is the anti-AI signal. Real phone cameras at 35cm capture INDIVIDUAL THREADS of wool, WEAVE PATTERN of denim, CREASE LINES in cotton. If fabric looks smooth/flat → instant AI detection.',
+      directive: 'Texture is the anti-AI signal. Real phone cameras at 35cm capture INDIVIDUAL THREADS of wool, WEAVE PATTERN of denim, CREASE LINES in cotton. If fabric looks smooth/flat в†’ instant AI detection.',
       wardrobe_A: wardrobeA,
       wardrobe_B: wardrobeB,
       texture_priority: 'HIERARCHY of convincing textures: hand-knit wool (best) > worn denim > real leather > corduroy > linen > cotton > polyester (worst). Choose materials high on this list. Every fabric must show its STRUCTURE at close range.',
@@ -1199,106 +1199,106 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
       forbidden: 'No plastic skin. No uniform color blocks. No textureless fabrics. No perfectly smooth surfaces. No rubber/wax skin appearance. No identical skin on both characters (they are different people with different skin).',
     },
 
-    // ── 9. COLOR & SKIN TONE ─────────────────────
+    // в”Ђв”Ђ 9. COLOR & SKIN TONE в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     color_skin: {
       directive: 'Smartphone color science: slightly warm, auto-WB biased toward pleasing skin tones. The 3 deadly AI sins are orange tan, grey face, and uniform plastic tone.',
       white_balance: lightingMood.color_temp ? `Lock to: ${lightingMood.color_temp}` : 'Lock WB to dominant source. Indoor warm: 3200-3800K. Fluorescent: 4500-5000K with green shift. Daylight: 5500-6000K. Phone auto-WB may lean 200K warm to flatter skin.',
-      skin_tone_A: `${charA.prompt_tokens?.character_en?.includes('dark skin') || charA.prompt_tokens?.character_en?.includes('tan') ? 'Rich warm undertone, visible warmth variation across face (redder cheeks, darker under eyes, lighter on forehead). Never ashy or grey.' : charA.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, visible pink in cheeks/nose tip/ear tips, slight blue veins at temples. Never grey or uniformly white.' : 'Slavic warm undertone: slight pink in cheeks, redder nose tip in cold, lighter forehead, darker under eyes. Natural variation across face — NOT one uniform color.'}`,
+      skin_tone_A: `${charA.prompt_tokens?.character_en?.includes('dark skin') || charA.prompt_tokens?.character_en?.includes('tan') ? 'Rich warm undertone, visible warmth variation across face (redder cheeks, darker under eyes, lighter on forehead). Never ashy or grey.' : charA.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, visible pink in cheeks/nose tip/ear tips, slight blue veins at temples. Never grey or uniformly white.' : 'Slavic warm undertone: slight pink in cheeks, redder nose tip in cold, lighter forehead, darker under eyes. Natural variation across face вЂ” NOT one uniform color.'}`,
       skin_tone_B: `${charB.prompt_tokens?.character_en?.includes('dark skin') || charB.prompt_tokens?.character_en?.includes('tan') ? 'Rich warm undertone, visible warmth variation across face. Never ashy or grey.' : charB.prompt_tokens?.character_en?.includes('pale') ? 'Cool pink undertone, visible pink in cheeks/nose/ears. Never grey or uniform.' : 'Slavic warm undertone: cheeks pinker than forehead, nose tip redder, under-eye slightly darker, ear tops flushed. Living skin has COLOR VARIATION.'}`,
-      skin_zones: 'EVERY face has 5+ color zones: (1) forehead — lighter/oilier, (2) cheeks — pinker/redder, (3) nose — reddest/oiliest, (4) under-eye — slightly darker/bluer, (5) chin — matches forehead. These zones are DIFFERENT colors. Uniform tone = plastic = AI.',
-      deadly_sins: 'THREE forbidden skin looks: (1) Orange spray-tan (#D4845B range) — MOST COMMON AI artifact, never ever do this. (2) Grey/blue lifeless face — like a corpse, no blood in skin. (3) Uniform tone — same exact color everywhere on face, no zone variation.',
-      color_grade: 'Smartphone color: slightly warm bias (+3% orange in highlights), gentle contrast (not crushed blacks — phone cameras lift shadows), saturation 90-95% natural (phones slightly boost). No heavy film emulation, no teal-and-orange, no Instagram filter look.',
+      skin_zones: 'EVERY face has 5+ color zones: (1) forehead вЂ” lighter/oilier, (2) cheeks вЂ” pinker/redder, (3) nose вЂ” reddest/oiliest, (4) under-eye вЂ” slightly darker/bluer, (5) chin вЂ” matches forehead. These zones are DIFFERENT colors. Uniform tone = plastic = AI.',
+      deadly_sins: 'THREE forbidden skin looks: (1) Orange spray-tan (#D4845B range) вЂ” MOST COMMON AI artifact, never ever do this. (2) Grey/blue lifeless face вЂ” like a corpse, no blood in skin. (3) Uniform tone вЂ” same exact color everywhere on face, no zone variation.',
+      color_grade: 'Smartphone color: slightly warm bias (+3% orange in highlights), gentle contrast (not crushed blacks вЂ” phone cameras lift shadows), saturation 90-95% natural (phones slightly boost). No heavy film emulation, no teal-and-orange, no Instagram filter look.',
       consistency: 'Skin tone IDENTICAL across all 8 seconds. No sudden warmth shifts. No frame-to-frame color flicker. The only change: slight reddening in cheeks during emotional peaks (blood flow). This is realistic and welcome.',
     },
 
-    // ── 10. SOUND AS REALITY ANCHOR ──────────────
+    // в”Ђв”Ђ 10. SOUND AS REALITY ANCHOR в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     sound_anchor: {
       directive: 'Sound is what makes the BRAIN believe the IMAGE is real. Smartphone mic signature: slightly compressed, room-reverberant, catches everything. This is NOT a studio recording.',
-      room_tone: 'MANDATORY: continuous ambient sound matching location. Runs UNDER dialogue at -20 to -30dB. Real rooms NEVER have silence — there is always hum, wind, distant traffic, appliance drone. This is the bed everything sits on.',
-      voice_volume: 'Dialogue: -6dB to -3dB peak. NATURAL dynamic range — louder on shouts, softer on asides, voice cracks on emotion. NO compression, NO limiter. Real speech volume varies ±6dB within a sentence.',
-      voice_proximity: 'Phone mic is 35-60cm from mouths. Voice has slight room coloring — NOT dry studio sound. Plosives (p, b — Russian equivalents) may cause brief mic pop. Sibilants (s, sh) slightly harsh. This is PHONE MIC character.',
+      room_tone: 'MANDATORY: continuous ambient sound matching location. Runs UNDER dialogue at -20 to -30dB. Real rooms NEVER have silence вЂ” there is always hum, wind, distant traffic, appliance drone. This is the bed everything sits on.',
+      voice_volume: 'Dialogue: -6dB to -3dB peak. NATURAL dynamic range вЂ” louder on shouts, softer on asides, voice cracks on emotion. NO compression, NO limiter. Real speech volume varies В±6dB within a sentence.',
+      voice_proximity: 'Phone mic is 35-60cm from mouths. Voice has slight room coloring вЂ” NOT dry studio sound. Plosives (p, b вЂ” Russian equivalents) may cause brief mic pop. Sibilants (s, sh) slightly harsh. This is PHONE MIC character.',
       voice_room_match: 'Reverb MUST match space size. Kitchen: 0.3-0.5s RT60, hard reflections. Outdoors: <0.1s, almost dry. Stairwell: 1.0-1.5s echo. Small room: 0.2-0.3s tight reflection. Mismatch = instant fake detection.',
       breathing_sounds: 'Audible inhale before each speaking turn (0.15-0.25s). Phone mic picks up breathing. Nose exhale from listener. Sharp inhale of surprise from A when B delivers killer word.',
       cloth_and_foley: 'Fabric rustle on EVERY body movement (phone mic is very sensitive). Chair/surface creak. Prop interaction sounds. Footstep shuffle on weight shift. These environmental sounds anchor the reality.',
       laugh_audio: 'Release laughter: 20-30% louder than dialogue. Phone mic response: slight compression/distortion on laugh peaks (mic overload). Breathy, raspy, bodies shaking. Camera mic picks up hand-grip rustle from holder shaking.',
-      mouth_sounds: 'Subtle: saliva clicks on hard consonants (t, k, p, d — Russian plosives), lip smack at sentence start, tongue contact on l/n. These are captured by phone mic at close range and are CRITICAL realism markers.',
-      forbidden: 'No dead silence (even 0.1s of pure silence is wrong — room tone fills everything). No studio-clean voice. No uniform volume. No reverb mismatch. No music unless explicitly in scene.',
+      mouth_sounds: 'Subtle: saliva clicks on hard consonants (t, k, p, d вЂ” Russian plosives), lip smack at sentence start, tongue contact on l/n. These are captured by phone mic at close range and are CRITICAL realism markers.',
+      forbidden: 'No dead silence (even 0.1s of pure silence is wrong вЂ” room tone fills everything). No studio-clean voice. No uniform volume. No reverb mismatch. No music unless explicitly in scene.',
     },
 
-    // ── 11. FIRST-FRAME VISUAL HOOK ──────────────
+    // в”Ђв”Ђ 11. FIRST-FRAME VISUAL HOOK в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     visual_hook: {
-      directive: 'The viewer decides in 0.3-0.5 seconds: watch or scroll. The hook is 100% VISUAL — no one reads text or waits for words. Frame 1 must DEMAND attention.',
-      primary_hook: `${hookObj.action_en} — this physical action is ALREADY IN PROGRESS when video starts. No lead-up, no preparation, no "1-2-3-go". We enter MID-ACTION.`,
+      directive: 'The viewer decides in 0.3-0.5 seconds: watch or scroll. The hook is 100% VISUAL вЂ” no one reads text or waits for words. Frame 1 must DEMAND attention.',
+      primary_hook: `${hookObj.action_en} вЂ” this physical action is ALREADY IN PROGRESS when video starts. No lead-up, no preparation, no "1-2-3-go". We enter MID-ACTION.`,
       face_emotion: 'Character A\'s face shows EXTREME readable emotion from FRAME 1 (literally frame 0, the first displayed image): fury, theatrical disbelief, righteous indignation, explosive shock. The face IS the hook. Neutral face = scroll-away.',
       gaze_hook: 'Direct eye contact with camera lens from frame 1. Pupils visible and pointed at viewer. This triggers hardwired primal response: "someone is staring at ME". 3x more effective than any text overlay.',
       composition_hook: 'Both faces visible, well-lit, and emotionally charged from frame 1. No fade-in, no black frame, no title card, no text, no logo. The SCENE is already happening when we arrive.',
-      object_hook: `${propAnchor} or character\'s signature element visible from frame 1 — gives instant visual context. The viewer\'s eye goes: FACE → EMOTION → OBJECT → "oh, a story" in 0.3s.`,
-      energy_level: 'Frame 1 energy ≥ 80% of peak energy. We do NOT build up to the conflict — we drop INTO it. The hook is the appetizer of the main course, not the walk to the restaurant.',
+      object_hook: `${propAnchor} or character\'s signature element visible from frame 1 вЂ” gives instant visual context. The viewer\'s eye goes: FACE в†’ EMOTION в†’ OBJECT в†’ "oh, a story" in 0.3s.`,
+      energy_level: 'Frame 1 energy в‰Ґ 80% of peak energy. We do NOT build up to the conflict вЂ” we drop INTO it. The hook is the appetizer of the main course, not the walk to the restaurant.',
       forbidden: 'No text hook (text overlay, title card, "wait for it"). No text on screen, no subtitles, no captions, no REC badge, no timestamp, no frames, no borders, no watermarks, no UI elements, no graphic overlays. No slow buildup. No fade-in. No empty/dark frame. No back-of-head. No neutral expressions. No walking into frame. FACE + EMOTION + EYES + ACTION from literal pixel 0.',
     },
 
-    // ── 12. EDIT LOGIC (single-take feel) ────────
+    // в”Ђв”Ђ 12. EDIT LOGIC (single-take feel) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
     edit_logic: {
       directive: 'Single continuous take, no cuts. But internal rhythm follows storytelling beats. The viewer feels beginning-middle-end in 8 seconds without any visible editing.',
       start: 'COLD OPEN MID-SCENE: Video starts with argument ALREADY HAPPENING. Characters positioned, emotion at 70%+, voices possibly already raised. No "hello", no setup, no walking in. The viewer eavesdrops on a fight already in progress.',
-      energy_curve: 'Energy graph: hook 80% → A speaks 85-90% → transition dip 60% (the pause) → B responds 90-95% → killer word 100% → release 70% warm. This curve creates MOMENTUM that pulls through the whole 8s.',
-      pre_punch_pause: 'At 3.6-3.8s (A→B transition): 0.15-0.25s of LOADED SILENCE. A finishes, brief beat where B\'s expression shifts (processing → ready to destroy). This pause makes the audience LEAN IN. The gap is filled by room tone + breathing, not dead silence.',
+      energy_curve: 'Energy graph: hook 80% в†’ A speaks 85-90% в†’ transition dip 60% (the pause) в†’ B responds 90-95% в†’ killer word 100% в†’ release 70% warm. This curve creates MOMENTUM that pulls through the whole 8s.',
+      pre_punch_pause: 'At 3.6-3.8s (Aв†’B transition): 0.15-0.25s of LOADED SILENCE. A finishes, brief beat where B\'s expression shifts (processing в†’ ready to destroy). This pause makes the audience LEAN IN. The gap is filled by room tone + breathing, not dead silence.',
       killer_delivery: 'B\'s killer word at ~6.8s: slight camera push (holder leans forward unconsciously). A\'s physical reaction is VISIBLE and SIMULTANEOUS: freeze mid-gesture in pathos pose, eyes widen, jaw slackens. MOUTH STRICTLY CLOSED. The REACTION sells the punchline.',
-      end_on_reaction: 'Final 0.5-0.8s: end on the REACTION to the punchline, NOT the punchline itself. Shared laughter, A\'s defeated smile, mutual physical contact. This is what makes people REWATCH — they want to see that moment of surrender again.',
+      end_on_reaction: 'Final 0.5-0.8s: end on the REACTION to the punchline, NOT the punchline itself. Shared laughter, A\'s defeated smile, mutual physical contact. This is what makes people REWATCH вЂ” they want to see that moment of surrender again.',
       rewatch_bait: 'In the final 0.3-0.5s: one character makes a micro-expression that rewards re-watching: a barely-visible eye-roll, a "I can\'t believe I\'m laughing" lip-bite, a subtle "you got me" head-shake. Something new to discover on rewatch #2-3.',
-      loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (Reels) feels semi-continuous. Not identical, but compatible mood — warmth transitioning back to tension.',
-      forbidden: 'No clean endings (fade out, wave, "that\'s all folks"). No text overlays, no subtitles, no frames/borders, no REC badge, no timestamp on screen, no graphic overlays of any kind. No setup before the action. No dead air at start or end. No beat longer than 0.3s without visual/audio content. Every single frame of 240 frames (30fps×8s) earns its place.',
+      loop_seam: 'The final frame\'s energy level and body positions should be CLOSE ENOUGH to frame 1 that auto-loop (Reels) feels semi-continuous. Not identical, but compatible mood вЂ” warmth transitioning back to tension.',
+      forbidden: 'No clean endings (fade out, wave, "that\'s all folks"). No text overlays, no subtitles, no frames/borders, no REC badge, no timestamp on screen, no graphic overlays of any kind. No setup before the action. No dead air at start or end. No beat longer than 0.3s without visual/audio content. Every single frame of 240 frames (30fpsГ—8s) earns its place.',
     },
   };
 }
 
-// ─── REMAKE INSTRUCTION BUILDER ──────────────
+// в”Ђв”Ђв”Ђ REMAKE INSTRUCTION BUILDER в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 // When user provides a video reference, build a detailed instruction for Gemini
 // to recreate the video's vibe, structure, and dialogue with our characters
 function buildRemakeInstruction(video_meta, charA, charB) {
   const parts = [];
-  parts.push('🎬 РЕЖИМ РЕМЕЙКА — КОПИЯ ОРИГИНАЛА + ХАРИЗМА НАШИХ ПЕРСОНАЖЕЙ');
+  parts.push('рџЋ¬ Р Р•Р–РРњ Р Р•РњР•Р™РљРђ вЂ” РљРћРџРРЇ РћР РР“РРќРђР›Рђ + РҐРђР РР—РњРђ РќРђРЁРРҐ РџР•Р РЎРћРќРђР–Р•Р™');
   parts.push('');
-  parts.push('ГЛАВНЫЕ ПРАВИЛА:');
-  parts.push('1. ДИАЛОГ: дословная копия из оригинала (85-95% слов сохранить)');
-  parts.push('2. ВИЗУАЛ: та же сцена, локация, ракурс, действия — но с НАШИМИ персонажами');
-  parts.push('3. ОДЕЖДА: персонажи ВСЕГДА в своей фирменной одежде (wardrobe_anchor) — ЗАПРЕЩЕНО копировать одежду из оригинала');
-  parts.push('4. ХАРИЗМА: можно добавить 1 signature_word или reaction_sound персонажа если не ломает смысл');
-  parts.push('5. ЭНЕРГИЯ: определи что сделало оригинал вирусным и усиль через наших персонажей');
+  parts.push('Р“Р›РђР’РќР«Р• РџР РђР’РР›Рђ:');
+  parts.push('1. Р”РРђР›РћР“: РґРѕСЃР»РѕРІРЅР°СЏ РєРѕРїРёСЏ РёР· РѕСЂРёРіРёРЅР°Р»Р° (85-95% СЃР»РѕРІ СЃРѕС…СЂР°РЅРёС‚СЊ)');
+  parts.push('2. Р’РР—РЈРђР›: С‚Р° Р¶Рµ СЃС†РµРЅР°, Р»РѕРєР°С†РёСЏ, СЂР°РєСѓСЂСЃ, РґРµР№СЃС‚РІРёСЏ вЂ” РЅРѕ СЃ РќРђРЁРРњР РїРµСЂСЃРѕРЅР°Р¶Р°РјРё');
+  parts.push('3. РћР”Р•Р–Р”Рђ: РїРµСЂСЃРѕРЅР°Р¶Рё Р’РЎР•Р“Р”Рђ РІ СЃРІРѕРµР№ С„РёСЂРјРµРЅРЅРѕР№ РѕРґРµР¶РґРµ (wardrobe_anchor) вЂ” Р—РђРџР Р•Р©Р•РќРћ РєРѕРїРёСЂРѕРІР°С‚СЊ РѕРґРµР¶РґСѓ РёР· РѕСЂРёРіРёРЅР°Р»Р°');
+  parts.push('4. РҐРђР РР—РњРђ: РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ 1 signature_word РёР»Рё reaction_sound РїРµСЂСЃРѕРЅР°Р¶Р° РµСЃР»Рё РЅРµ Р»РѕРјР°РµС‚ СЃРјС‹СЃР»');
+  parts.push('5. Р­РќР•Р Р“РРЇ: РѕРїСЂРµРґРµР»Рё С‡С‚Рѕ СЃРґРµР»Р°Р»Рѕ РѕСЂРёРіРёРЅР°Р» РІРёСЂСѓСЃРЅС‹Рј Рё СѓСЃРёР»СЊ С‡РµСЂРµР· РЅР°С€РёС… РїРµСЂСЃРѕРЅР°Р¶РµР№');
   parts.push('');
 
   if (video_meta.title) {
-    parts.push(`📝 Название оригинала: "${video_meta.title}"`);
+    parts.push(`рџ“ќ РќР°Р·РІР°РЅРёРµ РѕСЂРёРіРёРЅР°Р»Р°: "${video_meta.title}"`);
   }
   if (video_meta.author) {
-    parts.push(`👤 Автор: @${video_meta.author} (${video_meta.platform || 'Instagram'})`);
+    parts.push(`рџ‘¤ РђРІС‚РѕСЂ: @${video_meta.author} (${video_meta.platform || 'Instagram'})`);
   }
   if (video_meta.duration) {
-    parts.push(`⏱ Длительность оригинала: ${video_meta.duration}с`);
+    parts.push(`вЏ± Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ РѕСЂРёРіРёРЅР°Р»Р°: ${video_meta.duration}СЃ`);
   }
   if (video_meta.music) {
-    parts.push(`🎵 Музыка: ${video_meta.music}`);
+    parts.push(`рџЋµ РњСѓР·С‹РєР°: ${video_meta.music}`);
   }
 
   parts.push('');
-  parts.push(`🅰️ Персонаж A: ${charA.name_ru} — ${charA.vibe_archetype || 'провокатор'}, темп ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
-  parts.push(`🅱️ Персонаж B: ${charB.name_ru} — ${charB.vibe_archetype || 'панчлайн'}, темп ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
+  parts.push(`рџ…°пёЏ РџРµСЂСЃРѕРЅР°Р¶ A: ${charA.name_ru} вЂ” ${charA.vibe_archetype || 'РїСЂРѕРІРѕРєР°С‚РѕСЂ'}, С‚РµРјРї ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
+  parts.push(`рџ…±пёЏ РџРµСЂСЃРѕРЅР°Р¶ B: ${charB.name_ru} вЂ” ${charB.vibe_archetype || 'РїР°РЅС‡Р»Р°Р№РЅ'}, С‚РµРјРї ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
   parts.push('');
-  parts.push('⚠️ КРИТИЧЕСКИ ВАЖНО:');
-  parts.push('- Диалог ОБЯЗАТЕЛЬНО на русском языке');
-  parts.push('- dialogue_A_ru = ДОСЛОВНАЯ копия речи первого (можно изменить 1-3 слова для стиля персонажа)');
-  parts.push('- dialogue_B_ru = ДОСЛОВНАЯ копия речи второго (можно изменить 1-3 слова для стиля персонажа)');
-  parts.push('- killer_word = последнее ударное слово из ОРИГИНАЛЬНОЙ речи');
-  parts.push('- НЕ ПЕРЕПИСЫВАЙ диалог! НЕ ПРИДУМЫВАЙ НОВЫЙ! Бери ДОСЛОВНО из оригинала!');
-  parts.push('- photo_scene_en: КОПИРУЙ сцену из оригинала + ДОСЛОВНО вставь character_en каждого персонажа');
-  parts.push('- remake_veo_prompt_en: 6 блоков, 300-500 слов, ультра-детальный промпт-копия визуала оригинала');
-  parts.push('- Если к сообщению приложено фото обложки — используй его как визуальный референс');
-  parts.push('- Воспроизведи композицию кадра, позы, энергию из обложки');
+  parts.push('вљ пёЏ РљР РРўРР§Р•РЎРљР Р’РђР–РќРћ:');
+  parts.push('- Р”РёР°Р»РѕРі РћР‘РЇР—РђРўР•Р›Р¬РќРћ РЅР° СЂСѓСЃСЃРєРѕРј СЏР·С‹РєРµ');
+  parts.push('- dialogue_A_ru = Р”РћРЎР›РћР’РќРђРЇ РєРѕРїРёСЏ СЂРµС‡Рё РїРµСЂРІРѕРіРѕ (РјРѕР¶РЅРѕ РёР·РјРµРЅРёС‚СЊ 1-3 СЃР»РѕРІР° РґР»СЏ СЃС‚РёР»СЏ РїРµСЂСЃРѕРЅР°Р¶Р°)');
+  parts.push('- dialogue_B_ru = Р”РћРЎР›РћР’РќРђРЇ РєРѕРїРёСЏ СЂРµС‡Рё РІС‚РѕСЂРѕРіРѕ (РјРѕР¶РЅРѕ РёР·РјРµРЅРёС‚СЊ 1-3 СЃР»РѕРІР° РґР»СЏ СЃС‚РёР»СЏ РїРµСЂСЃРѕРЅР°Р¶Р°)');
+  parts.push('- killer_word = РїРѕСЃР»РµРґРЅРµРµ СѓРґР°СЂРЅРѕРµ СЃР»РѕРІРѕ РёР· РћР РР“РРќРђР›Р¬РќРћР™ СЂРµС‡Рё');
+  parts.push('- РќР• РџР•Р Р•РџРРЎР«Р’РђР™ РґРёР°Р»РѕРі! РќР• РџР РР”РЈРњР«Р’РђР™ РќРћР’Р«Р™! Р‘РµСЂРё Р”РћРЎР›РћР’РќРћ РёР· РѕСЂРёРіРёРЅР°Р»Р°!');
+  parts.push('- photo_scene_en: РљРћРџРР РЈР™ СЃС†РµРЅСѓ РёР· РѕСЂРёРіРёРЅР°Р»Р° + Р”РћРЎР›РћР’РќРћ РІСЃС‚Р°РІСЊ character_en РєР°Р¶РґРѕРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°');
+  parts.push('- remake_veo_prompt_en: 6 Р±Р»РѕРєРѕРІ, 300-500 СЃР»РѕРІ, СѓР»СЊС‚СЂР°-РґРµС‚Р°Р»СЊРЅС‹Р№ РїСЂРѕРјРїС‚-РєРѕРїРёСЏ РІРёР·СѓР°Р»Р° РѕСЂРёРіРёРЅР°Р»Р°');
+  parts.push('- Р•СЃР»Рё Рє СЃРѕРѕР±С‰РµРЅРёСЋ РїСЂРёР»РѕР¶РµРЅРѕ С„РѕС‚Рѕ РѕР±Р»РѕР¶РєРё вЂ” РёСЃРїРѕР»СЊР·СѓР№ РµРіРѕ РєР°Рє РІРёР·СѓР°Р»СЊРЅС‹Р№ СЂРµС„РµСЂРµРЅСЃ');
+  parts.push('- Р’РѕСЃРїСЂРѕРёР·РІРµРґРё РєРѕРјРїРѕР·РёС†РёСЋ РєР°РґСЂР°, РїРѕР·С‹, СЌРЅРµСЂРіРёСЋ РёР· РѕР±Р»РѕР¶РєРё');
 
   return parts.join('\n');
 }
 
-// ─── TIMING GRID BUILDER (v2) ────────────────
+// в”Ђв”Ђв”Ђ TIMING GRID BUILDER (v2) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 function buildTimingGridV2(hookObj, releaseObj) {
   return {
     total_seconds: 8.0,
@@ -1312,40 +1312,40 @@ function buildTimingGridV2(hookObj, releaseObj) {
   };
 }
 
-// ─── QC GATE (v3) ────────────────────────────
-// Smart quality control — 16 checks, some randomly fail to show system intelligence.
+// в”Ђв”Ђв”Ђ QC GATE (v3) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// Smart quality control вЂ” 16 checks, some randomly fail to show system intelligence.
 // After user clicks "Fix", all issues resolve with detailed fix descriptions.
 function runQCGate(blueprint, cast) {
   const rng = seededRandom(Date.now().toString());
 
-  // Pool of soft-fail checks — system randomly picks 2-4 to "find" issues
+  // Pool of soft-fail checks вЂ” system randomly picks 2-4 to "find" issues
   const softFailPool = [
-    { id: 's1', name_ru: 'Микротекстура кожи', name_en: 'skin_microtexture', desc_fail: 'Недостаточная детализация пор и морщин на лице A', desc_fix: 'Добавлен параметр pore_density=0.8 + wrinkle_map для обоих персонажей', group: 'лицо' },
-    { id: 's2', name_ru: 'Живость глаз', name_en: 'eye_saccades', desc_fail: 'Отсутствуют микродвижения зрачков (саккады)', desc_fix: 'Включены saccade_interval=0.3s + corneal_glint для реалистичного взгляда', group: 'лицо' },
-    { id: 's3', name_ru: 'Тени под скулами', name_en: 'cheekbone_shadow', desc_fail: 'Тени плоские — нет объёма лица', desc_fix: 'Скорректированы shadow_depth и ambient_occlusion для скул и носа', group: 'лицо' },
-    { id: 's4', name_ru: 'Шум сенсора', name_en: 'sensor_noise', desc_fail: 'Изображение слишком чистое — выглядит синтетически', desc_fix: 'Добавлен лёгкий ISO noise + grain_amount=0.04 для реалистичности', group: 'камера' },
-    { id: 's5', name_ru: 'Motion blur жестов', name_en: 'gesture_motion_blur', desc_fail: 'Резкие жесты без размытия — нереалистично', desc_fix: 'Включен motion_blur для быстрых жестов (shutter_angle=180°)', group: 'камера' },
-    { id: 's6', name_ru: 'Баланс белого', name_en: 'white_balance_drift', desc_fail: 'Белый баланс идеален — не похоже на реальную съёмку', desc_fix: 'Добавлен wb_drift=±200K для имитации реальной камеры', group: 'камера' },
-    { id: 's7', name_ru: 'Компрессия видео', name_en: 'compression_artifacts', desc_fail: 'Нет артефактов сжатия — слишком идеально', desc_fix: 'Добавлены subtle_block_artifacts=0.02 для Reels-реализма', group: 'камера' },
-    { id: 's8', name_ru: 'Дыхание персонажей', name_en: 'breathing_animation', desc_fail: 'Грудная клетка статична — нет дыхания', desc_fix: 'Активирована chest_rise_cycle=3.5s для обоих персонажей', group: 'тело' },
-    { id: 's9', name_ru: 'Микрожесты рук', name_en: 'hand_micro_gestures', desc_fail: 'Руки слишком статичны во время речи', desc_fix: 'Добавлены hand_gesture_frequency=0.7 + finger_curl_variation', group: 'тело' },
-    { id: 's10', name_ru: 'Вес тела', name_en: 'body_weight_shift', desc_fail: 'Нет переноса веса — персонажи как статуи', desc_fix: 'Включен weight_shift_interval=2s + subtle_sway для обоих', group: 'тело' },
-    { id: 's11', name_ru: 'Паузы в речи', name_en: 'speech_pause_natural', desc_fail: 'Речь без пауз — звучит роботизированно', desc_fix: 'Добавлены micro_pauses=0.15s между фразами + breath_pause', group: 'аудио' },
-    { id: 's12', name_ru: 'Громкость смеха', name_en: 'laugh_volume_curve', desc_fail: 'Смех на одной громкости — неестественно', desc_fix: 'Скорректирована laugh_volume_curve: crescendo→peak→fade', group: 'аудио' },
-    { id: 's13', name_ru: 'Фокус камеры', name_en: 'autofocus_hunt', desc_fail: 'Мгновенный фокус — телефон так не снимает', desc_fix: 'Добавлен af_hunt_duration=0.12s при приближении к камере', group: 'камера' },
-    { id: 's14', name_ru: 'Тремор камеры', name_en: 'handheld_tremor', desc_fail: 'Камера идеально стабильна — не похоже на ручную съёмку', desc_fix: 'Включен handheld_shake=0.3px + stabilization_lag=0.05s', group: 'камера' },
+    { id: 's1', name_ru: 'РњРёРєСЂРѕС‚РµРєСЃС‚СѓСЂР° РєРѕР¶Рё', name_en: 'skin_microtexture', desc_fail: 'РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅР°СЏ РґРµС‚Р°Р»РёР·Р°С†РёСЏ РїРѕСЂ Рё РјРѕСЂС‰РёРЅ РЅР° Р»РёС†Рµ A', desc_fix: 'Р”РѕР±Р°РІР»РµРЅ РїР°СЂР°РјРµС‚СЂ pore_density=0.8 + wrinkle_map РґР»СЏ РѕР±РѕРёС… РїРµСЂСЃРѕРЅР°Р¶РµР№', group: 'Р»РёС†Рѕ' },
+    { id: 's2', name_ru: 'Р–РёРІРѕСЃС‚СЊ РіР»Р°Р·', name_en: 'eye_saccades', desc_fail: 'РћС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ РјРёРєСЂРѕРґРІРёР¶РµРЅРёСЏ Р·СЂР°С‡РєРѕРІ (СЃР°РєРєР°РґС‹)', desc_fix: 'Р’РєР»СЋС‡РµРЅС‹ saccade_interval=0.3s + corneal_glint РґР»СЏ СЂРµР°Р»РёСЃС‚РёС‡РЅРѕРіРѕ РІР·РіР»СЏРґР°', group: 'Р»РёС†Рѕ' },
+    { id: 's3', name_ru: 'РўРµРЅРё РїРѕРґ СЃРєСѓР»Р°РјРё', name_en: 'cheekbone_shadow', desc_fail: 'РўРµРЅРё РїР»РѕСЃРєРёРµ вЂ” РЅРµС‚ РѕР±СЉС‘РјР° Р»РёС†Р°', desc_fix: 'РЎРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°РЅС‹ shadow_depth Рё ambient_occlusion РґР»СЏ СЃРєСѓР» Рё РЅРѕСЃР°', group: 'Р»РёС†Рѕ' },
+    { id: 's4', name_ru: 'РЁСѓРј СЃРµРЅСЃРѕСЂР°', name_en: 'sensor_noise', desc_fail: 'РР·РѕР±СЂР°Р¶РµРЅРёРµ СЃР»РёС€РєРѕРј С‡РёСЃС‚РѕРµ вЂ” РІС‹РіР»СЏРґРёС‚ СЃРёРЅС‚РµС‚РёС‡РµСЃРєРё', desc_fix: 'Р”РѕР±Р°РІР»РµРЅ Р»С‘РіРєРёР№ ISO noise + grain_amount=0.04 РґР»СЏ СЂРµР°Р»РёСЃС‚РёС‡РЅРѕСЃС‚Рё', group: 'РєР°РјРµСЂР°' },
+    { id: 's5', name_ru: 'Motion blur Р¶РµСЃС‚РѕРІ', name_en: 'gesture_motion_blur', desc_fail: 'Р РµР·РєРёРµ Р¶РµСЃС‚С‹ Р±РµР· СЂР°Р·РјС‹С‚РёСЏ вЂ” РЅРµСЂРµР°Р»РёСЃС‚РёС‡РЅРѕ', desc_fix: 'Р’РєР»СЋС‡РµРЅ motion_blur РґР»СЏ Р±С‹СЃС‚СЂС‹С… Р¶РµСЃС‚РѕРІ (shutter_angle=180В°)', group: 'РєР°РјРµСЂР°' },
+    { id: 's6', name_ru: 'Р‘Р°Р»Р°РЅСЃ Р±РµР»РѕРіРѕ', name_en: 'white_balance_drift', desc_fail: 'Р‘РµР»С‹Р№ Р±Р°Р»Р°РЅСЃ РёРґРµР°Р»РµРЅ вЂ” РЅРµ РїРѕС…РѕР¶Рµ РЅР° СЂРµР°Р»СЊРЅСѓСЋ СЃСЉС‘РјРєСѓ', desc_fix: 'Р”РѕР±Р°РІР»РµРЅ wb_drift=В±200K РґР»СЏ РёРјРёС‚Р°С†РёРё СЂРµР°Р»СЊРЅРѕР№ РєР°РјРµСЂС‹', group: 'РєР°РјРµСЂР°' },
+    { id: 's7', name_ru: 'РљРѕРјРїСЂРµСЃСЃРёСЏ РІРёРґРµРѕ', name_en: 'compression_artifacts', desc_fail: 'РќРµС‚ Р°СЂС‚РµС„Р°РєС‚РѕРІ СЃР¶Р°С‚РёСЏ вЂ” СЃР»РёС€РєРѕРј РёРґРµР°Р»СЊРЅРѕ', desc_fix: 'Р”РѕР±Р°РІР»РµРЅС‹ subtle_block_artifacts=0.02 РґР»СЏ Reels-СЂРµР°Р»РёР·РјР°', group: 'РєР°РјРµСЂР°' },
+    { id: 's8', name_ru: 'Р”С‹С…Р°РЅРёРµ РїРµСЂСЃРѕРЅР°Р¶РµР№', name_en: 'breathing_animation', desc_fail: 'Р“СЂСѓРґРЅР°СЏ РєР»РµС‚РєР° СЃС‚Р°С‚РёС‡РЅР° вЂ” РЅРµС‚ РґС‹С…Р°РЅРёСЏ', desc_fix: 'РђРєС‚РёРІРёСЂРѕРІР°РЅР° chest_rise_cycle=3.5s РґР»СЏ РѕР±РѕРёС… РїРµСЂСЃРѕРЅР°Р¶РµР№', group: 'С‚РµР»Рѕ' },
+    { id: 's9', name_ru: 'РњРёРєСЂРѕР¶РµСЃС‚С‹ СЂСѓРє', name_en: 'hand_micro_gestures', desc_fail: 'Р СѓРєРё СЃР»РёС€РєРѕРј СЃС‚Р°С‚РёС‡РЅС‹ РІРѕ РІСЂРµРјСЏ СЂРµС‡Рё', desc_fix: 'Р”РѕР±Р°РІР»РµРЅС‹ hand_gesture_frequency=0.7 + finger_curl_variation', group: 'С‚РµР»Рѕ' },
+    { id: 's10', name_ru: 'Р’РµСЃ С‚РµР»Р°', name_en: 'body_weight_shift', desc_fail: 'РќРµС‚ РїРµСЂРµРЅРѕСЃР° РІРµСЃР° вЂ” РїРµСЂСЃРѕРЅР°Р¶Рё РєР°Рє СЃС‚Р°С‚СѓРё', desc_fix: 'Р’РєР»СЋС‡РµРЅ weight_shift_interval=2s + subtle_sway РґР»СЏ РѕР±РѕРёС…', group: 'С‚РµР»Рѕ' },
+    { id: 's11', name_ru: 'РџР°СѓР·С‹ РІ СЂРµС‡Рё', name_en: 'speech_pause_natural', desc_fail: 'Р РµС‡СЊ Р±РµР· РїР°СѓР· вЂ” Р·РІСѓС‡РёС‚ СЂРѕР±РѕС‚РёР·РёСЂРѕРІР°РЅРЅРѕ', desc_fix: 'Р”РѕР±Р°РІР»РµРЅС‹ micro_pauses=0.15s РјРµР¶РґСѓ С„СЂР°Р·Р°РјРё + breath_pause', group: 'Р°СѓРґРёРѕ' },
+    { id: 's12', name_ru: 'Р“СЂРѕРјРєРѕСЃС‚СЊ СЃРјРµС…Р°', name_en: 'laugh_volume_curve', desc_fail: 'РЎРјРµС… РЅР° РѕРґРЅРѕР№ РіСЂРѕРјРєРѕСЃС‚Рё вЂ” РЅРµРµСЃС‚РµСЃС‚РІРµРЅРЅРѕ', desc_fix: 'РЎРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°РЅР° laugh_volume_curve: crescendoв†’peakв†’fade', group: 'Р°СѓРґРёРѕ' },
+    { id: 's13', name_ru: 'Р¤РѕРєСѓСЃ РєР°РјРµСЂС‹', name_en: 'autofocus_hunt', desc_fail: 'РњРіРЅРѕРІРµРЅРЅС‹Р№ С„РѕРєСѓСЃ вЂ” С‚РµР»РµС„РѕРЅ С‚Р°Рє РЅРµ СЃРЅРёРјР°РµС‚', desc_fix: 'Р”РѕР±Р°РІР»РµРЅ af_hunt_duration=0.12s РїСЂРё РїСЂРёР±Р»РёР¶РµРЅРёРё Рє РєР°РјРµСЂРµ', group: 'РєР°РјРµСЂР°' },
+    { id: 's14', name_ru: 'РўСЂРµРјРѕСЂ РєР°РјРµСЂС‹', name_en: 'handheld_tremor', desc_fail: 'РљР°РјРµСЂР° РёРґРµР°Р»СЊРЅРѕ СЃС‚Р°Р±РёР»СЊРЅР° вЂ” РЅРµ РїРѕС…РѕР¶Рµ РЅР° СЂСѓС‡РЅСѓСЋ СЃСЉС‘РјРєСѓ', desc_fix: 'Р’РєР»СЋС‡РµРЅ handheld_shake=0.3px + stabilization_lag=0.05s', group: 'РєР°РјРµСЂР°' },
   ];
 
   // Always-pass checks (core quality)
   const hardChecks = [
-    { id: 'h1', name_ru: 'Стабильность лица', name_en: 'face_stability', pass: true, hard: true, group: 'лицо', desc_fix: 'Лицевые ключевые точки закреплены' },
-    { id: 'h2', name_ru: 'Реализм рта', name_en: 'mouth_realistic', pass: true, hard: true, group: 'лицо', desc_fix: 'Артикуляция синхронизирована с речью' },
-    { id: 'h3', name_ru: 'Тишина B при речи A', name_en: 'silent_sealed', pass: true, hard: true, group: 'аудио', desc_fix: 'Рот B заблокирован на сегменте A' },
-    { id: 'h4', name_ru: 'Нет наложений аудио', name_en: 'audio_no_overlap', pass: true, hard: true, group: 'аудио', desc_fix: 'Сегменты не пересекаются' },
-    { id: 'h5', name_ru: 'Хук читаем', name_en: 'hook_timing', pass: true, hard: false, group: 'тайминг', desc_fix: 'Хук ≤0.7с — внимание захвачено' },
-    { id: 'h6', name_ru: 'Killer word на месте', name_en: 'killer_word_position', pass: true, hard: false, group: 'тайминг', desc_fix: 'Ударное слово в последней трети B' },
-    { id: 'h7', name_ru: 'Release без слов', name_en: 'release_clean', pass: true, hard: false, group: 'тайминг', desc_fix: 'Финал — только смех, 0 слов' },
-    { id: 'h8', name_ru: 'Фон без паттернов', name_en: 'background_solid', pass: true, hard: false, group: 'сцена', desc_fix: 'Фон натуральный, без артефактов' },
+    { id: 'h1', name_ru: 'РЎС‚Р°Р±РёР»СЊРЅРѕСЃС‚СЊ Р»РёС†Р°', name_en: 'face_stability', pass: true, hard: true, group: 'Р»РёС†Рѕ', desc_fix: 'Р›РёС†РµРІС‹Рµ РєР»СЋС‡РµРІС‹Рµ С‚РѕС‡РєРё Р·Р°РєСЂРµРїР»РµРЅС‹' },
+    { id: 'h2', name_ru: 'Р РµР°Р»РёР·Рј СЂС‚Р°', name_en: 'mouth_realistic', pass: true, hard: true, group: 'Р»РёС†Рѕ', desc_fix: 'РђСЂС‚РёРєСѓР»СЏС†РёСЏ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°РЅР° СЃ СЂРµС‡СЊСЋ' },
+    { id: 'h3', name_ru: 'РўРёС€РёРЅР° B РїСЂРё СЂРµС‡Рё A', name_en: 'silent_sealed', pass: true, hard: true, group: 'Р°СѓРґРёРѕ', desc_fix: 'Р РѕС‚ B Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РЅР° СЃРµРіРјРµРЅС‚Рµ A' },
+    { id: 'h4', name_ru: 'РќРµС‚ РЅР°Р»РѕР¶РµРЅРёР№ Р°СѓРґРёРѕ', name_en: 'audio_no_overlap', pass: true, hard: true, group: 'Р°СѓРґРёРѕ', desc_fix: 'РЎРµРіРјРµРЅС‚С‹ РЅРµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ' },
+    { id: 'h5', name_ru: 'РҐСѓРє С‡РёС‚Р°РµРј', name_en: 'hook_timing', pass: true, hard: false, group: 'С‚Р°Р№РјРёРЅРі', desc_fix: 'РҐСѓРє в‰¤0.7СЃ вЂ” РІРЅРёРјР°РЅРёРµ Р·Р°С…РІР°С‡РµРЅРѕ' },
+    { id: 'h6', name_ru: 'Killer word РЅР° РјРµСЃС‚Рµ', name_en: 'killer_word_position', pass: true, hard: false, group: 'С‚Р°Р№РјРёРЅРі', desc_fix: 'РЈРґР°СЂРЅРѕРµ СЃР»РѕРІРѕ РІ РїРѕСЃР»РµРґРЅРµР№ С‚СЂРµС‚Рё B' },
+    { id: 'h7', name_ru: 'Release Р±РµР· СЃР»РѕРІ', name_en: 'release_clean', pass: true, hard: false, group: 'С‚Р°Р№РјРёРЅРі', desc_fix: 'Р¤РёРЅР°Р» вЂ” С‚РѕР»СЊРєРѕ СЃРјРµС…, 0 СЃР»РѕРІ' },
+    { id: 'h8', name_ru: 'Р¤РѕРЅ Р±РµР· РїР°С‚С‚РµСЂРЅРѕРІ', name_en: 'background_solid', pass: true, hard: false, group: 'СЃС†РµРЅР°', desc_fix: 'Р¤РѕРЅ РЅР°С‚СѓСЂР°Р»СЊРЅС‹Р№, Р±РµР· Р°СЂС‚РµС„Р°РєС‚РѕРІ' },
   ];
 
   // Randomly select 2-4 soft fails
@@ -1375,7 +1375,7 @@ function runQCGate(blueprint, cast) {
   };
 }
 
-// ─── VIDEO PROMPT BUILDER ─────────────────
+// в”Ђв”Ђв”Ђ VIDEO PROMPT BUILDER в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 // Generates a single copy-paste text prompt optimized for AI video generation
 // Expects: natural language, scene + characters + dialogue + camera + sound in one block
 function buildVeoPrompt(opts) {
@@ -1386,6 +1386,7 @@ function buildVeoPrompt(opts) {
     productInfo,
     referenceStyle,
     soloMode = false,
+    enableLaughter = true,
   } = opts;
 
   const hasProduct = !!(productInfo?.description_en);
@@ -1397,7 +1398,7 @@ function buildVeoPrompt(opts) {
   const dB = veoPause(dialogueB);
   const dA2 = dialogueA2 ? veoPause(dialogueA2) : '';
 
-  // ── FULL CHARACTER BLOCK BUILDER ──
+  // в”Ђв”Ђ FULL CHARACTER BLOCK BUILDER в”Ђв”Ђ
   // Includes ALL 50+ params from biology_override, identity_anchors, modifiers
   const buildVeoCharBlock = (char, wardrobe, castEntry) => {
     const bio = char.biology_override || {};
@@ -1406,7 +1407,7 @@ function buildVeoPrompt(opts) {
     const si = char.speech_identity || {};
     const baseDesc = char.prompt_tokens?.character_en || castEntry?.character_en || '';
 
-    // ── AGE-AWARE TOKEN FILTER ──
+    // в”Ђв”Ђ AGE-AWARE TOKEN FILTER в”Ђв”Ђ
     // Prevents elderly-person defaults from contaminating young character prompts
     const ageNum = parseInt(String(bio.age || '').replace(/[^0-9]/g, ''), 10) || 65;
     const isYoung = ageNum < 35;
@@ -1420,8 +1421,8 @@ function buildVeoPrompt(opts) {
       return val;
     };
 
-    // ── VIDEO-SAFE EYE STABILIZATION ──
-    // Veo interprets eye-movement tokens literally → causes darting eyes
+    // в”Ђв”Ђ VIDEO-SAFE EYE STABILIZATION в”Ђв”Ђ
+    // Veo interprets eye-movement tokens literally в†’ causes darting eyes
     const _eyeSafe = (v) => {
       if (!v) return v;
       // Replace darting/shifting eye contact with steady focused alternative
@@ -1440,16 +1441,16 @@ function buildVeoPrompt(opts) {
       return v.replace(/,?\s*eye[s]?\s+(dart|roll)[^,]*/gi, '').replace(/^\s*,\s*/, '').trim() || v;
     };
 
-    // ── FACE_SILHOUETTE VALIDATION ──
+    // в”Ђв”Ђ FACE_SILHOUETTE VALIDATION в”Ђв”Ђ
     // Must contain face geometry, not accessories/identity items
     const FACE_SHAPE_WORDS = /face|oval|angular|round|square|heart|diamond|jaw|cheek|forehead|brow|chin|silhouette/i;
     const NON_FACE_WORDS = /glasses|earring|notebook|pen|hair|eyes|squint|pearl|cold|appraising/i;
     let faceSilhouette = id.face_silhouette || null;
     if (faceSilhouette && NON_FACE_WORDS.test(faceSilhouette) && !FACE_SHAPE_WORDS.test(faceSilhouette)) {
-      faceSilhouette = null; // bad data — skip, baseDesc already has appearance
+      faceSilhouette = null; // bad data вЂ” skip, baseDesc already has appearance
     }
 
-    // ── BODY & FACE ──
+    // в”Ђв”Ђ BODY & FACE в”Ђв”Ђ
     const body = [
       baseDesc,
       bio.height_build ? `Build: ${bio.height_build}` : null,
@@ -1459,7 +1460,7 @@ function buildVeoPrompt(opts) {
       bio.gait_tokens ? `Movement: ${safeArr(bio.gait_tokens)}` : null,
     ].filter(Boolean);
 
-    // ── FACE DETAIL ──
+    // в”Ђв”Ђ FACE DETAIL в”Ђв”Ђ
     const face = [
       faceSilhouette ? `Face shape: ${faceSilhouette}` : null,
       bio.skin_color_tokens ? `Skin tone: ${safeArr(bio.skin_color_tokens)}` : null,
@@ -1489,7 +1490,7 @@ function buildVeoPrompt(opts) {
       bio.scar_mark_tokens ? `Marks: ${safeArr(bio.scar_mark_tokens)}` : null,
     ].filter(Boolean);
 
-    // ── WARDROBE ──
+    // в”Ђв”Ђ WARDROBE в”Ђв”Ђ
     // Fix jewelry contradiction: if jewelry says 'none' but accessory_anchors has jewelry items, skip jewelry line
     const accessoriesStr = safeArr(id.accessory_anchors).toLowerCase();
     const jewelryVal = id.jewelry_anchors;
@@ -1497,7 +1498,7 @@ function buildVeoPrompt(opts) {
     const jewelryIsNone = !jewelryVal || /^none/i.test(jewelryVal);
     const showJewelry = jewelryVal && !jewelryIsNone && jewelryVal !== 'none visible';
 
-    // Wardrobe anchor is the primary outfit description — skip fabric/pattern/sleeves if they contradict
+    // Wardrobe anchor is the primary outfit description вЂ” skip fabric/pattern/sleeves if they contradict
     const mainOutfit = (id.wardrobe_anchor || wardrobe || '').toLowerCase();
     const skipFabric = id.fabric_texture_anchor && mainOutfit && !mainOutfit.includes(id.fabric_texture_anchor.toLowerCase().split(' ')[0]);
     const skipPattern = id.pattern_anchor && id.pattern_anchor !== 'solid color' && id.pattern_anchor !== 'no pattern' && mainOutfit && !mainOutfit.toLowerCase().includes(id.pattern_anchor.toLowerCase().split(' ')[0]);
@@ -1518,7 +1519,7 @@ function buildVeoPrompt(opts) {
       id.cloth_physics_hint ? `Cloth physics: ${id.cloth_physics_hint}` : null,
     ].filter(Boolean);
 
-    // ── EXPRESSION & BEHAVIOR ──
+    // в”Ђв”Ђ EXPRESSION & BEHAVIOR в”Ђв”Ђ
     const behavior = [
       bio.facial_expression_default ? `Resting face: ${bio.facial_expression_default}` : null,
       bio.voice_texture_tokens ? `Voice: ${safeArr(bio.voice_texture_tokens)}` : null,
@@ -1541,7 +1542,7 @@ function buildVeoPrompt(opts) {
       mod.mouth_motion_style ? `Mouth motion: ${mod.mouth_motion_style}` : null,
     ].filter(Boolean);
 
-    // ── SPEECH IDENTITY ──
+    // в”Ђв”Ђ SPEECH IDENTITY в”Ђв”Ђ
     const speech = [
       si.vocabulary_level ? `Vocabulary: ${si.vocabulary_level}` : null,
       si.sentence_structure ? `Sentences: ${si.sentence_structure}` : null,
@@ -1573,12 +1574,12 @@ function buildVeoPrompt(opts) {
   const ageNumB = parseInt(String(charB.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) || 65;
 
   // Camera style
-  const camStyle = 'Smartphone video, 9:16 vertical portrait, medium shot (waist-up framing — NOT close-up talking heads). Device INVISIBLE — hands busy with props. Handheld micro-jitter and breathing oscillation. RAW phone aesthetic: sensor noise ISO 800-1600, blown highlights, JPEG artifacts. Computational portrait-mode bokeh on background.';
+  const camStyle = 'Smartphone video, 9:16 vertical portrait, medium shot (waist-up framing вЂ” NOT close-up talking heads). Device INVISIBLE вЂ” hands busy with props. Handheld micro-jitter and breathing oscillation. RAW phone aesthetic: sensor noise ISO 800-1600, blown highlights, JPEG artifacts. Computational portrait-mode bokeh on background.';
 
-  // Location brief — use full location for richer setting
+  // Location brief вЂ” use full location for richer setting
   const locBrief = location.split(',').slice(0, 3).join(',').trim();
 
-  // Lighting — richer description with color temp and quality
+  // Lighting вЂ” richer description with color temp and quality
   const lightBrief = [
     lightingMood.style.split(',').slice(0, 2).join(',').trim(),
     lightingMood.color_temp ? lightingMood.color_temp : null,
@@ -1592,13 +1593,13 @@ function buildVeoPrompt(opts) {
   // Release with character-specific laugh styles
   const releaseBrief = releaseObj.action_en.split(',').slice(0, 2).join(',').trim();
 
-  // Strip example portions from speech tokens (after ' — ') so that
-  // identity-specific examples like "МОЛОКО! Восемьсот рублей МОЛОКО!"
+  // Strip example portions from speech tokens (after ' вЂ” ') so that
+  // identity-specific examples like "РњРћР›РћРљРћ! Р’РѕСЃРµРјСЊСЃРѕС‚ СЂСѓР±Р»РµР№ РњРћР›РћРљРћ!"
   // don't contaminate scene-specific dialogue delivery directions.
   // Full tokens remain in the character description block.
   const stripSpeechExample = (s) => {
     if (!s) return '';
-    const idx = s.indexOf(' — ');
+    const idx = s.indexOf(' вЂ” ');
     const cleaned = idx > 0 ? s.slice(0, idx).trim() : s;
     return cleaned.length >= 6 ? cleaned : '';
   };
@@ -1645,107 +1646,107 @@ function buildVeoPrompt(opts) {
   const bListeningPose = charB.modifiers?.listening_behavior || 'arms crossed, slight smirk';
 
   if (soloMode) {
-    // ── SOLO MODE: single character monologue ──
+    // в”Ђв”Ђ SOLO MODE: single character monologue в”Ђв”Ђ
     lines.push(`A hyper-realistic smartphone video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. Medium shot (waist-up). ${camStyle}`);
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
-    lines.push(`Character (center of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character (center of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand вЂ” see product description below.' : ''}`);
     lines.push('');
-    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
+    lines.push(`The video starts FROM THE PHOTO (frame 0) вЂ” no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end of the monologue.`);
+    lines.push(`Character speaks in Russian to the camera: "${dA}" вЂ” ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end of the monologue.`);
     lines.push('');
     if (enableLaughter) {
       const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
-      lines.push(`Character bursts into genuine laughter — ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
+      lines.push(`Character bursts into genuine laughter вЂ” ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
     } else {
-      lines.push(`Character finishes speaking with a confident expression — holds eye contact with camera, slight nod. No laughter. The monologue ends on the punchline word "${killerWord}". Brief pause, then video cuts.`);
+      lines.push(`Character finishes speaking with a confident expression вЂ” holds eye contact with camera, slight nod. No laughter. The monologue ends on the punchline word "${killerWord}". Brief pause, then video cuts.`);
     }
   } else {
-    // ── DUO MODE: two characters dialogue ──
+    // в”Ђв”Ђ DUO MODE: two characters dialogue в”Ђв”Ђ
     const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
     lines.push(`A hyper-realistic smartphone video of ${pairAgeDesc} characters in a heated comedic argument. Medium shot (waist-up). ${camStyle}`);
     lines.push('');
     lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
     lines.push('');
-    lines.push(`Character A (left of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
+    lines.push(`Character A (left of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand вЂ” see product description below.' : ''}`);
     lines.push(`Character B (right of frame): ${fullCharB}. Calm, composed, ${bListeningPose}.`);
     lines.push('');
 
     // Scene flow
-    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
+    lines.push(`The video starts FROM THE PHOTO (frame 0) вЂ” no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED — only micro-expressions: side-eye, nostrils flaring, one eyebrow raising.`);
+    lines.push(`A speaks in Russian to the camera: "${dA}" вЂ” ${charA.speech_pace} pace, ${voiceA}. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED вЂ” only micro-expressions: side-eye, nostrils flaring, one eyebrow raising.`);
     lines.push('');
 
     if (dA2) {
-      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+      lines.push(`B responds in Russian: "${dB}" вЂ” ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
       lines.push('');
-      lines.push(`A fires back a short follow-up in Russian: "${dA2}" — quick 1-4 word reaction.`);
+      lines.push(`A fires back a short follow-up in Russian: "${dA2}" вЂ” quick 1-4 word reaction.`);
     } else {
-      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+      lines.push(`B responds in Russian: "${dB}" вЂ” ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
     }
     lines.push('');
     if (enableLaughter) {
       const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
       const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
-      lines.push(`Both burst into genuine raspy laughter — both lean into each other, shoulders shaking, ${laughA} from A, ${laughB} from B. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. Warm shared moment.`);
+      lines.push(`Both burst into genuine raspy laughter вЂ” both lean into each other, shoulders shaking, ${laughA} from A, ${laughB} from B. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. Warm shared moment.`);
     } else {
-      lines.push(`A stares at B in stunned silence after the punchline "${killerWord}". No laughter. Tension holds — frozen expressions, micro-reactions only. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. The dialogue simply ends.`);
+      lines.push(`A stares at B in stunned silence after the punchline "${killerWord}". No laughter. Tension holds вЂ” frozen expressions, micro-reactions only. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. The dialogue simply ends.`);
     }
   }
   lines.push('');
 
-  // Sound design — location-aware ambient audio
+  // Sound design вЂ” location-aware ambient audio
   const locLower = location.toLowerCase();
   const roomTone = isOutdoor
-    ? locLower.includes('garden') || locLower.includes('dacha') || locLower.includes('огород') ? 'birdsong, wind rustling garden foliage, distant lawnmower, insects buzzing, gate creak'
+    ? locLower.includes('garden') || locLower.includes('dacha') || locLower.includes('РѕРіРѕСЂРѕРґ') ? 'birdsong, wind rustling garden foliage, distant lawnmower, insects buzzing, gate creak'
     : locLower.includes('bench') || locLower.includes('park') ? 'distant children playing, wind through trees, pigeon cooing, jogger footsteps, dog barking'
-    : locLower.includes('courtyard') || locLower.includes('двор') ? 'car engine starting, children shouting, ball bouncing, distant music from window, pigeon wings flapping'
-    : locLower.includes('bus') || locLower.includes('stop') || locLower.includes('остановк') ? 'traffic noise, bus diesel idle, pneumatic door hiss, crowd murmur, phone ringtone'
+    : locLower.includes('courtyard') || locLower.includes('РґРІРѕСЂ') ? 'car engine starting, children shouting, ball bouncing, distant music from window, pigeon wings flapping'
+    : locLower.includes('bus') || locLower.includes('stop') || locLower.includes('РѕСЃС‚Р°РЅРѕРІРє') ? 'traffic noise, bus diesel idle, pneumatic door hiss, crowd murmur, phone ringtone'
     : locLower.includes('market') || locLower.includes('bazaar') || locLower.includes('watermelon') ? 'crowd murmur, vendor calls, plastic bag rustle, distant radio, scale clinking'
-    : locLower.includes('roof') || locLower.includes('крыш') ? 'wind gusts, distant city hum, helicopter far away, metal sheet rattle, pigeon cooing'
+    : locLower.includes('roof') || locLower.includes('РєСЂС‹С€') ? 'wind gusts, distant city hum, helicopter far away, metal sheet rattle, pigeon cooing'
     : 'birds chirping, wind through foliage, distant ambient sounds, occasional car horn'
     : locLower.includes('kitchen') || locLower.includes('fridge') ? 'humming fridge, wall clock tick, distant plumbing, kettle whistle starting, cup clink'
-    : locLower.includes('stairwell') || locLower.includes('mailbox') || locLower.includes('подъезд') ? 'fluorescent buzz, distant elevator, echo in concrete space, door slam two floors up'
+    : locLower.includes('stairwell') || locLower.includes('mailbox') || locLower.includes('РїРѕРґСЉРµР·Рґ') ? 'fluorescent buzz, distant elevator, echo in concrete space, door slam two floors up'
     : locLower.includes('marshrutka') || locLower.includes('vinyl seat') ? 'diesel engine vibration, vinyl seat squeak, muffled traffic outside, door pneumatics hiss'
-    : locLower.includes('balcony') || locLower.includes('laundry') || locLower.includes('балкон') ? 'distant city hum, car horns, pigeon cooing, clothesline wire creak'
-    : locLower.includes('polyclinic') || locLower.includes('mint-green') || locLower.includes('больниц') ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA, coughing in corridor'
-    : locLower.includes('barn') || locLower.includes('hay') || locLower.includes('сарай') ? 'creaking wood, wind through plank gaps, distant rooster, hay rustle'
-    : locLower.includes('attic') || locLower.includes('rafter') || locLower.includes('чердак') ? 'roof rain patter, creaking rafters, dust settling whisper, mouse scurrying'
-    : locLower.includes('garage') || locLower.includes('гараж') ? 'metal tool clink, oil drip, distant car engine, fluorescent tube buzz, radio static'
-    : locLower.includes('elevator') || locLower.includes('лифт') ? 'motor hum, cable tension, metal creak, distant floor ding, muffled voices through walls'
-    : locLower.includes('bathroom') || locLower.includes('ванн') ? 'dripping tap, pipe gurgle, tile echo, extractor fan hum'
-    : locLower.includes('bedroom') || locLower.includes('спальн') ? 'wall clock tick, muffled TV from neighbors, fabric rustle, radiator click'
-    : locLower.includes('office') || locLower.includes('офис') ? 'keyboard clicking, air conditioning hum, printer whirring, muffled phone ringing'
-    : locLower.includes('store') || locLower.includes('магазин') || locLower.includes('shop') ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
-    : locLower.includes('corridor') || locLower.includes('коридор') || locLower.includes('hallway') ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
+    : locLower.includes('balcony') || locLower.includes('laundry') || locLower.includes('Р±Р°Р»РєРѕРЅ') ? 'distant city hum, car horns, pigeon cooing, clothesline wire creak'
+    : locLower.includes('polyclinic') || locLower.includes('mint-green') || locLower.includes('Р±РѕР»СЊРЅРёС†') ? 'fluorescent hum, rubber shoe squeaks on linoleum, distant intercom PA, coughing in corridor'
+    : locLower.includes('barn') || locLower.includes('hay') || locLower.includes('СЃР°СЂР°Р№') ? 'creaking wood, wind through plank gaps, distant rooster, hay rustle'
+    : locLower.includes('attic') || locLower.includes('rafter') || locLower.includes('С‡РµСЂРґР°Рє') ? 'roof rain patter, creaking rafters, dust settling whisper, mouse scurrying'
+    : locLower.includes('garage') || locLower.includes('РіР°СЂР°Р¶') ? 'metal tool clink, oil drip, distant car engine, fluorescent tube buzz, radio static'
+    : locLower.includes('elevator') || locLower.includes('Р»РёС„С‚') ? 'motor hum, cable tension, metal creak, distant floor ding, muffled voices through walls'
+    : locLower.includes('bathroom') || locLower.includes('РІР°РЅРЅ') ? 'dripping tap, pipe gurgle, tile echo, extractor fan hum'
+    : locLower.includes('bedroom') || locLower.includes('СЃРїР°Р»СЊРЅ') ? 'wall clock tick, muffled TV from neighbors, fabric rustle, radiator click'
+    : locLower.includes('office') || locLower.includes('РѕС„РёСЃ') ? 'keyboard clicking, air conditioning hum, printer whirring, muffled phone ringing'
+    : locLower.includes('store') || locLower.includes('РјР°РіР°Р·РёРЅ') || locLower.includes('shop') ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
+    : locLower.includes('corridor') || locLower.includes('РєРѕСЂРёРґРѕСЂ') || locLower.includes('hallway') ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
     : 'subtle room ambiance, quiet hum, occasional creak, distant muffled sounds';
-  lines.push(`Sound: ${roomTone}. Natural phone mic quality — slightly compressed, room-reverberant. Minimum 2 specific micro-sounds from this location. Fabric rustle on every movement. Audible inhale before each speaking turn. Saliva clicks on т/к/п/д consonants, lip smack, tongue contact on л/н. Laughter 20-30% louder — raspy, contagious. No music.`);
+  lines.push(`Sound: ${roomTone}. Natural phone mic quality вЂ” slightly compressed, room-reverberant. Minimum 2 specific micro-sounds from this location. Fabric rustle on every movement. Audible inhale before each speaking turn. Saliva clicks on С‚/Рє/Рї/Рґ consonants, lip smack, tongue contact on Р»/РЅ. Laughter 20-30% louder вЂ” raspy, contagious. No music.`);
   lines.push('');
 
   // Style/negative
-  lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, age-appropriate skin detail (${ageDescA === 'elderly' || ageDescB === 'elderly' ? 'wrinkles, age marks for elderly' : ageDescA === 'young' && ageDescB === 'young' ? 'natural imperfections, minor blemishes for young skin' : 'fine lines, natural imperfections'}). Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality — authentic raw phone video.`);
+  lines.push(`Style: Hyper-realistic smartphone footage indistinguishable from a real selfie video. Visible skin pores, age-appropriate skin detail (${ageDescA === 'elderly' || ageDescB === 'elderly' ? 'wrinkles, age marks for elderly' : ageDescA === 'young' && ageDescB === 'young' ? 'natural imperfections, minor blemishes for young skin' : 'fine lines, natural imperfections'}). Natural sensor noise (ISO 800-1600). Slight JPEG compression artifacts. Imperfect auto white balance. NOT studio quality вЂ” authentic raw phone video.`);
   lines.push('');
-  lines.push(`CRITICAL — ZERO TEXT IN VIDEO: Absolutely no text overlays, no subtitles, no captions, no speech bubbles, no name tags, no title cards, no watermarks, no logos, no UI elements, no borders, no filters, no REC badge, no timestamp, no timecode. The video frame must contain ONLY the scene with characters — not a single letter, digit, or graphic overlay of any kind. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
+  lines.push(`CRITICAL вЂ” ZERO TEXT IN VIDEO: Absolutely no text overlays, no subtitles, no captions, no speech bubbles, no name tags, no title cards, no watermarks, no logos, no UI elements, no borders, no filters, no REC badge, no timestamp, no timecode. The video frame must contain ONLY the scene with characters вЂ” not a single letter, digit, or graphic overlay of any kind. No plastic or airbrushed skin. No studio lighting. No perfectly smooth surfaces. The video must look completely real.`);
 
   // Topic context
   if (topicRu) {
     lines.push('');
-    lines.push(`The argument topic: ${cat.en} — ${topicRu}.`);
+    lines.push(`The argument topic: ${cat.en} вЂ” ${topicRu}.`);
   }
 
   // Product placement
   if (hasProduct) {
     lines.push('');
-    lines.push(`PRODUCT IN FRAME (must match the reference photo EXACTLY): ${productInfo.description_en}. Character A holds this product while arguing — it is clearly visible throughout the video, rendered with photorealistic accuracy. The product's colors, shape, branding, and materials must be identical to the original reference photo. The product is a natural part of the argument — A gestures with it, shows it to camera, uses it as a prop.`);
+    lines.push(`PRODUCT IN FRAME (must match the reference photo EXACTLY): ${productInfo.description_en}. Character A holds this product while arguing вЂ” it is clearly visible throughout the video, rendered with photorealistic accuracy. The product's colors, shape, branding, and materials must be identical to the original reference photo. The product is a natural part of the argument вЂ” A gestures with it, shows it to camera, uses it as a prop.`);
   }
 
   // Visual reference style
   if (hasReference) {
     lines.push('');
-    lines.push(`VISUAL REFERENCE — match this aesthetic: ${referenceStyle.description_en}. Replicate the lighting direction, color palette, mood, contrast, and composition style from this reference as closely as possible while keeping the characters, dialogue, and selfie format intact.`);
+    lines.push(`VISUAL REFERENCE вЂ” match this aesthetic: ${referenceStyle.description_en}. Replicate the lighting direction, color palette, mood, contrast, and composition style from this reference as closely as possible while keeping the characters, dialogue, and selfie format intact.`);
   }
 
   return lines.join('\n');
@@ -1773,11 +1774,11 @@ export function generate(input) {
     selected_location_id = null
   } = input;
 
-  // ── VALIDATION ──
+  // в”Ђв”Ђ VALIDATION в”Ђв”Ђ
   const warnings = [];
   const rng = seededRandom(seed);
   
-  // Validate characters — solo mode: character2_id can be null
+  // Validate characters вЂ” solo mode: character2_id can be null
   const rawA = characters.find(c => c.id === character1_id) || characters[0];
   const soloMode = !character2_id;
   const rawB = soloMode
@@ -1785,19 +1786,19 @@ export function generate(input) {
     : (characters.find(c => c.id === character2_id) || characters[1] || characters[0]);
 
   if (!rawA) {
-    return { error: 'Character not found', warnings: ['Выберите хотя бы одного персонажа'] };
+    return { error: 'Character not found', warnings: ['Р’С‹Р±РµСЂРёС‚Рµ С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°'] };
   }
   if (soloMode) {
-    warnings.push('Соло-режим: один персонаж, монолог');
+    warnings.push('РЎРѕР»Рѕ-СЂРµР¶РёРј: РѕРґРёРЅ РїРµСЂСЃРѕРЅР°Р¶, РјРѕРЅРѕР»РѕРі');
   }
 
   // Validate input mode consistency
   if (input_mode === 'script' && (!script_ru || (!script_ru.A && !script_ru.B))) {
-    warnings.push('Режим "Свой диалог" выбран, но диалог не указан — будет использован случайный');
+    warnings.push('Р РµР¶РёРј "РЎРІРѕР№ РґРёР°Р»РѕРі" РІС‹Р±СЂР°РЅ, РЅРѕ РґРёР°Р»РѕРі РЅРµ СѓРєР°Р·Р°РЅ вЂ” Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅ СЃР»СѓС‡Р°Р№РЅС‹Р№');
   }
   
   if (input_mode === 'video' && (!video_meta || !video_meta.url && !video_meta.cover_base64)) {
-    warnings.push('Режим "По видео" выбран, но видео не загружено — будет использован случайный диалог');
+    warnings.push('Р РµР¶РёРј "РџРѕ РІРёРґРµРѕ" РІС‹Р±СЂР°РЅ, РЅРѕ РІРёРґРµРѕ РЅРµ Р·Р°РіСЂСѓР¶РµРЅРѕ вЂ” Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅ СЃР»СѓС‡Р°Р№РЅС‹Р№ РґРёР°Р»РѕРі');
   }
   
   // Validate script content
@@ -1805,36 +1806,36 @@ export function generate(input) {
     const maxWordsA = soloMode ? 30 : 10;
     const maxWordsB = 12;
     if (script_ru.A && script_ru.A.split(/\s+/).length > maxWordsA) {
-      warnings.push(`Реплика A слишком длинная (${script_ru.A.split(/\s+/).length} слов, макс ${maxWordsA}) — может быть обрезана`);
+      warnings.push(`Р РµРїР»РёРєР° A СЃР»РёС€РєРѕРј РґР»РёРЅРЅР°СЏ (${script_ru.A.split(/\s+/).length} СЃР»РѕРІ, РјР°РєСЃ ${maxWordsA}) вЂ” РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЂРµР·Р°РЅР°`);
     }
     if (script_ru.B && script_ru.B.split(/\s+/).length > maxWordsB) {
-      warnings.push(`Реплика B слишком длинная (${script_ru.B.split(/\s+/).length} слов, макс ${maxWordsB}) — может быть обрезана`);
+      warnings.push(`Р РµРїР»РёРєР° B СЃР»РёС€РєРѕРј РґР»РёРЅРЅР°СЏ (${script_ru.B.split(/\s+/).length} СЃР»РѕРІ, РјР°РєСЃ ${maxWordsB}) вЂ” РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЂРµР·Р°РЅР°`);
     }
   }
   
   // Validate context length
   if (context_ru && context_ru.length > 500) {
-    warnings.push('Тема слишком длинная — может быть обрезана до 500 символов');
+    warnings.push('РўРµРјР° СЃР»РёС€РєРѕРј РґР»РёРЅРЅР°СЏ вЂ” РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЂРµР·Р°РЅР° РґРѕ 500 СЃРёРјРІРѕР»РѕРІ');
   }
   
   // Validate scene hint
   if (scene_hint_ru && scene_hint_ru.length > 200) {
-    warnings.push('Описание видео слишком длинное — может быть обрезано до 200 символов');
+    warnings.push('РћРїРёСЃР°РЅРёРµ РІРёРґРµРѕ СЃР»РёС€РєРѕРј РґР»РёРЅРЅРѕРµ вЂ” РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЂРµР·Р°РЅРѕ РґРѕ 200 СЃРёРјРІРѕР»РѕРІ');
   }
 
   let { A: charA, B: charB } = roles_locked
     ? { A: rawA, B: rawB }
     : resolveRoles(rawA, rawB);
 
-  // ── AGE-AWARE CHARACTER SANITIZATION ──
-  // Filter elderly-specific tokens from young/middle-aged characters’ biology_override
+  // в”Ђв”Ђ AGE-AWARE CHARACTER SANITIZATION в”Ђв”Ђ
+  // Filter elderly-specific tokens from young/middle-aged charactersвЂ™ biology_override
   // + validate face_silhouette contains actual face geometry, not accessories
-  // Creates shallow copies — does NOT mutate original character data
+  // Creates shallow copies вЂ” does NOT mutate original character data
   const _sanitizeChar = (c) => {
     let changed = false;
     let bio = c.biology_override;
     let id = c.identity_anchors;
-    // ── Bio age filter ──
+    // в”Ђв”Ђ Bio age filter в”Ђв”Ђ
     if (bio) {
       const age = parseInt(String(bio.age || '').replace(/[^0-9]/g, ''), 10) || 65;
       if (age < 55) {
@@ -1852,7 +1853,7 @@ export function generate(input) {
         changed = true;
       }
     }
-    // ── Face silhouette validation ──
+    // в”Ђв”Ђ Face silhouette validation в”Ђв”Ђ
     if (id?.face_silhouette) {
       const NON_FACE = /glasses|earring|notebook|pen|hair|eyes|squint|pearl|cold|appraising/i;
       const HAS_FACE = /face|oval|angular|round|square|heart|diamond|jaw|cheek|forehead|brow|chin|silhouette/i;
@@ -1866,18 +1867,18 @@ export function generate(input) {
   charA = _sanitizeChar(charA);
   charB = _sanitizeChar(charB);
 
-  // ── Topic context (from user input) ── must be before category detection
+  // в”Ђв”Ђ Topic context (from user input) в”Ђв”Ђ must be before category detection
   const topicRu = context_ru?.trim() || '';
   const sceneHint = scene_hint_ru?.trim() || '';
 
-  // Category: random structural hint for location/props — Gemini picks the real one
+  // Category: random structural hint for location/props вЂ” Gemini picks the real one
   let cat = category || pickRandom(HUMOR_CATEGORIES, rng);
 
   // topicRu and sceneHint already declared above (before category detection)
   const topicEn = topicRu ? `The comedic argument is specifically about: "${topicRu}".` : '';
-  const topicForScene = topicRu ? ` The argument topic: ${cat.en.toLowerCase()} — ${topicRu}.` : ` The argument topic: ${cat.en.toLowerCase()}.`;
+  const topicForScene = topicRu ? ` The argument topic: ${cat.en.toLowerCase()} вЂ” ${topicRu}.` : ` The argument topic: ${cat.en.toLowerCase()}.`;
 
-  // ── Location (from external catalog or fallback) ──
+  // в”Ђв”Ђ Location (from external catalog or fallback) в”Ђв”Ђ
   const locCatalog = locations.length > 0 ? locations : null;
   let location, locationObj = null;
 
@@ -1903,7 +1904,7 @@ export function generate(input) {
     }
     location = locationObj?.scene_en || FALLBACK_LOCATIONS[0];
   } else {
-    // No external catalog — use fallback
+    // No external catalog вЂ” use fallback
     const locIdx = Math.floor(rng() * FALLBACK_LOCATIONS.length);
     location = FALLBACK_LOCATIONS[locIdx];
     if (historyCache.hasLocation(location)) {
@@ -1911,7 +1912,7 @@ export function generate(input) {
     }
   }
 
-  // ── Lighting (location-coherent selection) ──
+  // в”Ђв”Ђ Lighting (location-coherent selection) в”Ђв”Ђ
   // Indoor locations get indoor-compatible lighting; outdoor get outdoor-compatible
   // Check explicit indoor keywords FIRST to prevent false-positive from outdoor regex
   // (e.g. marshrutka description may mention "street" but it's indoor)
@@ -1922,12 +1923,12 @@ export function generate(input) {
   const lightingPool = isOutdoor ? (outdoorMoods.length ? outdoorMoods : LIGHTING_MOODS) : (indoorMoods.length ? indoorMoods : LIGHTING_MOODS);
   const lightingMood = pickRandom(lightingPool, rng);
 
-  // ── Wardrobe from character anchors (full description, not just a keyword) ──
+  // в”Ђв”Ђ Wardrobe from character anchors (full description, not just a keyword) в”Ђв”Ђ
   const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar';
   const wardrobeB = charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt';
 
-  // ── Hook & Release (character-aware) ──
-  // Character A's hook_style determines the hook action — NOT random
+  // в”Ђв”Ђ Hook & Release (character-aware) в”Ђв”Ђ
+  // Character A's hook_style determines the hook action вЂ” NOT random
   const charAHookStyle = (charA.modifiers?.hook_style || '').toLowerCase();
   let hookObj;
   if (charAHookStyle) {
@@ -1962,16 +1963,16 @@ export function generate(input) {
   // Merge: override hookObj action with character's hook_style for maximum specificity
   const mergedHookObj = {
     action_en: charAHookStyle
-      ? `${charA.modifiers.hook_style} — ${hookObj.action_en}`
+      ? `${charA.modifiers.hook_style} вЂ” ${hookObj.action_en}`
       : hookObj.action_en,
     action_ru: charAHookStyle
-      ? `${charA.modifiers.hook_style} — ${hookObj.action_ru}`
+      ? `${charA.modifiers.hook_style} вЂ” ${hookObj.action_ru}`
       : hookObj.action_ru,
     audio: hookObj.audio,
   };
   const releaseObj = pickRandom(RELEASE_ACTIONS, rng);
 
-  // ── Serial prop anchor (category-aware + location-compatible + avoid repeats) ──
+  // в”Ђв”Ђ Serial prop anchor (category-aware + location-compatible + avoid repeats) в”Ђв”Ђ
   // Indoor-only props that make no sense outdoors
   const INDOOR_ONLY_PROPS = /wall.?mounted|samovar|stool|radio|calendar|sugar bowl|kettle|poker|ashtray/i;
   const filterProps = (arr) => isOutdoor ? arr.filter(p => !INDOOR_ONLY_PROPS.test(p)) : arr;
@@ -1995,7 +1996,7 @@ export function generate(input) {
     }
   }
 
-  // ── Dialogue based on mode ──
+  // в”Ђв”Ђ Dialogue based on mode в”Ђв”Ђ
   let dialogueA, dialogueB, killerWord;
   const demoKey = (cat.ru in DEMO_DIALOGUES) ? cat.ru : Object.keys(DEMO_DIALOGUES)[Math.floor(rng() * Object.keys(DEMO_DIALOGUES).length)];
   const demo = DEMO_DIALOGUES[demoKey];
@@ -2007,7 +2008,7 @@ export function generate(input) {
     dialogueA = script_ru.A || demo.A_lines[demoIdx];
     dialogueB = script_ru.B || (soloMode ? '' : demo.B_lines[demoIdx]);
     const kwSource = (soloMode || !dialogueB) ? dialogueA : dialogueB;
-    killerWord = kwSource.split(/\s+/).pop()?.replace(/[^а-яёa-z]/gi, '') || 'панч';
+    killerWord = kwSource.split(/\s+/).pop()?.replace(/[^Р°-СЏС‘a-z]/gi, '') || 'РїР°РЅС‡';
   } else if (input_mode === 'video' && video_meta) {
     // For video mode: try to extract dialogue from video metadata if available
     if (video_meta.extracted_dialogue) {
@@ -2032,7 +2033,7 @@ export function generate(input) {
     killerWord = demo.killer_word;
   }
 
-  // ── Dialogue override (from editor edits or variant selection) ──
+  // в”Ђв”Ђ Dialogue override (from editor edits or variant selection) в”Ђв”Ђ
   if (dialogue_override) {
     if (dialogue_override.A) dialogueA = dialogue_override.A;
     if (dialogue_override.B) dialogueB = dialogue_override.B;
@@ -2045,7 +2046,7 @@ export function generate(input) {
     }
   }
 
-  // ── Estimate duration ──
+  // в”Ђв”Ђ Estimate duration в”Ђв”Ђ
   const lines = soloMode
     ? [{ speaker: 'A', text: dialogueA, pace: charA.speech_pace }]
     : [
@@ -2056,7 +2057,7 @@ export function generate(input) {
   let estimate = estimateDialogue(lines, { enforce8s: options.enforce8s !== false });
   let autoFixes = [];
 
-  // VIDEO/SCRIPT mode: NEVER auto-trim — dialogue must be preserved verbatim from original
+  // VIDEO/SCRIPT mode: NEVER auto-trim вЂ” dialogue must be preserved verbatim from original
   // Only warn if it's too long, but don't modify
   const isPreserveMode = (input_mode === 'video' || input_mode === 'script');
 
@@ -2072,10 +2073,10 @@ export function generate(input) {
 
   // Warn user if dialogue is long in video/script mode (but DON'T modify it)
   if (isPreserveMode && estimate.risk === 'high') {
-    warnings.push('⚠️ Диалог длиннее обычного — может не влезть в 8 секунд. Попробуйте сократить реплики в редакторе после генерации.');
+    warnings.push('вљ пёЏ Р”РёР°Р»РѕРі РґР»РёРЅРЅРµРµ РѕР±С‹С‡РЅРѕРіРѕ вЂ” РјРѕР¶РµС‚ РЅРµ РІР»РµР·С‚СЊ РІ 8 СЃРµРєСѓРЅРґ. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРѕРєСЂР°С‚РёС‚СЊ СЂРµРїР»РёРєРё РІ СЂРµРґР°РєС‚РѕСЂРµ РїРѕСЃР»Рµ РіРµРЅРµСЂР°С†РёРё.');
   }
 
-  // ── Safety: scan banned words — SKIP for video mode (preserve original verbatim) ──
+  // в”Ђв”Ђ Safety: scan banned words вЂ” SKIP for video mode (preserve original verbatim) в”Ђв”Ђ
   if (!isPreserveMode) {
     const safeA = scanBannedWords(dialogueA || '');
     const safeB = scanBannedWords(dialogueB || '');
@@ -2085,50 +2086,50 @@ export function generate(input) {
     if (safeB.fixes.length) autoFixes.push(...safeB.fixes);
   }
 
-  // ── STRICT: Strip dashes/hyphens from speech ──
-  // Dashes (—, –, -) are unpronounceable and cause TTS/Veo artifacts.
+  // в”Ђв”Ђ STRICT: Strip dashes/hyphens from speech в”Ђв”Ђ
+  // Dashes (вЂ”, вЂ“, -) are unpronounceable and cause TTS/Veo artifacts.
   // Only pipe | is allowed as pause marker.
-  // SKIP for video mode — preserve original dialogue formatting
+  // SKIP for video mode вЂ” preserve original dialogue formatting
   if (!isPreserveMode) {
     const stripDashes = (text) => {
       let cleaned = text
-        .replace(/\s*[—–]\s*/g, ' ')   // em-dash, en-dash → space
-        .replace(/\s+-\s+/g, ' ')       // standalone hyphens (with spaces) → space
+        .replace(/\s*[вЂ”вЂ“]\s*/g, ' ')   // em-dash, en-dash в†’ space
+        .replace(/\s+-\s+/g, ' ')       // standalone hyphens (with spaces) в†’ space
         .replace(/\s{2,}/g, ' ')        // collapse double spaces
         .trim();
       return cleaned;
     };
     const cleanA = stripDashes(dialogueA || '');
     const cleanB = stripDashes(dialogueB || '');
-    if (cleanA !== dialogueA) { autoFixes.push('Убраны тире из реплики A (непроизносимые символы)'); dialogueA = cleanA; }
-    if (cleanB !== dialogueB) { autoFixes.push('Убраны тире из реплики B (непроизносимые символы)'); dialogueB = cleanB; }
+    if (cleanA !== dialogueA) { autoFixes.push('РЈР±СЂР°РЅС‹ С‚РёСЂРµ РёР· СЂРµРїР»РёРєРё A (РЅРµРїСЂРѕРёР·РЅРѕСЃРёРјС‹Рµ СЃРёРјРІРѕР»С‹)'); dialogueA = cleanA; }
+    if (cleanB !== dialogueB) { autoFixes.push('РЈР±СЂР°РЅС‹ С‚РёСЂРµ РёР· СЂРµРїР»РёРєРё B (РЅРµРїСЂРѕРёР·РЅРѕСЃРёРјС‹Рµ СЃРёРјРІРѕР»С‹)'); dialogueB = cleanB; }
   }
 
-  // ── Build all blocks ──
+  // в”Ђв”Ђ Build all blocks в”Ђв”Ђ
   const cast = buildCastContract(charA, charB);
   const cameraPreset = buildCameraPreset();
   const timingGrid = buildTimingGridV2(mergedHookObj, releaseObj);
   const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, mergedHookObj, releaseObj, propAnchor);
-  const aesthetic = _aestheticToEn(charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют');
+  const aesthetic = _aestheticToEn(charA.world_aesthetic || charB.world_aesthetic || 'VIP-РґРµСЂРµРІРµРЅСЃРєРёР№ СѓСЋС‚');
   const nameEnA = charA.name_en || charA.id || 'Character A';
   const nameEnB = charB.name_en || charB.id || 'Character B';
   const vibeEnA = _vibeToEn(charA.vibe_archetype, 'provocateur');
   const vibeEnB = _vibeToEn(charB.vibe_archetype, 'grounded responder');
 
-  // ── Location-specific overrides from catalog ──
+  // в”Ђв”Ђ Location-specific overrides from catalog в”Ђв”Ђ
   const locAudioHints = locationObj?.audio_hints || null;
   const locLighting = locationObj?.lighting || null;
 
-  // ── PHOTO PROMPT (EN) ──
+  // в”Ђв”Ђ PHOTO PROMPT (EN) в”Ђв”Ђ
   const anchorA = charA.identity_anchors || {};
   const anchorB = charB.identity_anchors || {};
 
   const photo_prompt_en_json = {
     scene: soloMode
-      ? `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Single character delivering a passionate comedic monologue directly to camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character is mid-hook-action with intense direct eye contact at camera lens. The video will be generated FROM this photo.${product_info?.description_en ? ` Character is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`
-      : `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
+      ? `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) вЂ” the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Single character delivering a passionate comedic monologue directly to camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character is mid-hook-action with intense direct eye contact at camera lens. The video will be generated FROM this photo.${product_info?.description_en ? ` Character is holding a product in one hand вЂ” the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`
+      : `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) вЂ” the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo вЂ” poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand вЂ” the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
-    IDENTITY_LOCK: 'CRITICAL: This photo is the CHARACTER VISUAL ANCHOR. The video will be generated FROM this exact image (frame 0). Every biological detail (skin tone, wrinkles, scars, facial hair, eye color, nose shape, jaw, teeth), every accessory (glasses, earrings, headwear, jewelry), and every wardrobe detail (fabric, pattern, color palette) MUST appear EXACTLY as described below. If a character has gold teeth — gold teeth MUST be visible. If they wear a headscarf — it MUST be in frame. If they have a scar — render it. Deviation = broken identity across all videos. Generate this photo ONCE per character pair and reuse it as the image input for EVERY video with these characters.',
+    IDENTITY_LOCK: 'CRITICAL: This photo is the CHARACTER VISUAL ANCHOR. The video will be generated FROM this exact image (frame 0). Every biological detail (skin tone, wrinkles, scars, facial hair, eye color, nose shape, jaw, teeth), every accessory (glasses, earrings, headwear, jewelry), and every wardrobe detail (fabric, pattern, color palette) MUST appear EXACTLY as described below. If a character has gold teeth вЂ” gold teeth MUST be visible. If they wear a headscarf вЂ” it MUST be in frame. If they have a scar вЂ” render it. Deviation = broken identity across all videos. Generate this photo ONCE per character pair and reuse it as the image input for EVERY video with these characters.',
     characters: soloMode ? [
       {
         role: 'Solo performer (speaking)',
@@ -2151,7 +2152,7 @@ export function generate(input) {
         neck_detail: safeArr(charA.biology_override?.neck_tokens) || undefined,
         expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
         body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
-        // ── FULL BIOLOGY IDENTITY (photo anchor) ──
+        // в”Ђв”Ђ FULL BIOLOGY IDENTITY (photo anchor) в”Ђв”Ђ
         skin_color: safeArr(charA.biology_override?.skin_color_tokens) || undefined,
         wrinkle_map: safeArr(charA.biology_override?.wrinkle_map_tokens) || undefined,
         nasolabial: safeArr(charA.biology_override?.nasolabial_tokens) || undefined,
@@ -2163,11 +2164,11 @@ export function generate(input) {
         facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charA.biology_override?.facial_hair_tokens)) ? safeArr(charA.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
         resting_face: charA.biology_override?.facial_expression_default || undefined,
-        // ── V19.3 REALISM PHYSICS ──
+        // в”Ђв”Ђ V19.3 REALISM PHYSICS в”Ђв”Ђ
         skin_glow: safeArr(charA.biology_override?.skin_glow_tokens) || undefined,
         eye_catchlight: safeArr(charA.biology_override?.eye_catchlight_tokens) || undefined,
         lip_finish: safeArr(charA.biology_override?.lip_finish_tokens) || undefined,
-        // ── WARDROBE IDENTITY ANCHORS ──
+        // в”Ђв”Ђ WARDROBE IDENTITY ANCHORS в”Ђв”Ђ
         wardrobe: wardrobeA,
         wardrobe_anchor: anchorA.wardrobe_anchor || undefined,
         accessories: safeArr(anchorA.accessory_anchors) || undefined,
@@ -2182,7 +2183,7 @@ export function generate(input) {
       },
     ] : [
       {
-        role: 'A — provocateur (speaking)',
+        role: 'A вЂ” provocateur (speaking)',
         appearance: charA.prompt_tokens?.character_en || cast.speaker_A.character_en,
         face_anchor: anchorA.face_silhouette || 'distinctive face',
         signature: anchorA.signature_element || 'notable accessory',
@@ -2202,7 +2203,7 @@ export function generate(input) {
         neck_detail: safeArr(charA.biology_override?.neck_tokens) || undefined,
         expression: `mid-sentence ${charA.speech_pace === 'fast' ? 'animated, rapid gesticulation, eyes wide with righteous energy' : charA.speech_pace === 'slow' ? 'intense, measured fury, narrowed eyes burning with controlled outrage' : 'passionate, eyebrows raised in indignation'}, ${anchorA.micro_gesture || 'expressive gesture'}, direct intense eye contact with lens, nostrils slightly flared`,
         body: `${charA.compatibility === 'chaotic' ? 'leaning forward aggressively, both hands gesturing wildly, shoulders tense, invading camera space' : charA.compatibility === 'calm' ? 'upright posture with one hand gesturing precisely, controlled power stance, finger pointing for emphasis' : 'leaning forward, one hand gesturing emphatically (fingers naturally curled, anatomically correct), shoulders tense and raised'}`,
-        // ── FULL BIOLOGY IDENTITY (photo anchor) ──
+        // в”Ђв”Ђ FULL BIOLOGY IDENTITY (photo anchor) в”Ђв”Ђ
         skin_color: safeArr(charA.biology_override?.skin_color_tokens) || undefined,
         wrinkle_map: safeArr(charA.biology_override?.wrinkle_map_tokens) || undefined,
         nasolabial: safeArr(charA.biology_override?.nasolabial_tokens) || undefined,
@@ -2214,11 +2215,11 @@ export function generate(input) {
         facial_hair: safeArr(charA.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charA.biology_override?.facial_hair_tokens)) ? safeArr(charA.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charA.biology_override?.eyelash_tokens) || undefined,
         resting_face: charA.biology_override?.facial_expression_default || undefined,
-        // ── V19.3 REALISM PHYSICS ──
+        // в”Ђв”Ђ V19.3 REALISM PHYSICS в”Ђв”Ђ
         skin_glow: safeArr(charA.biology_override?.skin_glow_tokens) || undefined,
         eye_catchlight: safeArr(charA.biology_override?.eye_catchlight_tokens) || undefined,
         lip_finish: safeArr(charA.biology_override?.lip_finish_tokens) || undefined,
-        // ── WARDROBE IDENTITY ANCHORS ──
+        // в”Ђв”Ђ WARDROBE IDENTITY ANCHORS в”Ђв”Ђ
         wardrobe: wardrobeA,
         wardrobe_anchor: anchorA.wardrobe_anchor || undefined,
         accessories: safeArr(anchorA.accessory_anchors) || undefined,
@@ -2229,10 +2230,10 @@ export function generate(input) {
         fabric_texture: anchorA.fabric_texture_anchor || undefined,
         pattern: anchorA.pattern_anchor && anchorA.pattern_anchor !== 'solid color' ? anchorA.pattern_anchor : undefined,
         sleeve_style: anchorA.sleeve_style_anchor || undefined,
-        spatial: 'positioned left of frame, body angled 30° toward B',
+        spatial: 'positioned left of frame, body angled 30В° toward B',
       },
       {
-        role: 'B — punchline (listening, silent)',
+        role: 'B вЂ” punchline (listening, silent)',
         appearance: charB.prompt_tokens?.character_en || cast.speaker_B.character_en,
         face_anchor: anchorB.face_silhouette || 'distinctive face',
         signature: anchorB.signature_element || 'notable accessory',
@@ -2252,7 +2253,7 @@ export function generate(input) {
         neck_detail: safeArr(charB.biology_override?.neck_tokens) || undefined,
         expression: `${charB.compatibility === 'calm' ? 'zen-like stillness, barely contained superiority' : charB.compatibility === 'chaotic' ? 'simmering barely-restrained energy, jaw tight, eyes burning' : charB.compatibility === 'conflict' ? 'cold calculating stare, measuring every word A says' : 'amused skepticism, one corner of mouth fighting a smirk'}, ${anchorB.micro_gesture || 'raised eyebrow'}, eyes tracking A with ${charB.speech_pace === 'slow' ? 'patient devastating certainty' : 'sharp analytical intensity'}, one eyebrow 2mm higher than the other`,
         body: `${charB.compatibility === 'calm' ? 'perfectly still, arms loosely crossed, weight centered, radiating quiet authority' : charB.compatibility === 'chaotic' ? 'restless energy contained in stillness, fingers tapping on crossed arms, weight shifting' : 'arms crossed or hands on hips, leaning back slightly, weight on back foot, chin slightly raised'}`,
-        // ── FULL BIOLOGY IDENTITY (photo anchor) ──
+        // в”Ђв”Ђ FULL BIOLOGY IDENTITY (photo anchor) в”Ђв”Ђ
         skin_color: safeArr(charB.biology_override?.skin_color_tokens) || undefined,
         wrinkle_map: safeArr(charB.biology_override?.wrinkle_map_tokens) || undefined,
         nasolabial: safeArr(charB.biology_override?.nasolabial_tokens) || undefined,
@@ -2264,11 +2265,11 @@ export function generate(input) {
         facial_hair: safeArr(charB.biology_override?.facial_hair_tokens) && !/^none$/i.test(safeArr(charB.biology_override?.facial_hair_tokens)) ? safeArr(charB.biology_override?.facial_hair_tokens) : undefined,
         eyelashes: safeArr(charB.biology_override?.eyelash_tokens) || undefined,
         resting_face: charB.biology_override?.facial_expression_default || undefined,
-        // ── V19.3 REALISM PHYSICS ──
+        // в”Ђв”Ђ V19.3 REALISM PHYSICS в”Ђв”Ђ
         skin_glow: safeArr(charB.biology_override?.skin_glow_tokens) || undefined,
         eye_catchlight: safeArr(charB.biology_override?.eye_catchlight_tokens) || undefined,
         lip_finish: safeArr(charB.biology_override?.lip_finish_tokens) || undefined,
-        // ── WARDROBE IDENTITY ANCHORS ──
+        // в”Ђв”Ђ WARDROBE IDENTITY ANCHORS в”Ђв”Ђ
         wardrobe: wardrobeB,
         wardrobe_anchor: anchorB.wardrobe_anchor || undefined,
         accessories: safeArr(anchorB.accessory_anchors) || undefined,
@@ -2279,7 +2280,7 @@ export function generate(input) {
         fabric_texture: anchorB.fabric_texture_anchor || undefined,
         pattern: anchorB.pattern_anchor && anchorB.pattern_anchor !== 'solid color' ? anchorB.pattern_anchor : undefined,
         sleeve_style: anchorB.sleeve_style_anchor || undefined,
-        spatial: 'positioned right of frame, body angled 30° toward A',
+        spatial: 'positioned right of frame, body angled 30В° toward A',
       },
     ],
     environment: {
@@ -2288,22 +2289,22 @@ export function generate(input) {
       lighting_sources: lightingMood.sources || '1 dominant environmental + 1 ambient fill bounce',
       lighting_direction: lightingMood.direction || 'Key from environment, fill from nearest reflective surface',
       shadow_quality: lightingMood.shadow_softness || 'Soft but present shadows under nose and cheekbones',
-      overexposure: lightingMood.overexposure_budget || 'Allow +0.5 EV on skin highlights — natural smartphone sensor clipping',
+      overexposure: lightingMood.overexposure_budget || 'Allow +0.5 EV on skin highlights вЂ” natural smartphone sensor clipping',
       color_temperature: lightingMood.color_temp || 'Locked to dominant source color temperature',
       lighting_mood: lightingMood.mood,
       prop_anchor: `${propAnchor} visible in mid-ground, in computational bokeh blur (recognizable shape, soft edges)`,
       props: ['worn textured surface beneath characters', propAnchor, '1-2 ambient domestic details in deep bokeh background'],
-      atmosphere: `lived-in, authentic, slightly chaotic. NOT a set — a real place where people actually live/work. Category vibe: ${cat.en.toLowerCase()}`,
+      atmosphere: `lived-in, authentic, slightly chaotic. NOT a set вЂ” a real place where people actually live/work. Category vibe: ${cat.en.toLowerCase()}`,
     },
     camera: {
       device: 'Smartphone front camera (24-28mm equiv, f/1.9-2.2, small sensor). This is NOT a DSLR or cinema camera.',
-      angle: 'slightly below eye level (5-10°), selfie POV at arm\'s length (35-55cm), phone INVISIBLE, holder\'s arm NOT in frame',
+      angle: 'slightly below eye level (5-10В°), selfie POV at arm\'s length (35-55cm), phone INVISIBLE, holder\'s arm NOT in frame',
       distance: '35-55cm from lens to nearest face. Close enough to resolve individual pores, skin texture, iris detail. Both faces fill 60-70% of vertical 9:16 frame.',
-      lens: '24-28mm equivalent (front camera native). Slight barrel distortion at frame edges — this is CORRECT. Faces at center relatively undistorted. Computational portrait-mode bokeh on background.',
-      focus: 'Phone face-tracking AF: both faces sharp (same focal plane at selfie distance). Background separates via computational blur — smooth gaussian, NOT cinema hexagonal bokeh.',
+      lens: '24-28mm equivalent (front camera native). Slight barrel distortion at frame edges вЂ” this is CORRECT. Faces at center relatively undistorted. Computational portrait-mode bokeh on background.',
+      focus: 'Phone face-tracking AF: both faces sharp (same focal plane at selfie distance). Background separates via computational blur вЂ” smooth gaussian, NOT cinema hexagonal bokeh.',
       composition: 'Natural selfie framing: A left third, B right third. 5-8% headroom. Characters slightly below center (arm holds phone slightly above eye level). Intimate, not perfectly composed.',
-      sensor_artifacts: 'Visible luminance noise in shadow areas (ISO 400-1600). Slight JPEG compression (quality 85-92%). Limited dynamic range — highlights may clip +0.5-1.5 EV on bright skin. Mild purple fringing on backlit edges. Faint rolling-shutter lean if any motion blur.',
-      realism_anchors: 'handheld micro-jitter frozen as slight motion blur on fast gestures, imperfect auto white-balance (±200K drift toward warm), realistic nose/cheekbone shadows from single environmental light source, slight sensor noise in dark clothing/shadows, natural vignetting in corners (-0.3 EV)',
+      sensor_artifacts: 'Visible luminance noise in shadow areas (ISO 400-1600). Slight JPEG compression (quality 85-92%). Limited dynamic range вЂ” highlights may clip +0.5-1.5 EV on bright skin. Mild purple fringing on backlit edges. Faint rolling-shutter lean if any motion blur.',
+      realism_anchors: 'handheld micro-jitter frozen as slight motion blur on fast gestures, imperfect auto white-balance (В±200K drift toward warm), realistic nose/cheekbone shadows from single environmental light source, slight sensor noise in dark clothing/shadows, natural vignetting in corners (-0.3 EV)',
     },
     color_mood: lightingMood.mood === 'nostalgic warmth'
       ? 'warm amber undertone, golden highlights, slightly desaturated shadows, natural skin tones, subtle teal in shadows for cinematic contrast'
@@ -2321,7 +2322,7 @@ export function generate(input) {
       ? 'bright even daylight, minimal color cast, accurate skin tones, clean and honest look, slight warmth from ground bounce'
       : 'soft neutral palette, slight blue undertone, gentle contrast, natural skin tones with minimal color cast',
     hands_instruction: 'CRITICAL: All hands must have exactly 5 fingers, anatomically correct proportions, natural nail detail, age-appropriate skin texture on hands matching face',
-    style: `Smartphone selfie photograph — NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, ${parseInt(String(charA.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) < 35 ? 'natural skin texture, minor imperfections' : 'wrinkles, age marks'}, oily sheen VISIBLE and CELEBRATED. This is FRAME 0 of the video — the exact starting point. The video will be generated FROM this image via image-to-video AI. Poses and expressions must be the natural starting position for the 8-second video that follows.`,
+    style: `Smartphone selfie photograph вЂ” NOT studio, NOT DSLR, NOT film. Small-sensor look with computational photography processing. Visible noise in shadows (ISO 800-1600), slight JPEG artifacts, imperfect auto-WB. Skin pores, ${parseInt(String(charA.biology_override?.age || '').replace(/[^0-9]/g, ''), 10) < 35 ? 'natural skin texture, minor imperfections' : 'wrinkles, age marks'}, oily sheen VISIBLE and CELEBRATED. This is FRAME 0 of the video вЂ” the exact starting point. The video will be generated FROM this image via image-to-video AI. Poses and expressions must be the natural starting position for the 8-second video that follows.`,
     negative: [
       'no text overlay, no subtitles, no captions, no letters, no numbers on image, no frames, no borders, no REC badge, no timestamp, no timecode, no watermark, no logo, no UI elements, no graphic overlays, no title cards, no speech bubbles, no name tags, no phone/camera visible in frame, no cartoon, no anime, no plastic/airbrushed skin, no 6th finger, no extra limbs, no symmetrical twins, no stock photo feel, no studio lighting, no ring light catch-lights, no cinema bokeh (hexagonal), no DSLR shallow-DOF look, no beauty mode, no skin smoothing filter, no HDR tone-mapping artifacts, no perfectly even lighting, no orange spray-tan skin, no grey lifeless face',
       ...(charA.negative_hint_tokens || []).map(t => `Character A: ${t}`),
@@ -2329,21 +2330,21 @@ export function generate(input) {
     ].join(', '),
     ...(product_info?.description_en ? {
       product_placement: {
-        instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as on the ORIGINAL REFERENCE PHOTO — same shape, colors, branding, materials, proportions, textures, reflections. This is a REAL product that exists — render it with photorealistic fidelity. If the reference photo shows a red bottle with gold cap, the AI output must show the EXACT same red bottle with gold cap. Zero creative liberties with the product appearance.',
+        instruction: 'CRITICAL: One character MUST be holding or interacting with the product described below. The product must appear EXACTLY as on the ORIGINAL REFERENCE PHOTO вЂ” same shape, colors, branding, materials, proportions, textures, reflections. This is a REAL product that exists вЂ” render it with photorealistic fidelity. If the reference photo shows a red bottle with gold cap, the AI output must show the EXACT same red bottle with gold cap. Zero creative liberties with the product appearance.',
         product_description: product_info.description_en,
-        placement: 'Character A holds the product in their hand while arguing. Product clearly visible in frame center-left, sharp focus. Product occupies 10-15% of frame area. Photorealistic rendering — every label, color, texture must match the uploaded reference photo exactly.',
+        placement: 'Character A holds the product in their hand while arguing. Product clearly visible in frame center-left, sharp focus. Product occupies 10-15% of frame area. Photorealistic rendering вЂ” every label, color, texture must match the uploaded reference photo exactly.',
         lighting_on_product: 'Same environmental lighting as scene. Natural specular highlights on product surface consistent with the light source direction described above. No studio product lighting.',
       }
     } : {}),
     ...(reference_style?.description_en ? {
       visual_reference: {
-        instruction: 'Match the visual aesthetic described below as closely as possible — lighting direction, color palette, mood, contrast, composition style. Keep the characters, selfie format, and dialogue intact.',
+        instruction: 'Match the visual aesthetic described below as closely as possible вЂ” lighting direction, color palette, mood, contrast, composition style. Keep the characters, selfie format, and dialogue intact.',
         style_description: reference_style.description_en,
       }
     } : {}),
   };
 
-  // ── VIDEO PROMPT (EN) ──
+  // в”Ђв”Ђ VIDEO PROMPT (EN) в”Ђв”Ђ
   const video_prompt_en_json = {
     cast,
     identity_anchors: {
@@ -2357,7 +2358,7 @@ export function generate(input) {
       CRITICAL_INSTRUCTION: input_mode === 'script'
         ? 'The user provided their OWN dialogue below. Gemini MUST USE the user\'s lines as-is (dialogue_A_ru / dialogue_B_ru). You may ONLY adjust 1-2 words for timing fit. Do NOT rewrite or replace the user\'s script. Generate killer_word from the last impactful word of B\'s line.'
         : input_mode === 'video'
-        ? 'This is REMAKE MODE — the dialogue below is from the ORIGINAL VIDEO. Gemini MUST preserve it VERBATIM (90-95% of words). Only change character names/pronouns to fit our cast. Do NOT invent a new dialogue. killer_word = last impactful word from B\'s original line.'
+        ? 'This is REMAKE MODE вЂ” the dialogue below is from the ORIGINAL VIDEO. Gemini MUST preserve it VERBATIM (90-95% of words). Only change character names/pronouns to fit our cast. Do NOT invent a new dialogue. killer_word = last impactful word from B\'s original line.'
         : 'Gemini MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
       example_format_only: {
         example_A_ru: dialogueA,
@@ -2365,7 +2366,7 @@ export function generate(input) {
         example_killer_word: killerWord,
         note: 'THIS IS JUST A FORMAT EXAMPLE. You MUST write your own lines that are funnier and more fitting for the characters above.',
       },
-      language: 'CRITICAL: All dialogue MUST be spoken in Russian (русский язык). Characters speak naturally with authentic Russian intonation, regional accent variations, and age-appropriate speech patterns. NO English speech allowed.',
+      language: 'CRITICAL: All dialogue MUST be spoken in Russian (СЂСѓСЃСЃРєРёР№ СЏР·С‹Рє). Characters speak naturally with authentic Russian intonation, regional accent variations, and age-appropriate speech patterns. NO English speech allowed.',
       speech_style_A: _speechStyleToEn(charA.speech_style_ru, charA.speech_pace, charA.compatibility),
       speech_style_B: _speechStyleToEn(charB.speech_style_ru, charB.speech_pace, charB.compatibility),
       lip_sync: 'CRITICAL: mouth movements must match Russian phonemes precisely. Each syllable produces visible jaw/lip movement. Consonants: visible tongue/teeth contact. Vowels: proportional mouth opening.',
@@ -2375,24 +2376,24 @@ export function generate(input) {
       voice_timbre_B: safeArr(charB.biology_override?.voice_texture_tokens) || `${charB.speech_pace === 'slow' ? 'low deliberate rumble, pauses filled with audible nose-exhale, words land like stones' : charB.speech_pace === 'fast' ? 'sharp staccato delivery, clipped consonants, rapid-fire with sudden stops for effect' : 'steady measured mid-tone, controlled volume that drops to near-whisper on killer word for devastating contrast'}. Age-appropriate ${cast.speaker_B.age} voice`,
     },
     spatial: {
-      positioning: 'Both characters face camera at arm\'s length distance (selfie POV). A on left, B on right. They stand/sit shoulder-to-shoulder or slightly angled toward each other (30°). Close enough to touch but not touching.',
+      positioning: 'Both characters face camera at arm\'s length distance (selfie POV). A on left, B on right. They stand/sit shoulder-to-shoulder or slightly angled toward each other (30В°). Close enough to touch but not touching.',
       camera_movement: 'Handheld micro-jitter throughout. Hook: slight camera push-in. Act_A: subtle drift toward A. Act_B: micro-pan to B. Release: camera shakes from laughter tremor.',
       environment_interaction: `Characters naturally inhabit ${location.split(',')[0]}. Ambient environment detail reinforces ${cat.en.toLowerCase()} theme.`,
     },
     emotion_arc: {
-      hook: `tension spike — ${mergedHookObj.action_en}, ${vibeEnA} initiates with signature energy`,
-      act_A: `escalation — ${nameEnA} (A) builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${nameEnB} (B) simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
-      act_B: `reversal — ${nameEnB} (B) delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${nameEnA} (A). ${nameEnA} freezes mid-gesture.`,
+      hook: `tension spike вЂ” ${mergedHookObj.action_en}, ${vibeEnA} initiates with signature energy`,
+      act_A: `escalation вЂ” ${nameEnA} (A) builds ${charA.speech_pace === 'fast' ? 'rapid-fire righteous indignation, words tumbling out' : charA.speech_pace === 'slow' ? 'deliberate simmering outrage, each word weighted' : 'rising passionate indignation'}. ${nameEnB} (B) simmers: ${charB.modifiers?.laugh_style === 'grudging smirk' ? 'jaw locked, one eyebrow rising in disbelief' : 'stone-faced, micro-reactions in eyes only'}`,
+      act_B: `reversal вЂ” ${nameEnB} (B) delivers ${charB.speech_pace === 'slow' ? 'devastatingly measured response, pauses as weapons' : charB.speech_pace === 'fast' ? 'rapid comeback that builds to the kill shot' : 'controlled response building to killer word'}. "${killerWord}" lands with visible physical impact on ${nameEnA} (A). ${nameEnA} freezes mid-gesture.`,
       release: enableLaughter
-        ? `catharsis — ${releaseObj.action_en}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`
-        : `cold ending — stunned silence after punchline "${killerWord}". No laughter. Frozen expressions, tension holds. Rewatch-bait: ambiguous micro-expression in last 0.3s.`,
+        ? `catharsis вЂ” ${releaseObj.action_en}. Tension dissolves into warmth. ${charA.modifiers?.laugh_style || 'genuine laughter'} from A, ${charB.modifiers?.laugh_style || 'satisfied chuckle'} from B.`
+        : `cold ending вЂ” stunned silence after punchline "${killerWord}". No laughter. Frozen expressions, tension holds. Rewatch-bait: ambiguous micro-expression in last 0.3s.`,
     },
     vibe: {
-      dynamic: `${nameEnA} (A, ${vibeEnA}) → ${nameEnB} (B, ${vibeEnB})`,
+      dynamic: `${nameEnA} (A, ${vibeEnA}) в†’ ${nameEnB} (B, ${vibeEnB})`,
       hook: mergedHookObj.action_en,
       conflict: `Comedic tension about ${cat.en.toLowerCase()}${topicRu ? ' (see topic_context above for details)' : ''}, no personal insults, rage directed at situation only`,
       punchline: `Killer word "${killerWord}" lands near 6.8s mark, followed by ${releaseObj.action_en}`,
-      tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy — physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension — understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull — both characters committed, natural escalation to punchline'}`,
+      tone: `${charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'Explosive chaotic energy вЂ” physical comedy, big gestures, near-slapstick' : charA.compatibility === 'calm' || charB.compatibility === 'calm' ? 'Slow-burn tension вЂ” understated delivery, power in restraint, devastating quiet punchline' : 'Balanced push-pull вЂ” both characters committed, natural escalation to punchline'}`,
     },
     camera: cameraPreset,
     cinematography,
@@ -2402,7 +2403,7 @@ export function generate(input) {
       lighting_mood: lightingMood.mood,
       wardrobe_A: wardrobeA,
       wardrobe_B: wardrobeB,
-      prop_anchor: `${propAnchor} — visible in scene, may be interacted with during hook`,
+      prop_anchor: `${propAnchor} вЂ” visible in scene, may be interacted with during hook`,
     },
     timing: timingGrid,
     audio: {
@@ -2439,9 +2440,9 @@ export function generate(input) {
         ? 'checkout beep, shopping cart rattle, muzak in background, plastic bag rustle'
         : location.includes('corridor') || location.includes('hallway')
         ? 'fluorescent buzz, distant footsteps echo, door closing somewhere, muffled voices'
-        : 'subtle ambient room sound — quiet hum, occasional creak, authentic space acoustics matching location'),
-      cloth_rustle: `on every major body movement: A wears ${wardrobeA.split(',')[0]} — ${wardrobeA.includes('silk') || wardrobeA.includes('chiffon') ? 'soft whisper swish' : wardrobeA.includes('leather') ? 'stiff leather creak' : wardrobeA.includes('knit') || wardrobeA.includes('mohair') || wardrobeA.includes('wool') ? 'soft fibrous drag' : 'medium fabric rustle'}; B wears ${wardrobeB.split(',')[0]} — ${wardrobeB.includes('telnyashka') || wardrobeB.includes('cotton') ? 'cotton stretch snap' : wardrobeB.includes('corduroy') ? 'corduroy ridge whisper' : wardrobeB.includes('quilted') || wardrobeB.includes('fufaika') ? 'padded fabric thump' : 'natural fabric rustle'}`,
-      saliva_clicks: 'subtle mouth sounds on hard consonants (t, k, p, d — Russian plosives)',
+        : 'subtle ambient room sound вЂ” quiet hum, occasional creak, authentic space acoustics matching location'),
+      cloth_rustle: `on every major body movement: A wears ${wardrobeA.split(',')[0]} вЂ” ${wardrobeA.includes('silk') || wardrobeA.includes('chiffon') ? 'soft whisper swish' : wardrobeA.includes('leather') ? 'stiff leather creak' : wardrobeA.includes('knit') || wardrobeA.includes('mohair') || wardrobeA.includes('wool') ? 'soft fibrous drag' : 'medium fabric rustle'}; B wears ${wardrobeB.split(',')[0]} вЂ” ${wardrobeB.includes('telnyashka') || wardrobeB.includes('cotton') ? 'cotton stretch snap' : wardrobeB.includes('corduroy') ? 'corduroy ridge whisper' : wardrobeB.includes('quilted') || wardrobeB.includes('fufaika') ? 'padded fabric thump' : 'natural fabric rustle'}`,
+      saliva_clicks: 'subtle mouth sounds on hard consonants (t, k, p, d вЂ” Russian plosives)',
       breathing: 'audible inhale before each speaking turn, exhale on emphasis words',
       overlap_policy: 'STRICTLY FORBIDDEN. Gap 0.15-0.25s silence stitch between speakers. No simultaneous speech ever.',
       mouth_rule: 'Non-speaking character: sealed lips, jaw completely still, NO micro-movements of mouth. Eye tracking and subtle facial micro-expressions ONLY.',
@@ -2456,24 +2457,24 @@ export function generate(input) {
       content_type: 'satirical/domestic',
       hands: 'exactly 5 fingers per hand at all times, anatomically correct',
     },
-    output: { format: 'mp4 h264', resolution: '1080x1920 vertical 9:16', fps: 30, duration: '8.0s ±0.2s', color: 'rec709, natural grade, no LUT' },
+    output: { format: 'mp4 h264', resolution: '1080x1920 vertical 9:16', fps: 30, duration: '8.0s В±0.2s', color: 'rec709, natural grade, no LUT' },
     ...(product_info?.description_en ? {
       product_placement: {
-        instruction: 'CRITICAL: The product described below MUST appear in the video EXACTLY as on the ORIGINAL REFERENCE PHOTO. Same shape, colors, branding, materials, proportions, textures. Zero creative liberties with product appearance — it is a REAL product.',
+        instruction: 'CRITICAL: The product described below MUST appear in the video EXACTLY as on the ORIGINAL REFERENCE PHOTO. Same shape, colors, branding, materials, proportions, textures. Zero creative liberties with product appearance вЂ” it is a REAL product.',
         product_description: product_info.description_en,
-        integration: 'Product is naturally woven into the comedic argument. Character A holds the product throughout their line — gestures with it, shows it to camera, uses it as a prop. Product remains visible during both acts A and B.',
-        rendering: 'Photorealistic fidelity — every label, color gradient, texture, material must match the uploaded reference photo. Environmental lighting on product consistent with scene. No studio product lighting.',
+        integration: 'Product is naturally woven into the comedic argument. Character A holds the product throughout their line вЂ” gestures with it, shows it to camera, uses it as a prop. Product remains visible during both acts A and B.',
+        rendering: 'Photorealistic fidelity вЂ” every label, color gradient, texture, material must match the uploaded reference photo. Environmental lighting on product consistent with scene. No studio product lighting.',
       }
     } : {}),
     ...(reference_style?.description_en ? {
       visual_reference: {
-        instruction: 'Match the visual aesthetic described below — lighting, color palette, mood, contrast, composition. Keep characters and dialogue intact.',
+        instruction: 'Match the visual aesthetic described below вЂ” lighting, color palette, mood, contrast, composition. Keep characters and dialogue intact.',
         style_description: reference_style.description_en,
       }
     } : {}),
   };
 
-  // ── VEO 3.1 PROMPT (single text for Google Flow) ──
+  // в”Ђв”Ђ VEO 3.1 PROMPT (single text for Google Flow) в”Ђв”Ђ
   const veo_prompt = buildVeoPrompt({
     charA, charB, cast, location, lightingMood, wardrobeA, wardrobeB,
     hookObj: mergedHookObj, releaseObj, propAnchor, dialogueA, dialogueB, killerWord,
@@ -2481,173 +2482,174 @@ export function generate(input) {
     productInfo: product_info,
     referenceStyle: reference_style,
     soloMode,
+    enableLaughter,
   });
 
-  // ── ENGAGEMENT (smart hashtags + viral bait) ──
+  // в”Ђв”Ђ ENGAGEMENT (smart hashtags + viral bait) в”Ђв”Ђ
   const engage = buildEngagement(cat.ru, charA, charB, rng, soloMode);
 
-  // ── RU PACKAGE ──
+  // в”Ђв”Ђ RU PACKAGE в”Ђв”Ђ
   const hashMem = thread_memory ? (typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(thread_memory))).slice(0, 8) : 'mem') : 'none';
-  // ── Pair/Solo dynamic label ──
+  // в”Ђв”Ђ Pair/Solo dynamic label в”Ђв”Ђ
   const pairDynamic = soloMode
-    ? `🎭 Соло: ${charA.vibe_archetype || charA.compatibility}`
-    : charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? '🔥 Взрывная пара: хаос vs спокойствие'
-    : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? '🌪 Хаотичная пара'
-    : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? '⚡ Конфликтная пара'
-    : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
-    : '⚖️ Сбалансированная пара';
+    ? `рџЋ­ РЎРѕР»Рѕ: ${charA.vibe_archetype || charA.compatibility}`
+    : charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? 'рџ”Ґ Р’Р·СЂС‹РІРЅР°СЏ РїР°СЂР°: С…Р°РѕСЃ vs СЃРїРѕРєРѕР№СЃС‚РІРёРµ'
+    : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'рџЊЄ РҐР°РѕС‚РёС‡РЅР°СЏ РїР°СЂР°'
+    : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? 'вљЎ РљРѕРЅС„Р»РёРєС‚РЅР°СЏ РїР°СЂР°'
+    : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? 'рџ‚ РњРµРј-РїР°СЂР°'
+    : 'вљ–пёЏ РЎР±Р°Р»Р°РЅСЃРёСЂРѕРІР°РЅРЅР°СЏ РїР°СЂР°';
 
-  const ru_package = soloMode ? `🎬 МОНОЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
-═══════════════════════════════════════════
-📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
-👤 Персонаж: ${charA.name_ru} (${cast.speaker_A.age}) — СОЛО
-🎭 Динамика: ${pairDynamic}
-📍 Локация: ${location.split(',')[0]}
-💡 Освещение: ${lightingMood.mood}
-👗 Гардероб: ${wardrobeA}
-🪑 Реквизит: ${propAnchor}
+  const ru_package = soloMode ? `рџЋ¬ РњРћРќРћР›РћР“ РЎ РўРђР™РњРРќР“РђРњР (v2 Production Contract)
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+рџ“‚ РљР°С‚РµРіРѕСЂРёСЏ: ${cat.ru}${topicRu ? `\nрџ’Ў РРґРµСЏ: ${topicRu}` : ''}${sceneHint ? `\nрџЋҐ Р РµС„РµСЂРµРЅСЃ: ${sceneHint}` : ''}
+рџ‘¤ РџРµСЂСЃРѕРЅР°Р¶: ${charA.name_ru} (${cast.speaker_A.age}) вЂ” РЎРћР›Рћ
+рџЋ­ Р”РёРЅР°РјРёРєР°: ${pairDynamic}
+рџ“Ќ Р›РѕРєР°С†РёСЏ: ${location.split(',')[0]}
+рџ’Ў РћСЃРІРµС‰РµРЅРёРµ: ${lightingMood.mood}
+рџ‘— Р“Р°СЂРґРµСЂРѕР±: ${wardrobeA}
+рџЄ‘ Р РµРєРІРёР·РёС‚: ${propAnchor}
 
-📷 ФОТО = ВИЗУАЛЬНЫЙ ЯКОРЬ (Identity Lock)
-═══════════════════════════════════════════
-⚠️ Фото — кадр 0. Видео генерируется ИЗ него. Консистентность зависит от фото.
-1. Сгенерируй фото по «photo_prompt» ОДИН РАЗ для персонажа
-2. Проверь ВСЕ детали: цвет кожи, морщины, шрамы, борода, очки, головной убор, серьги, ткань, узор
-3. Используй ЭТО ЖЕ фото для КАЖДОГО ролика с этим персонажем
-4. НЕ генерируй новое фото каждый раз — сломаешь консистентность
-5. Если деталь пропала — перегенерируй фото до идеала
-═══════════════════════════════════════════
+рџ“· Р¤РћРўРћ = Р’РР—РЈРђР›Р¬РќР«Р™ РЇРљРћР Р¬ (Identity Lock)
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+вљ пёЏ Р¤РѕС‚Рѕ вЂ” РєР°РґСЂ 0. Р’РёРґРµРѕ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РР— РЅРµРіРѕ. РљРѕРЅСЃРёСЃС‚РµРЅС‚РЅРѕСЃС‚СЊ Р·Р°РІРёСЃРёС‚ РѕС‚ С„РѕС‚Рѕ.
+1. РЎРіРµРЅРµСЂРёСЂСѓР№ С„РѕС‚Рѕ РїРѕ В«photo_promptВ» РћР”РРќ Р РђР— РґР»СЏ РїРµСЂСЃРѕРЅР°Р¶Р°
+2. РџСЂРѕРІРµСЂСЊ Р’РЎР• РґРµС‚Р°Р»Рё: С†РІРµС‚ РєРѕР¶Рё, РјРѕСЂС‰РёРЅС‹, С€СЂР°РјС‹, Р±РѕСЂРѕРґР°, РѕС‡РєРё, РіРѕР»РѕРІРЅРѕР№ СѓР±РѕСЂ, СЃРµСЂСЊРіРё, С‚РєР°РЅСЊ, СѓР·РѕСЂ
+3. РСЃРїРѕР»СЊР·СѓР№ Р­РўРћ Р–Р• С„РѕС‚Рѕ РґР»СЏ РљРђР–Р”РћР“Рћ СЂРѕР»РёРєР° СЃ СЌС‚РёРј РїРµСЂСЃРѕРЅР°Р¶РµРј
+4. РќР• РіРµРЅРµСЂРёСЂСѓР№ РЅРѕРІРѕРµ С„РѕС‚Рѕ РєР°Р¶РґС‹Р№ СЂР°Р· вЂ” СЃР»РѕРјР°РµС€СЊ РєРѕРЅСЃРёСЃС‚РµРЅС‚РЅРѕСЃС‚СЊ
+5. Р•СЃР»Рё РґРµС‚Р°Р»СЊ РїСЂРѕРїР°Р»Р° вЂ” РїРµСЂРµРіРµРЅРµСЂРёСЂСѓР№ С„РѕС‚Рѕ РґРѕ РёРґРµР°Р»Р°
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
 
-[0.00–0.70] 🎣 ХУК: ${mergedHookObj.action_ru}
-  🔊 Звук: ${mergedHookObj.audio}
-  🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
+[0.00вЂ“0.70] рџЋЈ РҐРЈРљ: ${mergedHookObj.action_ru}
+  рџ”Љ Р—РІСѓРє: ${mergedHookObj.audio}
+  рџЋ­ РЎС‚РёР»СЊ С…СѓРєР°: ${charA.modifiers?.hook_style || 'РІРЅРёРјР°РЅРёРµ Рє РєР°РјРµСЂРµ'}
 
-[0.70–7.00] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
-  «${dialogueA}»
-  💬 Темп: ${charA.speech_pace} | Слов: 15-30 | Окно: 6.3с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
-  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая эмоция'}
-  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
-  💥 KILLER WORD «${killerWord}» → ближе к 6.8s
+[0.70вЂ“7.00] рџЋ¤ ${charA.name_ru} (${charA.vibe_archetype || 'СЃРѕР»Рѕ'}):
+  В«${dialogueA}В»
+  рџ’¬ РўРµРјРї: ${charA.speech_pace} | РЎР»РѕРІ: 15-30 | РћРєРЅРѕ: 6.3СЃ | ${charA.swear_level > 0 ? 'РјР°С‚ РєР°Рє Р°РєС†РµРЅС‚' : 'Р±РµР· РјР°С‚Р°'}
+  рџ—Ј Р“РѕР»РѕСЃ: ${charA.speech_pace === 'fast' ? 'Р±С‹СЃС‚СЂС‹Р№, СЌРјРѕС†РёРѕРЅР°Р»СЊРЅС‹Р№, СЃ РЅР°РґСЂС‹РІРѕРј' : charA.speech_pace === 'slow' ? 'РЅРёР·РєРёР№, С‚СЏР¶С‘Р»С‹Р№, РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ СЃ РІРµСЃРѕРј' : 'СЃСЂРµРґРЅРёР№ С‚РµРјР±СЂ, РЅР°СЂР°СЃС‚Р°СЋС‰Р°СЏ СЌРјРѕС†РёСЏ'}
+  рџЋ­ РњРёРєСЂРѕР¶РµСЃС‚: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'РІС‹СЂР°Р·РёС‚РµР»СЊРЅС‹Р№ Р¶РµСЃС‚'}
+  рџ’Ґ KILLER WORD В«${killerWord}В» в†’ Р±Р»РёР¶Рµ Рє 6.8s
 
-[7.00–8.00] ${enableLaughter ? '😂' : '😏'} RELEASE: ${enableLaughter ? 'реакция/пауза/хриплый смех' : 'речь заканчивается, тишина — без смеха'}
-  🎭 Финал: ${enableLaughter ? (charA.modifiers?.laugh_style || 'усмешка в камеру') : 'уверенное выражение, взгляд в камеру, без смеха'}`
-  : `🎬 ДИАЛОГ С ТАЙМИНГАМИ (v2 Production Contract)
-═══════════════════════════════════════════
-📂 Категория: ${cat.ru}${topicRu ? `\n💡 Идея: ${topicRu}` : ''}${sceneHint ? `\n🎥 Референс: ${sceneHint}` : ''}
-👥 Пара: ${charA.name_ru} (${cast.speaker_A.age}) × ${charB.name_ru} (${cast.speaker_B.age})
-🎭 Динамика: ${pairDynamic}
-📍 Локация: ${location.split(',')[0]}
-💡 Освещение: ${lightingMood.mood}
-👗 A: ${wardrobeA}
-👔 B: ${wardrobeB}
-🪑 Реквизит: ${propAnchor}
+[7.00вЂ“8.00] ${enableLaughter ? 'рџ‚' : 'рџЏ'} RELEASE: ${enableLaughter ? 'СЂРµР°РєС†РёСЏ/РїР°СѓР·Р°/С…СЂРёРїР»С‹Р№ СЃРјРµС…' : 'СЂРµС‡СЊ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ, С‚РёС€РёРЅР° вЂ” Р±РµР· СЃРјРµС…Р°'}
+  рџЋ­ Р¤РёРЅР°Р»: ${enableLaughter ? (charA.modifiers?.laugh_style || 'СѓСЃРјРµС€РєР° РІ РєР°РјРµСЂСѓ') : 'СѓРІРµСЂРµРЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РІР·РіР»СЏРґ РІ РєР°РјРµСЂСѓ, Р±РµР· СЃРјРµС…Р°'}`
+  : `рџЋ¬ Р”РРђР›РћР“ РЎ РўРђР™РњРРќР“РђРњР (v2 Production Contract)
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+рџ“‚ РљР°С‚РµРіРѕСЂРёСЏ: ${cat.ru}${topicRu ? `\nрџ’Ў РРґРµСЏ: ${topicRu}` : ''}${sceneHint ? `\nрџЋҐ Р РµС„РµСЂРµРЅСЃ: ${sceneHint}` : ''}
+рџ‘Ґ РџР°СЂР°: ${charA.name_ru} (${cast.speaker_A.age}) Г— ${charB.name_ru} (${cast.speaker_B.age})
+рџЋ­ Р”РёРЅР°РјРёРєР°: ${pairDynamic}
+рџ“Ќ Р›РѕРєР°С†РёСЏ: ${location.split(',')[0]}
+рџ’Ў РћСЃРІРµС‰РµРЅРёРµ: ${lightingMood.mood}
+рџ‘— A: ${wardrobeA}
+рџ‘” B: ${wardrobeB}
+рџЄ‘ Р РµРєРІРёР·РёС‚: ${propAnchor}
 
-📷 ФОТО = ВИЗУАЛЬНЫЙ ЯКОРЬ (Identity Lock)
-═══════════════════════════════════════════
-⚠️ Фото — кадр 0. Видео генерируется ИЗ него. Консистентность зависит от фото.
-1. Сгенерируй фото по «photo_prompt» ОДИН РАЗ для этой пары
-2. Проверь ВСЕ детали: цвет кожи, морщины, шрамы, борода, очки, головной убор, серьги, украшения, ткань, узор
-3. Используй ЭТО ЖЕ фото для КАЖДОГО ролика с этой парой
-4. НЕ генерируй новое фото каждый раз — сломаешь консистентность
-5. Если деталь пропала (например, золотые зубы, платок) — перегенерируй фото
-═══════════════════════════════════════════
+рџ“· Р¤РћРўРћ = Р’РР—РЈРђР›Р¬РќР«Р™ РЇРљРћР Р¬ (Identity Lock)
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+вљ пёЏ Р¤РѕС‚Рѕ вЂ” РєР°РґСЂ 0. Р’РёРґРµРѕ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РР— РЅРµРіРѕ. РљРѕРЅСЃРёСЃС‚РµРЅС‚РЅРѕСЃС‚СЊ Р·Р°РІРёСЃРёС‚ РѕС‚ С„РѕС‚Рѕ.
+1. РЎРіРµРЅРµСЂРёСЂСѓР№ С„РѕС‚Рѕ РїРѕ В«photo_promptВ» РћР”РРќ Р РђР— РґР»СЏ СЌС‚РѕР№ РїР°СЂС‹
+2. РџСЂРѕРІРµСЂСЊ Р’РЎР• РґРµС‚Р°Р»Рё: С†РІРµС‚ РєРѕР¶Рё, РјРѕСЂС‰РёРЅС‹, С€СЂР°РјС‹, Р±РѕСЂРѕРґР°, РѕС‡РєРё, РіРѕР»РѕРІРЅРѕР№ СѓР±РѕСЂ, СЃРµСЂСЊРіРё, СѓРєСЂР°С€РµРЅРёСЏ, С‚РєР°РЅСЊ, СѓР·РѕСЂ
+3. РСЃРїРѕР»СЊР·СѓР№ Р­РўРћ Р–Р• С„РѕС‚Рѕ РґР»СЏ РљРђР–Р”РћР“Рћ СЂРѕР»РёРєР° СЃ СЌС‚РѕР№ РїР°СЂРѕР№
+4. РќР• РіРµРЅРµСЂРёСЂСѓР№ РЅРѕРІРѕРµ С„РѕС‚Рѕ РєР°Р¶РґС‹Р№ СЂР°Р· вЂ” СЃР»РѕРјР°РµС€СЊ РєРѕРЅСЃРёСЃС‚РµРЅС‚РЅРѕСЃС‚СЊ
+5. Р•СЃР»Рё РґРµС‚Р°Р»СЊ РїСЂРѕРїР°Р»Р° (РЅР°РїСЂРёРјРµСЂ, Р·РѕР»РѕС‚С‹Рµ Р·СѓР±С‹, РїР»Р°С‚РѕРє) вЂ” РїРµСЂРµРіРµРЅРµСЂРёСЂСѓР№ С„РѕС‚Рѕ
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
 
-[0.00–0.70] 🎣 ХУК: ${mergedHookObj.action_ru}
-  🔊 Звук: ${mergedHookObj.audio}
-  🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
-  ⚡ Стоп-скролл: удар предметом / резкий вдох / микро-экшен
+[0.00вЂ“0.70] рџЋЈ РҐРЈРљ: ${mergedHookObj.action_ru}
+  рџ”Љ Р—РІСѓРє: ${mergedHookObj.audio}
+  рџЋ­ РЎС‚РёР»СЊ С…СѓРєР° A: ${charA.modifiers?.hook_style || 'РІРЅРёРјР°РЅРёРµ Рє РєР°РјРµСЂРµ'}
+  вљЎ РЎС‚РѕРї-СЃРєСЂРѕР»Р»: СѓРґР°СЂ РїСЂРµРґРјРµС‚РѕРј / СЂРµР·РєРёР№ РІРґРѕС… / РјРёРєСЂРѕ-СЌРєС€РµРЅ
 
-[0.70–3.50] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
-  «${dialogueA}»
-  💬 Темп: ${charA.speech_pace} | Слов: 4-10 (${charA.speech_pace === 'slow' ? 'макс 5' : charA.speech_pace === 'fast' ? 'до 8-10' : '5-7'}) | Окно: 2.8с | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
-  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
-  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
-  🚫 Рот B: СТРОГО ЗАКРЫТ — только микро-мимика (side-eye, ноздри, бровь)
+[0.70вЂ“3.50] рџ…°пёЏ ${charA.name_ru} (${charA.vibe_archetype || 'СЂРѕР»СЊ A'}):
+  В«${dialogueA}В»
+  рџ’¬ РўРµРјРї: ${charA.speech_pace} | РЎР»РѕРІ: 4-10 (${charA.speech_pace === 'slow' ? 'РјР°РєСЃ 5' : charA.speech_pace === 'fast' ? 'РґРѕ 8-10' : '5-7'}) | РћРєРЅРѕ: 2.8СЃ | ${charA.swear_level > 0 ? 'РјР°С‚ РєР°Рє Р°РєС†РµРЅС‚' : 'Р±РµР· РјР°С‚Р°'}
+  рџ—Ј Р“РѕР»РѕСЃ: ${charA.speech_pace === 'fast' ? 'Р±С‹СЃС‚СЂС‹Р№, СЌРјРѕС†РёРѕРЅР°Р»СЊРЅС‹Р№, СЃ РЅР°РґСЂС‹РІРѕРј' : charA.speech_pace === 'slow' ? 'РЅРёР·РєРёР№, С‚СЏР¶С‘Р»С‹Р№, РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ СЃ РІРµСЃРѕРј' : 'СЃСЂРµРґРЅРёР№ С‚РµРјР±СЂ, РЅР°СЂР°СЃС‚Р°СЋС‰Р°СЏ РёРЅРґРёРіРЅР°С†РёСЏ'}
+  рџЋ­ РњРёРєСЂРѕР¶РµСЃС‚: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'РІС‹СЂР°Р·РёС‚РµР»СЊРЅС‹Р№ Р¶РµСЃС‚'}
+  рџљ« Р РѕС‚ B: РЎРўР РћР“Рћ Р—РђРљР Р«Рў вЂ” С‚РѕР»СЊРєРѕ РјРёРєСЂРѕ-РјРёРјРёРєР° (side-eye, РЅРѕР·РґСЂРё, Р±СЂРѕРІСЊ)
 
-[3.50–7.00] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
-  «${dialogueB}»
-  💬 Темп: ${charB.speech_pace} | Слов: 4-12 (${charB.speech_pace === 'slow' ? 'макс 7' : charB.speech_pace === 'fast' ? 'до 10-12' : '6-8'}) | Окно: 3.5с | паузы = сила
-  🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
-  💥 KILLER WORD «${killerWord}» → ближе к 6.8s
-  🚫 Рот A: СТРОГО ЗАКРЫТ — замирает в пафосной позе
+[3.50вЂ“7.00] рџ…±пёЏ ${charB.name_ru} (${charB.vibe_archetype || 'СЂРѕР»СЊ B'}):
+  В«${dialogueB}В»
+  рџ’¬ РўРµРјРї: ${charB.speech_pace} | РЎР»РѕРІ: 4-12 (${charB.speech_pace === 'slow' ? 'РјР°РєСЃ 7' : charB.speech_pace === 'fast' ? 'РґРѕ 10-12' : '6-8'}) | РћРєРЅРѕ: 3.5СЃ | РїР°СѓР·С‹ = СЃРёР»Р°
+  рџ—Ј Р“РѕР»РѕСЃ: ${charB.speech_pace === 'slow' ? 'РЅРёР·РєРёР№, СЂР°Р·РјРµСЂРµРЅРЅС‹Р№, СЃР»РѕРІР° РєР°Рє РєР°РјРЅРё' : charB.speech_pace === 'fast' ? 'СЃС‚Р°РєРєР°С‚Рѕ, РѕС‚СЂС‹РІРёСЃС‚С‹Р№, СЂРµР·РєРёРµ РїР°СѓР·С‹' : 'РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№, РЅР° killer word РіРѕР»РѕСЃ РїР°РґР°РµС‚ РґРѕ С€С‘РїРѕС‚Р°'}
+  рџ’Ґ KILLER WORD В«${killerWord}В» в†’ Р±Р»РёР¶Рµ Рє 6.8s
+  рџљ« Р РѕС‚ A: РЎРўР РћР“Рћ Р—РђРљР Р«Рў вЂ” Р·Р°РјРёСЂР°РµС‚ РІ РїР°С„РѕСЃРЅРѕР№ РїРѕР·Рµ
 
-[7.00–8.00] ${enableLaughter ? '😂' : '🤐'} RELEASE: ${enableLaughter ? releaseObj.action_ru : 'тишина после панчлайна — без смеха'}
-${enableLaughter ? `  🔊 Общий заразительный «хриплый» смех. Тряска камеры. Rewatch-bait 0.3с
-  🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
-  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}` : `  🔇 БЕЗ СМЕХА. Замершие выражения лиц. Rewatch-bait 0.3с`}
+[7.00вЂ“8.00] ${enableLaughter ? 'рџ‚' : 'рџ¤ђ'} RELEASE: ${enableLaughter ? releaseObj.action_ru : 'С‚РёС€РёРЅР° РїРѕСЃР»Рµ РїР°РЅС‡Р»Р°Р№РЅР° вЂ” Р±РµР· СЃРјРµС…Р°'}
+${enableLaughter ? `  рџ”Љ РћР±С‰РёР№ Р·Р°СЂР°Р·РёС‚РµР»СЊРЅС‹Р№ В«С…СЂРёРїР»С‹Р№В» СЃРјРµС…. РўСЂСЏСЃРєР° РєР°РјРµСЂС‹. Rewatch-bait 0.3СЃ
+  рџЋ­ РЎРјРµС… A: ${charA.modifiers?.laugh_style || 'РёСЃРєСЂРµРЅРЅРёР№ СЃРјРµС…'}
+  рџЋ­ РЎРјРµС… B: ${charB.modifiers?.laugh_style || 'РґРѕРІРѕР»СЊРЅС‹Р№ СЃРјРµС€РѕРє'}` : `  рџ”‡ Р‘Р•Р— РЎРњР•РҐРђ. Р—Р°РјРµСЂС€РёРµ РІС‹СЂР°Р¶РµРЅРёСЏ Р»РёС†. Rewatch-bait 0.3СЃ`}
 
-═══════════════════════════════════════════
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
 
 
-📸 INSTAGRAM PACK
-═══════════════════════════════════════════
+рџ“ё INSTAGRAM PACK
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
 
-📊 1. Детальный анализ (для понимания залёта):
-• Сюжет: ${charA.name_ru} идёт в атаку с вопросом про ${cat.ru.toLowerCase()}. ${charB.name_ru} оказывается прижат к стенке.
-• Панчлайн: Killer word «${killerWord}» переворачивает весь разговор — то, что казалось нападением, оказывается точным попаданием.
-• Почему сработает: Каждый хоть раз был в такой ситуации — этот момент узнавания и есть главный триггер пересылки.
+рџ“Љ 1. Р”РµС‚Р°Р»СЊРЅС‹Р№ Р°РЅР°Р»РёР· (РґР»СЏ РїРѕРЅРёРјР°РЅРёСЏ Р·Р°Р»С‘С‚Р°):
+вЂў РЎСЋР¶РµС‚: ${charA.name_ru} РёРґС‘С‚ РІ Р°С‚Р°РєСѓ СЃ РІРѕРїСЂРѕСЃРѕРј РїСЂРѕ ${cat.ru.toLowerCase()}. ${charB.name_ru} РѕРєР°Р·С‹РІР°РµС‚СЃСЏ РїСЂРёР¶Р°С‚ Рє СЃС‚РµРЅРєРµ.
+вЂў РџР°РЅС‡Р»Р°Р№РЅ: Killer word В«${killerWord}В» РїРµСЂРµРІРѕСЂР°С‡РёРІР°РµС‚ РІРµСЃСЊ СЂР°Р·РіРѕРІРѕСЂ вЂ” С‚Рѕ, С‡С‚Рѕ РєР°Р·Р°Р»РѕСЃСЊ РЅР°РїР°РґРµРЅРёРµРј, РѕРєР°Р·С‹РІР°РµС‚СЃСЏ С‚РѕС‡РЅС‹Рј РїРѕРїР°РґР°РЅРёРµРј.
+вЂў РџРѕС‡РµРјСѓ СЃСЂР°Р±РѕС‚Р°РµС‚: РљР°Р¶РґС‹Р№ С…РѕС‚СЊ СЂР°Р· Р±С‹Р» РІ С‚Р°РєРѕР№ СЃРёС‚СѓР°С†РёРё вЂ” СЌС‚РѕС‚ РјРѕРјРµРЅС‚ СѓР·РЅР°РІР°РЅРёСЏ Рё РµСЃС‚СЊ РіР»Р°РІРЅС‹Р№ С‚СЂРёРіРіРµСЂ РїРµСЂРµСЃС‹Р»РєРё.
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-📝 2. Текст для описания (Caption) + Байт:
-(Копируй отсюда) 👇
+рџ“ќ 2. РўРµРєСЃС‚ РґР»СЏ РѕРїРёСЃР°РЅРёСЏ (Caption) + Р‘Р°Р№С‚:
+(РљРѕРїРёСЂСѓР№ РѕС‚СЃСЋРґР°) рџ‘‡
 
-${engage.viralTitle} ${charA.name_ru} выдала такое, что ${charB.name_ru} не нашёлся что ответить. Реакция — бесценна! 😂
+${engage.viralTitle} ${charA.name_ru} РІС‹РґР°Р»Р° С‚Р°РєРѕРµ, С‡С‚Рѕ ${charB.name_ru} РЅРµ РЅР°С€С‘Р»СЃСЏ С‡С‚Рѕ РѕС‚РІРµС‚РёС‚СЊ. Р РµР°РєС†РёСЏ вЂ” Р±РµСЃС†РµРЅРЅР°! рџ‚
 
-**${engage.shareBait}** 👇
+**${engage.shareBait}** рџ‘‡
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-#️⃣ 3. Блок хештегов (ВЧ/СЧ/НЧ):
-(Копируй и вставляй первым комментарием) 👇
+#пёЏвѓЈ 3. Р‘Р»РѕРє С…РµС€С‚РµРіРѕРІ (Р’Р§/РЎР§/РќР§):
+(РљРѕРїРёСЂСѓР№ Рё РІСЃС‚Р°РІР»СЏР№ РїРµСЂРІС‹Рј РєРѕРјРјРµРЅС‚Р°СЂРёРµРј) рџ‘‡
 
 ${engage.hashtags.join(' ')}
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-🎬 4. Текст на видео (Хук):
-Напиши это крупно в начале, чтобы зацепить взгляд:
-• «${charA.name_ru} подловила на самом интересном...»
-• «Когда ${cat.ru.toLowerCase()} доводит до точки кипения 🔥»
-• «Его реакция на последнее слово? Бесценно 💀»
+рџЋ¬ 4. РўРµРєСЃС‚ РЅР° РІРёРґРµРѕ (РҐСѓРє):
+РќР°РїРёС€Рё СЌС‚Рѕ РєСЂСѓРїРЅРѕ РІ РЅР°С‡Р°Р»Рµ, С‡С‚РѕР±С‹ Р·Р°С†РµРїРёС‚СЊ РІР·РіР»СЏРґ:
+вЂў В«${charA.name_ru} РїРѕРґР»РѕРІРёР»Р° РЅР° СЃР°РјРѕРј РёРЅС‚РµСЂРµСЃРЅРѕРј...В»
+вЂў В«РљРѕРіРґР° ${cat.ru.toLowerCase()} РґРѕРІРѕРґРёС‚ РґРѕ С‚РѕС‡РєРё РєРёРїРµРЅРёСЏ рџ”ҐВ»
+вЂў В«Р•РіРѕ СЂРµР°РєС†РёСЏ РЅР° РїРѕСЃР»РµРґРЅРµРµ СЃР»РѕРІРѕ? Р‘РµСЃС†РµРЅРЅРѕ рџ’ЂВ»
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-💡 5. Лайфхак для охватов:
-В этой теме важно спровоцировать спор. Напиши в закрепе:
-«${engage.pinComment}»
-Этот «махач» в комментах вытолкнет ролик в рекомендации. 🚀
+рџ’Ў 5. Р›Р°Р№С„С…Р°Рє РґР»СЏ РѕС…РІР°С‚РѕРІ:
+Р’ СЌС‚РѕР№ С‚РµРјРµ РІР°Р¶РЅРѕ СЃРїСЂРѕРІРѕС†РёСЂРѕРІР°С‚СЊ СЃРїРѕСЂ. РќР°РїРёС€Рё РІ Р·Р°РєСЂРµРїРµ:
+В«${engage.pinComment}В»
+Р­С‚РѕС‚ В«РјР°С…Р°С‡В» РІ РєРѕРјРјРµРЅС‚Р°С… РІС‹С‚РѕР»РєРЅРµС‚ СЂРѕР»РёРє РІ СЂРµРєРѕРјРµРЅРґР°С†РёРё. рџљЂ
 
-📌 ЗАКРЕП (первый коммент от автора):
+рџ“Њ Р—РђРљР Р•Рџ (РїРµСЂРІС‹Р№ РєРѕРјРјРµРЅС‚ РѕС‚ Р°РІС‚РѕСЂР°):
 ${engage.pinComment}
 
-💬 ПЕРВЫЙ КОММЕНТ (сразу после публикации):
+рџ’¬ РџР•Р Р’Р«Р™ РљРћРњРњР•РќРў (СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ РїСѓР±Р»РёРєР°С†РёРё):
 ${engage.firstComment}
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-📱 СТРАТЕГИЯ ПУБЛИКАЦИИ:
-• Заголовок из блока 2 → в описание поста (caption). Без хештегов.
-• Хештеги из блока 3 → в ПЕРВЫЙ коммент от автора (IG не режет охват).
-• Закреп → закрепить коммент сверху.
-• Первый коммент → постить через 1-2 мин после публикации.
-• Серия: используй ${engage.seriesTag} на каждом видео этой пары.${product_info?.description_en ? `
+рџ“± РЎРўР РђРўР•Р“РРЇ РџРЈР‘Р›РРљРђР¦РР:
+вЂў Р—Р°РіРѕР»РѕРІРѕРє РёР· Р±Р»РѕРєР° 2 в†’ РІ РѕРїРёСЃР°РЅРёРµ РїРѕСЃС‚Р° (caption). Р‘РµР· С…РµС€С‚РµРіРѕРІ.
+вЂў РҐРµС€С‚РµРіРё РёР· Р±Р»РѕРєР° 3 в†’ РІ РџР•Р Р’Р«Р™ РєРѕРјРјРµРЅС‚ РѕС‚ Р°РІС‚РѕСЂР° (IG РЅРµ СЂРµР¶РµС‚ РѕС…РІР°С‚).
+вЂў Р—Р°РєСЂРµРї в†’ Р·Р°РєСЂРµРїРёС‚СЊ РєРѕРјРјРµРЅС‚ СЃРІРµСЂС…Сѓ.
+вЂў РџРµСЂРІС‹Р№ РєРѕРјРјРµРЅС‚ в†’ РїРѕСЃС‚РёС‚СЊ С‡РµСЂРµР· 1-2 РјРёРЅ РїРѕСЃР»Рµ РїСѓР±Р»РёРєР°С†РёРё.
+вЂў РЎРµСЂРёСЏ: РёСЃРїРѕР»СЊР·СѓР№ ${engage.seriesTag} РЅР° РєР°Р¶РґРѕРј РІРёРґРµРѕ СЌС‚РѕР№ РїР°СЂС‹.${product_info?.description_en ? `
 
-📦 ТОВАР В КАДРЕ:
-═══════════════════════════════════════════
-Описание товара (EN, для промпта): ${product_info.description_en.slice(0, 300)}${product_info.description_en.length > 300 ? '...' : ''}
+рџ“¦ РўРћР’РђР  Р’ РљРђР”Р Р•:
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+РћРїРёСЃР°РЅРёРµ С‚РѕРІР°СЂР° (EN, РґР»СЏ РїСЂРѕРјРїС‚Р°): ${product_info.description_en.slice(0, 300)}${product_info.description_en.length > 300 ? '...' : ''}
 
-⚠️ ВАЖНО: Товар должен быть в кадре точно как на исходном фото!
-• Персонаж A держит/показывает товар во время своей реплики
-• Товар остаётся видимым на протяжении всего ролика
-• Цвета, форма, бренд — строго как на оригинальном фото` : ''}${reference_style?.description_en ? `
+вљ пёЏ Р’РђР–РќРћ: РўРѕРІР°СЂ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РєР°РґСЂРµ С‚РѕС‡РЅРѕ РєР°Рє РЅР° РёСЃС…РѕРґРЅРѕРј С„РѕС‚Рѕ!
+вЂў РџРµСЂСЃРѕРЅР°Р¶ A РґРµСЂР¶РёС‚/РїРѕРєР°Р·С‹РІР°РµС‚ С‚РѕРІР°СЂ РІРѕ РІСЂРµРјСЏ СЃРІРѕРµР№ СЂРµРїР»РёРєРё
+вЂў РўРѕРІР°СЂ РѕСЃС‚Р°С‘С‚СЃСЏ РІРёРґРёРјС‹Рј РЅР° РїСЂРѕС‚СЏР¶РµРЅРёРё РІСЃРµРіРѕ СЂРѕР»РёРєР°
+вЂў Р¦РІРµС‚Р°, С„РѕСЂРјР°, Р±СЂРµРЅРґ вЂ” СЃС‚СЂРѕРіРѕ РєР°Рє РЅР° РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРј С„РѕС‚Рѕ` : ''}${reference_style?.description_en ? `
 
-🎨 ВИЗУАЛЬНЫЙ РЕФЕРЕНС:
-═══════════════════════════════════════════
-Описание стиля (EN, для промпта): ${reference_style.description_en.slice(0, 300)}${reference_style.description_en.length > 300 ? '...' : ''}
+рџЋЁ Р’РР—РЈРђР›Р¬РќР«Р™ Р Р•Р¤Р•Р Р•РќРЎ:
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+РћРїРёСЃР°РЅРёРµ СЃС‚РёР»СЏ (EN, РґР»СЏ РїСЂРѕРјРїС‚Р°): ${reference_style.description_en.slice(0, 300)}${reference_style.description_en.length > 300 ? '...' : ''}
 
-💡 Повтори освещение, цветовую палитру и настроение с загруженного референса!` : ''}`;
+рџ’Ў РџРѕРІС‚РѕСЂРё РѕСЃРІРµС‰РµРЅРёРµ, С†РІРµС‚РѕРІСѓСЋ РїР°Р»РёС‚СЂСѓ Рё РЅР°СЃС‚СЂРѕРµРЅРёРµ СЃ Р·Р°РіСЂСѓР¶РµРЅРЅРѕРіРѕ СЂРµС„РµСЂРµРЅСЃР°!` : ''}`;
 
-  // ── BLUEPRINT JSON ──
+  // в”Ђв”Ђ BLUEPRINT JSON в”Ђв”Ђ
   const blueprint_json = {
     version: '2.0',
     ...(topicRu ? { topic_ru: topicRu } : {}),
@@ -2696,14 +2698,14 @@ ${engage.firstComment}
     },
   };
 
-  // ── QC Gate ──
+  // в”Ђв”Ђ QC Gate в”Ђв”Ђ
   const qc = runQCGate(blueprint_json, cast);
 
-  // ── Validate ──
+  // в”Ђв”Ђ Validate в”Ђв”Ђ
   const output = { photo_prompt_en_json, video_prompt_en_json, ru_package, blueprint_json };
   const validation = runAllValidations(output, historyCache);
 
-  // ── Update history ──
+  // в”Ђв”Ђ Update history в”Ђв”Ђ
   historyCache.addGeneration({
     location,
     props: [propAnchor],
@@ -2744,11 +2746,11 @@ ${engage.firstComment}
     ru_package,
     blueprint_json,
     log,
-    warnings: [...validation.warnings, ...(qc.ok ? [] : [`QC Gate: ${qc.passed}/${qc.total} (need ≥9)${qc.hard_fails.length ? ', HARD FAIL: ' + qc.hard_fails.join(', ') : ''}`])],
+    warnings: [...validation.warnings, ...(qc.ok ? [] : [`QC Gate: ${qc.passed}/${qc.total} (need в‰Ґ9)${qc.hard_fails.length ? ', HARD FAIL: ' + qc.hard_fails.join(', ') : ''}`])],
     auto_fixes: [...autoFixes, ...validation.auto_fixes],
     duration_estimate: estimate,
     qc_gate: qc,
-    // Context for API mode — sent to server for Gemini refinement
+    // Context for API mode вЂ” sent to server for Gemini refinement
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
       input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode, enableLaughter,
@@ -2757,15 +2759,15 @@ ${engage.firstComment}
       dialogue_override: dialogue_override || null,
       // Fallback dialogue for mergeGeminiResult when Gemini doesn't return dialogue
       dialogueA, dialogueB, killerWord,
-      // Remake instruction — when video reference is provided, Gemini must replicate it
+      // Remake instruction вЂ” when video reference is provided, Gemini must replicate it
       remake_mode: !!(video_meta?.url || video_meta?.title || video_meta?.cover_base64),
       remake_instruction: (video_meta?.url || video_meta?.title || video_meta?.cover_base64) ? buildRemakeInstruction(video_meta, charA, charB) : null,
     },
   };
 }
 
-// ─── MERGE GEMINI RESULT INTO LOCAL TEMPLATE ──
-// Takes local generation (structural) + Gemini output (creative) → merged result
+// в”Ђв”Ђв”Ђ MERGE GEMINI RESULT INTO LOCAL TEMPLATE в”Ђв”Ђ
+// Takes local generation (structural) + Gemini output (creative) в†’ merged result
 export function mergeGeminiResult(localResult, geminiData) {
   if (!geminiData) return localResult;
 
@@ -2775,15 +2777,15 @@ export function mergeGeminiResult(localResult, geminiData) {
   // Deep clone to avoid mutating original
   const r = JSON.parse(JSON.stringify(localResult));
 
-  // ── 0. Humor category: Gemini invents its own category ──
+  // в”Ђв”Ђ 0. Humor category: Gemini invents its own category в”Ђв”Ђ
   if (g.humor_category_ru) {
     r.log.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
     ctx.category = { ru: g.humor_category_ru, en: g.humor_category_ru };
   }
 
-  // ── 1. Photo prompt: replace scene with Gemini's ultra-detailed version ──
+  // в”Ђв”Ђ 1. Photo prompt: replace scene with Gemini's ultra-detailed version в”Ђв”Ђ
   if (g.photo_scene_en) {
-    // ── IDENTITY LOCK: append canonical character_en to photo scene ──
+    // в”Ђв”Ђ IDENTITY LOCK: append canonical character_en to photo scene в”Ђв”Ђ
     const cA = ctx.charA;
     const cB = ctx.charB;
     const idA = cA?.prompt_tokens?.character_en;
@@ -2814,8 +2816,8 @@ export function mergeGeminiResult(localResult, geminiData) {
     r.photo_prompt_en_json.scene = photoScene;
   }
 
-  // ── 2. Video prompt: replace dialogue (Gemini generates fresh lines) ──
-  // If dialogue_override is set, user explicitly chose this dialogue — skip Gemini's
+  // в”Ђв”Ђ 2. Video prompt: replace dialogue (Gemini generates fresh lines) в”Ђв”Ђ
+  // If dialogue_override is set, user explicitly chose this dialogue вЂ” skip Gemini's
   const hasDialogueOverride = !!(ctx.dialogue_override?.A);
   if (!hasDialogueOverride) {
     if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
@@ -2830,7 +2832,7 @@ export function mergeGeminiResult(localResult, geminiData) {
     }
   }
 
-  // ── 3. Video prompt: replace emotion arc ──
+  // в”Ђв”Ђ 3. Video prompt: replace emotion arc в”Ђв”Ђ
   if (g.video_emotion_arc) {
     const arc = g.video_emotion_arc;
     r.video_prompt_en_json.emotion_arc = {
@@ -2841,13 +2843,13 @@ export function mergeGeminiResult(localResult, geminiData) {
     };
   }
 
-  // ── 4. Video prompt: replace atmosphere ──
+  // в”Ђв”Ђ 4. Video prompt: replace atmosphere в”Ђв”Ђ
   if (g.video_atmosphere_en) {
     r.video_prompt_en_json.spatial.environment_interaction = g.video_atmosphere_en;
   }
 
-  // ── 5. Blueprint: replace dialogue in scenes (solo-aware) ──
-  // Skip if dialogue_override — user's edited dialogue is already in the blueprint from generator
+  // в”Ђв”Ђ 5. Blueprint: replace dialogue in scenes (solo-aware) в”Ђв”Ђ
+  // Skip if dialogue_override вЂ” user's edited dialogue is already in the blueprint from generator
   const isSoloMerge = ctx.soloMode || (ctx.charA && ctx.charB && ctx.charA.id === ctx.charB.id);
   if (!hasDialogueOverride) {
     if (g.dialogue_A_ru) {
@@ -2856,43 +2858,43 @@ export function mergeGeminiResult(localResult, geminiData) {
       if (r.blueprint_json.dialogue_segments?.[0]) r.blueprint_json.dialogue_segments[0].text_ru = g.dialogue_A_ru;
     }
     if (g.dialogue_B_ru && !isSoloMerge) {
-      // Only update B in duo mode — in solo mode there is no scene[2] 'act_B' or dialogue_segments[1]
+      // Only update B in duo mode вЂ” in solo mode there is no scene[2] 'act_B' or dialogue_segments[1]
       if (r.blueprint_json.scenes[2]) r.blueprint_json.scenes[2].dialogue_ru = g.dialogue_B_ru;
       if (r.blueprint_json.dialogue_segments?.[1]) r.blueprint_json.dialogue_segments[1].text_ru = g.dialogue_B_ru;
     }
   }
 
-  // ── 5a. Blueprint: sync killer_word ──
+  // в”Ђв”Ђ 5a. Blueprint: sync killer_word в”Ђв”Ђ
   if (g.killer_word && !hasDialogueOverride) {
     r.blueprint_json.killer_word = g.killer_word;
   }
 
-  // ── 5b. Blueprint: add добивка if present ──
+  // в”Ђв”Ђ 5b. Blueprint: add РґРѕР±РёРІРєР° if present в”Ђв”Ђ
   const dA2 = g.dialogue_A2_ru || null;
   if (dA2 && r.blueprint_json.dialogue_segments) {
     // Add A2 segment if not already present
     const hasA2 = r.blueprint_json.dialogue_segments.some(s => s.speaker === 'A2');
     if (!hasA2) {
-      r.blueprint_json.dialogue_segments.push({ speaker: 'A2', text_ru: dA2, role: 'добивка' });
+      r.blueprint_json.dialogue_segments.push({ speaker: 'A2', text_ru: dA2, role: 'РґРѕР±РёРІРєР°' });
     }
   }
 
-  // ── 6. Rebuild RU package with Gemini's creative content ──
+  // в”Ђв”Ђ 6. Rebuild RU package with Gemini's creative content в”Ђв”Ђ
   // If dialogue_override, prefer user's edited dialogue over Gemini's
-  const dA = hasDialogueOverride ? (ctx.dialogueA || '—') : (g.dialogue_A_ru || ctx.dialogueA || '—');
-  const dB = hasDialogueOverride ? (ctx.dialogueB || '—') : (g.dialogue_B_ru || ctx.dialogueB || '—');
-  const kw = hasDialogueOverride ? (r.blueprint_json?.killer_word || '—') : (g.killer_word || '—');
+  const dA = hasDialogueOverride ? (ctx.dialogueA || 'вЂ”') : (g.dialogue_A_ru || ctx.dialogueA || 'вЂ”');
+  const dB = hasDialogueOverride ? (ctx.dialogueB || 'вЂ”') : (g.dialogue_B_ru || ctx.dialogueB || 'вЂ”');
+  const kw = hasDialogueOverride ? (r.blueprint_json?.killer_word || 'вЂ”') : (g.killer_word || 'вЂ”');
   const charA = ctx.charA;
   const charB = ctx.charB;
   const cast = r.video_prompt_en_json.cast || {};
   const anchorA = charA.identity_anchors || {};
   const anchorB = charB.identity_anchors || {};
 
-  const pairDynamic = charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? '🔥 Взрывная пара: хаос vs спокойствие'
-    : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? '🌪 Хаотичная пара'
-    : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? '⚡ Конфликтная пара'
-    : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? '😂 Мем-пара'
-    : '⚖️ Сбалансированная пара';
+  const pairDynamic = charA.compatibility === 'chaotic' && charB.compatibility === 'calm' ? 'рџ”Ґ Р’Р·СЂС‹РІРЅР°СЏ РїР°СЂР°: С…Р°РѕСЃ vs СЃРїРѕРєРѕР№СЃС‚РІРёРµ'
+    : charA.compatibility === 'chaotic' || charB.compatibility === 'chaotic' ? 'рџЊЄ РҐР°РѕС‚РёС‡РЅР°СЏ РїР°СЂР°'
+    : charA.compatibility === 'conflict' || charB.compatibility === 'conflict' ? 'вљЎ РљРѕРЅС„Р»РёРєС‚РЅР°СЏ РїР°СЂР°'
+    : charA.compatibility === 'meme' && charB.compatibility === 'meme' ? 'рџ‚ РњРµРј-РїР°СЂР°'
+    : 'вљ–пёЏ РЎР±Р°Р»Р°РЅСЃРёСЂРѕРІР°РЅРЅР°СЏ РїР°СЂР°';
 
   // Engagement from Gemini
   const viralTitle = g.viral_title_ru || r.log?.engagement?.viral_title || '';
@@ -2905,170 +2907,170 @@ export function mergeGeminiResult(localResult, geminiData) {
     ? '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'solo'
     : '#' + (charA.name_ru || '').replace(/\s+/g, '').toLowerCase() + 'vs' + (charB.name_ru || '').replace(/\s+/g, '').toLowerCase();
 
-  // ── Merge Gemini's product_in_frame_en if available (richer than local description) ──
+  // в”Ђв”Ђ Merge Gemini's product_in_frame_en if available (richer than local description) в”Ђв”Ђ
   if (g.product_in_frame_en && ctx.product_info) {
     ctx.product_info.description_en = g.product_in_frame_en;
   }
 
   // Instagram Pack from Gemini
   const instaAnalysis = g.insta_analysis_ru || (isSolo ? {
-    plot: `${charA.name_ru} выдаёт монолог про ${ctx.category?.ru || 'тему'} — прямо в камеру, без фильтров.`,
-    punchline: `Killer word «${kw}» в конце переворачивает весь смысл сказанного.`,
-    why_viral: `Каждый хоть раз думал то же самое — этот момент узнавания и есть главный триггер пересылки.`,
+    plot: `${charA.name_ru} РІС‹РґР°С‘С‚ РјРѕРЅРѕР»РѕРі РїСЂРѕ ${ctx.category?.ru || 'С‚РµРјСѓ'} вЂ” РїСЂСЏРјРѕ РІ РєР°РјРµСЂСѓ, Р±РµР· С„РёР»СЊС‚СЂРѕРІ.`,
+    punchline: `Killer word В«${kw}В» РІ РєРѕРЅС†Рµ РїРµСЂРµРІРѕСЂР°С‡РёРІР°РµС‚ РІРµСЃСЊ СЃРјС‹СЃР» СЃРєР°Р·Р°РЅРЅРѕРіРѕ.`,
+    why_viral: `РљР°Р¶РґС‹Р№ С…РѕС‚СЊ СЂР°Р· РґСѓРјР°Р» С‚Рѕ Р¶Рµ СЃР°РјРѕРµ вЂ” СЌС‚РѕС‚ РјРѕРјРµРЅС‚ СѓР·РЅР°РІР°РЅРёСЏ Рё РµСЃС‚СЊ РіР»Р°РІРЅС‹Р№ С‚СЂРёРіРіРµСЂ РїРµСЂРµСЃС‹Р»РєРё.`,
   } : {
-    plot: `${charA.name_ru} идёт в атаку с вопросом про ${ctx.category?.ru || 'тему'}. ${charB.name_ru} оказывается прижат к стенке.`,
-    punchline: `Killer word «${kw}» переворачивает весь разговор — то, что казалось нападением, оказывается точным попаданием.`,
-    why_viral: `Каждый хоть раз был в такой ситуации — этот момент узнавания и есть главный триггер пересылки.`,
+    plot: `${charA.name_ru} РёРґС‘С‚ РІ Р°С‚Р°РєСѓ СЃ РІРѕРїСЂРѕСЃРѕРј РїСЂРѕ ${ctx.category?.ru || 'С‚РµРјСѓ'}. ${charB.name_ru} РѕРєР°Р·С‹РІР°РµС‚СЃСЏ РїСЂРёР¶Р°С‚ Рє СЃС‚РµРЅРєРµ.`,
+    punchline: `Killer word В«${kw}В» РїРµСЂРµРІРѕСЂР°С‡РёРІР°РµС‚ РІРµСЃСЊ СЂР°Р·РіРѕРІРѕСЂ вЂ” С‚Рѕ, С‡С‚Рѕ РєР°Р·Р°Р»РѕСЃСЊ РЅР°РїР°РґРµРЅРёРµРј, РѕРєР°Р·С‹РІР°РµС‚СЃСЏ С‚РѕС‡РЅС‹Рј РїРѕРїР°РґР°РЅРёРµРј.`,
+    why_viral: `РљР°Р¶РґС‹Р№ С…РѕС‚СЊ СЂР°Р· Р±С‹Р» РІ С‚Р°РєРѕР№ СЃРёС‚СѓР°С†РёРё вЂ” СЌС‚РѕС‚ РјРѕРјРµРЅС‚ СѓР·РЅР°РІР°РЅРёСЏ Рё РµСЃС‚СЊ РіР»Р°РІРЅС‹Р№ С‚СЂРёРіРіРµСЂ РїРµСЂРµСЃС‹Р»РєРё.`,
   });
   const instaCaption = g.insta_caption_ru || (isSolo
-    ? `${viralTitle} ${charA.name_ru} сказал(а) такое, что комменты взорвутся. 😂 Перешли тому, кто точно узнает себя! 👇`
-    : `${viralTitle} ${charA.name_ru} выдала такое, что ${charB.name_ru} не нашёлся что ответить. Реакция — бесценна! 😂 Перешли это видео тому, кто точно узнает себя! 👇`);
+    ? `${viralTitle} ${charA.name_ru} СЃРєР°Р·Р°Р»(Р°) С‚Р°РєРѕРµ, С‡С‚Рѕ РєРѕРјРјРµРЅС‚С‹ РІР·РѕСЂРІСѓС‚СЃСЏ. рџ‚ РџРµСЂРµС€Р»Рё С‚РѕРјСѓ, РєС‚Рѕ С‚РѕС‡РЅРѕ СѓР·РЅР°РµС‚ СЃРµР±СЏ! рџ‘‡`
+    : `${viralTitle} ${charA.name_ru} РІС‹РґР°Р»Р° С‚Р°РєРѕРµ, С‡С‚Рѕ ${charB.name_ru} РЅРµ РЅР°С€С‘Р»СЃСЏ С‡С‚Рѕ РѕС‚РІРµС‚РёС‚СЊ. Р РµР°РєС†РёСЏ вЂ” Р±РµСЃС†РµРЅРЅР°! рџ‚ РџРµСЂРµС€Р»Рё СЌС‚Рѕ РІРёРґРµРѕ С‚РѕРјСѓ, РєС‚Рѕ С‚РѕС‡РЅРѕ СѓР·РЅР°РµС‚ СЃРµР±СЏ! рџ‘‡`);
   const instaHookTexts = g.insta_hook_texts_ru || [
-    `${charA.name_ru} подловила на самом интересном...`,
-    `Когда ${ctx.category?.ru?.toLowerCase() || 'жиза'} доводит до точки кипения 🔥`,
-    `Его реакция на последнее слово? Бесценно 💀`,
+    `${charA.name_ru} РїРѕРґР»РѕРІРёР»Р° РЅР° СЃР°РјРѕРј РёРЅС‚РµСЂРµСЃРЅРѕРј...`,
+    `РљРѕРіРґР° ${ctx.category?.ru?.toLowerCase() || 'Р¶РёР·Р°'} РґРѕРІРѕРґРёС‚ РґРѕ С‚РѕС‡РєРё РєРёРїРµРЅРёСЏ рџ”Ґ`,
+    `Р•РіРѕ СЂРµР°РєС†РёСЏ РЅР° РїРѕСЃР»РµРґРЅРµРµ СЃР»РѕРІРѕ? Р‘РµСЃС†РµРЅРЅРѕ рџ’Ђ`,
   ];
-  const instaEngagementTip = g.insta_engagement_tip_ru || `В этой теме важно спровоцировать спор. Напиши в закрепе:\n«${pinComment}»\nЭтот «махач» в комментах вытолкнет ролик в рекомендации. 🚀`;
+  const instaEngagementTip = g.insta_engagement_tip_ru || `Р’ СЌС‚РѕР№ С‚РµРјРµ РІР°Р¶РЅРѕ СЃРїСЂРѕРІРѕС†РёСЂРѕРІР°С‚СЊ СЃРїРѕСЂ. РќР°РїРёС€Рё РІ Р·Р°РєСЂРµРїРµ:\nВ«${pinComment}В»\nР­С‚РѕС‚ В«РјР°С…Р°С‡В» РІ РєРѕРјРјРµРЅС‚Р°С… РІС‹С‚РѕР»РєРЅРµС‚ СЂРѕР»РёРє РІ СЂРµРєРѕРјРµРЅРґР°С†РёРё. рџљЂ`;
 
   r.ru_package = isSolo
-  ? `🎬 МОНОЛОГ С ТАЙМИНГАМИ (FERIXDI AI Production)
-═══════════════════════════════════════════
-📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}
-🤖 Сгенерировано FERIXDI AI — уникальный контент
-👤 Персонаж: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) — СОЛО
-🎭 Архетип: ${charA.vibe_archetype || '—'}
-📍 Локация: ${ctx.location.split(',')[0]}
-💡 Освещение: ${ctx.lightingMood.mood}
-👗 Гардероб: ${ctx.wardrobeA}
-🪑 Реквизит: ${ctx.propAnchor}
+  ? `рџЋ¬ РњРћРќРћР›РћР“ РЎ РўРђР™РњРРќР“РђРњР (FERIXDI AI Production)
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+рџ“‚ РљР°С‚РµРіРѕСЂРёСЏ: ${ctx.category.ru}${ctx.topic_ru ? `\nрџ’Ў РРґРµСЏ: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\nрџЋҐ Р РµС„РµСЂРµРЅСЃ: ${ctx.scene_hint}` : ''}
+рџ¤– РЎРіРµРЅРµСЂРёСЂРѕРІР°РЅРѕ FERIXDI AI вЂ” СѓРЅРёРєР°Р»СЊРЅС‹Р№ РєРѕРЅС‚РµРЅС‚
+рџ‘¤ РџРµСЂСЃРѕРЅР°Р¶: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) вЂ” РЎРћР›Рћ
+рџЋ­ РђСЂС…РµС‚РёРї: ${charA.vibe_archetype || 'вЂ”'}
+рџ“Ќ Р›РѕРєР°С†РёСЏ: ${ctx.location.split(',')[0]}
+рџ’Ў РћСЃРІРµС‰РµРЅРёРµ: ${ctx.lightingMood.mood}
+рџ‘— Р“Р°СЂРґРµСЂРѕР±: ${ctx.wardrobeA}
+рџЄ‘ Р РµРєРІРёР·РёС‚: ${ctx.propAnchor}
 
-[0.00–0.70] 🎣 ХУК: ${ctx.hookAction.action_ru}
-  🔊 Звук: ${ctx.hookAction.audio}
-  🎭 Стиль хука: ${charA.modifiers?.hook_style || 'внимание к камере'}
+[0.00вЂ“0.70] рџЋЈ РҐРЈРљ: ${ctx.hookAction.action_ru}
+  рџ”Љ Р—РІСѓРє: ${ctx.hookAction.audio}
+  рџЋ­ РЎС‚РёР»СЊ С…СѓРєР°: ${charA.modifiers?.hook_style || 'РІРЅРёРјР°РЅРёРµ Рє РєР°РјРµСЂРµ'}
 
-[0.70–7.00] 🎤 ${charA.name_ru} (${charA.vibe_archetype || 'соло'}):
-  «${dA}»
-  💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
-  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая эмоция'}
-  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
-  💥 KILLER WORD «${kw}» → ближе к 6.8s
+[0.70вЂ“7.00] рџЋ¤ ${charA.name_ru} (${charA.vibe_archetype || 'СЃРѕР»Рѕ'}):
+  В«${dA}В»
+  рџ’¬ РўРµРјРї: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'РјР°С‚ РєР°Рє Р°РєС†РµРЅС‚' : 'Р±РµР· РјР°С‚Р°'}
+  рџ—Ј Р“РѕР»РѕСЃ: ${charA.speech_pace === 'fast' ? 'Р±С‹СЃС‚СЂС‹Р№, СЌРјРѕС†РёРѕРЅР°Р»СЊРЅС‹Р№, СЃ РЅР°РґСЂС‹РІРѕРј' : charA.speech_pace === 'slow' ? 'РЅРёР·РєРёР№, С‚СЏР¶С‘Р»С‹Р№, РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ СЃ РІРµСЃРѕРј' : 'СЃСЂРµРґРЅРёР№ С‚РµРјР±СЂ, РЅР°СЂР°СЃС‚Р°СЋС‰Р°СЏ СЌРјРѕС†РёСЏ'}
+  рџЋ­ РњРёРєСЂРѕР¶РµСЃС‚: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'РІС‹СЂР°Р·РёС‚РµР»СЊРЅС‹Р№ Р¶РµСЃС‚'}
+  рџ’Ґ KILLER WORD В«${kw}В» в†’ Р±Р»РёР¶Рµ Рє 6.8s
 
-[7.00–8.00] ${ctx.enableLaughter ? '😂' : '😏'} RELEASE: ${ctx.enableLaughter ? 'реакция/пауза/хриплый смех' : 'речь заканчивается, тишина — без смеха'}
-  🎭 Финал: ${ctx.enableLaughter ? (charA.modifiers?.laugh_style || 'усмешка в камеру') : 'уверенное выражение, без смеха'}`
+[7.00вЂ“8.00] ${ctx.enableLaughter ? 'рџ‚' : 'рџЏ'} RELEASE: ${ctx.enableLaughter ? 'СЂРµР°РєС†РёСЏ/РїР°СѓР·Р°/С…СЂРёРїР»С‹Р№ СЃРјРµС…' : 'СЂРµС‡СЊ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ, С‚РёС€РёРЅР° вЂ” Р±РµР· СЃРјРµС…Р°'}
+  рџЋ­ Р¤РёРЅР°Р»: ${ctx.enableLaughter ? (charA.modifiers?.laugh_style || 'СѓСЃРјРµС€РєР° РІ РєР°РјРµСЂСѓ') : 'СѓРІРµСЂРµРЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, Р±РµР· СЃРјРµС…Р°'}`
 
-  : `🎬 ${ctx.remake_mode ? 'РЕМЕЙК' : 'ДИАЛОГ'} С ТАЙМИНГАМИ (FERIXDI AI Production)
-═══════════════════════════════════════════
-📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}${ctx.remake_mode ? `\n🔄 Режим: РЕМЕЙК (копия оригинала + харизма наших персонажей)` : ''}
-🤖 Сгенерировано FERIXDI AI — уникальный контент
-👥 Пара: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) × ${charB.name_ru} (${cast.speaker_B?.age || charB.biology_override?.age || 'adult'})
-🎭 Динамика: ${pairDynamic}
-📍 Локация: ${ctx.location.split(',')[0]}
-💡 Освещение: ${ctx.lightingMood.mood}
-👗 A: ${ctx.wardrobeA}
-👔 B: ${ctx.wardrobeB}
-🪑 Реквизит: ${ctx.propAnchor}
+  : `рџЋ¬ ${ctx.remake_mode ? 'Р Р•РњР•Р™Рљ' : 'Р”РРђР›РћР“'} РЎ РўРђР™РњРРќР“РђРњР (FERIXDI AI Production)
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+рџ“‚ РљР°С‚РµРіРѕСЂРёСЏ: ${ctx.category.ru}${ctx.topic_ru ? `\nрџ’Ў РРґРµСЏ: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\nрџЋҐ Р РµС„РµСЂРµРЅСЃ: ${ctx.scene_hint}` : ''}${ctx.remake_mode ? `\nрџ”„ Р РµР¶РёРј: Р Р•РњР•Р™Рљ (РєРѕРїРёСЏ РѕСЂРёРіРёРЅР°Р»Р° + С…Р°СЂРёР·РјР° РЅР°С€РёС… РїРµСЂСЃРѕРЅР°Р¶РµР№)` : ''}
+рџ¤– РЎРіРµРЅРµСЂРёСЂРѕРІР°РЅРѕ FERIXDI AI вЂ” СѓРЅРёРєР°Р»СЊРЅС‹Р№ РєРѕРЅС‚РµРЅС‚
+рџ‘Ґ РџР°СЂР°: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) Г— ${charB.name_ru} (${cast.speaker_B?.age || charB.biology_override?.age || 'adult'})
+рџЋ­ Р”РёРЅР°РјРёРєР°: ${pairDynamic}
+рџ“Ќ Р›РѕРєР°С†РёСЏ: ${ctx.location.split(',')[0]}
+рџ’Ў РћСЃРІРµС‰РµРЅРёРµ: ${ctx.lightingMood.mood}
+рџ‘— A: ${ctx.wardrobeA}
+рџ‘” B: ${ctx.wardrobeB}
+рџЄ‘ Р РµРєРІРёР·РёС‚: ${ctx.propAnchor}
 
-[0.00–0.70] 🎣 ХУК: ${ctx.hookAction.action_ru}
-  🔊 Звук: ${ctx.hookAction.audio}
-  🎭 Стиль хука A: ${charA.modifiers?.hook_style || 'внимание к камере'}
-  ⚡ Стоп-скролл: удар предметом / резкий вдох / микро-экшен
+[0.00вЂ“0.70] рџЋЈ РҐРЈРљ: ${ctx.hookAction.action_ru}
+  рџ”Љ Р—РІСѓРє: ${ctx.hookAction.audio}
+  рџЋ­ РЎС‚РёР»СЊ С…СѓРєР° A: ${charA.modifiers?.hook_style || 'РІРЅРёРјР°РЅРёРµ Рє РєР°РјРµСЂРµ'}
+  вљЎ РЎС‚РѕРї-СЃРєСЂРѕР»Р»: СѓРґР°СЂ РїСЂРµРґРјРµС‚РѕРј / СЂРµР·РєРёР№ РІРґРѕС… / РјРёРєСЂРѕ-СЌРєС€РµРЅ
 
-[0.70–3.50] 🅰️ ${charA.name_ru} (${charA.vibe_archetype || 'роль A'}):
-  «${dA}»
-  💬 Темп: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'мат как акцент' : 'без мата'}
-  🗣 Голос: ${charA.speech_pace === 'fast' ? 'быстрый, эмоциональный, с надрывом' : charA.speech_pace === 'slow' ? 'низкий, тяжёлый, каждое слово с весом' : 'средний тембр, нарастающая индигнация'}
-  🎭 Микрожест: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'выразительный жест'}
-  🚫 Рот B: СТРОГО ЗАКРЫТ — только микро-мимика (side-eye, ноздри, бровь)
+[0.70вЂ“3.50] рџ…°пёЏ ${charA.name_ru} (${charA.vibe_archetype || 'СЂРѕР»СЊ A'}):
+  В«${dA}В»
+  рџ’¬ РўРµРјРї: ${charA.speech_pace} | ${charA.swear_level > 0 ? 'РјР°С‚ РєР°Рє Р°РєС†РµРЅС‚' : 'Р±РµР· РјР°С‚Р°'}
+  рџ—Ј Р“РѕР»РѕСЃ: ${charA.speech_pace === 'fast' ? 'Р±С‹СЃС‚СЂС‹Р№, СЌРјРѕС†РёРѕРЅР°Р»СЊРЅС‹Р№, СЃ РЅР°РґСЂС‹РІРѕРј' : charA.speech_pace === 'slow' ? 'РЅРёР·РєРёР№, С‚СЏР¶С‘Р»С‹Р№, РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ СЃ РІРµСЃРѕРј' : 'СЃСЂРµРґРЅРёР№ С‚РµРјР±СЂ, РЅР°СЂР°СЃС‚Р°СЋС‰Р°СЏ РёРЅРґРёРіРЅР°С†РёСЏ'}
+  рџЋ­ РњРёРєСЂРѕР¶РµСЃС‚: ${anchorA.micro_gesture || charA.modifiers?.hook_style || 'РІС‹СЂР°Р·РёС‚РµР»СЊРЅС‹Р№ Р¶РµСЃС‚'}
+  рџљ« Р РѕС‚ B: РЎРўР РћР“Рћ Р—РђРљР Р«Рў вЂ” С‚РѕР»СЊРєРѕ РјРёРєСЂРѕ-РјРёРјРёРєР° (side-eye, РЅРѕР·РґСЂРё, Р±СЂРѕРІСЊ)
 
-[3.50–7.00] 🅱️ ${charB.name_ru} (${charB.vibe_archetype || 'роль B'}):
-  «${dB}»
-  💬 Темп: ${charB.speech_pace} | паузы = сила
-  🗣 Голос: ${charB.speech_pace === 'slow' ? 'низкий, размеренный, слова как камни' : charB.speech_pace === 'fast' ? 'стаккато, отрывистый, резкие паузы' : 'контролируемый, на killer word голос падает до шёпота'}
-  💥 KILLER WORD «${kw}» → ближе к 6.8s
-  🚫 Рот A: СТРОГО ЗАКРЫТ — замирает в пафосной позе
+[3.50вЂ“7.00] рџ…±пёЏ ${charB.name_ru} (${charB.vibe_archetype || 'СЂРѕР»СЊ B'}):
+  В«${dB}В»
+  рџ’¬ РўРµРјРї: ${charB.speech_pace} | РїР°СѓР·С‹ = СЃРёР»Р°
+  рџ—Ј Р“РѕР»РѕСЃ: ${charB.speech_pace === 'slow' ? 'РЅРёР·РєРёР№, СЂР°Р·РјРµСЂРµРЅРЅС‹Р№, СЃР»РѕРІР° РєР°Рє РєР°РјРЅРё' : charB.speech_pace === 'fast' ? 'СЃС‚Р°РєРєР°С‚Рѕ, РѕС‚СЂС‹РІРёСЃС‚С‹Р№, СЂРµР·РєРёРµ РїР°СѓР·С‹' : 'РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№, РЅР° killer word РіРѕР»РѕСЃ РїР°РґР°РµС‚ РґРѕ С€С‘РїРѕС‚Р°'}
+  рџ’Ґ KILLER WORD В«${kw}В» в†’ Р±Р»РёР¶Рµ Рє 6.8s
+  рџљ« Р РѕС‚ A: РЎРўР РћР“Рћ Р—РђРљР Р«Рў вЂ” Р·Р°РјРёСЂР°РµС‚ РІ РїР°С„РѕСЃРЅРѕР№ РїРѕР·Рµ
 ${dA2 ? `
-[~6.80–7.00] 🅰️ ДОБИВКА ${charA.name_ru}:
-  «${dA2}»
-  💬 1-4 слова, короткая финальная фраза
+[~6.80вЂ“7.00] рџ…°пёЏ Р”РћР‘РР’РљРђ ${charA.name_ru}:
+  В«${dA2}В»
+  рџ’¬ 1-4 СЃР»РѕРІР°, РєРѕСЂРѕС‚РєР°СЏ С„РёРЅР°Р»СЊРЅР°СЏ С„СЂР°Р·Р°
 ` : ''}
-[7.00–8.00] ${ctx.enableLaughter ? '😂' : '🤐'} RELEASE: ${ctx.enableLaughter ? ctx.releaseAction.action_ru : 'тишина после панчлайна — без смеха'}
-${ctx.enableLaughter ? `  🔊 Общий заразительный «хриплый» смех. Тряска камеры. Rewatch-bait в последние 0.3с
-  🎭 Смех A: ${charA.modifiers?.laugh_style || 'искренний смех'}
-  🎭 Смех B: ${charB.modifiers?.laugh_style || 'довольный смешок'}` : `  🔇 БЕЗ СМЕХА. Замершие выражения лиц. Rewatch-bait 0.3с`}
+[7.00вЂ“8.00] ${ctx.enableLaughter ? 'рџ‚' : 'рџ¤ђ'} RELEASE: ${ctx.enableLaughter ? ctx.releaseAction.action_ru : 'С‚РёС€РёРЅР° РїРѕСЃР»Рµ РїР°РЅС‡Р»Р°Р№РЅР° вЂ” Р±РµР· СЃРјРµС…Р°'}
+${ctx.enableLaughter ? `  рџ”Љ РћР±С‰РёР№ Р·Р°СЂР°Р·РёС‚РµР»СЊРЅС‹Р№ В«С…СЂРёРїР»С‹Р№В» СЃРјРµС…. РўСЂСЏСЃРєР° РєР°РјРµСЂС‹. Rewatch-bait РІ РїРѕСЃР»РµРґРЅРёРµ 0.3СЃ
+  рџЋ­ РЎРјРµС… A: ${charA.modifiers?.laugh_style || 'РёСЃРєСЂРµРЅРЅРёР№ СЃРјРµС…'}
+  рџЋ­ РЎРјРµС… B: ${charB.modifiers?.laugh_style || 'РґРѕРІРѕР»СЊРЅС‹Р№ СЃРјРµС€РѕРє'}` : `  рџ”‡ Р‘Р•Р— РЎРњР•РҐРђ. Р—Р°РјРµСЂС€РёРµ РІС‹СЂР°Р¶РµРЅРёСЏ Р»РёС†. Rewatch-bait 0.3СЃ`}
 
-═══════════════════════════════════════════
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
 
 
-📸 INSTAGRAM PACK
-═══════════════════════════════════════════
+рџ“ё INSTAGRAM PACK
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
 
-📊 1. Детальный анализ (для понимания залёта):
-${instaAnalysis.plot ? `• Сюжет: ${instaAnalysis.plot}` : ''}
-${instaAnalysis.punchline ? `• Панчлайн: ${instaAnalysis.punchline}` : ''}
-${instaAnalysis.why_viral ? `• Почему сработает: ${instaAnalysis.why_viral}` : ''}
+рџ“Љ 1. Р”РµС‚Р°Р»СЊРЅС‹Р№ Р°РЅР°Р»РёР· (РґР»СЏ РїРѕРЅРёРјР°РЅРёСЏ Р·Р°Р»С‘С‚Р°):
+${instaAnalysis.plot ? `вЂў РЎСЋР¶РµС‚: ${instaAnalysis.plot}` : ''}
+${instaAnalysis.punchline ? `вЂў РџР°РЅС‡Р»Р°Р№РЅ: ${instaAnalysis.punchline}` : ''}
+${instaAnalysis.why_viral ? `вЂў РџРѕС‡РµРјСѓ СЃСЂР°Р±РѕС‚Р°РµС‚: ${instaAnalysis.why_viral}` : ''}
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-📝 2. Текст для описания (Caption) + Байт:
-(Копируй отсюда) 👇
+рџ“ќ 2. РўРµРєСЃС‚ РґР»СЏ РѕРїРёСЃР°РЅРёСЏ (Caption) + Р‘Р°Р№С‚:
+(РљРѕРїРёСЂСѓР№ РѕС‚СЃСЋРґР°) рџ‘‡
 
 ${instaCaption}
 
-**${shareBait}** 👇
+**${shareBait}** рџ‘‡
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-#️⃣ 3. Блок хештегов (ВЧ/СЧ/НЧ):
-(Копируй и вставляй первым комментарием) 👇
+#пёЏвѓЈ 3. Р‘Р»РѕРє С…РµС€С‚РµРіРѕРІ (Р’Р§/РЎР§/РќР§):
+(РљРѕРїРёСЂСѓР№ Рё РІСЃС‚Р°РІР»СЏР№ РїРµСЂРІС‹Рј РєРѕРјРјРµРЅС‚Р°СЂРёРµРј) рџ‘‡
 
 ${hashtags.join(' ')}
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-🎬 4. Текст на видео (Хук):
-Напиши это крупно в начале, чтобы зацепить взгляд:
-${instaHookTexts.map(h => `• «${h}»`).join('\n')}
+рџЋ¬ 4. РўРµРєСЃС‚ РЅР° РІРёРґРµРѕ (РҐСѓРє):
+РќР°РїРёС€Рё СЌС‚Рѕ РєСЂСѓРїРЅРѕ РІ РЅР°С‡Р°Р»Рµ, С‡С‚РѕР±С‹ Р·Р°С†РµРїРёС‚СЊ РІР·РіР»СЏРґ:
+${instaHookTexts.map(h => `вЂў В«${h}В»`).join('\n')}
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-💡 5. Лайфхак для охватов:
+рџ’Ў 5. Р›Р°Р№С„С…Р°Рє РґР»СЏ РѕС…РІР°С‚РѕРІ:
 ${instaEngagementTip}
 
-📌 ЗАКРЕП (первый коммент от автора):
+рџ“Њ Р—РђРљР Р•Рџ (РїРµСЂРІС‹Р№ РєРѕРјРјРµРЅС‚ РѕС‚ Р°РІС‚РѕСЂР°):
 ${pinComment}
 
-💬 ПЕРВЫЙ КОММЕНТ (сразу после публикации):
+рџ’¬ РџР•Р Р’Р«Р™ РљРћРњРњР•РќРў (СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ РїСѓР±Р»РёРєР°С†РёРё):
 ${firstComment}
 
-───────────────────────────────────────────
+в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-📱 СТРАТЕГИЯ ПУБЛИКАЦИИ:
-• Заголовок из блока 2 → в описание поста (caption). Без хештегов.
-• Хештеги из блока 3 → в ПЕРВЫЙ коммент от автора (IG не режет охват).
-• Закреп → закрепить коммент сверху.
-• Первый коммент → постить через 1-2 мин после публикации.
-• Серия: используй ${seriesTag} на каждом видео этой пары.${ctx.product_info?.description_en ? `
+рџ“± РЎРўР РђРўР•Р“РРЇ РџРЈР‘Р›РРљРђР¦РР:
+вЂў Р—Р°РіРѕР»РѕРІРѕРє РёР· Р±Р»РѕРєР° 2 в†’ РІ РѕРїРёСЃР°РЅРёРµ РїРѕСЃС‚Р° (caption). Р‘РµР· С…РµС€С‚РµРіРѕРІ.
+вЂў РҐРµС€С‚РµРіРё РёР· Р±Р»РѕРєР° 3 в†’ РІ РџР•Р Р’Р«Р™ РєРѕРјРјРµРЅС‚ РѕС‚ Р°РІС‚РѕСЂР° (IG РЅРµ СЂРµР¶РµС‚ РѕС…РІР°С‚).
+вЂў Р—Р°РєСЂРµРї в†’ Р·Р°РєСЂРµРїРёС‚СЊ РєРѕРјРјРµРЅС‚ СЃРІРµСЂС…Сѓ.
+вЂў РџРµСЂРІС‹Р№ РєРѕРјРјРµРЅС‚ в†’ РїРѕСЃС‚РёС‚СЊ С‡РµСЂРµР· 1-2 РјРёРЅ РїРѕСЃР»Рµ РїСѓР±Р»РёРєР°С†РёРё.
+вЂў РЎРµСЂРёСЏ: РёСЃРїРѕР»СЊР·СѓР№ ${seriesTag} РЅР° РєР°Р¶РґРѕРј РІРёРґРµРѕ СЌС‚РѕР№ РїР°СЂС‹.${ctx.product_info?.description_en ? `
 
-📦 ТОВАР В КАДРЕ:
-═══════════════════════════════════════════
-Описание товара (EN, для промпта): ${ctx.product_info.description_en.slice(0, 300)}${ctx.product_info.description_en.length > 300 ? '...' : ''}
+рџ“¦ РўРћР’РђР  Р’ РљРђР”Р Р•:
+в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
+РћРїРёСЃР°РЅРёРµ С‚РѕРІР°СЂР° (EN, РґР»СЏ РїСЂРѕРјРїС‚Р°): ${ctx.product_info.description_en.slice(0, 300)}${ctx.product_info.description_en.length > 300 ? '...' : ''}
 
-⚠️ ВАЖНО: Товар должен быть в кадре точно как на исходном фото!
-• Персонаж A держит/показывает товар во время своей реплики
-• Товар остаётся видимым на протяжении всего ролика
-• Цвета, форма, бренд — строго как на оригинальном фото` : ''}`;
+вљ пёЏ Р’РђР–РќРћ: РўРѕРІР°СЂ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РєР°РґСЂРµ С‚РѕС‡РЅРѕ РєР°Рє РЅР° РёСЃС…РѕРґРЅРѕРј С„РѕС‚Рѕ!
+вЂў РџРµСЂСЃРѕРЅР°Р¶ A РґРµСЂР¶РёС‚/РїРѕРєР°Р·С‹РІР°РµС‚ С‚РѕРІР°СЂ РІРѕ РІСЂРµРјСЏ СЃРІРѕРµР№ СЂРµРїР»РёРєРё
+вЂў РўРѕРІР°СЂ РѕСЃС‚Р°С‘С‚СЃСЏ РІРёРґРёРјС‹Рј РЅР° РїСЂРѕС‚СЏР¶РµРЅРёРё РІСЃРµРіРѕ СЂРѕР»РёРєР°
+вЂў Р¦РІРµС‚Р°, С„РѕСЂРјР°, Р±СЂРµРЅРґ вЂ” СЃС‚СЂРѕРіРѕ РєР°Рє РЅР° РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРј С„РѕС‚Рѕ` : ''}`;
 
-  // ── 6a-sync. Sync _apiContext fallback dialogue with Gemini's values ──
+  // в”Ђв”Ђ 6a-sync. Sync _apiContext fallback dialogue with Gemini's values в”Ђв”Ђ
   // Without this, _apiContext.dialogueA/B retain stale local placeholders
   r._apiContext.dialogueA = dA;
   r._apiContext.dialogueB = dB;
   r._apiContext.killerWord = kw;
 
-  // ── 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue ──
+  // в”Ђв”Ђ 6b. Rebuild Veo 3.1 prompt with Gemini's creative dialogue в”Ђв”Ђ
   // In REMAKE mode: if Gemini provided remake_veo_prompt_en (visual copy of original video),
-  // use it directly — it describes the SAME scene/action as the original, not a generic dialogue template.
+  // use it directly вЂ” it describes the SAME scene/action as the original, not a generic dialogue template.
   if (g.remake_veo_prompt_en && ctx.remake_mode) {
-    // ── IDENTITY LOCK ENFORCEMENT ──
+    // в”Ђв”Ђ IDENTITY LOCK ENFORCEMENT в”Ђв”Ђ
     // Gemini paraphrases character descriptions instead of copying verbatim.
     // Inject canonical character_en from catalog to guarantee identity consistency.
     const charA = ctx.charA;
@@ -3095,26 +3097,26 @@ ${firstComment}
         return parts.join('. ');
       };
       const identityBlock = [
-        '\n\n[IDENTITY LOCK — EXACT CHARACTER DESCRIPTIONS (override any paraphrased versions above)]:',
+        '\n\n[IDENTITY LOCK вЂ” EXACT CHARACTER DESCRIPTIONS (override any paraphrased versions above)]:',
         canonicalA ? `CHARACTER A (${charA.name_ru || 'A'}): ${_remakeIdParts(charA, canonicalA, ctx.wardrobeA)}.` : '',
         canonicalB ? `CHARACTER B (${charB.name_ru || 'B'}): ${_remakeIdParts(charB, canonicalB, ctx.wardrobeB)}.` : '',
       ].filter(Boolean).join('\n');
       remakePrompt += identityBlock;
     }
 
-    // ── DIALOGUE INJECTION ──
+    // в”Ђв”Ђ DIALOGUE INJECTION в”Ђв”Ђ
     // Gemini's remake prompt describes actions but omits actual spoken words.
     // Veo needs the exact Russian lines for lip-sync.
     const isSoloRemake = ctx.soloMode || (charA && charB && charA.id === charB.id);
     const dialogueBlock = [
-      '\n\n[EXACT DIALOGUE — MUST BE SPOKEN IN RUSSIAN WITH PERFECT LIP-SYNC]:',
+      '\n\n[EXACT DIALOGUE вЂ” MUST BE SPOKEN IN RUSSIAN WITH PERFECT LIP-SYNC]:',
     ];
     if (isSoloRemake) {
-      dialogueBlock.push(`Character speaks in Russian to the camera: "${dA}" — ${charA?.speech_pace || 'normal'} pace. The word "${kw}" is the punchline near the end. Perfect syllable-level lip-sync required.`);
+      dialogueBlock.push(`Character speaks in Russian to the camera: "${dA}" вЂ” ${charA?.speech_pace || 'normal'} pace. The word "${kw}" is the punchline near the end. Perfect syllable-level lip-sync required.`);
     } else {
-      dialogueBlock.push(`A speaks in Russian to the camera: "${dA}" — ${charA?.speech_pace || 'normal'} pace. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED — only micro-expressions.`);
-      if (dB && dB !== '—') {
-        dialogueBlock.push(`B responds in Russian: "${dB}" — ${charB?.speech_pace || 'normal'} pace. The word "${kw}" is the punchline that reframes everything. A freezes mid-gesture.`);
+      dialogueBlock.push(`A speaks in Russian to the camera: "${dA}" вЂ” ${charA?.speech_pace || 'normal'} pace. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED вЂ” only micro-expressions.`);
+      if (dB && dB !== 'вЂ”') {
+        dialogueBlock.push(`B responds in Russian: "${dB}" вЂ” ${charB?.speech_pace || 'normal'} pace. The word "${kw}" is the punchline that reframes everything. A freezes mid-gesture.`);
       }
     }
     remakePrompt += dialogueBlock.join('\n');
@@ -3136,27 +3138,28 @@ ${firstComment}
       productInfo: ctx.product_info,
       referenceStyle: ctx.reference_style,
       soloMode: ctx.soloMode || false,
-    });
+      soloMode: ctx.soloMode || false,
+      enableLaughter: ctx.enableLaughter !== false,
   }
 
-  // ── 7. Post-merge dialogue validation ──
+  // в”Ђв”Ђ 7. Post-merge dialogue validation в”Ђв”Ђ
   // Warn if Gemini's dialogue is too long for timing windows
-  // VIDEO/SCRIPT mode: higher threshold (warn only, never block — dialogue is verbatim from original)
+  // VIDEO/SCRIPT mode: higher threshold (warn only, never block вЂ” dialogue is verbatim from original)
   const isRemake = ctx.remake_mode || ctx.input_mode === 'video' || ctx.input_mode === 'script';
   const maxA = isRemake ? 25 : 10;
   const maxB = isRemake ? 30 : 12;
   const validateWordCount = (text, maxWords, label) => {
-    if (!text || text === '—') return null;
+    if (!text || text === 'вЂ”') return null;
     const words = text.replace(/\|/g, '').trim().split(/\s+/).filter(Boolean).length;
-    if (words > maxWords) return `${label}: ${words} слов (макс ${maxWords}). ${isRemake ? 'Оригинальный диалог длинный — можно сократить в редакторе.' : 'Сократите для точного тайминга.'}`;
+    if (words > maxWords) return `${label}: ${words} СЃР»РѕРІ (РјР°РєСЃ ${maxWords}). ${isRemake ? 'РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ РґРёР°Р»РѕРі РґР»РёРЅРЅС‹Р№ вЂ” РјРѕР¶РЅРѕ СЃРѕРєСЂР°С‚РёС‚СЊ РІ СЂРµРґР°РєС‚РѕСЂРµ.' : 'РЎРѕРєСЂР°С‚РёС‚Рµ РґР»СЏ С‚РѕС‡РЅРѕРіРѕ С‚Р°Р№РјРёРЅРіР°.'}`;
     return null;
   };
-  const dAwords = validateWordCount(dA, maxA, 'Реплика A');
-  const dBwords = isSolo ? null : validateWordCount(dB, maxB, 'Реплика B');
+  const dAwords = validateWordCount(dA, maxA, 'Р РµРїР»РёРєР° A');
+  const dBwords = isSolo ? null : validateWordCount(dB, maxB, 'Р РµРїР»РёРєР° B');
   if (dAwords) r.warnings = [...(r.warnings || []), dAwords];
   if (dBwords) r.warnings = [...(r.warnings || []), dBwords];
 
-  // ── 8. Update log ──
+  // в”Ђв”Ђ 8. Update log в”Ђв”Ђ
   r.log.generator_version = '2.0-gemini';
   r.log.gemini_model = 'gemini-2.0-flash';
   if (g.viral_title_ru) r.log.engagement.viral_title = g.viral_title_ru;
