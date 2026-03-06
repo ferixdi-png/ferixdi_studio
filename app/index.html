@@ -202,6 +202,22 @@
               </div>
             </div>
 
+            <!-- Animated stats ticker -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-black/30 rounded-xl p-3 border border-emerald-500/15 text-center">
+                <div class="text-lg font-bold text-emerald-400" id="stat-reach">0</div>
+                <div class="text-[9px] text-gray-500 uppercase tracking-wider">Органика в месяц</div>
+              </div>
+              <div class="bg-black/30 rounded-xl p-3 border border-violet-500/15 text-center">
+                <div class="text-lg font-bold text-violet-400" id="stat-prompts">0</div>
+                <div class="text-[9px] text-gray-500 uppercase tracking-wider">Промптов создано</div>
+              </div>
+              <div class="bg-black/30 rounded-xl p-3 border border-amber-500/15 text-center">
+                <div class="text-lg font-bold text-amber-400" id="stat-price">10 000</div>
+                <div class="text-[9px] text-gray-500 uppercase tracking-wider">Цена доступа ₽</div>
+              </div>
+            </div>
+
             <!-- Two columns: free vs promo -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Free -->
@@ -1539,6 +1555,52 @@
         <!-- SECTION: Settings -->
         <section id="section-settings" class="section-panel hidden space-y-4">
           <h2 class="text-lg font-semibold text-white">⚙️ Настройки</h2>
+
+          <!-- Личный кабинет -->
+          <div id="account-panel" class="glass-panel p-4 space-y-3">
+            <!-- Logged-in state -->
+            <div id="account-logged-in" class="hidden space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-gray-400 font-medium">👤 Личный кабинет</div>
+                <button id="account-logout-btn" class="text-[10px] text-red-400/70 hover:text-red-400 transition-colors">Выйти</button>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/8 border border-emerald-500/20">
+                <div class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-sm">👤</div>
+                <div>
+                  <div class="text-sm font-semibold text-emerald-300" id="account-username">—</div>
+                  <div class="text-[10px] text-gray-500">Личные лимиты генерации · VIP</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Login/Register forms (shown when not logged in) -->
+            <div id="account-auth" class="space-y-3">
+              <div class="text-xs text-gray-400 font-medium">👤 Вход / Регистрация</div>
+              <p class="text-[10px] text-gray-500 leading-relaxed">Создай аккаунт — у каждого свои лимиты генерации. Больше никакого ожидания из-за других пользователей.</p>
+
+              <!-- Tab toggle -->
+              <div class="flex rounded-lg overflow-hidden border border-gray-700/50">
+                <button id="auth-tab-login" class="flex-1 py-1.5 text-[11px] font-medium text-center bg-cyan-500/15 text-cyan-400 transition-all">Вход</button>
+                <button id="auth-tab-register" class="flex-1 py-1.5 text-[11px] font-medium text-center text-gray-500 hover:text-gray-300 transition-all">Регистрация</button>
+              </div>
+
+              <!-- Login form -->
+              <div id="auth-login-form" class="space-y-2">
+                <input id="login-username" type="text" class="input-field w-full text-sm" placeholder="Логин" autocomplete="username">
+                <input id="login-password" type="password" class="input-field w-full text-sm" placeholder="Пароль" autocomplete="current-password">
+                <button id="login-btn" class="btn-neon w-full text-xs py-2">Войти</button>
+              </div>
+
+              <!-- Register form -->
+              <div id="auth-register-form" class="hidden space-y-2">
+                <input id="reg-username" type="text" class="input-field w-full text-sm" placeholder="Придумайте логин (латиница, 3+ символов)" autocomplete="username">
+                <input id="reg-password" type="password" class="input-field w-full text-sm" placeholder="Пароль (6+ символов)" autocomplete="new-password">
+                <button id="register-btn" class="btn-neon w-full text-xs py-2">Создать аккаунт</button>
+              </div>
+
+              <div id="auth-status" class="text-xs h-5"></div>
+            </div>
+          </div>
 
           <!-- Промо-код -->
           <div class="glass-panel p-4 space-y-3">

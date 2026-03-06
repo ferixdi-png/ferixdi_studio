@@ -123,6 +123,30 @@ function initPromoCode() {
 
 async function autoAuth(hash) {
   const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+
+  // If user has a saved account, try login first
+  const savedUser = localStorage.getItem('ferixdi_username');
+  const savedPass = localStorage.getItem('ferixdi_pass_enc');
+  if (savedUser && savedPass) {
+    try {
+      const resp = await fetch(`${url}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: savedUser, password: atob(savedPass) }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.jwt) {
+          localStorage.setItem('ferixdi_jwt', data.jwt);
+          log('OK', 'API', `Авторизовано: ${data.username}`);
+          updateAccountUI();
+          return;
+        }
+      }
+    } catch { /* fallback to promo auth */ }
+  }
+
+  // Fallback: promo-only auth
   const h = hash || localStorage.getItem('ferixdi_ph');
   if (!h) return;
   try {
@@ -136,9 +160,127 @@ async function autoAuth(hash) {
       if (data.jwt) {
         localStorage.setItem('ferixdi_jwt', data.jwt);
         log('OK', 'API', 'Авторизовано на сервере');
+        updateAccountUI();
       }
     }
   } catch { /* server might not be up yet */ }
+}
+
+// ─── ACCOUNT SYSTEM (Login / Register) ────────────
+function updateAccountUI() {
+  const loggedIn = document.getElementById('account-logged-in');
+  const authForms = document.getElementById('account-auth');
+  const usernameEl = document.getElementById('account-username');
+  const headerMode = document.getElementById('header-mode');
+
+  const savedUser = localStorage.getItem('ferixdi_username');
+  if (savedUser) {
+    loggedIn?.classList.remove('hidden');
+    authForms?.classList.add('hidden');
+    if (usernameEl) usernameEl.textContent = savedUser;
+    if (headerMode) headerMode.textContent = savedUser;
+  } else {
+    loggedIn?.classList.add('hidden');
+    authForms?.classList.remove('hidden');
+    if (isPromoValid() && headerMode) headerMode.textContent = 'VIP';
+  }
+}
+
+function initAccountSystem() {
+  const tabLogin = document.getElementById('auth-tab-login');
+  const tabRegister = document.getElementById('auth-tab-register');
+  const loginForm = document.getElementById('auth-login-form');
+  const registerForm = document.getElementById('auth-register-form');
+  const loginBtn = document.getElementById('login-btn');
+  const registerBtn = document.getElementById('register-btn');
+  const logoutBtn = document.getElementById('account-logout-btn');
+  const statusEl = document.getElementById('auth-status');
+  const url = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+
+  // Tab switching
+  tabLogin?.addEventListener('click', () => {
+    loginForm?.classList.remove('hidden');
+    registerForm?.classList.add('hidden');
+    tabLogin.className = 'flex-1 py-1.5 text-[11px] font-medium text-center bg-cyan-500/15 text-cyan-400 transition-all';
+    tabRegister.className = 'flex-1 py-1.5 text-[11px] font-medium text-center text-gray-500 hover:text-gray-300 transition-all';
+    if (statusEl) statusEl.innerHTML = '';
+  });
+  tabRegister?.addEventListener('click', () => {
+    loginForm?.classList.add('hidden');
+    registerForm?.classList.remove('hidden');
+    tabRegister.className = 'flex-1 py-1.5 text-[11px] font-medium text-center bg-cyan-500/15 text-cyan-400 transition-all';
+    tabLogin.className = 'flex-1 py-1.5 text-[11px] font-medium text-center text-gray-500 hover:text-gray-300 transition-all';
+    if (statusEl) statusEl.innerHTML = '';
+  });
+
+  // Login
+  loginBtn?.addEventListener('click', async () => {
+    const username = document.getElementById('login-username')?.value.trim();
+    const password = document.getElementById('login-password')?.value;
+    if (!username || !password) { statusEl.innerHTML = '<span class="text-red-400">Заполните все поля</span>'; return; }
+    loginBtn.disabled = true; loginBtn.textContent = '...';
+    try {
+      const resp = await fetch(`${url}/api/auth/login`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await resp.json();
+      if (resp.ok && data.jwt) {
+        localStorage.setItem('ferixdi_jwt', data.jwt);
+        localStorage.setItem('ferixdi_username', data.username);
+        localStorage.setItem('ferixdi_pass_enc', btoa(password));
+        statusEl.innerHTML = '<span class="neon-text-green">✓ Вход выполнен!</span>';
+        log('OK', 'АККАУНТ', `Вход: ${data.username}`);
+        updateAccountUI();
+      } else {
+        statusEl.innerHTML = `<span class="text-red-400">${data.error || 'Ошибка входа'}</span>`;
+      }
+    } catch { statusEl.innerHTML = '<span class="text-red-400">Сервер недоступен</span>'; }
+    loginBtn.disabled = false; loginBtn.textContent = 'Войти';
+  });
+
+  // Register
+  registerBtn?.addEventListener('click', async () => {
+    const username = document.getElementById('reg-username')?.value.trim();
+    const password = document.getElementById('reg-password')?.value;
+    const promoHash = localStorage.getItem('ferixdi_ph');
+    if (!username || !password) { statusEl.innerHTML = '<span class="text-red-400">Заполните все поля</span>'; return; }
+    if (!promoHash) { statusEl.innerHTML = '<span class="text-red-400">Сначала активируйте промо-код ниже</span>'; return; }
+    registerBtn.disabled = true; registerBtn.textContent = '...';
+    try {
+      const resp = await fetch(`${url}/api/auth/register`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, promoHash }),
+      });
+      const data = await resp.json();
+      if (resp.ok && data.jwt) {
+        localStorage.setItem('ferixdi_jwt', data.jwt);
+        localStorage.setItem('ferixdi_username', data.username);
+        localStorage.setItem('ferixdi_pass_enc', btoa(password));
+        statusEl.innerHTML = '<span class="neon-text-green">✓ Аккаунт создан! Добро пожаловать!</span>';
+        log('OK', 'АККАУНТ', `Регистрация: ${data.username}`);
+        updateAccountUI();
+      } else {
+        statusEl.innerHTML = `<span class="text-red-400">${data.error || 'Ошибка регистрации'}</span>`;
+      }
+    } catch { statusEl.innerHTML = '<span class="text-red-400">Сервер недоступен</span>'; }
+    registerBtn.disabled = false; registerBtn.textContent = 'Создать аккаунт';
+  });
+
+  // Logout
+  logoutBtn?.addEventListener('click', () => {
+    localStorage.removeItem('ferixdi_username');
+    localStorage.removeItem('ferixdi_pass_enc');
+    localStorage.removeItem('ferixdi_jwt');
+    log('INFO', 'АККАУНТ', 'Выход из аккаунта');
+    updateAccountUI();
+  });
+
+  // Enter key support
+  document.getElementById('login-password')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn?.click(); });
+  document.getElementById('reg-password')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') registerBtn?.click(); });
+
+  updateAccountUI();
 }
 
 function updateWelcomeBanner() {
@@ -169,6 +311,53 @@ function initWelcomeBanner() {
   if (btn && !isPromoValid()) {
     btn.addEventListener('click', () => navigateTo('settings'));
   }
+  initStatsTicker();
+}
+
+// ─── ANIMATED STATS TICKER ────────────────────
+function initStatsTicker() {
+  const reachEl = document.getElementById('stat-reach');
+  const promptsEl = document.getElementById('stat-prompts');
+  const priceEl = document.getElementById('stat-price');
+  if (!reachEl) return;
+
+  // Animate counter from 0 to target
+  function animateCount(el, target, duration, prefix = '', suffix = '') {
+    const start = performance.now();
+    const initial = 0;
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const current = Math.round(initial + (target - initial) * eased);
+      el.textContent = prefix + current.toLocaleString('ru-RU') + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Initial count-up animation
+  animateCount(reachEl, 847000, 2500);
+  animateCount(promptsEl, 12400, 2000);
+  animateCount(priceEl, 10000, 1800, '', ' ₽');
+
+  // Organic reach keeps growing slowly (simulates real-time growth)
+  let currentReach = 847000;
+  let currentPrompts = 12400;
+  setInterval(() => {
+    currentReach += Math.floor(Math.random() * 180 + 40);
+    reachEl.textContent = currentReach.toLocaleString('ru-RU');
+  }, 3000);
+  setInterval(() => {
+    currentPrompts += Math.floor(Math.random() * 3 + 1);
+    promptsEl.textContent = currentPrompts.toLocaleString('ru-RU');
+  }, 8000);
+
+  // Price slowly ticks up (creates urgency)
+  let currentPrice = 10000;
+  setInterval(() => {
+    currentPrice += Math.floor(Math.random() * 50 + 10);
+    priceEl.textContent = currentPrice.toLocaleString('ru-RU') + ' ₽';
+  }, 15000);
 }
 
 function initApp() {
@@ -186,8 +375,9 @@ function initApp() {
     });
   }
 
-  // Initialize mobile menu
+  // Initialize mobile menu + account system
   initMobileMenu();
+  initAccountSystem();
   
   // Load data in parallel
   const loadPromises = [
@@ -204,8 +394,9 @@ function initApp() {
   
   navigateTo('generation-mode'); // Start with generation mode selection
 
-  // Auto-authenticate if promo is already saved
-  if (isPromoValid()) {
+  // Auto-authenticate: saved account or promo
+  const hasSavedAccount = localStorage.getItem('ferixdi_username');
+  if (hasSavedAccount || isPromoValid()) {
     autoAuth();
   }
 }

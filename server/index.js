@@ -17,11 +17,13 @@ const GITHUB_REPO = process.env.GITHUB_REPO || 'ferixdi-png/ferixdi_studio';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 const CUSTOM_CHARS_PATH = 'app/data/custom_characters.json';
 const CUSTOM_LOCS_PATH = 'app/data/custom_locations.json';
+const USERS_PATH = 'app/data/users.json';
 
 // In-memory cache (loaded from GitHub on startup)
 let _customCharacters = [];
 let _customLocations = [];
-let _ghCacheSha = { chars: null, locs: null };
+let _users = [];
+let _ghCacheSha = { chars: null, locs: null, users: null };
 
 async function ghApiRequest(path, method = 'GET', body = null) {
   const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`;
@@ -36,7 +38,7 @@ async function ghApiRequest(path, method = 'GET', body = null) {
 }
 
 async function loadCustomFromGitHub(type) {
-  const filePath = type === 'character' ? CUSTOM_CHARS_PATH : CUSTOM_LOCS_PATH;
+  const filePath = type === 'character' ? CUSTOM_CHARS_PATH : type === 'location' ? CUSTOM_LOCS_PATH : USERS_PATH;
   try {
     const resp = await ghApiRequest(filePath);
     if (!resp.ok) {
@@ -49,7 +51,8 @@ async function loadCustomFromGitHub(type) {
     }
     const data = await resp.json();
     if (type === 'character') _ghCacheSha.chars = data.sha;
-    else _ghCacheSha.locs = data.sha;
+    else if (type === 'location') _ghCacheSha.locs = data.sha;
+    else if (type === 'users') _ghCacheSha.users = data.sha;
     const content = Buffer.from(data.content, 'base64').toString('utf-8');
     return JSON.parse(content);
   } catch (e) {
@@ -58,7 +61,7 @@ async function loadCustomFromGitHub(type) {
   }
 }
 
-const _ghSaveLock = { character: null, location: null };
+const _ghSaveLock = { character: null, location: null, users: null };
 async function saveCustomToGitHub(type) {
   // Serialize saves per type to prevent SHA race conditions (409 conflict)
   if (_ghSaveLock[type]) await _ghSaveLock[type].catch(() => {});
@@ -70,9 +73,9 @@ async function saveCustomToGitHub(type) {
     resolve(); _ghSaveLock[type] = null;
     return false;
   }
-  const filePath = type === 'character' ? CUSTOM_CHARS_PATH : CUSTOM_LOCS_PATH;
-  const items = type === 'character' ? _customCharacters : _customLocations;
-  const sha = type === 'character' ? _ghCacheSha.chars : _ghCacheSha.locs;
+  const filePath = type === 'character' ? CUSTOM_CHARS_PATH : type === 'location' ? CUSTOM_LOCS_PATH : USERS_PATH;
+  const items = type === 'character' ? _customCharacters : type === 'location' ? _customLocations : _users;
+  const sha = type === 'character' ? _ghCacheSha.chars : type === 'location' ? _ghCacheSha.locs : _ghCacheSha.users;
   const content = Buffer.from(JSON.stringify(items, null, 2) + '\n').toString('base64');
   const body = {
     message: `[auto] Update custom ${type}s (${items.length} items)`,
@@ -100,7 +103,8 @@ async function saveCustomToGitHub(type) {
     }
     const result = await resp.json();
     if (type === 'character') _ghCacheSha.chars = result.content?.sha;
-    else _ghCacheSha.locs = result.content?.sha;
+    else if (type === 'location') _ghCacheSha.locs = result.content?.sha;
+    else if (type === 'users') _ghCacheSha.users = result.content?.sha;
     console.log(`[GH] Saved ${filePath} (${items.length} items)`);
     resolve(); _ghSaveLock[type] = null;
     return true;
@@ -115,14 +119,17 @@ async function initCustomData() {
   console.log('\n╔══════════════════════════════════════════╗');
   console.log('║  🗄️  GitHub Persistence — Loading...      ║');
   console.log('╚══════════════════════════════════════════╝');
-  const [chars, locs] = await Promise.all([
+  const [chars, locs, users] = await Promise.all([
     loadCustomFromGitHub('character'),
     loadCustomFromGitHub('location'),
+    loadCustomFromGitHub('users'),
   ]);
   _customCharacters = chars;
   _customLocations = locs;
+  _users = users;
   console.log(`✅ [GH] Custom characters: ${_customCharacters.length}`);
   console.log(`✅ [GH] Custom locations:  ${_customLocations.length}`);
+  console.log(`✅ [GH] Users:             ${_users.length}`);
   if (_customCharacters.length > 0) {
     console.log(`   📋 Characters: ${_customCharacters.map(c => c.name_ru || c.id).join(', ')}`);
   }
@@ -271,11 +278,103 @@ app.post('/api/auth/validate', async (req, res) => {
       return res.status(403).json({ error: 'Invalid key' });
     }
 
-    const token = jwt.sign({ label: match.label, hash }, JWT_SECRET, { expiresIn: '24h' });
-    res.json({ jwt: token, label: match.label });
+    // Check if this promo user has a registered account — if so, include userId
+    const existingUser = _users.find(u => u.promoHash === hash);
+    const userId = existingUser ? existingUser.id : `promo_${hash.slice(0, 12)}`;
+    const token = jwt.sign({ label: match.label, hash, userId }, JWT_SECRET, { expiresIn: '24h' });
+    res.json({ jwt: token, label: match.label, userId, hasAccount: !!existingUser });
   } catch (e) {
     res.status(500).json({ error: 'Auth check failed' });
   }
+});
+
+// ─── POST /api/auth/register — Create personal account ──────
+app.post('/api/auth/register', async (req, res) => {
+  const ip = getClientIP(req);
+  if (!checkRateLimit(`reg:${ip}`, 900_000, 5)) {
+    return res.status(429).json({ error: 'Слишком много попыток. Подождите 15 минут.' });
+  }
+
+  const { username, password, promoHash } = req.body;
+  if (!username || !password || !promoHash) {
+    return res.status(400).json({ error: 'Все поля обязательны' });
+  }
+  if (typeof username !== 'string' || username.length < 3 || username.length > 30) {
+    return res.status(400).json({ error: 'Логин: 3-30 символов' });
+  }
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    return res.status(400).json({ error: 'Логин: только латиница, цифры и _' });
+  }
+  if (typeof password !== 'string' || password.length < 6 || password.length > 100) {
+    return res.status(400).json({ error: 'Пароль: минимум 6 символов' });
+  }
+
+  // Validate promo code
+  try {
+    const keysPath = join(__dirname, '..', 'app', 'data', 'access_keys.json');
+    const keys = JSON.parse(readFileSync(keysPath, 'utf-8'));
+    const match = keys.keys.find(k => k.hash === promoHash);
+    if (!match) {
+      return res.status(403).json({ error: 'Неверный промо-код. Сначала активируйте промо-код.' });
+    }
+  } catch {
+    return res.status(500).json({ error: 'Ошибка проверки промо-кода' });
+  }
+
+  // Check username uniqueness
+  const usernameLower = username.toLowerCase();
+  if (_users.find(u => u.username.toLowerCase() === usernameLower)) {
+    return res.status(409).json({ error: 'Этот логин уже занят' });
+  }
+
+  // Hash password
+  const salt = crypto.randomBytes(16).toString('hex');
+  const passHash = crypto.createHash('sha256').update(salt + password).digest('hex');
+  const userId = crypto.randomUUID();
+
+  const newUser = {
+    id: userId,
+    username,
+    passHash,
+    salt,
+    promoHash,
+    createdAt: new Date().toISOString(),
+  };
+  _users.push(newUser);
+  saveCustomToGitHub('users').catch(e => console.error('[Users] Save error:', e.message));
+
+  const token = jwt.sign({ userId, username, hash: promoHash, label: 'user' }, JWT_SECRET, { expiresIn: '30d' });
+  console.log(`[Auth] New user registered: ${username} (${userId})`);
+  res.json({ jwt: token, userId, username });
+});
+
+// ─── POST /api/auth/login — Login with username/password ──────
+app.post('/api/auth/login', async (req, res) => {
+  const ip = getClientIP(req);
+  if (!checkRateLimit(`login:${ip}`, 900_000, 10)) {
+    return res.status(429).json({ error: 'Слишком много попыток. Подождите 15 минут.' });
+  }
+
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Логин и пароль обязательны' });
+  }
+
+  const user = _users.find(u => u.username.toLowerCase() === username.toLowerCase());
+  if (!user) {
+    await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
+    return res.status(401).json({ error: 'Неверный логин или пароль' });
+  }
+
+  const passHash = crypto.createHash('sha256').update(user.salt + password).digest('hex');
+  if (passHash !== user.passHash) {
+    await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
+    return res.status(401).json({ error: 'Неверный логин или пароль' });
+  }
+
+  const token = jwt.sign({ userId: user.id, username: user.username, hash: user.promoHash, label: 'user' }, JWT_SECRET, { expiresIn: '30d' });
+  console.log(`[Auth] User logged in: ${user.username}`);
+  res.json({ jwt: token, userId: user.id, username: user.username });
 });
 
 // ─── GET /api/custom/characters — Serve custom characters from memory ────
@@ -1275,7 +1374,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(503).json({ error: 'AI-движок не настроен. Обратитесь к администратору.' });
   }
 
-  const userId = req.user?.hash || getClientIP(req);
+  const userId = req.user?.userId || req.user?.hash || getClientIP(req);
   // Global Gemini rate limit — 1 request per user per 5 min (cost control)
   if (!checkRateLimit(`gemini:${userId}`, RL_GEMINI.window, RL_GEMINI.max)) {
     const entry = _rateBuckets.get(`gemini:${userId}`);
@@ -1664,7 +1763,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   } catch (e) {
     const errorId = crypto.randomUUID().slice(0, 8);
     const timestamp = new Date().toISOString();
-    const userId = req.user?.hash || getClientIP(req);
+    const userId = req.user?.userId || req.user?.hash || getClientIP(req);
     
     // Enhanced error logging (defensive — data may not exist if prompt building crashed)
     console.error(`[${timestamp}] Generate error [${errorId}] [${userId}]:`, {
@@ -1693,7 +1792,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
 
 // ─── POST /api/product/describe — AI Vision: описание товара по фото ──
 app.post('/api/product/describe', authMiddleware, async (req, res) => {
-  const uid = req.user?.hash || getClientIP(req);
+  const uid = req.user?.userId || req.user?.hash || getClientIP(req);
   // Global Gemini rate limit — 1 request per user per 5 min (cost control)
   if (!checkRateLimit(`gemini:${uid}`, RL_GEMINI.window, RL_GEMINI.max)) {
     const entry = _rateBuckets.get(`gemini:${uid}`);
@@ -1882,7 +1981,7 @@ app.post('/api/trends', authMiddleware, async (req, res) => {
   if (!GEMINI_KEY) {
     return res.status(503).json({ error: 'AI-движок не настроен.' });
   }
-  const userId = req.user?.hash || getClientIP(req);
+  const userId = req.user?.userId || req.user?.hash || getClientIP(req);
   // Global Gemini rate limit — 1 request per user per 5 min (cost control)
   if (!checkRateLimit(`gemini:${userId}`, RL_GEMINI.window, RL_GEMINI.max)) {
     const entry = _rateBuckets.get(`gemini:${userId}`);
@@ -2410,7 +2509,7 @@ app.post('/api/match-cast', authMiddleware, async (req, res) => {
   const GEMINI_KEY = nextGeminiKey();
   if (!GEMINI_KEY) return res.status(503).json({ error: 'AI-движок не настроен.' });
 
-  const userId = req.user?.hash || getClientIP(req);
+  const userId = req.user?.userId || req.user?.hash || getClientIP(req);
   // Global Gemini rate limit — 1 request per user per 5 min (cost control)
   if (!checkRateLimit(`gemini:${userId}`, RL_GEMINI.window, RL_GEMINI.max)) {
     const entry = _rateBuckets.get(`gemini:${userId}`);
@@ -2830,7 +2929,7 @@ STUDIO = СБОРЩИК ПРОМПТОВ: Studio НЕ генерирует ви�
 // ─── POST /api/translate — adapt dialogue & insta pack to English ──
 const RL_TRANSLATE = { window: 60_000, max: 6 }; // 6 per min
 app.post('/api/translate', authMiddleware, async (req, res) => {
-  const uid = req.user?.hash || getClientIP(req);
+  const uid = req.user?.userId || req.user?.hash || getClientIP(req);
   // Global Gemini rate limit — 1 request per user per 5 min (cost control)
   if (!checkRateLimit(`gemini:${uid}`, RL_GEMINI.window, RL_GEMINI.max)) {
     const entry = _rateBuckets.get(`gemini:${uid}`);
