@@ -324,7 +324,7 @@ function initWelcomeBanner() {
 function initStatsTicker() {
   const reachEl = document.getElementById('stat-reach');
   const promptsEl = document.getElementById('stat-prompts');
-  const priceEl = document.getElementById('stat-price');
+  const usersEl = document.getElementById('stat-users');
   if (!reachEl) return;
 
   // Animate counter from 0 to target
@@ -344,7 +344,7 @@ function initStatsTicker() {
   // Initial count-up animation
   animateCount(reachEl, 847000, 2500);
   animateCount(promptsEl, 12400, 2000);
-  animateCount(priceEl, 10000, 1800, '', ' ₽');
+  animateCount(usersEl, 340, 1800);
 
   // Organic reach keeps growing slowly (simulates real-time growth)
   let currentReach = 847000;
@@ -358,12 +358,12 @@ function initStatsTicker() {
     promptsEl.textContent = currentPrompts.toLocaleString('ru-RU');
   }, 8000);
 
-  // Price slowly ticks up (creates urgency)
-  let currentPrice = 10000;
+  // Users count slowly grows
+  let currentUsers = 340;
   setInterval(() => {
-    currentPrice += Math.floor(Math.random() * 50 + 10);
-    priceEl.textContent = currentPrice.toLocaleString('ru-RU') + ' ₽';
-  }, 15000);
+    currentUsers += Math.floor(Math.random() * 2 + 1);
+    usersEl.textContent = currentUsers.toLocaleString('ru-RU');
+  }, 20000);
 }
 
 function initApp() {
