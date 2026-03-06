@@ -142,6 +142,12 @@ async function autoAuth(hash) {
           updateAccountUI();
           return;
         }
+      } else if (resp.status === 401) {
+        // Saved credentials are invalid — clear them
+        localStorage.removeItem('ferixdi_username');
+        localStorage.removeItem('ferixdi_pass_enc');
+        log('WARN', 'API', 'Сохранённые учётные данные недействительны — сброшены');
+        updateAccountUI();
       }
     } catch { /* fallback to promo auth */ }
   }
@@ -290,7 +296,7 @@ function updateWelcomeBanner() {
 
   const title = banner.querySelector('h3');
   const desc = banner.querySelector('p');
-  const columns = banner.querySelector('.grid');
+  const columns = document.getElementById('welcome-columns');
   const ctaBtn = document.getElementById('welcome-go-settings');
   const ctaHint = document.getElementById('welcome-cta-hint');
 

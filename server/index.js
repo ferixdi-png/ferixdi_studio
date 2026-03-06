@@ -236,6 +236,9 @@ app.use(express.json({ limit: '50mb' }));
 
 // ─── Serve Frontend (app/) ──────────────────
 const appDir = join(__dirname, '..', 'app');
+// Block access to sensitive data files
+app.use('/data/users.json', (req, res) => res.status(403).json({ error: 'Forbidden' }));
+app.use('/data/access_keys.json', (req, res) => res.status(403).json({ error: 'Forbidden' }));
 app.use(express.static(appDir));
 
 // ─── Auth Middleware ──────────────────────────
@@ -3072,12 +3075,14 @@ process.on('SIGINT', () => {
 });
 
 // ─── START SERVER ───────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 FERIXDI Studio API running on port ${PORT}`);
-  console.log(`🔐 JWT_SECRET: ${JWT_SECRET ? 'SET' : 'RANDOM (set in production!)'}`);
-  console.log(`🔑 Gemini keys: ${getGeminiKeys().length} available`);
-  console.log(`🗄️  GitHub persistence: ${GITHUB_TOKEN ? 'ENABLED' : 'DISABLED (set GITHUB_TOKEN!)'}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  // Load custom characters/locations from GitHub on startup
-  initCustomData().catch(e => console.error('[GH] Init failed:', e.message));
+// Load data from GitHub BEFORE accepting requests (users must be loaded for auth)
+initCustomData().catch(e => console.error('[GH] Init failed:', e.message)).finally(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 FERIXDI Studio API running on port ${PORT}`);
+    console.log(`🔐 JWT_SECRET: ${JWT_SECRET ? 'SET' : 'RANDOM (set in production!)'}`);
+    console.log(`🔑 Gemini keys: ${getGeminiKeys().length} available`);
+    console.log(`🗄️  GitHub persistence: ${GITHUB_TOKEN ? 'ENABLED' : 'DISABLED (set GITHUB_TOKEN!)'}`);
+    console.log(`👤 Users loaded: ${_users.length}`);
+    console.log(`📊 Health check: http://localhost:${PORT}/health`);
+  });
 });
