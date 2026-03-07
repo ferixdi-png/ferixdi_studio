@@ -1650,28 +1650,30 @@ function buildVeoPrompt(opts) {
 
   if (soloMode) {
     // ── SOLO MODE: single character monologue ──
-    lines.push(`A hyper-realistic smartphone video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. Medium shot (waist-up). ${camStyle}`);
+    lines.push(`An 8-second hyper-realistic smartphone video of a ${ageDescA} character delivering a passionate comedic monologue directly to camera. Medium shot (waist-up). Character and setting strictly identical to the source image. ${camStyle}`);
     lines.push('');
-    lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
+    lines.push(`Setting: ${locBrief}. ${lightBrief}. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic. Character holds ${propAnchor} in one hand — clearly visible in frame.`);
     lines.push('');
     lines.push(`Character (center of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
     lines.push('');
     lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`Character speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end of the monologue.`);
+    lines.push(`Character speaks in Russian directly to camera (audio sync — perfect syllable-level lip-sync): "${dA}" — ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end.`);
     lines.push('');
     if (enableLaughter) {
       const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
-      lines.push(`Character bursts into genuine laughter — ${soloLaugh}, ${releaseBrief}. Camera shakes from body tremor. Warm moment of self-amusement.`);
+      const _ltA = safeArr(charA.biology_override?.teeth_tokens) || '';
+      const _lbA = _ltA ? `, showing ${_ltA}` : '';
+      lines.push(`Character bursts into genuine laughter — ${soloLaugh}${_lbA}, ${releaseBrief}. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds.`);
     } else {
       lines.push(`Character finishes speaking with a confident expression — holds eye contact with camera, slight nod. No laughter. The monologue ends on the punchline word "${killerWord}". Brief pause, then video cuts.`);
     }
   } else {
     // ── DUO MODE: two characters dialogue ──
     const pairAgeDesc = ageDescA === ageDescB ? `two ${ageDescA}` : `a ${ageDescA} and a ${ageDescB}`;
-    lines.push(`A hyper-realistic smartphone video of ${pairAgeDesc} characters in a heated comedic argument. Medium shot (waist-up). ${camStyle}`);
+    lines.push(`An 8-second hyper-realistic smartphone video of ${pairAgeDesc} characters in a heated comedic argument. Medium shot (waist-up). Character and setting strictly identical to the source image. ${camStyle}`);
     lines.push('');
-    lines.push(`Setting: ${locBrief}. ${lightBrief}. ${propAnchor} visible in the background. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic.`);
+    lines.push(`Setting: ${locBrief}. ${lightBrief}. ${isOutdoor ? 'Outdoor natural light.' : 'Indoor ambient light.'} ${aesthetic} aesthetic. Character A holds ${propAnchor} in one hand — clearly visible in frame.`);
     lines.push('');
     lines.push(`Character A (left of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character A is holding a product in one hand — see product description below.' : ''}`);
     lines.push(`Character B (right of frame): ${fullCharB}. Calm, composed, ${bListeningPose}.`);
@@ -1680,7 +1682,7 @@ function buildVeoPrompt(opts) {
     // Scene flow
     lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
     lines.push('');
-    lines.push(`A speaks in Russian to the camera: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. Perfect syllable-level lip-sync. B listens with MOUTH STRICTLY CLOSED — only micro-expressions: side-eye, nostrils flaring, one eyebrow raising.`);
+    lines.push(`A speaks in Russian to the camera (audio sync — perfect syllable-level lip-sync): "${dA}" — ${charA.speech_pace} pace, ${voiceA}. B listens with MOUTH STRICTLY CLOSED — only micro-expressions: side-eye, nostrils flaring, one eyebrow raising.`);
     lines.push('');
 
     if (dA2) {
@@ -1694,7 +1696,11 @@ function buildVeoPrompt(opts) {
     if (enableLaughter) {
       const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
       const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
-      lines.push(`Both burst into genuine raspy laughter — both lean into each other, shoulders shaking, ${laughA} from A, ${laughB} from B. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. Warm shared moment.`);
+      const _ltAd = safeArr(charA.biology_override?.teeth_tokens) || '';
+      const _ltBd = safeArr(charB.biology_override?.teeth_tokens) || '';
+      const _lbAd = _ltAd ? `, showing ${_ltAd}` : '';
+      const _lbBd = _ltBd ? `, showing ${_ltBd}` : '';
+      lines.push(`Both burst into genuine raspy laughter — lean into each other, shoulders shaking. A: ${laughA}${_lbAd}. B: ${laughB}${_lbBd}. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds.`);
     } else {
       lines.push(`A stares at B in stunned silence after the punchline "${killerWord}". No laughter. Tension holds — frozen expressions, micro-reactions only. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. The dialogue simply ends.`);
     }
@@ -2150,8 +2156,8 @@ export function generate(input) {
 
   const photo_prompt_en_json = {
     scene: soloMode
-      ? `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Single character delivering a passionate comedic monologue directly to camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character is mid-hook-action with intense direct eye contact at camera lens. The video will be generated FROM this photo.${product_info?.description_en ? ` Character is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`
-      : `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ''}`,
+      ? `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Single character delivering a passionate comedic monologue directly to camera.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character is mid-hook-action with intense direct eye contact at camera lens. The video will be generated FROM this photo.${product_info?.description_en ? ` Character is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ` Character holds ${propAnchor} in one hand — clearly visible in frame, not blurred into background.`}`
+      : `Smartphone medium shot photo capturing the EXACT HOOK MOMENT (frame 0, 0.0-0.7s) — the first frame from which the video will begin. Waist-up framing, device INVISIBLE. ${mergedHookObj.action_en.split(',').slice(0, 2).join(',').trim()} is ALREADY IN PROGRESS. Two characters in heated comedic confrontation.${topicForScene} ${location}. ${lightingMood.style}. ${aesthetic} aesthetic. Mood: ${lightingMood.mood}. Shot on smartphone front camera, portrait mode, 9:16 vertical, 1080x1920px. Character A is mid-hook-action with intense direct eye contact at camera lens. Character B is silent, mouth sealed, eyes tracking A with loaded reaction. The video will be generated FROM this photo — poses, expressions, and energy must be the exact starting point for animation.${product_info?.description_en ? ` Character A is holding a product in one hand — the product must appear EXACTLY as on the original reference photo: ${product_info.description_en.slice(0, 200)}.` : ` Character A holds ${propAnchor} in one hand — clearly visible in frame, not blurred into background.`}`,
     ...(topicEn ? { topic_context: topicEn } : {}),
     IDENTITY_LOCK: 'CRITICAL: This photo is the CHARACTER VISUAL ANCHOR. The video will be generated FROM this exact image (frame 0). Every biological detail (skin tone, wrinkles, scars, facial hair, eye color, nose shape, jaw, teeth), every accessory (glasses, earrings, headwear, jewelry), and every wardrobe detail (fabric, pattern, color palette) MUST appear EXACTLY as described below. If a character has gold teeth — gold teeth MUST be visible. If they wear a headscarf — it MUST be in frame. If they have a scar — render it. Deviation = broken identity across all videos. Generate this photo ONCE per character pair and reuse it as the image input for EVERY video with these characters.',
     characters: soloMode ? [
