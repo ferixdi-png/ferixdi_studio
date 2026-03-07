@@ -1738,6 +1738,16 @@ function buildVeoPrompt(opts) {
   lines.push(`CRITICAL — ZERO TEXT IN VIDEO: Absolutely no text overlays, no subtitles, no captions, no speech bubbles, no name tags, no title cards, no watermarks, no logos, no UI elements, no borders, no filters, no REC badge, no timestamp, no timecode. The video frame must contain ONLY the scene with characters — not a single letter, digit, or graphic overlay of any kind.`);
   lines.push(`CRITICAL — ANTI-AI REALISM MANDATE: No plastic or airbrushed skin — skin must show pores, imperfections, uneven tone. No studio lighting — only environmental light sources. No perfectly smooth surfaces — every texture shows grain/weave/wear. No symmetrical faces — real faces are asymmetric. No uniform skin color — face has 5+ distinct color zones (forehead lighter, cheeks pinker, nose reddest, under-eye darker, chin neutral). No rubber/wax skin appearance. No identical texture on both characters. Flyaway hairs catching backlight. Visible fabric weave at close range. The video must be INDISTINGUISHABLE from real iPhone footage.`);
 
+  // Character-specific forbidden elements from identity_anchors.negative_hint_tokens
+  const _negA = charA.identity_anchors?.negative_hint_tokens;
+  const _negB = !soloMode && charB !== charA ? charB.identity_anchors?.negative_hint_tokens : null;
+  if (_negA?.length || _negB?.length) {
+    const _negParts = [];
+    if (_negA?.length) _negParts.push(`Character A — NEVER add: ${safeArr(_negA)}`);
+    if (_negB?.length) _negParts.push(`Character B — NEVER add: ${safeArr(_negB)}`);
+    lines.push(`IDENTITY GUARD — CHARACTER-SPECIFIC FORBIDDEN: ${_negParts.join('. ')}. Adding these elements breaks character identity across all videos.`);
+  }
+
   // Topic context
   if (topicRu) {
     lines.push('');
