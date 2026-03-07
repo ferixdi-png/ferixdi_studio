@@ -1633,6 +1633,7 @@ function updateModeSpecificUI(mode) {
     document.getElementById('mode-video')?.classList.remove('hidden');
     document.getElementById('remix-video')?.classList.remove('hidden');
     initVideoDropzoneMain();
+    initVideoRefImageDropzoneMain();
   }
 
   log('INFO', 'РЕЖИМ', `Выбран режим: ${mode}`);
@@ -2232,6 +2233,55 @@ async function autoMatchCast() {
 }
 window.autoMatchCast = autoMatchCast;
 
+// ─── VIDEO REFERENCE IMAGE DROPZONE (main generate page) ────
+function initVideoRefImageDropzoneMain() {
+  const dropzone = document.getElementById('video-ref-dropzone-main');
+  const fileInput = document.getElementById('video-ref-file-main');
+  if (!dropzone || !fileInput || dropzone._initialized) return;
+  dropzone._initialized = true;
+
+  const handleRefFile = (file) => {
+    if (!file.type.startsWith('image/')) { log('WARN', 'РЕФ', 'Нужно изображение'); return; }
+    if (file.size > 10 * 1024 * 1024) { log('WARN', 'РЕФ', 'Файл > 10 МБ'); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      state._videoRefImageBase64 = dataUrl.split(',')[1];
+      state._videoRefImageMime = file.type;
+      // Show preview
+      const previewEl = document.getElementById('video-ref-preview-main');
+      const imgEl = document.getElementById('video-ref-img-main');
+      const nameEl = document.getElementById('video-ref-name-main');
+      const innerEl = document.getElementById('video-ref-inner-main');
+      if (imgEl) imgEl.src = dataUrl;
+      if (nameEl) nameEl.textContent = `✓ ${file.name} (${(file.size/1024).toFixed(0)} КБ)`;
+      if (previewEl) previewEl.classList.remove('hidden');
+      if (innerEl) innerEl.innerHTML = '<div class="text-[10px] text-violet-400">✓ Референс загружен</div>';
+      log('OK', 'РЕФ', `Референс-фото: ${file.name}`);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = 'rgba(139,92,246,0.5)'; });
+  dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropzone.style.borderColor = '';
+    if (e.dataTransfer.files.length) handleRefFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) handleRefFile(fileInput.files[0]); });
+
+  document.getElementById('video-ref-clear-main')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    state._videoRefImageBase64 = null;
+    state._videoRefImageMime = null;
+    fileInput.value = '';
+    document.getElementById('video-ref-preview-main')?.classList.add('hidden');
+    document.getElementById('video-ref-inner-main').innerHTML = '<div class="text-base mb-0.5">\uD83D\uDDBC</div><div class="text-[10px] text-gray-500">JPG / PNG · до 10 МБ</div>';
+    log('INFO', 'РЕФ', 'Референс-фото убрано');
+  });
+}
+
 // ─── VIDEO DROPZONE (main generate page) ────
 function initVideoDropzoneMain() {
   const dropzone = document.getElementById('video-dropzone-main');
@@ -2274,7 +2324,8 @@ function updateReadiness() {
 
   const checks = {
     mode: !!state.generationMode,
-    chars: !!state.selectedA,
+    // Video mode: characters optional — AI copies from original video
+    chars: state.generationMode === 'video' ? true : !!state.selectedA,
     content: _hasContent(),
     promo: isPromoValid(),
   };
@@ -3374,6 +3425,12 @@ async function callAIEngine(apiContext) {
     payload.video_cover_mime = 'image/jpeg';
   }
 
+  // Attach reference image if uploaded (фото-референс: фон/локация/стиль)
+  if (state._videoRefImageBase64) {
+    payload.reference_image = state._videoRefImageBase64;
+    payload.reference_image_mime = state._videoRefImageMime || 'image/jpeg';
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 90_000); // 90s timeout
 
@@ -3480,7 +3537,8 @@ function initGenerate() {
       return;
     }
     
-    if (!state.selectedA) {
+    // Video mode: characters are optional (AI copies from original)
+    if (!state.selectedA && state.generationMode !== 'video') {
       showGenStatus('⚠️ Сначала выберите хотя бы одного персонажа на шаге 3', 'text-orange-400');
       navigateTo('characters');
       return;
@@ -3570,7 +3628,7 @@ function initGenerate() {
     // script and video modes: topicText stays empty — their content comes from script_ru / video_meta
     const input = {
       input_mode: state.generationMode || state.inputMode,
-      character1_id: state.selectedA.id,
+      character1_id: state.selectedA?.id || null,
       character2_id: state.selectedB ? state.selectedB.id : null,
       roles_locked: true,
       context_ru: topicText,

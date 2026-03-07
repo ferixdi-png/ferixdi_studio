@@ -426,6 +426,10 @@
           <!-- MODE: video -->
           <div id="remix-video" class="glass-panel p-4 space-y-3 hidden">
             <div class="text-xs text-gray-400 font-medium mb-2">🎥 Видео-референс</div>
+            <!-- Info: chars/location optional -->
+            <div class="text-[11px] text-amber-300/80 bg-amber-500/8 border border-amber-500/20 rounded-lg p-2.5 leading-relaxed">
+              🎬 <strong>Персонажи и локация — необязательны.</strong> AI скопирует их из оригинального видео. Или выбери своих на шаге 3 для максимальной харизмы.
+            </div>
             <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone-main">
               <div class="text-lg mb-1">📁</div>
               <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
@@ -443,6 +447,30 @@
             <div>
               <label class="text-xs text-gray-400 font-medium mb-1 block">🎬 Контекст видео (необязательно):</label>
               <textarea id="scene-hint-main" class="input-field h-14 resize-none" placeholder="Кратко опиши что на видео — чтобы AI лучше понял контекст"></textarea>
+            </div>
+            <!-- Reference image upload -->
+            <div class="border-t border-gray-800/50 pt-3">
+              <div class="text-xs text-violet-400 font-medium mb-1.5">🖼 Референс-фото (необязательно)</div>
+              <div class="text-[10px] text-gray-500 mb-2">Фон, локация, стиль, любое фото — AI учтёт его при создании ремейка</div>
+              <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-violet-400/40 transition-colors" id="video-ref-dropzone-main">
+                <div id="video-ref-inner-main">
+                  <div class="text-base mb-0.5">🖼</div>
+                  <div class="text-[10px] text-gray-500">JPG / PNG · до 10 МБ</div>
+                </div>
+                <input type="file" id="video-ref-file-main" accept="image/jpeg,image/png,image/webp" class="hidden">
+              </div>
+              <div id="video-ref-preview-main" class="hidden mt-2 flex items-center gap-2">
+                <img id="video-ref-img-main" class="w-12 h-12 rounded-lg object-cover border border-violet-500/30" alt="ref">
+                <div class="flex-1">
+                  <div class="text-[10px] text-violet-300" id="video-ref-name-main"></div>
+                  <button class="text-[10px] text-gray-500 hover:text-red-400 transition-colors mt-0.5" id="video-ref-clear-main">✕ Убрать</button>
+                </div>
+              </div>
+            </div>
+            <!-- Product shortcut -->
+            <div class="border-t border-gray-800/50 pt-3 flex items-center justify-between gap-2">
+              <div class="text-[10px] text-gray-500">📦 Фото товара в кадре?</div>
+              <button onclick="navigateTo('advanced')" class="text-[10px] px-3 py-1.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors">Загрузить товар →</button>
             </div>
           </div>
 

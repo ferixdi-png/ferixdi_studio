@@ -1818,15 +1818,31 @@ export function generate(input) {
   const rng = seededRandom(seed);
   
   // Validate characters — solo mode: character2_id can be null
-  const rawA = characters.find(c => c.id === character1_id) || characters[0];
+  const _VIDEO_PLACEHOLDER = {
+    id: 'none', name_ru: 'Персонаж из оригинала', name_en: 'Original Cast',
+    group: '', vibe_archetype: 'authentic', speech_pace: 'natural',
+    prompt_tokens: { main: [], secondary: [] },
+    identity_anchors: { face_silhouette: null },
+    biology_override: { age: '30s' },
+    modifiers: {},
+    compatibility: []
+  };
+  let rawA = characters.find(c => c.id === character1_id) || characters[0];
   const soloMode = !character2_id;
-  const rawB = soloMode
-    ? rawA  // solo: reuse A as B placeholder (downstream functions need both)
-    : (characters.find(c => c.id === character2_id) || characters[1] || characters[0]);
 
   if (!rawA) {
-    return { error: 'Character not found', warnings: ['Выберите хотя бы одного персонажа'] };
+    if (input_mode === 'video') {
+      // Video mode: no character required — AI will copy original cast from video
+      rawA = _VIDEO_PLACEHOLDER;
+      warnings.push('Видео-режим: персонажи будут скопированы из оригинального видео');
+    } else {
+      return { error: 'Character not found', warnings: ['Выберите хотя бы одного персонажа'] };
+    }
   }
+
+  const rawB = soloMode
+    ? rawA  // solo: reuse A as B placeholder (downstream functions need both)
+    : (characters.find(c => c.id === character2_id) || characters[1] || rawA);
   if (soloMode) {
     warnings.push('Соло-режим: один персонаж, монолог');
   }

@@ -1406,7 +1406,7 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     return res.status(429).json({ error: `Лимит: 1 запрос в минуту. Подожди ещё ~${waitSec} сек.` });
   }
 
-  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime, ab_variants, meme_image, meme_image_mime, meme_file, meme_file_mime, meme_context } = req.body;
+  const { context, product_image, product_mime, video_file, video_file_mime, video_cover, video_cover_mime, reference_image, reference_image_mime, ab_variants, meme_image, meme_image_mime, meme_file, meme_file_mime, meme_context } = req.body;
   const requestedVariants = Math.min(Math.max(parseInt(ab_variants) || 0, 0), 3); // 0 = normal, 1-3 = extra variants
   
   // Enhanced validation
@@ -1540,6 +1540,16 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
       });
       parts.push({
         inline_data: { mime_type: video_cover_mime || 'image/jpeg', data: video_cover }
+      });
+    }
+
+    // Attach reference image if provided — visual reference for scene/location/style
+    if (reference_image) {
+      parts.push({
+        text: '\n\n[ПРИКРЕПЛЁННЫЙ РЕФЕРЕНС-ФОТО — используй как визуальный референс: скопируй настроение, локацию, цветовую палитру, освещение, эстетику и композицию. Отрази ЭТОТ стиль в photo_scene_en, video_atmosphere_en и remake_veo_prompt_en.]'
+      });
+      parts.push({
+        inline_data: { mime_type: reference_image_mime || 'image/jpeg', data: reference_image }
       });
     }
 
