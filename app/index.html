@@ -6,8 +6,15 @@
   <title>FERIXDI STUDIO — Продвижение бизнеса через вирусные AI-видео | Помощник для Veo</title>
   <meta name="description" content="FERIXDI Studio — продвижение бизнеса через вирусные Reels. Помощник для Veo: создаёт цепляющие видео которые привлекают аудиторию и продвигают ваш проект.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#00d4ff">
   <!-- Tailwind CDN (no build required) -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+    }
+  </script>
   <script>
     tailwind.config = {
       theme: {
@@ -1386,7 +1393,10 @@
           </div>
           <div class="flex items-center justify-between">
             <div class="text-[10px] text-gray-500" id="history-count"></div>
-            <button id="btn-clear-history" class="text-[10px] px-3 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors hidden">🗑 Очистить</button>
+            <div class="flex gap-2">
+              <button id="btn-export-history" class="text-[10px] px-3 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors hidden">⬇️ Экспорт</button>
+              <button id="btn-clear-history" class="text-[10px] px-3 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors hidden">🗑 Очистить</button>
+            </div>
           </div>
           <div id="history-list" class="space-y-2"></div>
           <div id="history-empty" class="glass-panel p-6 text-center hidden">

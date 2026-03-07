@@ -453,6 +453,12 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ jwt: token, userId: user.id, username: user.username });
 });
 
+// ─── POST /api/auth/logout — clear httpOnly cookie ────────────────
+app.post('/api/auth/logout', (req, res) => {
+  res.setHeader('Set-Cookie', 'ferixdi_jwt=; HttpOnly; SameSite=Strict; Max-Age=0; Path=/');
+  res.json({ ok: true });
+});
+
 // ─── GET /api/custom/characters — Serve custom characters from memory ────
 app.get('/api/custom/characters', (req, res) => {
   res.json(_customCharacters);
@@ -3168,6 +3174,34 @@ Return ONLY valid JSON (no markdown):
     console.error('Translate error:', e.message);
     res.status(500).json({ error: `Ошибка перевода: ${e.message}` });
   }
+});
+
+// ─── GET /api/admin/stats — protected server diagnostics ──────────
+app.get('/api/admin/stats', (req, res) => {
+  const adminToken = process.env.ADMIN_TOKEN;
+  const provided = req.headers['x-admin-token'] || req.query.token;
+  if (!adminToken || provided !== adminToken) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  const mem = process.memoryUsage();
+  res.json({
+    uptime: Math.round(process.uptime()),
+    memory: { rss: Math.round(mem.rss / 1024 / 1024) + ' MB', heap: Math.round(mem.heapUsed / 1024 / 1024) + ' MB' },
+    users: _users.length,
+    customChars: _customCharacters.length,
+    customLocs: _customLocations.length,
+    geminiCache: { size: _geminiCache.size, ttlMs: GEMINI_CACHE_TTL },
+    rateBuckets: _rateBuckets.size,
+    geminiKeys: getGeminiKeys().length,
+    version: '2.0.0',
+    ts: new Date().toISOString(),
+  });
+});
+
+// ─── POST /api/logout — invalidate JWT token ──────────────────────
+app.post('/api/logout', authMiddleware, (req, res) => {
+  req.user = null;
+  res.json({ success: true });
 });
 
 // ─── Health Check Endpoint ───────────────────────

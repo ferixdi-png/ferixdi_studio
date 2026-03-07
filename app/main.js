@@ -274,13 +274,10 @@ function initAccountSystem() {
     registerBtn.disabled = false; registerBtn.textContent = 'Создать аккаунт';
   });
 
-  // Logout
+  // Logout — also clears httpOnly cookie server-side
   logoutBtn?.addEventListener('click', () => {
-    localStorage.removeItem('ferixdi_username');
     localStorage.removeItem('ferixdi_pass_enc');
-    localStorage.removeItem('ferixdi_jwt');
-    log('INFO', 'АККАУНТ', 'Выход из аккаунта');
-    updateAccountUI();
+    logoutUser();
   });
 
   // Enter key support
@@ -3746,6 +3743,10 @@ function initGenerate() {
       return;
     }
 
+    // In-flight guard: prevent double-click
+    if (state._generationInFlight) return;
+    state._generationInFlight = true;
+
     sfx.generate();
     btn.disabled = true;
     btn.textContent = '⏳ Анализирую контекст...';
@@ -3798,6 +3799,7 @@ function initGenerate() {
     try {
       localResult = generate(input);
     } catch (e) {
+      state._generationInFlight = false;
       showGenStatus(`❌ Ошибка генерации: ${e.message}`, 'text-red-400');
       log('ERR', 'GEN', e.message);
       btn.disabled = false;
@@ -3806,6 +3808,7 @@ function initGenerate() {
     }
 
     if (localResult.error) {
+      state._generationInFlight = false;
       displayResult(localResult);
       btn.disabled = false;
       btn.textContent = '🚀 Собрать промпт';
@@ -3847,6 +3850,7 @@ function initGenerate() {
         }
       } catch (apiErr) {
         resetGenProgress();
+        state._generationInFlight = false;
         log('ERR', 'AI', `Ошибка API: ${apiErr.message}`);
         updatePreflightStatus(`❌ Ошибка генерации: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
         showGenStatus('', '');
@@ -3966,6 +3970,7 @@ function initGenerate() {
       displayResult(localResult);
     }
 
+    state._generationInFlight = false;
     btn.disabled = false;
     btn.textContent = '🚀 Собрать промпт';
   });
@@ -4689,7 +4694,46 @@ function initDialogueEditor() {
   });
 }
 
-// ─── HEADER SETTINGS BUTTON ─────────────────
+// ─── LOGOUT ───────────────────────────────
+async function logoutUser() {
+  try {
+    const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    await fetch(`${apiUrl}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+  } catch { /* ignore */ }
+  ['ferixdi_jwt', 'ferixdi_promo', 'ferixdi_username', 'ferixdi_user_id'].forEach(k => localStorage.removeItem(k));
+  showNotification('👋 Вы вышли из системы', 'info');
+  setTimeout(() => window.location.reload(), 1000);
+}
+window.logoutUser = logoutUser;
+
+// ─── CHAR COUNTERS ───────────────────────────
+function initCharCounters() {
+  const fields = [
+    { id: 'idea-input', max: 500 },
+    { id: 'idea-input-suggested', max: 500 },
+    { id: 'script-a', max: 300 },
+    { id: 'script-b', max: 300 },
+    { id: 'scene-hint-main', max: 200 },
+    { id: 'scene-hint', max: 200 },
+  ];
+  fields.forEach(({ id, max }) => {
+    const el = document.getElementById(id);
+    if (!el || document.getElementById(`${id}-counter`)) return;
+    const counter = document.createElement('div');
+    counter.id = `${id}-counter`;
+    counter.className = 'text-right text-[10px] text-gray-600 mt-0.5 transition-colors';
+    el.parentNode?.insertBefore(counter, el.nextSibling);
+    const update = () => {
+      const len = el.value.length;
+      counter.textContent = `${len} / ${max}`;
+      counter.className = `text-right text-[10px] mt-0.5 transition-colors ${len >= max ? 'text-red-400' : len > max * 0.85 ? 'text-amber-400' : 'text-gray-600'}`;
+    };
+    el.addEventListener('input', update);
+    update();
+  });
+}
+
+// ─── HEADER SETTINGS BUTTON ─────────────
 function initHeaderSettings() {
   document.getElementById('btn-settings')?.addEventListener('click', () => navigateTo('settings'));
 }
@@ -4697,7 +4741,11 @@ function initHeaderSettings() {
 
 // ─── CHAR FILTERS ────────────────────────────
 function initCharFilters() {
-  document.getElementById('char-search')?.addEventListener('input', () => renderCharacters(getCurrentFilters()));
+  let _charSearchTimer = null;
+  document.getElementById('char-search')?.addEventListener('input', () => {
+    clearTimeout(_charSearchTimer);
+    _charSearchTimer = setTimeout(() => renderCharacters(getCurrentFilters()), 200);
+  });
   document.getElementById('char-group-filter')?.addEventListener('change', () => renderCharacters(getCurrentFilters()));
   document.getElementById('char-compat-filter')?.addEventListener('change', () => renderCharacters(getCurrentFilters()));
   document.getElementById('char-swap')?.addEventListener('click', () => {
@@ -6404,6 +6452,9 @@ function renderHistory() {
     : `${shownCount} из ${totalCount}`;
   if (countEl) countEl.textContent = countText;
 
+  // Show export button when there's history
+  document.getElementById('btn-export-history')?.classList.toggle('hidden', totalCount === 0);
+
   if (shownCount === 0) {
     list.innerHTML = '<div class="text-center text-xs text-gray-500 py-4">Ничего не найдено</div>';
     return;
@@ -6457,6 +6508,21 @@ function renderHistory() {
   });
 }
 
+function exportHistory() {
+  const history = getGenerationHistory();
+  if (!history.length) { showNotification('История пуста — нечего экспортировать', 'info'); return; }
+  const json = JSON.stringify(history, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ferixdi-history-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showNotification(`✅ Экспортировано ${history.length} генераций`, 'success');
+  log('OK', 'ИСТОРИЯ', `Экспортировано ${history.length} записей`);
+}
+
 function initHistory() {
   document.getElementById('btn-clear-history')?.addEventListener('click', () => {
     if (confirm('Очистить всю историю генераций?')) {
@@ -6465,6 +6531,7 @@ function initHistory() {
       showNotification('История очищена', 'info');
     }
   });
+  document.getElementById('btn-export-history')?.addEventListener('click', exportHistory);
 
   // Search with debounce
   let _histSearchTimer = null;
@@ -7730,6 +7797,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initMatrixRain',initMatrixRain],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
+  try { initCharCounters(); } catch(e) { console.error('[FERIXDI] initCharCounters:', e); }
   // Silent JWT refresh every 20 minutes while page is open
   setInterval(() => {
     if (isPromoValid() || localStorage.getItem('ferixdi_username')) autoAuth();
