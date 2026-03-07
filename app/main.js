@@ -768,7 +768,14 @@ function renderCharacters(filter = {}) {
   if (filter.group) chars = chars.filter(c => c.group === filter.group);
   if (filter.compat) chars = chars.filter(c => c.compatibility === filter.compat);
 
-  grid.innerHTML = chars.map(c => {
+  // Virtual scroll: render first page only, load more on demand
+  const _VS_PAGE = 48;
+  state._charRenderAll = chars;
+  state._charRenderPage = 1;
+  const _slice = chars.slice(0, _VS_PAGE);
+  const _hasMore = chars.length > _VS_PAGE;
+
+  grid.innerHTML = _slice.map(c => {
     const isA = state.selectedA?.id === c.id;
     const isB = state.selectedB?.id === c.id;
     const selCls = isA ? 'selected ring-2 ring-violet-500' : isB ? 'selected ring-2 ring-indigo-500' : '';
@@ -830,7 +837,12 @@ function renderCharacters(filter = {}) {
         </div>
       </details>
     </div>`;
-  }).join('');
+  }).join('') + (_hasMore ? `
+    <div id="char-load-more" class="col-span-full text-center py-3">
+      <button onclick="loadMoreCharacters()" class="text-[11px] text-cyan-400 hover:text-cyan-300 border border-cyan-500/20 rounded-lg px-5 py-2 hover:bg-cyan-500/10 transition-colors">
+        Ещё персонажи (${chars.length - _VS_PAGE} из ${chars.length})
+      </button>
+    </div>` : '');
 
   // Event delegation
   grid.querySelectorAll('.select-a').forEach(btn => {
@@ -842,6 +854,50 @@ function renderCharacters(filter = {}) {
   grid.querySelectorAll('.copy-char-prompt').forEach(btn => {
     btn.addEventListener('click', (e) => { e.stopPropagation(); copyCharacterPrompt(btn.dataset.id); });
   });
+}
+
+// ─── LOAD MORE CHARACTERS (virtual scroll) ─────────────────
+function loadMoreCharacters() {
+  const grid = document.getElementById('char-grid');
+  if (!grid || !state._charRenderAll) return;
+  state._charRenderPage = (state._charRenderPage || 1) + 1;
+  const PAGE = 48;
+  const slice = state._charRenderAll.slice(0, PAGE * state._charRenderPage);
+  const hasMore = state._charRenderAll.length > slice.length;
+  const remaining = state._charRenderAll.length - slice.length;
+
+  // Append new cards (replace load-more btn area)
+  const moreBtn = document.getElementById('char-load-more');
+  if (moreBtn) moreBtn.remove();
+
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = slice.slice(slice.length - PAGE).map(c => {
+    const isA = state.selectedA?.id === c.id;
+    const isB = state.selectedB?.id === c.id;
+    const selCls = isA ? 'selected ring-2 ring-violet-500' : isB ? 'selected ring-2 ring-indigo-500' : '';
+    const tagCls = c.compatibility === 'meme' ? 'tag-green' : c.compatibility === 'conflict' ? 'tag-pink' : c.compatibility === 'chaotic' ? 'tag-orange' : c.compatibility === 'calm' ? '' : 'tag-purple';
+    const compatRu = { meme: 'мем', conflict: 'конфликт', chaotic: 'хаос', calm: 'спокойный', balanced: 'баланс' };
+    const paceRu = { fast: 'быстрая', normal: 'средняя', slow: 'медленная' };
+    const anchors = c.identity_anchors || {};
+    return `<div class="char-card ${selCls}" data-id="${c.id}"><div class="flex items-center justify-between mb-1"><div class="flex items-center gap-2 min-w-0">${getAvatarImg(c.id)}<span class="text-sm font-bold text-white truncate">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span></div><span class="tag text-[10px] ${tagCls} flex-shrink-0">${compatRu[c.compatibility] || c.compatibility}</span></div>${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}<div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2"><span>🎭 ${c.group}</span><span>⚡ ${paceRu[c.speech_pace] || c.speech_pace}</span><span>🔥 мат ${c.swear_level}/3</span><span>${c.role_default === 'A' ? '🅰️' : '🅱️'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span></div><div class="flex gap-2 mb-2"><button class="select-a flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isA ? 'bg-violet-600 text-white border-violet-500' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25'}" data-id="${c.id}">${isA ? '✓ Выбран A' : '🅰️ Выбрать A'}</button><button class="select-b flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isB ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-indigo-600/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-600/25'}" data-id="${c.id}">${isB ? '✓ Выбран B' : '🅱️ Выбрать B'}</button></div><button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}"><span>📋</span> Копировать промпт</button></div>`;
+  }).join('');
+  tempDiv.querySelectorAll('.char-card').forEach(el => grid.appendChild(el));
+
+  if (hasMore) {
+    const newBtn = document.createElement('div');
+    newBtn.id = 'char-load-more';
+    newBtn.className = 'col-span-full text-center py-3';
+    newBtn.innerHTML = `<button onclick="loadMoreCharacters()" class="text-[11px] text-cyan-400 hover:text-cyan-300 border border-cyan-500/20 rounded-lg px-5 py-2 hover:bg-cyan-500/10 transition-colors">Ещё персонажи (${remaining} из ${state._charRenderAll.length})</button>`;
+    grid.appendChild(newBtn);
+  }
+
+  // Wire up new buttons
+  tempDiv.querySelectorAll('.select-a').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('A', btn.dataset.id); }));
+  tempDiv.querySelectorAll('.select-b').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('B', btn.dataset.id); }));
+  tempDiv.querySelectorAll('.copy-char-prompt').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); copyCharacterPrompt(btn.dataset.id); }));
+  grid.querySelectorAll('.select-a').forEach(btn => { if (!btn._wired) { btn._wired = true; btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('A', btn.dataset.id); }); } });
+  grid.querySelectorAll('.select-b').forEach(btn => { if (!btn._wired) { btn._wired = true; btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('B', btn.dataset.id); }); } });
+  log('OK', 'LAZY', `Персонажи: страница ${state._charRenderPage}, показано ${slice.length}/${state._charRenderAll.length}`);
 }
 
 function selectChar(role, id) {
@@ -2323,6 +2379,40 @@ function initVideoUrlFetch() {
   // (tikvideo.app / saveclip.app) — user downloads MP4, then uploads here
 }
 
+// ─── GENERATION PROGRESS BAR ───────────────────────────────
+let _genProgressTimer = null;
+
+function setGenProgress(pct, label) {
+  const bar = document.getElementById('gen-progress-bar');
+  const fill = document.getElementById('gen-progress-fill');
+  if (!bar || !fill) return;
+  bar.classList.remove('hidden');
+  fill.style.width = `${Math.min(100, pct)}%`;
+  if (label) showGenStatus(label, pct >= 100 ? 'text-emerald-400' : pct > 60 ? 'text-violet-400' : 'text-cyan-400');
+}
+
+function resetGenProgress() {
+  clearInterval(_genProgressTimer);
+  _genProgressTimer = null;
+  const bar = document.getElementById('gen-progress-bar');
+  const fill = document.getElementById('gen-progress-fill');
+  if (fill) { fill.style.width = '0%'; }
+  setTimeout(() => bar?.classList.add('hidden'), 600);
+}
+
+function startGenProgressSimulation(from, to, durationMs) {
+  clearInterval(_genProgressTimer);
+  let current = from;
+  const steps = durationMs / 400;
+  const step = (to - from) / steps;
+  _genProgressTimer = setInterval(() => {
+    current = Math.min(to, current + step);
+    const fill = document.getElementById('gen-progress-fill');
+    if (fill) fill.style.width = `${current}%`;
+    if (current >= to) { clearInterval(_genProgressTimer); _genProgressTimer = null; }
+  }, 400);
+}
+
 // ─── RATE LIMIT COUNTDOWN ────────────────────────────────
 function startRateLimitCountdown() {
   const btn = document.getElementById('btn-generate');
@@ -3659,7 +3749,7 @@ function initGenerate() {
     sfx.generate();
     btn.disabled = true;
     btn.textContent = '⏳ Анализирую контекст...';
-    showGenStatus('🔍 Анализирую тему и подбираю параметры...', 'text-cyan-400');
+    setGenProgress(8, '🔍 Анализирую тему и подбираю параметры...');
 
     // Reset previous results, error overlay, and preflight status
     document.getElementById('gen-error-overlay')?.remove();
@@ -3724,7 +3814,7 @@ function initGenerate() {
 
     // Step 1.5: Show pre-flight parameter breakdown
     btn.textContent = '⏳ Подготавливаю промпты...';
-    showGenStatus('📋 Структура готова, создаю промпты для AI...', 'text-cyan-400');
+    setGenProgress(22, '📋 Структура готова, создаю промпты для AI...');
     renderPreflight(localResult);
 
     // Step 2: If API mode — send context to AI engine for creative refinement
@@ -3732,12 +3822,16 @@ function initGenerate() {
 
     if (isApiMode && localResult._apiContext) {
       btn.textContent = '⚡ AI собирает промпт...';
-      showGenStatus('🧠 FERIXDI AI собирает промпт и сюжет... (15-30с)', 'text-violet-400');
+      setGenProgress(35, '🧠 FERIXDI AI собирает промпт и сюжет... (15-30с)');
+      startGenProgressSimulation(35, 88, 25000); // animate over ~25s
       log('INFO', 'AI', 'Собираю промпт и диалог...');
 
       try {
         const aiData = await callAIEngine(localResult._apiContext);
         if (aiData) {
+          clearInterval(_genProgressTimer);
+          setGenProgress(100, '✅ Промпт собран! Скопируй и вставь в Google Flow');
+          setTimeout(resetGenProgress, 1800);
           const merged = mergeAIResult(localResult, aiData);
           log('OK', 'AI', 'Промпт и сюжет готовы');
           updatePreflightStatus('✅ Готово · Промпт собран — скопируй и вставь в Google Flow', 'bg-emerald-500/8 text-emerald-400 border border-emerald-500/15');
@@ -3752,6 +3846,7 @@ function initGenerate() {
           displayResult(localResult);
         }
       } catch (apiErr) {
+        resetGenProgress();
         log('ERR', 'AI', `Ошибка API: ${apiErr.message}`);
         updatePreflightStatus(`❌ Ошибка генерации: ${apiErr.message?.slice(0, 60) || 'неизвестная'}`, 'bg-red-500/8 text-red-400 border border-red-500/15');
         showGenStatus('', '');
@@ -7635,6 +7730,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initMatrixRain',initMatrixRain],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
+  // Silent JWT refresh every 20 minutes while page is open
+  setInterval(() => {
+    if (isPromoValid() || localStorage.getItem('ferixdi_username')) autoAuth();
+  }, 20 * 60 * 1000);
   // Locations loaded lazily on first visit to the locations tab (see navigateTo lazy init)
   // Initial readiness check after all components loaded
   setTimeout(() => {

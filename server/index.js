@@ -3179,10 +3179,14 @@ app.get('/health', (req, res) => {
     memory: process.memoryUsage(),
     geminiKeys: getGeminiKeys().length,
     rateBuckets: _rateBuckets.size,
+    geminiCacheSize: _geminiCache.size,
     version: '2.0.0'
   };
   res.json(health);
 });
+
+// ─── GET /healthz — lightweight ping for Render health checks ───
+app.get('/healthz', (_, res) => res.json({ ok: true, ts: Date.now() }));
 
 // ─── Graceful Shutdown ─────────────────────────────
 process.on('SIGTERM', () => {
