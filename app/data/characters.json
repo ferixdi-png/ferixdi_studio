@@ -492,7 +492,7 @@
             "micro_gesture": "finger jabbing the air like conductor's baton",
             "wardrobe_anchor": "hand-knitted mohair cardigan with reindeer pattern, stretched at elbows, wooden toggle buttons",
             "accessory_anchors": [
-                "snub nose with wide nostrils flaring when angry"
+                "bright hand-knitted shawl draped over shoulders"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
@@ -501,11 +501,11 @@
             ],
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
-            "nail_style_anchor": "manicured neat nails",
-            "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
+            "nail_style_anchor": "short unpolished nails",
+            "fabric_texture_anchor": "coarse mohair knit",
+            "pattern_anchor": "reindeer pattern",
+            "sleeve_style_anchor": "full length sleeves",
+            "cloth_physics_hint": "heavy mohair knit barely moves with breathing, stable texture, minimal fabric physics"
         },
         "vibe_archetype": "главнокомандующая — орёт и все подчиняются",
         "world_aesthetic": "коммунальный реализм",
@@ -708,8 +708,7 @@
             "micro_gesture": "slow single eyebrow raise over glasses rim",
             "wardrobe_anchor": "cream cashmere turtleneck under tweed blazer with elbow patches, cameo brooch at collar",
             "accessory_anchors": [
-                "large grey-blue eyes behind vintage gold-rimmed spectacles",
-                "pearl stud earrings barely visible"
+                "vintage gold-rimmed spectacles on fine chain"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
@@ -719,10 +718,10 @@
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "round gold-rimmed spectacles",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "plaid checkered",
-            "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "fabric_texture_anchor": "fine cashmere and tweed",
+            "pattern_anchor": "subtle tweed texture",
+            "sleeve_style_anchor": "full length sleeves",
+            "cloth_physics_hint": "cashmere breathes softly with movement, tweed blazer holds shape, subtle fabric shift on inhale"
         },
         "vibe_archetype": "интеллигентный снайпер — тихий голос, убийственная точность",
         "world_aesthetic": "петербургская интеллигенция",
@@ -940,9 +939,9 @@
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
-            "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "floral print",
+            "nail_style_anchor": "crimson painted nails, theatrical manicure",
+            "fabric_texture_anchor": "smooth chiffon and cashmere",
+            "pattern_anchor": "leopard print",
             "sleeve_style_anchor": "full length sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -1031,7 +1030,7 @@
                 "deep purple-brown under-eye bags"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "complete but yellowed set"
@@ -1149,17 +1148,17 @@
                 "gold brooch shaped like a rose pinned to lapel"
             ],
             "footwear_anchor": "worn comfortable footwear",
-            "headwear_anchor": "none",
+            "headwear_anchor": "knitted beret tilted rakishly",
             "color_palette": [
-                "neutral earth tones"
+                "burgundy"
             ],
             "jewelry_anchors": "gold brooch shaped like a rose pinned to lapel",
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
-            "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "floral print",
-            "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
+            "fabric_texture_anchor": "faux-fur trim and wool coat",
+            "pattern_anchor": "solid color",
+            "sleeve_style_anchor": "full length sleeves",
+            "cloth_physics_hint": "heavy coat fabric barely moves, faux-fur collar catches light, stable layered texture"
         },
         "vibe_archetype": "районная разведка — знает всё обо всех, шепчет громко",
         "world_aesthetic": "дачный шик",
@@ -1361,14 +1360,12 @@
             "micro_gesture": "strokes mustache slowly while staring",
             "wardrobe_anchor": "grey wool vest over threadbare white dress shirt, sleeves rolled once, pocket watch chain visible",
             "accessory_anchors": [
-                "bright watchful hazel eyes with crow's feet like river delta",
-                "pocket watch chain dangling from vest pocket",
-                "bald crown with white fringe of hair"
+                "pocket watch chain dangling from vest pocket"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
@@ -1591,9 +1588,9 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "polka dot",
+            "pattern_anchor": "sequin pattern",
             "sleeve_style_anchor": "full length sleeves",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "cloth_physics_hint": "sequined fabric catches and scatters light with every micro-movement, shimmer shift with breathing, metallic surface sparkle"
         },
         "vibe_archetype": "PTA-генерал — контролирует из любви, душит заботой",
         "world_aesthetic": "родительский чат",
@@ -1804,11 +1801,11 @@
             ],
             "jewelry_anchors": "costume jewelry rings on multiple fingers collected from flea markets",
             "glasses_anchor": "none",
-            "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "no pattern",
-            "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "nail_style_anchor": "unpainted natural nails",
+            "fabric_texture_anchor": "stiff brocade",
+            "pattern_anchor": "brocade floral weave",
+            "sleeve_style_anchor": "padded shoulder full sleeves",
+            "cloth_physics_hint": "stiff brocade holds shape with minimal movement, padded shoulders exaggerate posture, fabric barely breathes"
         },
         "vibe_archetype": "театральная меланхоличка — каждое слово как из романа",
         "world_aesthetic": "винтажная Москва",
@@ -1885,7 +1882,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -2001,14 +1998,15 @@
             "micro_gesture": "hair flip while checking phone screen reflection",
             "wardrobe_anchor": "silk floral blouse with pearl buttons, designer belt, Apple Watch, AirPods in one ear",
             "accessory_anchors": [
-                "no permanent accessories"
+                "Apple Watch on wrist",
+                "AirPods in one ear"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "beaded bracelet",
+            "jewelry_anchors": "Apple Watch on wrist",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "smooth silk",
@@ -2145,7 +2143,7 @@
         },
         "numeric_id": 10,
         "negative_hint_tokens": [
-            "missing jewelry (beaded bracelet)",
+            "missing jewelry (Apple Watch on wrist)",
             "missing signature element (smartphone perpetually in hand at selfie angle)",
             "matte skin",
             "airbrushed",
@@ -2215,15 +2213,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "plaid tones"
             ],
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "worn soft flannel",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "worn flannel drapes loosely, subtle fabric wrinkle at rolled cuffs, minimal movement"
         },
         "vibe_archetype": "молчаливый прокурор — три слова и все легли",
         "world_aesthetic": "городской минимализм",
@@ -2426,15 +2424,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "bright bold colors"
             ],
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
-            "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "plaid checkered",
-            "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
+            "fabric_texture_anchor": "fluffy soft mohair knit",
+            "pattern_anchor": "bold zigzag",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "fluffy mohair knit catches ambient light softly, slight halo fuzz at edges, lightweight drape with minimal movement"
         },
         "vibe_archetype": "фитнес-мама-блогер — энергия и хаос в одном флаконе",
         "world_aesthetic": "коммунальный реализм",
@@ -2449,8 +2447,7 @@
             ],
             "height_build": "tall athletic frame from fitness training",
             "hair_tokens": [
-                "long dark hair in messy ponytail with loose strands",
-                "bright hand-knitted mohair cardigan with bold zigzag pattern over sports top"
+                "long dark hair in messy ponytail with loose strands"
             ],
             "nose_tokens": [
                 "prominent nose she's proud of as family feature"
@@ -2459,11 +2456,10 @@
                 "full lips usually pressed tight"
             ],
             "hands_tokens": [
-                "energetic hand gestures",
-                "bright hand-knitted mohair cardigan with bold zigzag pattern over sports top"
+                "energetic hand gestures"
             ],
             "posture_tokens": [
-                "energetic hand gestures"
+                "forward-leaning energetic posture, weight on balls of feet"
             ],
             "skin_color_tokens": [
                 "natural skin tone"
@@ -2503,7 +2499,7 @@
                 "rounded prominent forehead"
             ],
             "eyebrow_tokens": [
-                "thick bushy gray eyebrows"
+                "thick dark expressive eyebrows"
             ],
             "lip_texture_tokens": [
                 "full weathered lips"
@@ -2512,16 +2508,16 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "visible under-eye shadows"
             ],
             "shoulder_tokens": [
-                "rounded hunched shoulders"
+                "athletic broad shoulders"
             ],
             "teeth_tokens": [
-                "white dentures visible when speaking"
+                "natural teeth, slightly worn"
             ],
             "eyelash_tokens": [
                 "thick dark lashes for age"
@@ -2628,7 +2624,7 @@
             "micro_gesture": "points with glasses in hand, then puts them back on to deliver verdict",
             "wardrobe_anchor": "paisley-print burgundy silk shawl over black cashmere turtleneck, thick-framed glasses, practical but stylish",
             "accessory_anchors": [
-                "warm brown eyes behind fashionable thick-framed glasses"
+                "thick-framed fashion glasses"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
@@ -2636,11 +2632,11 @@
                 "burgundy"
             ],
             "jewelry_anchors": "none visible",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "thick-framed modern fashion glasses",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "argyle",
-            "sleeve_style_anchor": "long sleeves rolled to elbows",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
         "vibe_archetype": "завуч-с-пейсли — тёплая строгость в модной оправе",
@@ -2669,7 +2665,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -2684,7 +2680,7 @@
                 "average ears with slight age-related changes"
             ],
             "neck_tokens": [
-                "paisley-print burgundy silk shawl draped over shoulders over black cashmere turtleneck"
+                "smooth neck partially covered by turtleneck collar and draped paisley shawl"
             ],
             "body_shape_tokens": [
                 "short thick build"
@@ -2879,7 +2875,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "slightly hunched forward posture, weight settled onto surface, habitual screen-lean"
             ],
             "skin_color_tokens": [
                 "office-pale skin with bags under eyes from screen work"
@@ -2929,13 +2925,13 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "visible under-eye shadows"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "natural teeth with age-appropriate wear"
@@ -3054,7 +3050,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
             "fabric_texture_anchor": "coarse wool",
@@ -3087,7 +3083,7 @@
                 "cigarette-stained fingers"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "relaxed heavy slump, weight settled into seat, belly forward, unhurried dad-bod at rest"
             ],
             "skin_color_tokens": [
                 "ruddy complexion with razor bumps on neck"
@@ -3102,8 +3098,7 @@
                 "average ears with slight age-related changes"
             ],
             "neck_tokens": [
-                "ruddy complexion with razor bumps on neck",
-                "white shirt collar peeking out"
+                "ruddy complexion with razor bumps on neck, visible throat movement when speaking"
             ],
             "body_shape_tokens": [
                 "solid dad-bod with beer belly"
@@ -3138,7 +3133,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -3194,7 +3189,6 @@
         },
         "numeric_id": 15,
         "negative_hint_tokens": [
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (unlit cigarette tucked behind ear)",
             "matte skin",
             "airbrushed",
@@ -3264,15 +3258,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
-            "fabric_texture_anchor": "stiff leather",
-            "pattern_anchor": "paisley",
+            "fabric_texture_anchor": "smooth polo knit jersey",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "усатый эксперт — мнение по любому вопросу за 3 секунды",
         "world_aesthetic": "рыночный хаос",
@@ -3314,8 +3308,7 @@
                 "natural proportioned ears"
             ],
             "neck_tokens": [
-                "gold chain necklace visible at collar",
-                "thick neck"
+                "thick muscular neck, short neck line"
             ],
             "body_shape_tokens": [
                 "short stocky build"
@@ -3350,7 +3343,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -3470,7 +3463,6 @@
             "micro_gesture": "jabs finger in air like conducting chaos orchestra",
             "wardrobe_anchor": "oversized puffer jacket, rhinestone sunglasses on head, reading glasses on forehead — double headgear",
             "accessory_anchors": [
-                "sharp blue eyes behind reading glasses perpetually pushed up on forehead",
                 "rhinestone sunglasses pushed up on head"
             ],
             "footwear_anchor": "worn comfortable footwear",
@@ -3479,12 +3471,12 @@
                 "neutral earth tones"
             ],
             "jewelry_anchors": "tarnished silver ring",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "reading glasses perpetually pushed up on forehead",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "десантник на пенсии — ураган энергии и хаоса",
         "world_aesthetic": "подъездный нуар",
@@ -3519,11 +3511,10 @@
                 "weathered outdoor skin with forehead creases and five o'clock shadow"
             ],
             "wrinkle_map_tokens": [
-                "weathered outdoor skin with forehead creases and five o'clock shadow"
+                "deep forehead creases, crow's feet from years of squinting outdoors"
             ],
             "facial_hair_tokens": [
-                "thick grey mustache",
-                "weathered outdoor skin with forehead creases and five o'clock shadow"
+                "thick grey mustache"
             ],
             "ear_tokens": [
                 "natural proportioned ears"
@@ -3684,8 +3675,6 @@
             "micro_gesture": "pushes glasses up and delivers devastating sarcasm deadpan",
             "wardrobe_anchor": "old military field jacket, medals pinned crookedly, woolen scarf, combat boots even at home",
             "accessory_anchors": [
-                "calm grey-blue eyes behind thin-framed glasses",
-                "tall wiry frame with military bearing",
                 "old military field jacket with medals pinned slightly crooked"
             ],
             "footwear_anchor": "worn comfortable footwear",
@@ -3696,10 +3685,10 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "argyle",
-            "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
+            "fabric_texture_anchor": "worn canvas military fabric",
+            "pattern_anchor": "olive solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "worn canvas military jacket, stiff structured drape, medals add weight to chest panel"
         },
         "vibe_archetype": "военный ворчун — бубнит тихо, сарказм уровня 'бог'",
         "world_aesthetic": "военный минимализм",
@@ -3724,8 +3713,7 @@
                 "thin lips rarely smiling"
             ],
             "hands_tokens": [
-                "sinewy hands",
-                "tall wiry frame with military bearing"
+                "sinewy hands"
             ],
             "posture_tokens": [
                 "perfectly upright composure, hands folded or clasped, serene"
@@ -3740,18 +3728,16 @@
                 "clean-shaven or age-appropriate stubble"
             ],
             "ear_tokens": [
-                "average ears with slight age-related changes",
-                "tall wiry frame with military bearing"
+                "average ears with slight age-related changes"
             ],
             "neck_tokens": [
-                "woolen scarf tucked in collar"
+                "wiry neck with visible tendons, tanned weathered skin at collar"
             ],
             "body_shape_tokens": [
                 "tall wiry build"
             ],
             "scar_mark_tokens": [
-                "small scar on chin",
-                "woolen scarf tucked in collar"
+                "small scar on chin"
             ],
             "voice_texture_tokens": [
                 "gravelly aged baritone, unhurried commanding delivery, understated menace in whisper"
@@ -3779,7 +3765,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -3902,8 +3888,7 @@
             "micro_gesture": "puts glasses on, inspects, takes off, delivers verdict",
             "wardrobe_anchor": "quilted cotton vest over checked flannel, reading glasses on neck cord, pockets full of screws",
             "accessory_anchors": [
-                "blue eyes behind reading glasses on cord around neck",
-                "reading glasses dangling"
+                "reading glasses dangling on cord around neck"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
@@ -3944,7 +3929,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -3994,13 +3979,13 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "natural teeth with age-appropriate wear"
@@ -4113,20 +4098,20 @@
             "micro_gesture": "eye roll then leans into camera conspiratorially",
             "wardrobe_anchor": "oversized puffer jacket, rhinestone sunglasses on head, AirPods, phone always in hand",
             "accessory_anchors": [
-                "oversized designer-knockoff puffer jacket with rhinestone sunglasses pushed up on head"
+                "AirPods in both ears"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "bright youth tones, white, pastel"
             ],
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "manicured neat nails",
-            "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "geometric",
-            "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "тикток-хроникёр — снимает семейный хаос и набирает лайки",
         "world_aesthetic": "зумер-хаос",
@@ -4166,8 +4151,7 @@
                 "none"
             ],
             "ear_tokens": [
-                "natural proportioned ears",
-                "clear dewy youthful skin"
+                "natural proportioned ears"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
@@ -4204,7 +4188,7 @@
                 "smooth youthful chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "natural under-eye area with slight shadows"
@@ -4326,19 +4310,19 @@
             "micro_gesture": "raises one finger like 'actually...' before demolishing argument",
             "wardrobe_anchor": "striped telnyashka under corduroy jacket, messy ponytail, minimal jewelry",
             "accessory_anchors": [
-                "light tan with subtle freckles across nose bridge"
+                "no permanent accessories"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "navy, earth, stripe tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "soft worn cotton",
             "pattern_anchor": "striped",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "cotton fabric shows subtle stretch on inhale, natural compression wrinkles, minimal light change"
         },
         "vibe_archetype": "вежливый терминатор — разбивает аргументы как на олимпиаде",
@@ -4358,7 +4342,6 @@
                 "brown hair with pastel pink tips in messy waves"
             ],
             "nose_tokens": [
-                "light tan with subtle freckles across nose bridge",
                 "delicate straight nose"
             ],
             "mouth_tokens": [
@@ -4423,7 +4406,7 @@
                 "dark heavy bags under eyes"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "healthy white teeth"
@@ -4537,18 +4520,18 @@
             "micro_gesture": "head tilt with squint — 'you did NOT just say that'",
             "wardrobe_anchor": "faux-pearl necklace over embroidered magenta kaftan dress, doc martens boots",
             "accessory_anchors": [
-                "faux-pearl necklace over embroidered magenta kaftan dress"
+                "faux-pearl necklace"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "magenta, earth, vibrant tones"
             ],
-            "jewelry_anchors": "small cross pendant on chain",
+            "jewelry_anchors": "faux-pearl necklace",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "thin linen",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "full length sleeves",
             "cloth_physics_hint": "linen fabric shifts subtly with breathing, natural creases deepen on exhale, light texture movement"
         },
@@ -4572,14 +4555,13 @@
                 "upturned nose with small nostril piercing"
             ],
             "mouth_tokens": [
-                "full lips with lip gloss",
-                "smooth young skin with slight acne on chin"
+                "full lips with lip gloss"
             ],
             "hands_tokens": [
                 "natural hands"
             ],
             "posture_tokens": [
-                "confident posture"
+                "confident assertive stance, arms often crossed or gesturing for emphasis"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -4591,11 +4573,10 @@
                 "none"
             ],
             "ear_tokens": [
-                "natural proportioned ears",
-                "natural ears proportional to face"
+                "natural proportioned ears"
             ],
             "neck_tokens": [
-                "faux-pearl necklace over embroidered magenta kaftan dress"
+                "smooth young neck, graceful line"
             ],
             "body_shape_tokens": [
                 "average build"
@@ -4629,7 +4610,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -4755,14 +4736,14 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "oversized black hoodie with hood half-up",
             "color_palette": [
-                "neutral earth tones"
+                "black, dark tones"
             ],
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "quilted padding",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "sleeveless",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
         "vibe_archetype": "геймер-снайпер — три слова и критический урон",
@@ -4802,8 +4783,7 @@
                 "clean-shaven or age-appropriate stubble"
             ],
             "ear_tokens": [
-                "natural proportioned ears",
-                "wireless earbuds always in"
+                "natural proportioned ears"
             ],
             "neck_tokens": [
                 "smooth neck with natural skin texture"
@@ -4961,20 +4941,20 @@
             "micro_gesture": "shrugs with palms up — 'what's the problem?'",
             "wardrobe_anchor": "fitted sports track jacket, joggers, clean white sneakers, thin gold chain",
             "accessory_anchors": [
-                "gold chain thin at neck"
+                "young athletic neck with visible collar"
             ],
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
-            "jewelry_anchors": "small cross pendant on chain",
+            "jewelry_anchors": "thin gold chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "floral print",
+            "fabric_texture_anchor": "smooth sports jersey",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
+            "cloth_physics_hint": "smooth jersey stretches with movement, athletic fabric holds shape, minimal wrinkle"
         },
         "vibe_archetype": "качок-философ — жизнь проста, не усложняй",
         "world_aesthetic": "спортивный минимализм",
@@ -4989,21 +4969,19 @@
             ],
             "height_build": "athletic mesomorph gym build",
             "hair_tokens": [
-                "curly mop of brown hair",
-                "young skin with jaw acne and patchy first beard"
+                "curly mop of brown hair"
             ],
             "nose_tokens": [
                 "narrow nose inherited from mother"
             ],
             "mouth_tokens": [
-                "chapped lips with slight overbite",
-                "young skin with jaw acne and patchy first beard"
+                "chapped lips with slight overbite"
             ],
             "hands_tokens": [
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -5012,17 +4990,16 @@
                 "age-appropriate wrinkle pattern"
             ],
             "facial_hair_tokens": [
-                "young skin with jaw acne and patchy first beard"
+                "patchy first beard on jawline"
             ],
             "ear_tokens": [
-                "natural proportioned ears",
-                "natural ears proportional to face"
+                "natural proportioned ears"
             ],
             "neck_tokens": [
-                "gold chain thin at neck"
+                "young athletic neck with visible collar"
             ],
             "body_shape_tokens": [
-                "thin at neck, athletic, narrow"
+                "athletic mesomorph gym build"
             ],
             "scar_mark_tokens": [
                 "clean skin with natural minor imperfections"
@@ -5053,7 +5030,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -5173,10 +5150,10 @@
             "micro_gesture": "leans in conspiratorially then jerks back in mock outrage",
             "wardrobe_anchor": "track suit bottoms, wool socks in sandals, oversized knit sweater, bathrobe on top",
             "accessory_anchors": [
-                "tight suspicious mouth always whispering"
+                "no permanent accessories"
             ],
             "footwear_anchor": "worn comfortable footwear",
-            "headwear_anchor": "flushed face with broken capillary veins",
+            "headwear_anchor": "none",
             "color_palette": [
                 "neutral earth tones"
             ],
@@ -5211,7 +5188,7 @@
                 "tight suspicious mouth always whispering"
             ],
             "hands_tokens": [
-                "tight suspicious mouth always whispering"
+                "natural hands"
             ],
             "posture_tokens": [
                 "restless forward lean, constantly shifting weight, hands always moving"
@@ -5383,10 +5360,10 @@
             "micro_gesture": "pushes imaginary glasses up nose, delivers cryptic observation",
             "wardrobe_anchor": "track suit bottoms, wool socks in sandals, oversized knit sweater, always looks like just woke up",
             "accessory_anchors": [
-                "curious wide eyes always watching everything"
+                "no permanent accessories"
             ],
             "footwear_anchor": "track suit bottoms with wool socks in sandals",
-            "headwear_anchor": "neat combover with hat indentation",
+            "headwear_anchor": "none",
             "color_palette": [
                 "neutral earth tones"
             ],
@@ -5418,11 +5395,10 @@
                 "sharp thin nose perpetually sniffing"
             ],
             "mouth_tokens": [
-                "perpetual crooked smirk showing crooked teeth",
-                "curious wide eyes always watching everything"
+                "perpetual crooked smirk showing crooked teeth"
             ],
             "hands_tokens": [
-                "curious wide eyes always watching everything"
+                "natural hands"
             ],
             "posture_tokens": [
                 "deadpan still stance contrasting with explosive punchlines"
@@ -5434,7 +5410,7 @@
                 "age-appropriate wrinkle pattern"
             ],
             "facial_hair_tokens": [
-                "pasty indoor complexion with stubble patches"
+                "sparse stubble patches"
             ],
             "ear_tokens": [
                 "average ears with slight age-related changes"
@@ -5603,12 +5579,12 @@
                 "silver"
             ],
             "jewelry_anchors": "thin gold wedding band left hand",
-            "glasses_anchor": "none",
+            "glasses_anchor": "stylish decorative frames",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "corduroy ribbing",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
+            "fabric_texture_anchor": "fine cashmere",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "fine cashmere drapes softly, gentle sag at collar, minimal movement"
         },
         "vibe_archetype": "серебряная королева — один взгляд и зять в нокауте",
         "world_aesthetic": "дачный шик",
@@ -5648,8 +5624,7 @@
                 "none"
             ],
             "ear_tokens": [
-                "average ears with slight age-related changes",
-                "pearl earrings"
+                "average ears with slight age-related changes"
             ],
             "neck_tokens": [
                 "slight neck creasing with visible throat movement"
@@ -5816,10 +5791,10 @@
             "jewelry_anchors": "small cross pendant",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "argyle",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "fabric_texture_anchor": "cotton apron fabric",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "cotton apron holds shape, warm sweater shows natural drape, practical non-movement"
         },
         "vibe_archetype": "рыночная императрица — цена названа, торг окончен",
         "world_aesthetic": "рыночный хаос",
@@ -6019,13 +5994,13 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "maroon, gold, rich tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "three gold rings on each hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "striped",
+            "pattern_anchor": "solid velvet",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
@@ -6072,7 +6047,7 @@
                 "natural ears proportional to face"
             ],
             "neck_tokens": [
-                "amber pendant"
+                "loose aged neck skin with visible collarbone"
             ],
             "body_shape_tokens": [
                 "tiny round build"
@@ -6236,7 +6211,7 @@
             "color_palette": [
                 "SILVER"
             ],
-            "jewelry_anchors": "beaded bracelet",
+            "jewelry_anchors": "wide leather bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "soft worn cotton",
@@ -6283,7 +6258,7 @@
                 "none"
             ],
             "ear_tokens": [
-                "FADED ANCHOR TATTOO on forearm"
+                "natural proportioned ears"
             ],
             "neck_tokens": [
                 "loose sagging neck skin with visible tendons"
@@ -6447,15 +6422,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "white, grey, clinical tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
-            "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "coarse wool",
+            "nail_style_anchor": "surgeon's perfectly manicured nails",
+            "fabric_texture_anchor": "fine woven cotton",
             "pattern_anchor": "solid color",
-            "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "crisp cotton blouse holds its shape, minimal movement, surgical cleanliness"
         },
         "vibe_archetype": "хирург — каждое слово как скальпель",
         "world_aesthetic": "больничная стерильность",
@@ -7403,7 +7378,7 @@
                 "deep purple-brown under-eye bags"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "yellowed uneven teeth"
@@ -7747,7 +7722,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -7963,10 +7938,10 @@
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "no pattern",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "кузнец — выжженные брови и кувалды вместо рук",
         "world_aesthetic": "кузнечная мастерская",
@@ -8178,7 +8153,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "geometric",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "full length sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
@@ -8259,7 +8234,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -8388,8 +8363,8 @@
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
         "vibe_archetype": "вечная дива — очки, мех, перформанс",
@@ -8599,7 +8574,7 @@
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "coarse wool",
             "pattern_anchor": "striped",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
         },
         "vibe_archetype": "рыжая ведьма — веснушки как звёзды, травы как оружие",
@@ -8804,7 +8779,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
             "fabric_texture_anchor": "smooth silk",
@@ -8942,7 +8917,6 @@
         },
         "numeric_id": 42,
         "negative_hint_tokens": [
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (shaved left temple with tribal + signet ring)",
             "missing faint scar near hairline",
             "matte skin",
@@ -9227,10 +9201,10 @@
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "solid color",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "домашний викинг — борода с бусинами, дзен",
         "world_aesthetic": "скандинавский уют",
@@ -9259,7 +9233,7 @@
                 "RUNIC TATTOO ON NECK visible above collar"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -9434,7 +9408,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "smooth silk",
@@ -9467,7 +9441,7 @@
                 "THIN WAX-TIPPED HANDLEBAR MUSTACHE with upward curls groomed daily"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -9517,7 +9491,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -9570,7 +9544,6 @@
         },
         "numeric_id": 45,
         "negative_hint_tokens": [
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (suspenders + wax-tipped handlebar mustache + slicked hair)",
             "missing prominent mole on cheek",
             "matte skin",
@@ -9646,10 +9619,10 @@
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "милый громила — страшный вид, золотое сердце",
         "world_aesthetic": "спортивный нуар",
@@ -9677,7 +9650,7 @@
                 "FULL SLEEVE TATTOO on left arm flowers and children names"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -9727,7 +9700,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -9857,10 +9830,10 @@
             "jewelry_anchors": "small cross pendant",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "stiff leather",
-            "pattern_anchor": "geometric",
+            "fabric_texture_anchor": "smooth polo knit jersey",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "pushed-up sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "рассеянный профессор — очки-хамелеоны и гениальные выводы",
         "world_aesthetic": "университетская пыль",
@@ -10069,12 +10042,12 @@
                 "neutral earth tones"
             ],
             "jewelry_anchors": "heavy signet ring",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "reading glasses perpetually pushed up on forehead",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "stiff leather",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "fabric_texture_anchor": "smooth polo knit jersey",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "бородатый хипстер — кофе, тату, философия",
         "world_aesthetic": "крафтовый минимализм",
@@ -10102,7 +10075,7 @@
                 "GEOMETRIC TATTOO SLEEVE right arm mountains compass lines"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -10151,7 +10124,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -10284,7 +10257,7 @@
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "coarse wool",
             "pattern_anchor": "solid color",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
         },
         "vibe_archetype": "восточный орёл — брови, нос, авторитет",
@@ -10702,10 +10675,10 @@
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "no pattern",
             "sleeve_style_anchor": "full length sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "неоновая точка — розовый, жёлтый, молния",
         "world_aesthetic": "неон-панк",
@@ -10910,15 +10883,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "white, grey, clinical tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
-            "nail_style_anchor": "bitten short nails",
+            "nail_style_anchor": "surgeon's perfectly manicured nails",
             "fabric_texture_anchor": "smooth silk",
             "pattern_anchor": "polka dot",
-            "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "эмо-принцесса — чёлка, пирсинг, глубина",
         "world_aesthetic": "ночной меланхолик",
@@ -11330,12 +11303,12 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "polka dot",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -11543,7 +11516,7 @@
                 "neutral earth tones"
             ],
             "jewelry_anchors": "small cross pendant",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "reading glasses perpetually pushed up on forehead",
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "stiff polyester",
             "pattern_anchor": "floral print",
@@ -11625,7 +11598,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -11754,15 +11727,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "embroidered flowers",
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "рэпер — дреды, золото, фристайл",
         "world_aesthetic": "уличный хип-хоп",
@@ -11839,7 +11812,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "natural under-eye area with slight shadows"
@@ -11964,15 +11937,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "BACKWARDS CAP faded never removed",
             "color_palette": [
-                "neutral earth tones"
+                "white, grey, clinical tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
-            "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "heavy denim",
+            "nail_style_anchor": "surgeon's perfectly manicured nails",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
             "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "скейтер — ссадины, кайф и сколотый зуб",
         "world_aesthetic": "скейт-парк хаос",
@@ -12051,7 +12024,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -12179,13 +12152,13 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "ботаник — очки, факты, и 'вообще-то'",
         "world_aesthetic": "школьная олимпиада",
@@ -12262,7 +12235,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -12317,7 +12290,6 @@
         "numeric_id": 58,
         "negative_hint_tokens": [
             "missing glasses",
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (enormous magnifying glasses + plaid shirt tucked in + neat side part)",
             "old wrinkled skin, age spots",
             "matte skin",
@@ -12389,7 +12361,7 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
@@ -12602,10 +12574,10 @@
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "argyle",
             "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "тихий гений — водолазка, шрам, рентгеновский взгляд",
         "world_aesthetic": "минималистичный нуар",
@@ -12812,7 +12784,7 @@
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "pushed-up sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
@@ -13023,7 +12995,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
@@ -13235,7 +13207,7 @@
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "quilted padding",
             "pattern_anchor": "floral print",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
         "vibe_archetype": "сплетница в бигуди — халат, тапочки, досье",
@@ -13443,10 +13415,10 @@
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "stiff leather",
-            "pattern_anchor": "paisley",
+            "fabric_texture_anchor": "smooth polo knit jersey",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "сварщик — маска на лбу, фартук в искрах, чинит всё",
         "world_aesthetic": "гаражный реализм",
@@ -13474,7 +13446,7 @@
                 "calloused hands with oil-black nails"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "tanned face with SPARK-BURN MICRO-SCARS scattered"
@@ -13529,7 +13501,7 @@
                 "deep purple-brown under-eye bags"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "gold tooth visible on smile"
@@ -13648,14 +13620,14 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "paisley",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
         },
         "vibe_archetype": "ледяная тёща — жемчуга и взгляд-рентген",
@@ -13862,7 +13834,7 @@
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -13892,7 +13864,7 @@
                 "flour-dusted hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -14071,8 +14043,8 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
             "fabric_texture_anchor": "thick knitted",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "knit fabric stretches visibly on inhale, returns on exhale, ribbing pattern shifts subtly"
         },
         "vibe_archetype": "король шаурмы — усы, золото и гостеприимство",
@@ -14361,7 +14333,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -14901,13 +14873,13 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "geometric",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "short sleeves",
             "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
         },
@@ -15113,10 +15085,10 @@
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "бабка-кукла — пудра, ресницы и сталь под фарфором",
         "world_aesthetic": "кукольный дом",
@@ -15144,7 +15116,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "PORCELAIN FACE smooth from powder wrinkles hidden"
@@ -15325,10 +15297,10 @@
             "jewelry_anchors": "thin gold wedding band left hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "тренер со свистком — свистит и все бегут",
         "world_aesthetic": "стадионный хаос",
@@ -15411,7 +15383,7 @@
                 "mild under-eye shadows"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "white dentures visible when speaking"
@@ -15534,10 +15506,10 @@
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "дачная императрица — шляпа, перчатки, урожай",
         "world_aesthetic": "дачный генштаб",
@@ -15564,7 +15536,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "tanned rosy face"
@@ -15775,7 +15747,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -16159,7 +16131,7 @@
             "nail_style_anchor": "short yellowed nails",
             "fabric_texture_anchor": "quilted padding",
             "pattern_anchor": "floral print",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
         "vibe_archetype": "деревенская матриарх — сапоги, коза и власть",
@@ -16373,7 +16345,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "pushed-up sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -16452,7 +16424,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -16788,10 +16760,10 @@
             "jewelry_anchors": "small cross pendant",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "embroidered flowers",
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "pushed-up sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "инфлюенсер-машина — лайки, контент, повторить",
         "world_aesthetic": "инстаграм-реальность",
@@ -17205,15 +17177,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "no pattern",
             "sleeve_style_anchor": "full length sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "таксист-всезнайка — ёлочка, навигатор и мнение обо всём",
         "world_aesthetic": "рыночный хаос",
@@ -17289,7 +17261,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "light under-eye circles"
@@ -17416,10 +17388,10 @@
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "королева дороги — руль, кофе и стальной взгляд",
         "world_aesthetic": "городской минимализм",
@@ -17619,7 +17591,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "smooth silk",
@@ -17755,7 +17727,6 @@
         },
         "numeric_id": 84,
         "negative_hint_tokens": [
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (yellow thermal backpack + bike helmet + perpetual motion)",
             "old wrinkled skin, age spots",
             "matte skin",
@@ -17910,7 +17881,7 @@
                 "smooth youthful chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -18038,10 +18009,10 @@
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "учитель-терпение — мел на пиджаке и бесконечная мудрость",
         "world_aesthetic": "школьный реализм",
@@ -18068,7 +18039,7 @@
                 "pointer or marker in hand"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -18243,15 +18214,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "строгая училка — красный карандаш и двойка взглядом",
         "world_aesthetic": "школьный реализм",
@@ -18454,10 +18425,10 @@
                 "neutral earth tones"
             ],
             "jewelry_anchors": "no jewelry",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "reading glasses perpetually pushed up on forehead",
             "nail_style_anchor": "bitten short nails",
             "fabric_texture_anchor": "soft worn cotton",
-            "pattern_anchor": "geometric",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "full length sleeves",
             "cloth_physics_hint": "cotton fabric shows subtle stretch on inhale, natural compression wrinkles, minimal light change"
         },
@@ -18536,7 +18507,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -18664,10 +18635,10 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "розовая клавиатура — стикеры снаружи, сталь внутри",
         "world_aesthetic": "крафтовый минимализм",
@@ -18744,7 +18715,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -19088,7 +19059,7 @@
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "thin linen",
             "pattern_anchor": "polka dot",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "linen fabric shifts subtly with breathing, natural creases deepen on exhale, light texture movement"
         },
         "vibe_archetype": "йога-воин — намасте и разрушительное спокойствие",
@@ -19294,10 +19265,10 @@
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "повар-философ — борщ как религия, нож как аргумент",
         "world_aesthetic": "кухонный реализм",
@@ -19325,7 +19296,7 @@
                 "burn-scarred hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -19380,7 +19351,7 @@
                 "sunken hollows under eyes"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "natural teeth with age-appropriate wear"
@@ -19503,10 +19474,10 @@
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "paisley",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "кормилица — мука, скалка и пирожки как ответ на всё",
         "world_aesthetic": "кухонный реализм",
@@ -19711,10 +19682,10 @@
             "jewelry_anchors": "tarnished silver ring",
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "бюрократ-машина — галстук, печать и 'приходите завтра'",
         "world_aesthetic": "казённый минимализм",
@@ -19998,7 +19969,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -20126,7 +20097,7 @@
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "polka dot",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -20341,7 +20312,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -20760,9 +20731,9 @@
                 "neutral earth tones"
             ],
             "jewelry_anchors": "small cross pendant",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "reading glasses perpetually pushed up on forehead",
             "nail_style_anchor": "manicured neat nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -21180,10 +21151,10 @@
             "jewelry_anchors": "small cross pendant",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "full length sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "инфлюенсер 24/7 — кольцевая лампа и вечный контент",
         "world_aesthetic": "инстаграм-реальность",
@@ -21390,7 +21361,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
@@ -21476,7 +21447,7 @@
                 "sunken hollows under eyes"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "natural teeth with age-appropriate wear"
@@ -21598,7 +21569,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
@@ -21812,7 +21783,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "thick knitted",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "knit fabric stretches visibly on inhale, returns on exhale, ribbing pattern shifts subtly"
         },
@@ -22055,7 +22026,7 @@
                 "cigarette in one hand tea mug in other"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "ruddy face no makeup"
@@ -22105,7 +22076,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -22235,7 +22206,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "geometric",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -22263,7 +22234,7 @@
                 "hands always positioned on invisible steering wheel"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -22443,8 +22414,8 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "soft worn cotton",
-            "pattern_anchor": "geometric",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "cotton fabric shows subtle stretch on inhale, natural compression wrinkles, minimal light change"
         },
         "vibe_archetype": "нефтяной магнат — золото и тяжёлый взгляд",
@@ -22654,10 +22625,10 @@
             "jewelry_anchors": "heavy signet ring",
             "glasses_anchor": "round gold-rimmed spectacles",
             "nail_style_anchor": "long painted nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "polka dot",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "стартап-евангелист — оранжевые очки и вечный питч",
         "world_aesthetic": "коворкинг-хаос",
@@ -22735,7 +22706,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -22897,7 +22868,7 @@
                 "Breitling watch"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "sturdy tanned"
@@ -22947,7 +22918,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "visible under-eye shadows"
@@ -23495,10 +23466,10 @@
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "WB-королева — сканер как скипетр, коробки как трон",
         "world_aesthetic": "маркетплейс-хаос",
@@ -23698,15 +23669,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "cuffed long sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "бизнесмен-90е — дипломат, цепь и молчаливая власть",
         "world_aesthetic": "лихие-девяностые",
@@ -23785,7 +23756,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -24154,7 +24125,7 @@
                 "big weathered hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -24203,13 +24174,13 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "yellowed uneven teeth"
@@ -24333,10 +24304,10 @@
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "argyle",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "кавказский таксист — чётки, лаваш и гостеприимство",
         "world_aesthetic": "кабина-застолье",
@@ -24754,8 +24725,8 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "paisley",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
         "vibe_archetype": "студент-молчун — наушник и 'угу'",
@@ -24783,7 +24754,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "pale skin"
@@ -24832,7 +24803,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "smooth under-eye area"
@@ -24961,10 +24932,10 @@
             "jewelry_anchors": "thin gold wedding band left hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "таксистка-навигатор — бандана и город наизусть",
         "world_aesthetic": "город-карта",
@@ -25171,8 +25142,8 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "corduroy ribbing",
-            "pattern_anchor": "paisley",
+            "fabric_texture_anchor": "fine cashmere",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
@@ -25408,7 +25379,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "pale skin"
@@ -25457,7 +25428,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -25587,7 +25558,7 @@
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "soft worn cotton",
             "pattern_anchor": "plaid checkered",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "cotton fabric shows subtle stretch on inhale, natural compression wrinkles, minimal light change"
         },
         "vibe_archetype": "деревенский таксист — GPS и восторг от города",
@@ -25615,7 +25586,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -25826,7 +25797,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "tanned wiry legs"
@@ -26004,10 +25975,10 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "striped",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "студентка-курьерша — учебник, косички и сессия",
         "world_aesthetic": "доставка-зачётка",
@@ -26035,7 +26006,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -26214,10 +26185,10 @@
             "jewelry_anchors": "small cross pendant",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "floral print",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "экс-менеджер-курьер — галстук и свобода от KPI",
         "world_aesthetic": "офис-на-колёсах",
@@ -26631,7 +26602,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "short sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
@@ -26661,7 +26632,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -26839,7 +26810,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "pushed-up sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -26869,7 +26840,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "pale skin shadows under eyes"
@@ -27043,7 +27014,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "soft worn cotton",
@@ -27076,7 +27047,7 @@
                 "cheerful brown eyes remembering every customer"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -27125,7 +27096,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -27178,7 +27149,6 @@
         "numeric_id": 129,
         "negative_hint_tokens": [
             "missing headwear",
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (name stickers on backpack + red beard + candies for kids)",
             "matte skin",
             "airbrushed",
@@ -27465,7 +27435,7 @@
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "quilted padding",
             "pattern_anchor": "floral print",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
         "vibe_archetype": "физрук-командир — свисток и вечный норматив",
@@ -27670,7 +27640,7 @@
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "thin wire reading glasses",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "no pattern",
             "sleeve_style_anchor": "short sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -27700,7 +27670,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -27750,7 +27720,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -27875,13 +27845,13 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "музыкалка-мечтательница — камертон и тишина как музыка",
         "world_aesthetic": "кабинет-музыки",
@@ -27908,7 +27878,7 @@
                 "TUNING FORK in hand tapped on everything"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -28009,7 +27979,6 @@
         },
         "numeric_id": 133,
         "negative_hint_tokens": [
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (tuning fork + music note scarf + dreamy eyes)",
             "missing silk scarf with music notes pattern",
             "matte skin",
@@ -28085,10 +28054,10 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "stiff leather",
+            "fabric_texture_anchor": "smooth polo knit jersey",
             "pattern_anchor": "argyle",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "трудовик-мастер — опилки, стамеска и 'мерь дважды'",
         "world_aesthetic": "мастерская-школа",
@@ -28167,7 +28136,7 @@
                 "rounded stubborn chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -28324,7 +28293,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -28499,7 +28468,7 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "round gold-rimmed spectacles",
@@ -28715,7 +28684,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "quilted padding",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "short sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
@@ -28919,12 +28888,12 @@
                 "neutral earth tones"
             ],
             "jewelry_anchors": "no jewelry",
-            "glasses_anchor": "thick black Soviet-era frames",
+            "glasses_anchor": "reading glasses perpetually pushed up on forehead",
             "nail_style_anchor": "long painted nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "striped",
             "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "физик-рассеянный — мел крошится и сферический конь",
         "world_aesthetic": "кабинет-физики",
@@ -28951,7 +28920,7 @@
                 "CHALK CRUMBLING in hand always breaking"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -29000,7 +28969,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -29126,7 +29095,7 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "striped",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -29411,7 +29380,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "faint under-eye shadows"
@@ -29571,7 +29540,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -29831,7 +29800,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -29961,7 +29930,7 @@
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "stiff polyester",
             "pattern_anchor": "argyle",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
         "vibe_archetype": "сисадмин-выживальщик — кабели и 'выключить-включить'",
@@ -30038,7 +30007,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -30245,7 +30214,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "creased thin-skin under eyes"
@@ -30374,9 +30343,9 @@
             "jewelry_anchors": "thin gold wedding band left hand",
             "glasses_anchor": "rectangular modern frames",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "plaid checkered",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
         "vibe_archetype": "фронтендер-наушники — код и стена от мира",
@@ -30405,7 +30374,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -30455,13 +30424,13 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "gaps between front teeth"
@@ -31000,7 +30969,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "beaded bracelet",
+            "jewelry_anchors": "wide leather bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "thin linen",
@@ -31033,7 +31002,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -31088,7 +31057,7 @@
                 "puffy under-eye circles"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "white dentures visible when speaking"
@@ -31206,7 +31175,7 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "smooth silk",
@@ -31289,7 +31258,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "light under-eye circles"
@@ -31340,7 +31309,6 @@
         },
         "numeric_id": 149,
         "negative_hint_tokens": [
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (cauliflower ears + master sport belt + neck wider than head)",
             "missing faint scar near hairline",
             "matte skin",
@@ -31418,7 +31386,7 @@
             "nail_style_anchor": "short yellowed nails",
             "fabric_texture_anchor": "smooth silk",
             "pattern_anchor": "polka dot",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
         "vibe_archetype": "фитнес-дива — загар, блёстки и подиум",
@@ -31626,7 +31594,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "bell sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
@@ -31706,7 +31674,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -31834,7 +31802,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "thin linen",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "short sleeves",
             "cloth_physics_hint": "linen fabric shifts subtly with breathing, natural creases deepen on exhale, light texture movement"
         },
@@ -32070,7 +32038,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -32126,7 +32094,7 @@
                 "creased thin-skin under eyes"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "healthy white teeth with minor natural imperfections"
@@ -32329,7 +32297,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -32454,11 +32422,11 @@
             "color_palette": [
                 "neutral earth tones"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "cracked rough nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
@@ -32591,7 +32559,6 @@
         "numeric_id": 155,
         "negative_hint_tokens": [
             "missing headwear",
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (tall chef hat + flour mustache + santoku knife)",
             "missing prominent mole on cheek",
             "matte skin",
@@ -32669,7 +32636,7 @@
             "nail_style_anchor": "cracked rough nails",
             "fabric_texture_anchor": "stiff polyester",
             "pattern_anchor": "striped",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
         "vibe_archetype": "кондитерша — крем, пирожные и 'не трогай!'",
@@ -32697,7 +32664,7 @@
                 "PIPING BAG in hand"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -32875,10 +32842,10 @@
             "jewelry_anchors": "simple metal watch",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "stiff leather",
-            "pattern_anchor": "geometric",
+            "fabric_texture_anchor": "smooth polo knit jersey",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "leather shows no breathing movement, rigid structure, stable surface highlights"
+            "cloth_physics_hint": "smooth jersey stretches slightly on chest, polo collar holds shape, gold chain hangs static"
         },
         "vibe_archetype": "шашлычник-философ — шампуры и 'мясо должно дышать'",
         "world_aesthetic": "мангал-двор",
@@ -32954,7 +32921,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -33081,8 +33048,8 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "paisley",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
         "vibe_archetype": "повариха-диктатор — половник и 'добавки нет'",
@@ -33292,8 +33259,8 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "thick knitted",
-            "pattern_anchor": "paisley",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "knit fabric stretches visibly on inhale, returns on exhale, ribbing pattern shifts subtly"
         },
         "vibe_archetype": "итальянец-повар — усики, жесты и 'мамма миа'",
@@ -33372,7 +33339,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "light under-eye circles"
@@ -33494,7 +33461,7 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, dark tones"
             ],
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
@@ -33529,7 +33496,7 @@
                 "hands in dough"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -33734,7 +33701,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -33784,7 +33751,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -34122,10 +34089,10 @@
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "round gold-rimmed spectacles",
             "nail_style_anchor": "long painted nails",
-            "fabric_texture_anchor": "corduroy ribbing",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "short sleeves",
-            "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
+            "fabric_texture_anchor": "fine cashmere",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "fine cashmere drapes softly, gentle sag at collar, minimal movement"
         },
         "vibe_archetype": "бюрократ МФЦ — печать и вечный обед",
         "world_aesthetic": "МФЦ-окошко",
@@ -34202,7 +34169,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -34325,7 +34292,7 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "black, gold, dark tones"
             ],
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "rectangular modern frames",
@@ -34410,7 +34377,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -34568,7 +34535,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -35030,7 +34997,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -35151,15 +35118,15 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "white, grey, clinical tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
-            "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "heavy denim",
+            "nail_style_anchor": "surgeon's perfectly manicured nails",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "solid color",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "чиновница ЖКХ — папка жалоб и вечный чай",
         "world_aesthetic": "кабинет-ЖКХ",
@@ -35395,7 +35362,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -35606,7 +35573,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -35866,7 +35833,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -35995,7 +35962,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
@@ -36025,7 +35992,7 @@
                 "multiple rings"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "porcelain skin"
@@ -36415,7 +36382,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "coarse wool",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
         },
@@ -36445,7 +36412,7 @@
                 "ring light"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -36495,7 +36462,7 @@
                 "double chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "faint under-eye shadows"
@@ -36625,7 +36592,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "stiff polyester",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "synthetic fabric shows slight sheen shift with breathing, minimal stretch, stable drape"
         },
@@ -36654,7 +36621,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -36832,7 +36799,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
             "fabric_texture_anchor": "thin linen",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "linen fabric shifts subtly with breathing, natural creases deepen on exhale, light texture movement"
         },
@@ -36910,7 +36877,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -37038,8 +37005,8 @@
             "jewelry_anchors": "brass pin on collar",
             "glasses_anchor": "round gold-rimmed spectacles",
             "nail_style_anchor": "cracked rough nails",
-            "fabric_texture_anchor": "corduroy ribbing",
-            "pattern_anchor": "embroidered flowers",
+            "fabric_texture_anchor": "fine cashmere",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "bell sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
         },
@@ -37069,7 +37036,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -37125,7 +37092,7 @@
                 "mild under-eye shadows"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "natural adult teeth"
@@ -37457,10 +37424,10 @@
             "jewelry_anchors": "thin gold wedding band left hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "thick ridged nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "embroidered flowers",
-            "sleeve_style_anchor": "three-quarter sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "тёща-прораб — валик и зять как рабсила",
         "world_aesthetic": "квартира-ремонт",
@@ -37537,7 +37504,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "sunken hollows under eyes"
@@ -37666,7 +37633,7 @@
             "jewelry_anchors": "PEARL EARRINGS family heirloom",
             "glasses_anchor": "none",
             "nail_style_anchor": "bitten short nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "plaid checkered",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -38085,7 +38052,7 @@
             "glasses_anchor": "round gold-rimmed spectacles",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "thin linen",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "sleeveless",
             "cloth_physics_hint": "linen fabric shifts subtly with breathing, natural creases deepen on exhale, light texture movement"
         },
@@ -38326,7 +38293,7 @@
                 "HOE in hand"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "deeply tanned face"
@@ -38500,14 +38467,14 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "white, grey, clinical tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
-            "nail_style_anchor": "bitten short nails",
+            "nail_style_anchor": "surgeon's perfectly manicured nails",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "geometric",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
         "vibe_archetype": "сантехник — ключ и 'кто ставил?!'",
@@ -38708,9 +38675,9 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "maroon, gold, rich tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "three gold rings on each hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "soft worn cotton",
@@ -38793,7 +38760,7 @@
                 "cleft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -38919,10 +38886,10 @@
             "jewelry_anchors": "beaded bracelet",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "geometric",
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "электрик — изолента и 'кто проводку тянул?!'",
         "world_aesthetic": "квартира-щиток",
@@ -38998,7 +38965,7 @@
                 "strong jutting chin"
             ],
             "nasolabial_tokens": [
-                "asymmetric nasolabial folds"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "visible under-eye shadows"
@@ -39120,14 +39087,14 @@
             "footwear_anchor": "worn comfortable footwear",
             "headwear_anchor": "none",
             "color_palette": [
-                "neutral earth tones"
+                "maroon, gold, rich tones"
             ],
-            "jewelry_anchors": "thin gold wedding band left hand",
+            "jewelry_anchors": "three gold rings on each hand",
             "glasses_anchor": "none",
             "nail_style_anchor": "long painted nails",
             "fabric_texture_anchor": "smooth silk",
-            "pattern_anchor": "paisley",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "pattern_anchor": "solid",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
         },
         "vibe_archetype": "ветеринарша — стетоскоп и шерсть везде",
@@ -39155,7 +39122,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -39210,7 +39177,7 @@
                 "faint under-eye shadows"
             ],
             "shoulder_tokens": [
-                "broad heavy shoulders"
+                "narrow athletic shoulders"
             ],
             "teeth_tokens": [
                 "natural adult teeth"
@@ -39330,10 +39297,10 @@
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "short yellowed nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "geometric",
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "автомеханик — масло на лбу и диагноз по звуку",
         "world_aesthetic": "гараж-яма",
@@ -39360,7 +39327,7 @@
                 "natural hands"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "tanned face"
@@ -39410,7 +39377,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -39536,10 +39503,10 @@
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "striped",
             "sleeve_style_anchor": "full length sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "риелторша — ключи и 'вид бесценно!'",
         "world_aesthetic": "квартира-показ",
@@ -39615,7 +39582,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "dark heavy bags under eyes"
@@ -39742,8 +39709,8 @@
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "smooth silk",
             "pattern_anchor": "polka dot",
-            "sleeve_style_anchor": "bell sleeves",
-            "cloth_physics_hint": "silk fabric catches light on micro-folds, subtle shimmer shift with breathing, delicate drape movement"
+            "sleeve_style_anchor": "long sleeves",
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "рыночная продавщица — весы и 'подходим!'",
         "world_aesthetic": "рынок-прилавок",
@@ -39820,7 +39787,7 @@
                 "square prominent chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "mild under-eye shadows"
@@ -40154,7 +40121,7 @@
             "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "corduroy ribbing",
+            "fabric_texture_anchor": "fine cashmere",
             "pattern_anchor": "no pattern",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "fabric shows micro-movement with breathing rhythm, subtle wrinkle shift on inhale/exhale"
@@ -40184,7 +40151,7 @@
                 "SMALL CALCULATOR in hand counting aloud"
             ],
             "posture_tokens": [
-                "casual but aware posture, body language tuned for comedy beats"
+                "gym-confident relaxed stance, chest out, easy natural energy"
             ],
             "skin_color_tokens": [
                 "natural Eastern European skin tone"
@@ -40363,7 +40330,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
             "fabric_texture_anchor": "thick knitted",
-            "pattern_anchor": "paisley",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "cuffed long sleeves",
             "cloth_physics_hint": "knit fabric stretches visibly on inhale, returns on exhale, ribbing pattern shifts subtly"
         },
@@ -40576,7 +40543,7 @@
             "glasses_anchor": "none",
             "nail_style_anchor": "manicured neat nails",
             "fabric_texture_anchor": "velvet",
-            "pattern_anchor": "embroidered flowers",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "short sleeves",
             "cloth_physics_hint": "velvet nap catches light differently on micro-movement, subtle light play with breathing"
         },
@@ -40605,7 +40572,7 @@
                 "PROTEIN SHAKER always in hand"
             ],
             "posture_tokens": [
-                "relaxed performative stance, timing movements for comedic effect"
+                "broad-shouldered slouch, hands ready like always mid-task, craftsman at rest between jobs"
             ],
             "skin_color_tokens": [
                 "tanned"
@@ -40655,7 +40622,7 @@
                 "pointed narrow chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "natural under-eye area with slight shadows"
@@ -40998,10 +40965,10 @@
             "jewelry_anchors": "none visible",
             "glasses_anchor": "none",
             "nail_style_anchor": "dirt under nails from garden work",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "argyle",
             "sleeve_style_anchor": "sleeveless",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "сосед-дрель — тапочки и 'по закону с 7!'",
         "world_aesthetic": "подъезд-стена",
@@ -41440,10 +41407,10 @@
             "jewelry_anchors": "small cross pendant on chain",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
-            "pattern_anchor": "geometric",
+            "fabric_texture_anchor": "quilted puffer nylon",
+            "pattern_anchor": "solid",
             "sleeve_style_anchor": "full length sleeves",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "готик-красотка",
         "world_aesthetic": "лунный готик",
@@ -41537,7 +41504,7 @@
                 "receding soft chin"
             ],
             "nasolabial_tokens": [
-                "moderate nasolabial lines"
+                "barely visible nasolabial creases"
             ],
             "undereye_tokens": [
                 "puffy under-eye circles"
@@ -41668,13 +41635,13 @@
                 "green",
                 "warm yellow"
             ],
-            "jewelry_anchors": "wooden prayer beads on wrist",
+            "jewelry_anchors": "no jewelry",
             "glasses_anchor": "none",
             "nail_style_anchor": "clean trimmed nails",
-            "fabric_texture_anchor": "heavy denim",
+            "fabric_texture_anchor": "quilted puffer nylon",
             "pattern_anchor": "striped",
             "sleeve_style_anchor": "long sleeves rolled to elbows",
-            "cloth_physics_hint": "stiff denim shows no breathing movement, stable heavy fabric, fixed wrinkle pattern"
+            "cloth_physics_hint": "puffer jacket holds air, minimal drape, surface nylon sheen shifts with movement"
         },
         "vibe_archetype": "рыжая художница",
         "world_aesthetic": "творческий хаос",
@@ -41818,7 +41785,6 @@
         "numeric_id": 199,
         "negative_hint_tokens": [
             "missing headwear",
-            "missing jewelry (wooden prayer beads on wrist)",
             "missing signature element (red curly hair + freckles everywhere + paint stains on hands)",
             "missing DENSE CONSTELLATION OF FRECKLES covering face nose cheeks forehead shoulders",
             "old wrinkled skin, age spots",
@@ -41903,7 +41869,7 @@
             "nail_style_anchor": "cracked rough nails",
             "fabric_texture_anchor": "coarse wool",
             "pattern_anchor": "plaid checkered",
-            "sleeve_style_anchor": "three-quarter sleeves",
+            "sleeve_style_anchor": "long sleeves",
             "cloth_physics_hint": "heavy wool barely moves with breathing, stable texture, minimal fabric physics"
         },
         "vibe_archetype": "ледяная модель",
