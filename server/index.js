@@ -2325,6 +2325,7 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_KEY}`;
 
     // First try WITH online grounding for real-time data
+    // NOTE: responseMimeType:'application/json' is incompatible with googleSearch tools — omit it here
     const acTrend = new AbortController();
     const toTrend = setTimeout(() => acTrend.abort(), 60_000); // 60s timeout
     let resp = await fetch(geminiUrl, {
@@ -2336,17 +2337,18 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
         generationConfig: {
           temperature: 0.95,
           maxOutputTokens: 16384,
-          responseMimeType: 'application/json',
         },
       }),
       signal: acTrend.signal,
     });
     clearTimeout(toTrend);
 
-    let data = await resp.json();
+    // Safe parse — non-JSON body (HTML error page) must not kill the retry path
+    let data;
+    try { data = await resp.json(); } catch { data = {}; }
 
-    // If grounding fails (quota/region), retry WITHOUT grounding
-    if (!resp.ok) {
+    // If grounding fails (quota/region/incompatibility), retry WITHOUT grounding
+    if (!resp.ok || !data.candidates) {
       console.warn('Trends grounding failed, retrying without:', data.error?.message);
       const acTrend2 = new AbortController();
       const toTrend2 = setTimeout(() => acTrend2.abort(), 60_000);
