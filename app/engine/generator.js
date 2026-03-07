@@ -1656,17 +1656,21 @@ function buildVeoPrompt(opts) {
     lines.push('');
     lines.push(`Character (center of frame): ${fullCharA}. Expressive, animated, direct eye contact with camera.${hasProduct ? ' Character is holding a product in one hand — see product description below.' : ''}`);
     lines.push('');
-    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, monologue already in progress. Character ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
+    lines.push(`STAR PRESENCE & CHARISMA (VEO 3.1): camera magnetism from frame 0 — eyes NEVER leave the lens. Every gesture loaded with comedic intention. Natural body sway from speech energy. Micro-pause before killer word amplifies punchline impact. NO robotic stiffness, NO AI-blank expression — pure raw PERFORMANCE.`);
     lines.push('');
-    lines.push(`Character speaks in Russian directly to camera (audio sync — perfect syllable-level lip-sync): "${dA}" — ${charA.speech_pace} pace, ${voiceA}. The word "${killerWord}" is the punchline near the end.`);
-    lines.push('');
+    const _wpsA = charA.speech_pace === 'fast' ? 2.8 : charA.speech_pace === 'slow' ? 1.7 : 2.2;
+    const _durAm = Math.max(1.5, Math.round((dA.split(/\s+/).filter(Boolean).length / _wpsA) * 10) / 10);
+    const _tAEndM = parseFloat(Math.min(0.7 + _durAm, 7.5).toFixed(1));
+    lines.push(`TIMESTAMPED SCRIPT (VEO 3.1 — follow timecodes exactly):`);
+    lines.push(`0.0–0.7s [HOOK — already in motion from source photo]: ${hookBrief}. Direct lens lock from frame 0. Energy ≥80% immediately. Camera: micro push-in 0.8px/frame over 10 frames.`);
+    lines.push(`0.7–${_tAEndM}s [MONOLOGUE — audio sync]: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. Every Russian syllable lip-synced.${charA.modifiers?.micro_gesture ? ` Signature micro-gesture: ${charA.modifiers.micro_gesture} on each major phrase.` : ''} Killer word "${killerWord}": 0.2s breath-pause before it → jaw drops → explosive consonant release → eyes narrow.`);
     if (enableLaughter) {
       const soloLaugh = charA.modifiers?.laugh_style || 'self-satisfied smirk';
       const _ltA = safeArr(charA.biology_override?.teeth_tokens) || '';
       const _lbA = _ltA ? `, showing ${_ltA}` : '';
-      lines.push(`Character bursts into genuine laughter — ${soloLaugh}${_lbA}, ${releaseBrief}. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds.`);
+      lines.push(`${_tAEndM}–8.0s [RELEASE]: Genuine laughter erupts — ${soloLaugh}${_lbA}, ${releaseBrief}. Body tremor → camera ±1.2px shake. 7.7–8.0s: ambiguous micro-expression — compels rewatch. LOOP LOCK: final frame pose/energy compatible with frame 0 for seamless autoplay.`);
     } else {
-      lines.push(`Character finishes speaking with a confident expression — holds eye contact with camera, slight nod. No laughter. The monologue ends on the punchline word "${killerWord}". Brief pause, then video cuts.`);
+      lines.push(`${_tAEndM}–8.0s [RELEASE]: Confident hold — eye contact maintained, ${charA.modifiers?.contempt_expression || 'slight knowing nod'}. No laughter. Ends on "${killerWord}". 7.7–8.0s: ambiguous micro-expression — compels rewatch. LOOP LOCK: final frame compatible with frame 0.`);
     }
   } else {
     // ── DUO MODE: two characters dialogue ──
@@ -1680,19 +1684,24 @@ function buildVeoPrompt(opts) {
     lines.push('');
 
     // Scene flow
-    lines.push(`The video starts FROM THE PHOTO (frame 0) — no setup, no intro, argument already in progress. A ${hookBrief}, staring directly into the camera with intense emotion. This is the exact continuation of the generated photo.`);
+    lines.push(`STAR PRESENCE & CHEMISTRY (VEO 3.1): A — camera magnetism from frame 0, lens lock never breaks, explosive comedic energy. B — loaded silence, every micro-expression readable from 3 meters, reactions feel REAL and unscripted. Zero AI-stiffness, zero blank expressions.`);
     lines.push('');
-    lines.push(`A speaks in Russian to the camera (audio sync — perfect syllable-level lip-sync): "${dA}" — ${charA.speech_pace} pace, ${voiceA}. B listens with MOUTH STRICTLY CLOSED — only micro-expressions: side-eye, nostrils flaring, one eyebrow raising.`);
-    lines.push('');
-
+    const _wpsAd = charA.speech_pace === 'fast' ? 2.8 : charA.speech_pace === 'slow' ? 1.7 : 2.2;
+    const _wpsBd = charB.speech_pace === 'fast' ? 2.8 : charB.speech_pace === 'slow' ? 1.7 : 2.2;
+    const _durAd = Math.max(1.5, Math.round((dA.split(/\s+/).filter(Boolean).length / _wpsAd) * 10) / 10);
+    const _durBd = Math.max(0.8, Math.round(((dB || '').split(/\s+/).filter(Boolean).length / _wpsBd) * 10) / 10);
+    const _tAEndD = parseFloat(Math.min(0.7 + _durAd, 5.8).toFixed(1));
+    const _tPauseD = parseFloat((_tAEndD + 0.25).toFixed(1));
+    const _tBEndD = parseFloat(Math.min(_tPauseD + _durBd, 7.5).toFixed(1));
+    const _tReleaseD = dA2 ? parseFloat(Math.min(_tBEndD + 0.5, 7.5).toFixed(1)) : _tBEndD;
+    lines.push(`TIMESTAMPED SCRIPT (VEO 3.1 — follow timecodes exactly):`);
+    lines.push(`0.0–0.7s [HOOK]: A: ${hookBrief}, direct lens lock, energy ≥80% from frame 0. B: ${bListeningPose}, mouth SEALED. Camera: micro push-in 0.8px/frame (10 frames).`);
+    lines.push(`0.7–${_tAEndD}s [ACT A — audio sync]: A speaks: "${dA}" — ${charA.speech_pace} pace, ${voiceA}. Every Russian syllable lip-synced.${charA.modifiers?.micro_gesture ? ` Signature gesture: ${charA.modifiers.micro_gesture}.` : ''} B: MOUTH SEALED — side-eye, nostril flare, eyebrow +2mm, finger tap.`);
+    lines.push(`${_tAEndD}–${_tPauseD}s [TENSION PAUSE — 0.25s silence]: B's expression shifts: ${charB.modifiers?.contempt_expression || 'slow blink, loaded micro-smirk'}. A holds last gesture. Viewer feels the incoming punchline.`);
+    lines.push(`${_tPauseD}–${_tBEndD}s [ACT B — PUNCHLINE — audio sync]: B: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. Killer word "${killerWord}": voice drops half-tone, jaw snaps shut, eyes narrow 20°. A: mid-gesture freeze → eyes widen → dart B↔camera 2–3Hz.`);
     if (dA2) {
-      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
-      lines.push('');
-      lines.push(`A fires back a short follow-up in Russian: "${dA2}" — quick 1-4 word reaction.`);
-    } else {
-      lines.push(`B responds in Russian: "${dB}" — ${charB.speech_pace} pace, ${responseStyleB}. The word "${killerWord}" is the punchline that reframes everything. A freezes mid-gesture in shock.`);
+      lines.push(`${_tBEndD}–${_tReleaseD}s [ДОБИВКА]: A: "${dA2}" — 1–3 words, stunned+defiant, eyes wide.`);
     }
-    lines.push('');
     if (enableLaughter) {
       const laughA = charA.modifiers?.laugh_style || 'genuine laugh';
       const laughB = charB.modifiers?.laugh_style || 'satisfied chuckle';
@@ -1700,9 +1709,9 @@ function buildVeoPrompt(opts) {
       const _ltBd = safeArr(charB.biology_override?.teeth_tokens) || '';
       const _lbAd = _ltAd ? `, showing ${_ltAd}` : '';
       const _lbBd = _ltBd ? `, showing ${_ltBd}` : '';
-      lines.push(`Both burst into genuine raspy laughter — lean into each other, shoulders shaking. A: ${laughA}${_lbAd}. B: ${laughB}${_lbBd}. Camera shakes violently from body tremor. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds.`);
+      lines.push(`${_tReleaseD}–8.0s [RELEASE — laughter]: Both erupt. A: ${laughA}${_lbAd}. B: ${laughB}${_lbBd}. Lean together, shoulders shake. Camera ±1.2px tremor. 7.7–8.0s: ambiguous shared glance — compels rewatch. LOOP LOCK: final frame compatible with frame 0.`);
     } else {
-      lines.push(`A stares at B in stunned silence after the punchline "${killerWord}". No laughter. Tension holds — frozen expressions, micro-reactions only. Rewatch-bait: ambiguous micro-expression in last 0.3 seconds. The dialogue simply ends.`);
+      lines.push(`${_tReleaseD}–8.0s [RELEASE — stunned silence]: A stares at B, no words. Frozen micro-reactions. 7.7–8.0s: A glances B→camera — ambiguous expression. LOOP LOCK: final frame compatible with frame 0.`);
     }
   }
   lines.push('');
