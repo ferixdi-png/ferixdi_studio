@@ -496,6 +496,7 @@ function renderLocations(filterGroup = '') {
       <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
         <span>📋</span> Промпт
       </button>
+      ${l._custom ? `<button onclick="deleteCustomLoc('${l.id}')" class="text-[9px] px-2 py-1 rounded-md font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 w-full mt-1 flex items-center justify-center gap-1">🗑 Удалить</button>` : ''}
     </div>`;
   }).join('');
 
@@ -810,6 +811,7 @@ function renderCharacters(filter = {}) {
       <button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}" title="Скопировать детализированный промпт для Veo">
         <span>📋</span> Копировать промпт
       </button>
+      ${c._custom ? `<button onclick="deleteCustomChar('${c.id}')" class="text-[10px] px-2 py-1 rounded-md font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 w-full mt-1 flex items-center justify-center gap-1">🗑 Удалить</button>` : ''}
 
       <!-- Expandable detail -->
       <details class="group">
@@ -3879,6 +3881,7 @@ function initGenerate() {
             </button>
           `;
         } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized') || apiErr.message?.toLowerCase().includes('invalid token') || apiErr.message?.toLowerCase().includes('token expired')) {
+          try { await autoAuth(); } catch { /* ignore */ }
           errorTitle = 'Ошибка авторизации';
           errorDesc = 'Промо-код истёк или недействителен. Проверьте настройки.';
           errorAction = 'Введите новый промо-код в разделе «Настройки»';
@@ -4755,6 +4758,62 @@ function initCharFilters() {
     log('INFO', 'ПЕРСОНАЖИ', 'Местами: A ⇄ B');
   });
 }
+
+// ─── KEYBOARD SHORTCUTS ────────────────────
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd + Enter → trigger generation (only when generate section is visible)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      const genSection = document.getElementById('section-generate');
+      if (genSection && !genSection.classList.contains('hidden')) {
+        e.preventDefault();
+        const btn = document.getElementById('btn-generate');
+        if (btn && !btn.disabled) btn.click();
+      }
+    }
+    // Escape → close topmost open modal/overlay
+    if (e.key === 'Escape') {
+      document.getElementById('gen-error-overlay')?.remove();
+      const lessonModal = document.getElementById('lesson-modal-overlay');
+      if (lessonModal && !lessonModal.classList.contains('hidden')) {
+        lessonModal.classList.add('hidden');
+      }
+    }
+  });
+}
+
+// ─── DELETE CUSTOM CHAR ──────────────────────
+function deleteCustomChar(id) {
+  if (!confirm('Удалить пользовательского персонажа?')) return;
+  state.characters = state.characters.filter(c => c.id !== id);
+  try {
+    const stored = JSON.parse(localStorage.getItem('ferixdi_custom_chars') || '[]');
+    localStorage.setItem('ferixdi_custom_chars', JSON.stringify(stored.filter(c => c.id !== id)));
+  } catch { /* ignore */ }
+  if (state.selectedA?.id === id) state.selectedA = null;
+  if (state.selectedB?.id === id) state.selectedB = null;
+  renderCharacters(getCurrentFilters());
+  updateCharDisplay();
+  showNotification('🗑 Персонаж удалён', 'info');
+  log('INFO', 'CHAR-DELETE', `Удалён кастомный персонаж: ${id}`);
+}
+window.deleteCustomChar = deleteCustomChar;
+
+// ─── DELETE CUSTOM LOC ───────────────────────
+function deleteCustomLoc(id) {
+  if (!confirm('Удалить пользовательскую локацию?')) return;
+  state.locations = state.locations.filter(l => l.id !== id);
+  try {
+    const stored = JSON.parse(localStorage.getItem('ferixdi_custom_locs') || '[]');
+    localStorage.setItem('ferixdi_custom_locs', JSON.stringify(stored.filter(l => l.id !== id)));
+  } catch { /* ignore */ }
+  if (state.selectedLocation?.id === id) state.selectedLocation = null;
+  renderLocations();
+  renderLocationsBrowse();
+  showNotification('🗑 Локация удалена', 'info');
+  log('INFO', 'LOC-DELETE', `Удалена кастомная локация: ${id}`);
+}
+window.deleteCustomLoc = deleteCustomLoc;
 
 // ─── LOG PANEL TOGGLE ─────────────────────
 function initLogPanel() {
@@ -6460,12 +6519,14 @@ function renderHistory() {
     return;
   }
 
+  const _modeIcons = { idea: '💡', script: '📝', video: '🎬', suggested: '🎲', solo: '👤', duo: '👥' };
   list.innerHTML = indexed.slice().reverse().map(({ ep, origIdx }) => {
     const dt = new Date(ep.ts);
     const dateStr = dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     const label = `${ep.charA || '?'} × ${ep.charB || '?'}`;
+    const modeTag = ep.mode ? ` · ${_modeIcons[ep.mode] || ''}${ep.mode}` : '';
     return `<div class="hist-entry" data-idx="${origIdx}">
-      <div class="text-[10px] text-gray-500 px-1 mb-0.5">${label}${ep.mode ? ` · ${ep.mode}` : ''}</div>
+      <div class="text-[10px] text-gray-500 px-1 mb-0.5">${label}${modeTag}</div>
       ${renderEpisodeCard(ep, origIdx + 1, dateStr, `h_ep${origIdx}`)}
     </div>`;
   }).join('');
@@ -7795,6 +7856,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initTranslate',initTranslate],['initCharConstructor',initCharConstructor],
     ['initLocConstructor',initLocConstructor],
     ['initMatrixRain',initMatrixRain],
+    ['initKeyboardShortcuts',initKeyboardShortcuts],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
   try { initCharCounters(); } catch(e) { console.error('[FERIXDI] initCharCounters:', e); }
