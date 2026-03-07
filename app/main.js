@@ -4890,12 +4890,18 @@ function _reachEstimate(v) {
 }
 
 function _highlightKiller(text, killer) {
-  if (!killer || !text) return escapeHtml(text);
-  const escaped = escapeHtml(text);
+  if (!text) return '';
+  // Render pipe | as visual pause badge first
+  let result = escapeHtml(text).replace(/\|/g, '<span class="pipe-pause">pause</span>');
+  if (!killer) return result;
   const kw = escapeHtml(killer);
-  // Case-insensitive replace of the killer word in the text
   const regex = new RegExp(`(${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  return escaped.replace(regex, '<span class="killer-glow">$1</span>');
+  return result.replace(regex, '<span class="killer-glow">$1</span>');
+}
+
+function _wordCount(text) {
+  if (!text) return 0;
+  return text.trim().split(/\s+/).filter(w => w && w !== '|').length;
 }
 
 function _isTrendSaved(topic) {
@@ -5122,15 +5128,24 @@ function _renderTrends() {
       <div class="trend-dialogue bg-black/40 rounded-xl p-3.5 space-y-2 border border-white/[0.03]">
         <div class="flex items-center justify-between mb-0.5">
           <div class="text-[10px] text-gray-500 font-semibold">💬 Готовый диалог:</div>
-          ${t.killer_word ? `<div class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">💥 killer: <span class="font-bold">${escapeHtml(t.killer_word)}</span></div>` : ''}
+          <div class="flex items-center gap-2">
+            ${t.killer_word ? `<div class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">💥 <span class="font-bold">${escapeHtml(t.killer_word)}</span></div>` : ''}
+            <button class="trend-copy-both text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-gray-400 hover:bg-cyan-500/15 hover:text-cyan-400 border border-white/10 transition-colors" data-a="${_escForAttr(t.dialogue_A)}" data-b="${_escForAttr(t.dialogue_B)}" title="Скопировать оба">📋 оба</button>
+          </div>
         </div>
         <div class="flex items-start gap-2 group">
           <div class="flex-1 text-[11px]"><span class="text-cyan-400 font-bold">A:</span> <span class="text-gray-200">«${dialogA}»</span></div>
-          <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_A)}" title="Скопировать реплику A">📋</button>
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <span class="text-[8px] text-gray-600 font-mono">${_wordCount(t.dialogue_A)}сл</span>
+            <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_A)}" title="Скопировать реплику A">📋</button>
+          </div>
         </div>
         <div class="flex items-start gap-2 group">
           <div class="flex-1 text-[11px]"><span class="text-violet-400 font-bold">B:</span> <span class="text-gray-200">«${dialogB}»</span></div>
-          <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_B)}" title="Скопировать реплику B">📋</button>
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <span class="text-[8px] ${_wordCount(t.dialogue_B) > 18 ? 'text-red-400' : 'text-gray-600'} font-mono">${_wordCount(t.dialogue_B)}сл</span>
+            <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_B)}" title="Скопировать реплику B">📋</button>
+          </div>
         </div>
       </div>
 
@@ -5239,6 +5254,19 @@ function initTrends() {
     if (scriptBtn) {
       useTrendAsScript(scriptBtn.dataset.a || '', scriptBtn.dataset.b || '');
       scriptBtn.textContent = '✓ Выбрано!';
+      return;
+    }
+
+    // Copy both lines A + B
+    const copyBothBtn = e.target.closest('.trend-copy-both');
+    if (copyBothBtn) {
+      const a = copyBothBtn.dataset.a || '';
+      const b = copyBothBtn.dataset.b || '';
+      navigator.clipboard.writeText(`A: «${a}»\nB: «${b}»`).then(() => {
+        sfx.copy();
+        copyBothBtn.textContent = '✓ скопировано';
+        setTimeout(() => { copyBothBtn.innerHTML = '📋 оба'; }, 1400);
+      });
       return;
     }
 

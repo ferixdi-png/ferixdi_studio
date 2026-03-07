@@ -1215,6 +1215,22 @@ mark {
 .virality-bar-fill.vb-max  { background: linear-gradient(90deg, #ef4444, #ec4899, #a855f7);
   box-shadow: 0 0 8px rgba(239,68,68,0.4); }
 
+/* Pipe pause badge */
+.pipe-pause {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #67e8f9;
+  background: rgba(103,232,249,0.1);
+  border: 1px solid rgba(103,232,249,0.25);
+  border-radius: 3px;
+  padding: 0 4px;
+  margin: 0 3px;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
 /* Killer word glow */
 .killer-glow {
   color: #fbbf24;

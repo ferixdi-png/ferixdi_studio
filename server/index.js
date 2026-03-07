@@ -1997,6 +1997,14 @@ app.post('/api/video/fetch', authMiddleware, async (req, res) => {
   }
 });
 
+// ─── Helper: trim text to N words (preserving pipe | pauses) ─────────
+function _trimToWords(text, maxWords) {
+  if (!text) return text;
+  const tokens = text.trim().split(/\s+/);
+  if (tokens.length <= maxWords) return text.trim();
+  return tokens.slice(0, maxWords).join(' ');
+}
+
 // ─── POST /api/trends — AI trend analysis with online grounding ──────
 app.post('/api/trends', authMiddleware, async (req, res) => {
   const GEMINI_KEY = nextGeminiKey();
@@ -2303,8 +2311,8 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
   "trend_context": "1-2 предложения объясняющих КОНТЕКСТ: почему именно сейчас это актуально, что случилось, какой инфоповод",
   "comedy_angle": "конкретная ситуация конфликта A vs B — в чём именно спор",
   "viral_format": "название формата (для format) или null",
-  "dialogue_A": "Готовая реплика A — 8-15 слов, разговорная, как реально говорят",
-  "dialogue_B": "Готовая реплика B — 8-18 слов, с панчлайном в конце",
+  "dialogue_A": "Реплика A — СТРОГО 8-15 слов. Один символ | как пауза (необязательно). Без тире.",
+  "dialogue_B": "Реплика B — СТРОГО 8-18 слов. Один символ | как пауза (необязательно). killer_word — ПОСЛЕДНЕЕ слово.",
   "killer_word": "последнее слово B — переворачивает смысл",
   "share_hook": "фраза для пересылки: 'скинь маме/другу/в чат потому что...' — 1 предложение",
   "virality": 8,
@@ -2312,12 +2320,16 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
 }
 
 КРИТИЧЕСКИ ВАЖНО:
-• dialogue_A (8-15 слов) и dialogue_B (8-18 слов) — ГОТОВЫЕ реплики для озвучки, разговорная русская речь, длинные и сочные
-• НЕ начинай B с «Зато» — клише
-• killer_word = ПОСЛЕДНЕЕ слово из dialogue_B, ПЕРЕВОРАЧИВАЕТ смысл
-• dialogue_A: возмущение/вопрос/жалоба. dialogue_B: неожиданный поворот
-• trend_context — объясни пользователю ПОЧЕМУ эта тема сейчас актуальна (не "потому что смешно", а конкретный инфоповод или жизненная ситуация)
-• theme_tag — каждая идея ОБЯЗАНА иметь УНИКАЛЬНЫЙ theme_tag. Проверь: если два тега одинаковые — ЗАМЕНИ одну идею!
+• dialogue_A — СТРОГО 6-15 слов. ПОСЧИТАЙ слова перед записью. Если больше 15 — СОКРАТИ!
+• dialogue_B — СТРОГО 6-18 слов. ПОСЧИТАЙ слова перед записью. Если больше 18 — СОКРАТИ!
+• Символ | (пайп) = пауза-вдох 0.3с. В одной реплике максимум 1 пайп. Используй если усиливает ритм.
+• Без тире (—, –, -), без английских слов в репликах
+• B НИКОГДА не начинает с «Зато», «Ну и», «А вот» — клише
+• killer_word = ПОСЛЕДНЕЕ слово dialogue_B — ПЕРЕВОРАЧИВАЕТ весь смысл. Убери его — фраза рассыпается.
+• dialogue_A: узнаваемая боль/возмущение/жалоба. dialogue_B: неожиданный переворот темы.
+• ТЕСТ: прочитал вслух — уложился в 3.5с для A и 4.5с для B? Если нет — СОКРАТИ.
+• trend_context — объясни ПОЧЕМУ именно сейчас актуально (конкретный инфоповод, не «смешно»)
+• theme_tag — УНИКАЛЬНЫЙ для каждой идеи. Повтор тега = БРАК, замени идею!
 
 Отвечай ТОЛЬКО JSON массивом из 30 объектов. Без markdown.`;
 
@@ -2497,8 +2509,8 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
       why_trending: String(t.trend_context || t.why_trending || '').slice(0, 250),
       comedy_angle: String(t.comedy_angle || '').slice(0, 300),
       viral_format: t.viral_format || null,
-      dialogue_A: String(t.dialogue_A || '').slice(0, 150),
-      dialogue_B: String(t.dialogue_B || '').slice(0, 200),
+      dialogue_A: _trimToWords(String(t.dialogue_A || ''), 15),
+      dialogue_B: _trimToWords(String(t.dialogue_B || ''), 18),
       killer_word: String(t.killer_word || '').slice(0, 30),
       share_hook: String(t.share_hook || '').slice(0, 150),
       virality: Math.max(1, Math.min(10, Number(t.virality) || 7)),
