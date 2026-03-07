@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * FERIXDI Studio — Generator v2
  * Production Contract: Veo 3.1 • 8s • Handheld Selfie Feel

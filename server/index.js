@@ -8,6 +8,7 @@ import cors from 'cors';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { readFileSync } from 'fs';
+import zlib from 'zlib';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -200,7 +201,58 @@ const RL_PRODUCT = { window: 60_000,  max: 8 };   // 8 per min
 const RL_CONSULT = { window: 600_000, max: 5 };   // 5 per 10min per IP (free, no auth)
 const RL_GEMINI  = { window: 60_000, max: 1 };    // 1 Gemini request per user per 1min
 
+// ─── GEMINI RESPONSE CACHE (in-memory, TTL 5 min) ──────────────────────────────────
+const _geminiCache = new Map();
+const GEMINI_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function getGeminiCacheKey(context) {
+  const keyObj = {
+    mode: context.input_mode,
+    a: context.charA?.id,
+    b: context.charB?.id,
+    topic: context.topic_ru,
+    script: context.script_ru ? JSON.stringify(context.script_ru) : null,
+    hint: context.scene_hint,
+    loc: context.location,
+    solo: context.soloMode,
+  };
+  return crypto.createHash('sha256').update(JSON.stringify(keyObj)).digest('hex').slice(0, 20);
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of _geminiCache) {
+    if (now - v.ts > GEMINI_CACHE_TTL) _geminiCache.delete(k);
+  }
+}, 60_000);
+
+// ─── GZIP COMPRESSION (built-in zlib, no extra dep) ───────────────────────
+function compressionMiddleware(req, res, next) {
+  const ae = req.headers['accept-encoding'] || '';
+  if (!ae.includes('gzip')) return next();
+  const _origJson = res.json.bind(res);
+  res.json = (obj) => {
+    const buf = Buffer.from(JSON.stringify(obj), 'utf8');
+    if (buf.length < 1024) { // Skip compression for small payloads
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      return res.end(buf);
+    }
+    zlib.gzip(buf, { level: 6 }, (err, compressed) => {
+      if (err) {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        return res.end(buf);
+      }
+      res.setHeader('Content-Encoding', 'gzip');
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.setHeader('Content-Length', compressed.length);
+      res.end(compressed);
+    });
+  };
+  next();
+}
+
 // ─── Enhanced Security Headers ────────────────────────
+app.use(compressionMiddleware);
 app.use((req, res, next) => {
   // Security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -241,9 +293,27 @@ app.use('/data/users.json', (req, res) => res.status(403).json({ error: 'Forbidd
 app.use('/data/access_keys.json', (req, res) => res.status(403).json({ error: 'Forbidden' }));
 app.use(express.static(appDir));
 
+// ─── Cookie helper ─────────────────────────────────────────
+function _parseCookies(req) {
+  const header = req.headers.cookie || '';
+  return Object.fromEntries(
+    header.split(';').map(c => { const [k, ...v] = c.trim().split('='); return [k, v.join('=')]; })
+  );
+}
+function _setAuthCookie(res, token, req) {
+  const isHttps = req.headers['x-forwarded-proto'] === 'https';
+  const secure = isHttps ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `ferixdi_jwt=${token}; HttpOnly; SameSite=Strict; Max-Age=2592000; Path=/${secure}`);
+}
+
 // ─── Auth Middleware ──────────────────────────
 function authMiddleware(req, res, next) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
+  // Accept both Authorization header (API clients) and httpOnly cookie (browser)
+  let token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token) {
+    const cookies = _parseCookies(req);
+    token = cookies['ferixdi_jwt'];
+  }
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
     req.user = jwt.verify(token, JWT_SECRET);
@@ -285,6 +355,7 @@ app.post('/api/auth/validate', async (req, res) => {
     const existingUser = _users.find(u => u.promoHash === hash);
     const userId = existingUser ? existingUser.id : `promo_${hash.slice(0, 12)}`;
     const token = jwt.sign({ label: match.label, hash, userId }, JWT_SECRET, { expiresIn: '24h' });
+    _setAuthCookie(res, token, req);
     res.json({ jwt: token, label: match.label, userId, hasAccount: !!existingUser });
   } catch (e) {
     res.status(500).json({ error: 'Auth check failed' });
@@ -347,6 +418,7 @@ app.post('/api/auth/register', async (req, res) => {
   saveCustomToGitHub('users').catch(e => console.error('[Users] Save error:', e.message));
 
   const token = jwt.sign({ userId, username, hash: promoHash, label: 'user' }, JWT_SECRET, { expiresIn: '30d' });
+  _setAuthCookie(res, token, req);
   console.log(`[Auth] New user registered: ${username} (${userId})`);
   res.json({ jwt: token, userId, username });
 });
@@ -376,6 +448,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 
   const token = jwt.sign({ userId: user.id, username: user.username, hash: user.promoHash, label: 'user' }, JWT_SECRET, { expiresIn: '30d' });
+  _setAuthCookie(res, token, req);
   console.log(`[Auth] User logged in: ${user.username}`);
   res.json({ jwt: token, userId: user.id, username: user.username });
 });
@@ -1465,6 +1538,17 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
   // Auto-enable remake_mode for video input — ensures remake_veo_prompt_en is always generated
   if (context.input_mode === 'video') context.remake_mode = true;
 
+  // ─── GEMINI CACHE CHECK (skip for requests with binary attachments) ────
+  const _hasAttachments = !!(video_file || product_image || reference_image);
+  const _cacheKey = _hasAttachments ? null : getGeminiCacheKey(context);
+  if (_cacheKey) {
+    const _cached = _geminiCache.get(_cacheKey);
+    if (_cached && Date.now() - _cached.ts < GEMINI_CACHE_TTL) {
+      console.log(`[CACHE HIT] Gemini кеш: ${_cacheKey}`);
+      return res.json({ ai: _cached.result });
+    }
+  }
+
   try {
     let promptText = buildAIPrompt(context);
 
@@ -1646,6 +1730,12 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
         console.error('Response text (last 200 chars):', text.slice(-200));
         return res.status(422).json({ error: 'AI вернул невалидный JSON. Попробуйте ещё раз.' });
       }
+    }
+
+    // ── Store in cache if no attachments ──
+    if (_cacheKey && geminiResult) {
+      _geminiCache.set(_cacheKey, { result: geminiResult, ts: Date.now() });
+      console.log(`[CACHE SET] Gemini кеш: ${_cacheKey}`);
     }
 
     // ── Post-parse validation: ensure critical fields exist ──

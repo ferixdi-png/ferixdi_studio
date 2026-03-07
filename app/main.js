@@ -1,4 +1,5 @@
-﻿/**
+﻿// @ts-check
+/**
  * FERIXDI Studio — Main Application
  * Космический хакерский командный центр для ремикса видео
  */
@@ -1377,7 +1378,15 @@ function navigateTo(section) {
   // Lazy init heavy sections on first visit
   if (!_lazyInited.has(section)) {
     _lazyInited.add(section);
-    const _lazyMap = { ideas: initTrends, education: initEducation, jokes: initJokesLibrary };
+    const _lazyMap = {
+      ideas: initTrends,
+      education: initEducation,
+      jokes: initJokesLibrary,
+      // Locations: load only when user visits the locations tab
+      locations: () => loadLocations().then(() => { try { loadCustomLocations(); renderLocations(); renderLocationsBrowse(); initLocationsBrowse(); } catch(e) { console.error('[FERIXDI] locations:', e); } }),
+      // Characters: data already pre-fetched on startup; render DOM on first visit
+      characters: () => { renderCharacters(getCurrentFilters()); populateSeriesSelects(); },
+    };
     const lazyFn = _lazyMap[section];
     if (lazyFn) {
       try { lazyFn(); log('OK', 'LAZY', `Секция «${section}» инициализирована`); }
@@ -2045,7 +2054,16 @@ function initVideoUpload() {
 
 function handleVideoFile(file) {
   if (!file.type.startsWith('video/')) { log('WARN', 'ВИДЕО', 'Не видеофайл'); return; }
-  if (file.size > 50 * 1024 * 1024) { log('WARN', 'ВИДЕО', 'Файл больше 50 MB'); return; }
+  const sizeMB = file.size / 1024 / 1024;
+  if (sizeMB > 50) {
+    showNotification('❌ Файл больше 50 МБ. Сжми видео до загрузки.', 'error');
+    log('WARN', 'ВИДЕО', `Файл больше 50 MB (${sizeMB.toFixed(1)} MB)`);
+    return;
+  }
+  if (sizeMB > 20) {
+    showNotification(`⚠️ Большое видео (${sizeMB.toFixed(1)} МБ) — передача займёт дольше. Рекомендуем до 20 МБ.`, 'warning');
+    log('WARN', 'ВИДЕО', `Большой файл: ${sizeMB.toFixed(1)} MB`);
+  }
 
   const url = URL.createObjectURL(file);
   const video = document.createElement('video');
@@ -2303,6 +2321,29 @@ function initVideoDropzoneMain() {
 function initVideoUrlFetch() {
   // No-op: Instagram downloads handled via external links
   // (tikvideo.app / saveclip.app) — user downloads MP4, then uploads here
+}
+
+// ─── RATE LIMIT COUNTDOWN ────────────────────────────────
+function startRateLimitCountdown() {
+  const btn = document.getElementById('btn-generate');
+  if (!btn || !state._rateLimitUntil) return;
+  clearInterval(state._rateLimitTimer);
+  const update = () => {
+    const remaining = Math.ceil((state._rateLimitUntil - Date.now()) / 1000);
+    if (remaining <= 0) {
+      clearInterval(state._rateLimitTimer);
+      state._rateLimitTimer = null;
+      state._rateLimitUntil = null;
+      updateReadiness();
+      showGenStatus('', '');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = `⏱ Подождите ${remaining}с...`;
+    showGenStatus(`⚠️ Лимит: 1 запрос в минуту. Осталось ${remaining}с`, 'text-amber-400');
+  };
+  update();
+  state._rateLimitTimer = setInterval(update, 1000);
 }
 
 function showGenStatus(text, cls) {
@@ -3441,6 +3482,7 @@ async function callAIEngine(apiContext) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include', // send httpOnly cookie for same-origin prod
       body: JSON.stringify(payload),
       signal: controller.signal,
     });
@@ -3462,6 +3504,7 @@ async function callAIEngine(apiContext) {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${freshToken}`,
             },
+            credentials: 'include',
             body: JSON.stringify(payload),
             signal: controller.signal,
           });
@@ -3530,6 +3573,12 @@ function getThreadMemory() {
 
 function initGenerate() {
   document.getElementById('btn-generate')?.addEventListener('click', async () => {
+    // Rate limit guard — show countdown if still in cooldown
+    if (state._rateLimitUntil && Date.now() < state._rateLimitUntil) {
+      startRateLimitCountdown();
+      return;
+    }
+
     // Validate complete workflow
     if (!state.generationMode) {
       showGenStatus('⚠️ Сначала выберите режим генерации на шаге 1', 'text-orange-400');
@@ -3715,10 +3764,15 @@ function initGenerate() {
         let errorIcon = '⚠️';
         let errorButtons = '';
 
-        if (apiErr.message?.includes('429') || apiErr.message?.includes('rate limit')) {
+        if (apiErr.message?.includes('429') || apiErr.message?.includes('rate limit') || apiErr.message?.includes('Лимит')) {
+          // Extract wait time and start countdown
+          const waitMatch = apiErr.message?.match(/(\d+)\s*сек/);
+          const waitSec = waitMatch ? parseInt(waitMatch[1]) : 60;
+          state._rateLimitUntil = Date.now() + waitSec * 1000;
+          startRateLimitCountdown();
           errorTitle = 'Слишком много запросов';
-          errorDesc = 'Превышен лимит запросов. Подождите немного перед следующей генерацией.';
-          errorAction = 'Лимит сбросится через 1 минуту';
+          errorDesc = 'Превышен лимит запросов. Кнопка разблокируется автоматически.';
+          errorAction = `Ожидайте ${waitSec}с — кнопка автоматически разблокируется`;
           errorIcon = '⏱️';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
@@ -7581,16 +7635,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initMatrixRain',initMatrixRain],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
-  loadLocations().then(() => {
-    try { loadCustomLocations(); renderLocations(); renderLocationsBrowse(); initLocationsBrowse(); }
-    catch(e) { console.error('[FERIXDI] locations:', e); }
-  });
+  // Locations loaded lazily on first visit to the locations tab (see navigateTo lazy init)
   // Initial readiness check after all components loaded
   setTimeout(() => {
     updateReadiness();
     if (isPromoValid()) autoAuth(); // Refresh JWT on every app load
     loadCustomCharacters();
-    renderCharacters();
+    // Characters DOM rendered lazily on first visit to characters tab (data already pre-fetched)
     populateSeriesSelects();
     renderSeriesList();
     // Restore draft UI after characters are available
