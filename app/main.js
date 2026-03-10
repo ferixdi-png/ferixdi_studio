@@ -8034,6 +8034,13 @@ function _viralityColor(score) {
   return                   { bar: 'bg-gray-500',    text: 'text-gray-400',    label: 'Низкий' };
 }
 
+function _formatThreadsText(text) {
+  if (!text) return '';
+  let s = escapeHtml(text);
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+  return s;
+}
+
 function _renderThreadsPosts() {
   const resultsEl = document.getElementById('threads-results');
   if (!resultsEl || !_threadsData.length) return;
@@ -8058,10 +8065,10 @@ function _renderThreadsPosts() {
         <span class="${vColor.text} text-[10px] font-bold tabular-nums">${vScore}</span>
       </div>
       <div class="flex gap-1.5 mt-1">
-        <span class="text-[8px] text-gray-600" title="Глубина мысли (0-30)">🧠${sb.depth || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Узнаваемость/жиза (0-30)">🧠${sb.depth || 0}</span>
         <span class="text-[8px] text-gray-600" title="Эмоция (0-25)">❤️${sb.emotion || 0}</span>
         <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔁${sb.shareability || 0}</span>
-        <span class="text-[8px] text-gray-600" title="Дебаты (0-20)">💬${sb.debate || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Комменты (0-20)">💬${sb.debate || 0}</span>
       </div>`;
 
     // Variants tabs HTML
@@ -8081,7 +8088,7 @@ function _renderThreadsPosts() {
       return `<div class="threads-var-panel ${v.style !== (firstVar?.style || 'bold') ? 'hidden' : ''}" data-style="${escapeHtml(v.style)}">
         <div class="flex items-start gap-2">
           <div class="flex-1 space-y-1.5">
-            <p class="text-sm text-gray-100 leading-relaxed whitespace-pre-wrap">${escapeHtml(v.text)}</p>
+            <p class="text-sm text-gray-100 leading-relaxed whitespace-pre-wrap">${_formatThreadsText(v.text)}</p>
             <div class="flex items-center gap-2">
               <span class="${charColor} text-[9px] font-medium">${charCount} символов</span>
               ${charCount <= 500 ? '<span class="text-[8px] text-emerald-600">✓ Threads OK</span>' : '<span class="text-[8px] text-red-600">⚠ Длинный</span>'}
@@ -8167,16 +8174,16 @@ function _renderThreadsPosts() {
               <span class="${vColor.text} text-xs font-bold tabular-nums" style="font-family:'JetBrains Mono',monospace">${vScore}</span>
             </div>
             <div class="flex gap-1.5 justify-end">
-              <span class="text-[8px] text-gray-600" title="Глубина (0-30)">🧠${sb.depth || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Узнаваемость (0-30)">🧠${sb.depth || 0}</span>
               <span class="text-[8px] text-gray-600" title="Эмоция (0-25)">❤️${sb.emotion || 0}</span>
               <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔁${sb.shareability || 0}</span>
-              <span class="text-[8px] text-gray-600" title="Дебаты (0-20)">💬${sb.debate || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Комменты (0-20)">💬${sb.debate || 0}</span>
             </div>
           </div>
         </div>
 
         <!-- Post text -->
-        <p class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeHtml(post.text)}</p>
+        <p class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap">${_formatThreadsText(post.text)}</p>
 
         <!-- Best time -->
         ${bestTimeHtml}

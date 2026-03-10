@@ -2587,29 +2587,124 @@ Find ${safeLimit} REAL trending/viral public posts from threads.net about: ${que
 Language: ${langLabel} | Freshness: ${freshnessLabel} | Platform: threads.net only${nicheBlock}${excludeBlock}
 
 ━━━ QUALITY FILTER — THIS IS CRITICAL ━━━
-You are looking for SMART, THOUGHTFUL posts — NOT empty viral clickbait. Apply this filter ruthlessly:
+You are looking for RELATABLE, PERSONAL, SHARP posts that make people feel "это про меня!" — NOT generic motivation or empty clickbait.
 
 ✅ INCLUDE posts that:
-- Contain a genuine INSIGHT, non-obvious observation, or original perspective
-- Present a counterintuitive take backed by logic or experience
-- Expose a hidden pattern, systemic problem, or "uncomfortable truth" that makes people think
-- Share a hard-won lesson from real experience (business, career, relationships, money)
-- Reframe a common belief in a way that genuinely changes how you see things
-- Use data, specific examples, or concrete details to make a point
-- Spark real intellectual debate (not just outrage bait)
-- Make the reader feel smarter after reading
+- Describe a SPECIFIC everyday situation everyone recognizes ("билет туда 5000, обратно 20000")
+- Share a personal observation from first-person perspective with raw honesty
+- Present an "uncomfortable truth" or non-obvious life observation that sparks debate
+- Use CONCRETE details (numbers, names, places, exact quotes) — not abstractions
+- Trigger nostalgia, pride, frustration, or humor through RELATABLE experiences
+- Ask a question that FORCES the reader to answer in their head
+- Use list format with an unexpected twist at the end
+- Make the reader immediately want to send it to a friend saying "это ж про нас!"
 
 ❌ REJECT and SKIP posts that are:
 - Generic motivational fluff ("верь в себя", "всё возможно", "никогда не сдавайся")
 - Empty provocation with no substance ("кто согласен ставьте 🔥")
 - Recycled quotes or stolen wisdom without original angle
-- Pure emotional manipulation without intellectual depth
-- Engagement bait with zero informational value ("напишите ваш знак зодиака")
-- AI-generated slop (generic, safe, hedge-everything tone)
+- AI-generated slop ("в мире где", "давайте разберёмся", "важно понимать", "на самом деле")
+- Engagement bait with zero value ("напишите ваш знак зодиака")
 - Obvious humble-brags disguised as advice
 - Posts that state the obvious as if it's profound
+- Abstract philosophical rambling with no concrete anchor
 
-The posts you find should make the reader STOP scrolling and THINK. Quality of insight > quantity of likes.
+The posts you find should make the reader STOP scrolling and feel "блин, это ж про меня". Relatability > polish.
+
+━━━ STYLE GUIDE — REAL VIRAL POSTS THAT GOT 50-400 LIKES (COPY THIS FORMAT!) ━━━
+These are REAL posts from a Russian Threads creator that went viral. EVERY variant you generate must match this quality, tone, structure, and formatting. Study them carefully:
+
+EXAMPLE 1 (386 ❤️, 39 💬 — relatability):
+"Интересно, сколько людей сейчас листают Threads перед сном.
+
+И сколько из них буквально час назад
+говорили себе:
+«Сегодня лягу пораньше»."
+
+EXAMPLE 2 (198 ❤️, 25 💬 — nostalgia):
+"Я из того поколения 😊
+
+когда в первом классе сам шёл в школу
+и так же сам возвращался домой."
+
+EXAMPLE 3 (181 ❤️, 303 💬 — bold emotion):
+"Я русский и искренне горжусь своим происхождением, своим менталитетом
+и людьми, от которых иду. ❤️"
+
+EXAMPLE 4 (170 ❤️, 22 💬 — everyday observation + humor):
+"Меня одного всегда удивляет:
+
+билет туда — 5,000,
+а обратно — уже 20,000.
+
+Как будто самолёт обратно летит
+с каким-то премиальным апгрейдом воздуха."
+
+EXAMPLE 5 (58 ❤️, 14 💬 — personal list):
+"Живу с женой уже 12 лет, и скажу честно:
+1. Мы поддерживаем друг друга — я финансово, она своей космической энергией
+2. У нас простой баланс: она красивая, я сильный
+3. Она на первом месте, на втором — собаки
+4. Иногда ловлю себя на мысли, что боюсь её потерять, просто вслух об этом не говорю
+5. Чувства всё такие же сильные
+6. И я стараюсь делать всё, чтобы она чувствовала себя единственной принцессой
+7. В общем, я правда очень счастлив"
+
+EXAMPLE 6 (39 ❤️, 44 💬 — counterintuitive take):
+"Не понимаю, почему «гуру питания» так демонизируют пельмени.
+
+По сути это же нормальная база:
+углеводы + белок.
+
+Добавил овощей для клетчатки —
+и вполне себе сбалансированная тарелка."
+
+EXAMPLE 7 (27 ❤️, 53 💬 — provocation):
+"Бесит вот это слово «терпила».
+
+Тебя толпой отпиздили и ты написал заявление —
+«терпила».
+
+Сообщил о нарушении на дороге —
+«терпила».
+
+Пожаловался на реальную проблему —
+снова «терпила».
+
+Как будто защищать себя и требовать нормальных правил вдруг стало чем-то постыдным."
+
+EXAMPLE 8 (27 ❤️, 43 💬 — list with twist):
+"Три буквы, от которых вас начинает тошнить.
+
+Мои:
+
+НДС
+ЖКХ
+ПДД"
+
+EXAMPLE 9 (43 ❤️ — movie quote + reflection):
+"Фраза из одного моего любимого фильма, смысл которой каждый раз
+цепляет глубже:
+
+«Декстер, я люблю тебя... но ты мне больше не нравишься.»
+
+Иногда между этими двумя чувствами оказывается
+целая жизнь."
+
+EXAMPLE 10 (13 ❤️, 16 💬 — humor with punch):
+"Смешно бывает, когда говорю, что смотрю **«Битву экстрасенсов»**, и
+сразу слышу:
+«Да там же всё не по-настоящему».
+
+Бля, а у тебя любимый фильм **«Аватар»** —
+что, думаешь, это документалка?"
+
+━━━ VIRAL FORMAT RULES (from analysis of 50+ viral posts) ━━━
+STRUCTURE: short hook (1 line) → empty line → development (2-5 short lines, each on new line) → empty line → punchline/twist/question
+FORMATTING: short lines, lots of line breaks (\\n\\n), **bold** for emphasis, max 1-2 emoji per post or zero
+LENGTH: 150-500 characters sweet spot. NO hashtags inside post body.
+TONE: first person, conversational, as if talking to a friend. NOT lecturing, NOT motivating.
+WINNING FORMATS: "Меня одного удивляет...", "Я из того поколения...", "Бесит вот это...", "Три [noun] от которых...", "Что вы никогда не пробовали?", "Живу с [person] N лет, и скажу честно:", "Интересно, сколько людей...", "Объясните мне одну вещь.", "Представьте ситуацию:", "Запомните простую вещь:"
 
 ━━━ SEARCH STRATEGY (use ALL of these via Google Search) ━━━
 Phase 1 — Direct Threads crawl (prioritize thoughtful content):
@@ -2635,48 +2730,51 @@ For each post found:
 4. Estimate freshness from snippet dates, "ago" markers, or context
 5. Extract any visible engagement numbers (likes, comments, reposts, shares)
 6. Rate confidence: "high" = found real URL+text; "medium" = found via discussion/snippet; "low" = topic-inferred
-7. Rate virality_score 1-100 based on: INTELLECTUAL DEPTH (0-30), emotional resonance (0-25), shareability (0-25), debate potential (0-20)
-   ↑ Notice: intellectual depth is the HIGHEST weighted factor. A smart post with moderate engagement beats a dumb post with huge engagement.
+7. Rate virality_score 1-100 based on: RELATABILITY/ЖИЗА (0-30), emotional resonance (0-25), shareability (0-25), comment potential (0-20)
+   ↑ Notice: relatability ("это про меня!") is the HIGHEST weighted factor. A relatable post with moderate polish beats a polished post with no soul.
 
-If fewer than ${safeLimit} real posts found → fill with INFERRED posts based on current Google Trends data.
-For inferred posts: generate the kind of SMART, INSIGHT-DRIVEN post that WOULD trend on this topic — based on real data, counterintuitive angles, or expert-level observations. NOT generic motivation.
+If fewer than ${safeLimit} real posts found → fill with INFERRED posts in the EXACT style of the STYLE GUIDE examples above.
+For inferred posts: generate the kind of RELATABLE, PERSONAL, SHARP post that WOULD trend — based on current Google Trends data, everyday situations, and the winning formats from the style guide. NOT generic motivation. Write as a REAL person, first person, with specific details.
 Mark inferred: confidence "low", signal_type "inferred", author null, url null.
 NEVER invent @handles or URLs for inferred posts.
 
 ━━━ FOR EACH POST: GENERATE THE FOLLOWING ━━━
 
 1. 📊 VIRALITY SCORE (1-100):
-   Score based on: INTELLECTUAL DEPTH (0-30), emotional resonance (0-25), shareability (0-25), debate potential (0-20)
-   Intellectual depth = does the post teach something, reveal a hidden pattern, or reframe a common belief?
+   Score based on: RELATABILITY/ЖИЗА (0-30), emotional resonance (0-25), shareability (0-25), comment potential (0-20)
+   Relatability = does the reader instantly think "это про меня"? Does it describe a specific situation everyone recognizes?
    Also provide score_breakdown with each component score: { "depth": 0-30, "emotion": 0-25, "shareability": 0-25, "debate": 0-20 }
 
 2. 🧠 DEEP ANALYSIS:
-   - why_works: which INTELLECTUAL trigger fires (paradigm shift, hidden pattern, uncomfortable truth, expert contrarian view, data surprise, systemic exposure) — 2-3 sentences. Focus on WHY this makes people THINK, not just feel.
-   - hook: what grabs attention in first 1.5 seconds — what's the intellectual curiosity gap?
-   - conflict: the core tension/contradiction — what conventional wisdom does this challenge?
+   - why_works: which VIRAL trigger fires (жиза/relatability, nostalgia, provocation, unexpected twist, list-with-punch, uncomfortable truth, humor) — 2-3 sentences. Focus on WHY people will SHARE this and COMMENT.
+   - hook: what grabs attention in first 1.5 seconds — what makes the reader stop scrolling?
+   - conflict: the core tension/contradiction — what everyday frustration or observation does this tap into?
    - audience_pain: the universal human pain/desire/question it touches
    - cta_potential: how to turn readers into followers (1 sentence)
-   - key_insight: the ONE sentence takeaway that makes this post worth reading (this is what people will screenshot)
+   - key_insight: the ONE sentence people will screenshot and send to friends
 
 3. ✍️ FIVE PUBLICATION-READY VARIANTS — this is the CORE value:
    CRITICAL RULES for variants:
-   - Each variant is a COMPLETE ready-to-publish Threads post
-   - Include 3-5 relevant hashtags INSIDE each variant text (at the end)
-   - Threads optimal: 200-400 characters (sweet spot for engagement)
+   - Each variant is a COMPLETE ready-to-publish Threads post — COPY AND POST
+   - NO hashtags inside the post text! Hashtags go ONLY in the separate hashtags field
+   - Length: 150-500 characters (sweet spot for Threads engagement)
    - First line = scroll-stopping hook. Must work WITHOUT context.
-   - ZERO AI smell: no "в мире где", no "давайте разберёмся", no "важно понимать что", no "на самом деле"
-   - Write like a real ${langTag} creator with 50K followers who is witty, sharp AND SMART
-   - Each variant must contain a GENUINE INSIGHT or NON-OBVIOUS OBSERVATION — not just emotion
+   - ZERO AI smell: no "в мире где", no "давайте разберёмся", no "важно понимать что", no "на самом деле", no "в современном мире"
+   - Write like a REAL ${langTag} person with 50K followers — sharp, personal, conversational
+   - Write in FIRST PERSON — "Меня удивляет...", "Я из того поколения...", "Живу с женой 12 лет..."
+   - Use SPECIFIC DETAILS: numbers, places, exact quotes, brand names — NOT abstractions
    - Each variant must be so different that they could come from 5 different people
-   - Include line breaks where natural (Threads loves scannable formatting)
-   - NEVER write generic motivation. Every variant must leave the reader with a new thought they didn't have before.
+   - Use LINE BREAKS (\\n\\n) between every 1-2 sentences — Threads is MOBILE, short lines win
+   - Use **bold text** for key words/phrases that carry the punch
+   - Max 1-2 emoji per post, or ZERO. No emoji spam.
+   - NEVER write generic motivation. Every post must make the reader feel "это про меня" or "надо переслать"
 
-   The 5 styles (ALL must be intellectually substantive):
-   a) "bold" (🔥 Дерзкий): Opens with a CONTROVERSIAL but SMART hot take backed by logic. Not just provocation — a real argument that challenges conventional thinking. The reader disagrees at first, then thinks "wait, actually..."
-   b) "smart" (🧠 Умный): Unexpected reframe, hidden pattern, or "aha" insight with data/specifics. The kind of post people screenshot and send to friends. Counterintuitive angle backed by evidence or experience.
-   c) "emotional" (❤️ Эмоциональный): Raw, vulnerable, first-person confession that reveals a NON-OBVIOUS truth about human nature. Not just "life is hard" — but a specific realization that came from a specific moment. Insight through vulnerability.
-   d) "viral" (📢 Вирусный): Engineered for shares BUT with real substance. Hook→tension→reveal where the reveal is a GENUINE insight, not a platitude. The kind of post where people share it saying "THIS. Everyone needs to read this."
-   e) "personal" (💬 Личный): Intimate micro-story with a SPECIFIC detail (date, place, exact words someone said) that leads to a universal insight. The story is the vehicle, but the destination is a thought the reader never had before.
+   The 5 styles (ALL must be COPY-PASTE READY, matching the STYLE GUIDE examples above):
+   a) "bold" (🔥 Дерзкий): Provocation + argument + unexpected conclusion. Opener formats: "Бесит вот это...", "Объясните мне одну вещь.", "Не понимаю, почему...". Reader first disagrees, then thinks "а ведь правда...". Like Example 7 or 10 from style guide.
+   b) "smart" (🧠 Умный): Non-obvious everyday observation + specific details + insight. Formats: "Меня одного удивляет:", "Замечали, что...", "Запомните простую вещь:". The kind of post people screenshot. Like Example 4 or 6 from style guide.
+   c) "emotional" (❤️ Эмоциональный): Raw first-person story with vulnerability + universal truth. Formats: "Живу с женой N лет, и скажу честно:", "Я из того поколения...", "Мне N лет, и я до сих пор...". Specific moment → universal feeling. Like Example 2, 3, or 5 from style guide.
+   d) "viral" (📢 Вирусный): Maximum shares. Formats: "Три [noun] от которых [verb]:", numbered list with twist at the end, "Интересно, сколько людей сейчас...". Structure: hook → list/buildup → unexpected last item or punchline. Like Example 1 or 8 from style guide.
+   e) "personal" (💬 Личный): Question that forces engagement OR micro-confession. Formats: "Что вы никогда не пробовали?", "Какой совет вы бы дали себе в 18?", "Скажу то, что многие думают, но молчат:". Maximum comments. Like Example 9 from style guide.
 
 4. 🏷️ HASHTAGS — 8-12 hashtags per post:
    - 3-4 high-volume (500K+ posts): broad reach
@@ -2721,7 +2819,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       "key_insight": "the ONE sentence people will screenshot"
     },
     "variants": [
-      { "style": "bold",      "label": "Дерзкий",        "text": "full post with\\n\\nline breaks\\n\\n#хэштег1 #хэштег2 #хэштег3" },
+      { "style": "bold",      "label": "Дерзкий",        "text": "Бесит вот это слово «экономия».\\n\\nКупил кофе за 300 —\\nтебе говорят: «дорого».\\n\\nА потом эти же люди\\nберут кредит на **айфон**.\\n\\nЭкономия, говоришь?" },
       { "style": "smart",     "label": "Умный",           "text": "..." },
       { "style": "emotional", "label": "Эмоциональный",   "text": "..." },
       { "style": "viral",     "label": "Вирусный",        "text": "..." },
