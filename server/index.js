@@ -223,6 +223,10 @@ function getGeminiCacheKey(context) {
     hint: context.scene_hint,
     loc: context.location,
     solo: context.soloMode,
+    laugh: context.enableLaughter,
+    hook: context.hookAction?.id,
+    rel: context.releaseAction?.id,
+    aes: context.aesthetic,
   };
   return crypto.createHash('sha256').update(JSON.stringify(keyObj)).digest('hex').slice(0, 20);
 }
@@ -1881,33 +1885,55 @@ Format your response as a single dense paragraph optimized for AI image generati
       }
     };
 
-    const acProd = new AbortController();
-    const toProd = setTimeout(() => acProd.abort(), 30_000); // 30s timeout
-    const resp = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      signal: acProd.signal,
-    });
-    clearTimeout(toProd);
+    const MAX_RETRIES = 1;
+    let lastError = null;
+    let text = null;
 
-    const data = await resp.json();
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      const apiKey = attempt === 0 ? GEMINI_KEY : (nextGeminiKey() || GEMINI_KEY);
+      const tryUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+      const acProd = new AbortController();
+      const toProd = setTimeout(() => acProd.abort(), 30_000);
+      try {
+        const resp = await fetch(tryUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+          signal: acProd.signal,
+        });
+        clearTimeout(toProd);
 
-    if (!resp.ok) {
-      const errMsg = data.error?.message || JSON.stringify(data.error) || 'AI error';
-      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          lastError = data.error?.message || JSON.stringify(data.error) || 'AI error';
+          if ((resp.status === 429 || resp.status >= 500) && attempt < MAX_RETRIES) {
+            await new Promise(r => setTimeout(r, 1500));
+            continue;
+          }
+          return res.status(resp.status).json({ error: `Ошибка AI: ${lastError}` });
+        }
+
+        text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) break;
+        lastError = 'AI не вернул контент';
+        if (attempt < MAX_RETRIES) await new Promise(r => setTimeout(r, 800));
+      } catch (fetchErr) {
+        clearTimeout(toProd);
+        lastError = fetchErr.message;
+        if (attempt < MAX_RETRIES) await new Promise(r => setTimeout(r, 1000));
+      }
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) {
-      return res.status(422).json({ error: 'AI не вернул описание. Попробуйте другое фото.' });
+      return res.status(422).json({ error: `AI не вернул описание. ${lastError || 'Попробуйте другое фото.'}` });
     }
 
     res.json({
       description_en: text.trim(),
       language: lang,
       model: 'ferixdi-ai-v2',
-      tokens: data.usageMetadata?.totalTokenCount || 0,
+      tokens: 0,
     });
 
   } catch (e) {
@@ -2379,9 +2405,9 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
         signal: acTrend2.signal,
       });
       clearTimeout(toTrend2);
-      data = await resp.json();
-      if (!resp.ok) {
-        return res.status(resp.status).json({ error: data.error?.message || 'AI error' });
+      try { data = await resp.json(); } catch { data = {}; }
+      if (!resp.ok || !data.candidates) {
+        return res.status(resp.status || 502).json({ error: data.error?.message || 'AI не ответил. Попробуйте снова.' });
       }
     }
 
@@ -2582,8 +2608,13 @@ app.post('/api/threads-trends', authMiddleware, async (req, res) => {
   // ──── THE MEGA PROMPT ────
   const prompt = `Today is ${dateStr}. You are the world's best Threads content strategist and trend analyst.
 
-⚠️ CRITICAL INSTRUCTION: You MUST use Google Search to find what is ACTUALLY happening in the world RIGHT NOW.
-DO NOT generate generic posts from memory. Every post must be rooted in a REAL current event, news story, or trend.
+⚠️ CRITICAL INSTRUCTION: You MUST use Google Search to find what is ACTUALLY happening in the world RIGHT NOW (today is ${dateStr}).
+DO NOT generate generic posts from memory. DO NOT recycle old news from 2024 or 2025. Every post must be rooted in a REAL current event from the LAST 48 HOURS.
+
+🚫 STALENESS CHECK: Before outputting ANY post, verify:
+- Is this event from the last 48 hours? If NO → SKIP IT
+- Would a reader TODAY say "это же старая новость"? If YES → SKIP IT
+- Events like Apple iPad crush ad, Scarlett Johansson vs OpenAI, Telegram Stars launch, first Neuralink implant — these are OLD (2024). DO NOT USE THEM.
 
 ━━━ MISSION ━━━
 STEP 1: Use Google Search to find TODAY's hottest news, events, and trending topics:
@@ -2815,7 +2846,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
   try {
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_KEY}`;
 
-    // Attempt 1: WITH Google Search grounding (finds real posts via web)
+    // ── Attempt 1: google_search tool (Gemini 2.0+ format) ──
     const ac1 = new AbortController();
     const to1 = setTimeout(() => ac1.abort(), 120_000);
     let resp = await fetch(geminiUrl, {
@@ -2834,22 +2865,65 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
     try { data = await resp.json(); } catch { data = {}; }
 
     let usedGrounding = false;
+    const gMeta1 = data.candidates?.[0]?.groundingMetadata;
+    const hasRealGrounding = !!(gMeta1?.groundingChunks?.length || gMeta1?.searchEntryPoint);
 
-    // Detailed grounding debug logging
-    console.log('[THREADS] Attempt 1 (grounding):', {
-      ok: resp.ok,
-      status: resp.status,
+    console.log('[THREADS] Attempt 1 (google_search):', {
+      ok: resp.ok, status: resp.status,
       hasCandidates: !!data.candidates,
-      hasGroundingMeta: !!data.candidates?.[0]?.groundingMetadata,
-      hasSearchEntryPoint: !!data.candidates?.[0]?.groundingMetadata?.searchEntryPoint,
+      hasGroundingMeta: !!gMeta1,
+      hasGroundingChunks: gMeta1?.groundingChunks?.length || 0,
+      hasSearchEntryPoint: !!gMeta1?.searchEntryPoint,
       errorMsg: data.error?.message || 'none',
       finishReason: data.candidates?.[0]?.finishReason,
-      partsCount: data.candidates?.[0]?.content?.parts?.length,
     });
 
-    // Attempt 2: WITHOUT grounding if quota/region/billing issue
+    // ── Attempt 2: google_search_retrieval (Gemini 1.5 format, forces dynamic retrieval) ──
+    if (!resp.ok || !data.candidates || (resp.ok && data.candidates && !hasRealGrounding)) {
+      const reason = !resp.ok ? 'HTTP error' : !data.candidates ? 'no candidates' : 'no grounding chunks';
+      console.warn(`[THREADS] Attempt 1 insufficient (${reason}), trying google_search_retrieval...`);
+      const ac1b = new AbortController();
+      const to1b = setTimeout(() => ac1b.abort(), 120_000);
+      try {
+        const resp1b = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            tools: [{ google_search_retrieval: { dynamic_retrieval_config: { mode: 'MODE_DYNAMIC', dynamic_threshold: 0.1 } } }],
+            generationConfig: { temperature: 0.85, maxOutputTokens: 32768 },
+          }),
+          signal: ac1b.signal,
+        });
+        clearTimeout(to1b);
+        let data1b;
+        try { data1b = await resp1b.json(); } catch { data1b = {}; }
+        const gMeta1b = data1b.candidates?.[0]?.groundingMetadata;
+        const hasReal1b = !!(gMeta1b?.groundingChunks?.length || gMeta1b?.searchEntryPoint);
+        console.log('[THREADS] Attempt 2 (google_search_retrieval):', {
+          ok: resp1b.ok, hasGroundingChunks: gMeta1b?.groundingChunks?.length || 0, hasSearchEntryPoint: !!gMeta1b?.searchEntryPoint,
+        });
+        if (resp1b.ok && data1b.candidates && hasReal1b) {
+          resp = resp1b; data = data1b;
+          usedGrounding = true;
+          console.log('[THREADS] ✓ google_search_retrieval succeeded with grounding');
+        } else if (resp1b.ok && data1b.candidates && !hasRealGrounding) {
+          // Use these results even without grounding — they're at least fresh from attempt 2
+          resp = resp1b; data = data1b;
+          console.log('[THREADS] google_search_retrieval returned candidates but no grounding chunks');
+        }
+      } catch (e2) {
+        clearTimeout(to1b);
+        console.warn('[THREADS] Attempt 2 failed:', e2.message);
+      }
+    } else if (hasRealGrounding) {
+      usedGrounding = true;
+      console.log('[THREADS] ✓ Attempt 1 grounded with', gMeta1.groundingChunks?.length || 0, 'chunks');
+    }
+
+    // ── Attempt 3: WITHOUT grounding (last resort) ──
     if (!resp.ok || !data.candidates) {
-      console.warn('[THREADS] Grounding attempt failed, retrying without grounding. Error:', data.error?.message, '| Status:', resp.status);
+      console.warn('[THREADS] All grounding attempts failed, retrying without grounding. Error:', data.error?.message);
       const ac2 = new AbortController();
       const to2 = setTimeout(() => ac2.abort(), 120_000);
       resp = await fetch(geminiUrl, {
@@ -2862,12 +2936,9 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
         signal: ac2.signal,
       });
       clearTimeout(to2);
-      data = await resp.json();
-      console.log('[THREADS] Attempt 2 (no grounding):', { ok: resp.ok, status: resp.status, hasCandidates: !!data.candidates });
-      if (!resp.ok) return res.status(resp.status).json({ error: data.error?.message || 'AI error' });
-    } else {
-      usedGrounding = !!(data.candidates?.[0]?.groundingMetadata);
-      console.log('[THREADS] Grounding result:', usedGrounding ? 'GROUNDED' : 'NOT GROUNDED (model did not search)');
+      try { data = await resp.json(); } catch { data = {}; }
+      console.log('[THREADS] Attempt 3 (no grounding):', { ok: resp.ok, status: resp.status, hasCandidates: !!data.candidates });
+      if (!resp.ok) return res.status(resp.status || 502).json({ error: data.error?.message || 'AI error' });
     }
 
     // Grounding responses may have multiple parts — concatenate all text parts
@@ -2918,7 +2989,9 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
         reposts_est: String((p.signals?.reposts_est) || 'неизвестно').slice(0, 20),
       },
       confidence: ['high', 'medium', 'low'].includes(p.confidence) ? p.confidence : 'low',
-      signal_type: ['direct', 'inferred'].includes(p.signal_type) ? p.signal_type : 'inferred',
+      signal_type: ['direct', 'inferred', 'news_reaction', 'trend_take', 'event_humor'].includes(p.signal_type) ? p.signal_type : 'inferred',
+      news_source: p.news_source ? String(p.news_source).slice(0, 300) : null,
+      news_url: (p.news_url && /^https?:\/\//.test(String(p.news_url))) ? String(p.news_url).slice(0, 500) : null,
       topic_tag: String(p.topic_tag || '').slice(0, 60),
       virality_score: Math.min(100, Math.max(0, parseInt(p.virality_score) || 0)),
       score_breakdown: {
@@ -2959,8 +3032,32 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       },
     })).filter(p => p.text.length > 10);
 
-    // Sort by virality score descending
-    posts.sort((a, b) => b.virality_score - a.virality_score);
+    // ── Staleness detection: flag posts referencing known old events ──
+    const _stalePatterns = [
+      /ipad.*пресс|crush.*ad|гидравлич.*пресс.*ipad/i,
+      /скарлетт.*йоханссон.*openai|johansson.*openai|голос.*sky/i,
+      /telegram.*звёзд|telegram.*stars.*запуск|внутренн.*валют.*telegram/i,
+      /neuralink.*перв.*доброволец|первый.*чип.*мозг.*neuralink/i,
+      /microsoft.*recall.*скриншот|recall.*каждые.*секунд/i,
+    ];
+    let staleCount = 0;
+    posts.forEach(p => {
+      const fullText = `${p.text} ${p.news_source || ''}`;
+      if (_stalePatterns.some(rx => rx.test(fullText))) {
+        p._stale = true;
+        staleCount++;
+      }
+    });
+    if (staleCount > 0) {
+      console.warn(`[THREADS] ⚠️ ${staleCount}/${posts.length} posts flagged as stale (recycled old news)`);
+    }
+    // Move stale posts to the end
+    posts.sort((a, b) => (a._stale ? 1 : 0) - (b._stale ? 1 : 0) || b.virality_score - a.virality_score);
+    // Clean up internal flag
+    posts.forEach(p => { delete p._stale; });
+
+    const hasFreshContent = staleCount < posts.length;
+    const effectiveGrounding = usedGrounding && hasFreshContent;
 
     res.json({
       posts,
@@ -2968,10 +3065,13 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       niche,
       lang,
       fetched_at: now.toISOString(),
-      used_grounding: usedGrounding,
-      source_note: usedGrounding
-        ? 'Посты найдены через Google Search в реальном времени. Ссылки ведут на реальные посты.'
-        : 'AI-анализ трендов на основе обученных данных. Реальные ссылки недоступны.',
+      used_grounding: effectiveGrounding,
+      source_note: effectiveGrounding
+        ? '📰 На основе реальных новостей (Google Search). Каждый пост привязан к актуальному событию.'
+        : staleCount > posts.length / 2
+          ? '⚠️ AI не смог найти свежие новости. Часть постов может быть основана на старых событиях.'
+          : '🧠 AI-тренды на основе актуальных событий. Без привязки к конкретным новостям.',
+      stale_count: staleCount,
       total: posts.length,
     });
 
@@ -3052,9 +3152,10 @@ ${locCatalog}` : ''}
     });
     clearTimeout(to);
 
-    const data = await resp.json();
+    let data;
+    try { data = await resp.json(); } catch { data = {}; }
     if (!resp.ok) {
-      return res.status(resp.status).json({ error: `AI ошибка: ${data.error?.message || 'unknown'}` });
+      return res.status(resp.status || 502).json({ error: `AI ошибка: ${data.error?.message || 'unknown'}` });
     }
 
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -3079,6 +3180,11 @@ ${locCatalog}` : ''}
 // ─── POST /api/consult — Free AI consultation (NO auth required) ──────
 app.post('/api/consult', async (req, res) => {
   const ip = getClientIP(req);
+
+  // Per-IP consult rate limit — 5 per 10min (free endpoint, prevent abuse)
+  if (!checkRateLimit(`consult:${ip}`, RL_CONSULT.window, RL_CONSULT.max)) {
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите несколько минут.' });
+  }
 
   // Global Gemini rate limit — 1 request per user per 1 min
   if (!checkRateLimit(`gemini:${ip}`, RL_GEMINI.window, RL_GEMINI.max)) {
@@ -3379,12 +3485,13 @@ STUDIO = СБОРЩИК ПРОМПТОВ: Studio НЕ генерирует ви�
     });
     clearTimeout(toCon);
 
-    const data = await resp.json();
+    let data;
+    try { data = await resp.json(); } catch { data = {}; }
 
     if (!resp.ok) {
       const errMsg = data.error?.message || 'AI error';
       console.error('Consult API error:', errMsg);
-      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
+      return res.status(resp.status || 502).json({ error: `Ошибка AI: ${errMsg}` });
     }
 
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -3407,6 +3514,10 @@ STUDIO = СБОРЩИК ПРОМПТОВ: Studio НЕ генерирует ви�
 const RL_TRANSLATE = { window: 60_000, max: 6 }; // 6 per min
 app.post('/api/translate', authMiddleware, async (req, res) => {
   const uid = req.user?.userId || req.user?.hash || getClientIP(req);
+  // Per-user translate rate limit — 6 per min
+  if (!checkRateLimit(`translate:${uid}`, RL_TRANSLATE.window, RL_TRANSLATE.max)) {
+    return res.status(429).json({ error: 'Слишком много переводов. Подождите минуту.' });
+  }
   // Global Gemini rate limit — 1 request per user per 1 min
   if (!checkRateLimit(`gemini:${uid}`, RL_GEMINI.window, RL_GEMINI.max)) {
     const entry = _rateBuckets.get(`gemini:${uid}`);
@@ -3496,10 +3607,11 @@ Return ONLY valid JSON (no markdown):
     });
     clearTimeout(toTr);
 
-    const data = await resp.json();
+    let data;
+    try { data = await resp.json(); } catch { data = {}; }
     if (!resp.ok) {
       const errMsg = data.error?.message || 'AI error';
-      return res.status(resp.status).json({ error: `Ошибка AI: ${errMsg}` });
+      return res.status(resp.status || 502).json({ error: `Ошибка AI: ${errMsg}` });
     }
 
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -3512,7 +3624,15 @@ Return ONLY valid JSON (no markdown):
       const cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
       parsed = JSON.parse(cleaned);
     } catch {
-      return res.status(422).json({ error: 'Не удалось разобрать ответ AI. Попробуйте снова.' });
+      // Fallback: extract first { ... } block
+      try {
+        const braceMatch = text.match(/\{[\s\S]*\}/);
+        if (braceMatch) parsed = JSON.parse(braceMatch[0]);
+      } catch { /* last resort failed */ }
+      if (!parsed) {
+        console.error('[TRANSLATE] JSON parse failed. First 300 chars:', text.slice(0, 300));
+        return res.status(422).json({ error: 'Не удалось разобрать ответ AI. Попробуйте снова.' });
+      }
     }
 
     res.json(parsed);
@@ -3545,10 +3665,10 @@ app.get('/api/admin/stats', (req, res) => {
   });
 });
 
-// ─── POST /api/logout — invalidate JWT token ──────────────────────
-app.post('/api/logout', authMiddleware, (req, res) => {
-  req.user = null;
-  res.json({ success: true });
+// ─── POST /api/logout — alias for /api/auth/logout (clear httpOnly cookie) ──
+app.post('/api/logout', (req, res) => {
+  res.setHeader('Set-Cookie', 'ferixdi_jwt=; HttpOnly; SameSite=Strict; Max-Age=0; Path=/');
+  res.json({ ok: true });
 });
 
 // ─── Health Check Endpoint ───────────────────────

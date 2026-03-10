@@ -2635,7 +2635,8 @@ async function handleProductFile(file) {
         headers,
         body: JSON.stringify({ image_base64: base64, mime_type: mimeType }),
       });
-      const data = await resp.json();
+      let data;
+      try { const t = await resp.text(); data = t ? JSON.parse(t) : {}; } catch { data = {}; }
 
       if (!resp.ok) {
         showProductStatus(`❌ ${data.error || 'Ошибка'}`, 'text-red-400');
@@ -2769,7 +2770,8 @@ async function handlePostGenPhoto(file) {
           language: document.getElementById('post-photo-lang-ru')?.checked ? 'ru' : 'en',
         }),
       });
-      const data = await resp.json();
+      let data;
+      try { const t = await resp.text(); data = t ? JSON.parse(t) : {}; } catch { data = {}; }
 
       if (!resp.ok) {
         showPostPhotoStatus(`${data.error || 'Ошибка'}`, 'text-red-400');
@@ -5502,7 +5504,8 @@ function initConsultation() {
         body: JSON.stringify({ question, context }),
       });
 
-      const data = await resp.json();
+      let data;
+      try { const t = await resp.text(); data = t ? JSON.parse(t) : {}; } catch { data = {}; }
 
       if (!resp.ok) {
         throw new Error(data.error || `Ошибка ${resp.status}`);
@@ -6773,7 +6776,8 @@ async function generateABVariants() {
     }
 
     const resp = await fetch(`${apiBase}/api/generate`, { method: 'POST', headers, body: JSON.stringify(payload) });
-    const data = await resp.json();
+    let data;
+    try { const t = await resp.text(); data = t ? JSON.parse(t) : {}; } catch { data = {}; }
 
     if (!resp.ok) {
       showNotification(data.error || 'Ошибка A/B генерации', 'error');
@@ -7808,12 +7812,15 @@ function initThreadsTrends() {
       _threadsData = data.posts || [];
       _threadsLastResponse = data;
 
-      // Source badge
+      // Source badge — 3 states: grounded / stale warning / AI-only
       if (badgeEl) {
         badgeEl.classList.remove('hidden');
         if (data.used_grounding) {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
           badgeEl.textContent = '📰 На основе реальных новостей';
+        } else if (data.stale_count > _threadsData.length / 2) {
+          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-amber-500/15 text-amber-400 border-amber-500/30';
+          badgeEl.textContent = '⚠️ Часть постов может быть неактуальна';
         } else {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-violet-500/15 text-violet-400 border-violet-500/30';
           badgeEl.textContent = '🧠 AI-тренды на основе актуальных событий';
@@ -7829,7 +7836,8 @@ function initThreadsTrends() {
       // Status
       if (statusEl) {
         const src = data.used_grounding ? 'на основе реальных новостей' : 'на основе AI-трендов';
-        statusEl.innerHTML = `<span class="text-emerald-400">✓ Создано ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>`;
+        const staleWarn = data.stale_count > 0 ? ` · <span class="text-amber-400">${data.stale_count} устаревших</span>` : '';
+        statusEl.innerHTML = `<span class="text-emerald-400">✓ Создано ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>${staleWarn}`;
       }
 
       // Summary stats
