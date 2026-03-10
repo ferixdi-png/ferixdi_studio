@@ -1383,6 +1383,9 @@ function navigateTo(section) {
   // Refresh history when navigating to history section
   if (section === 'history') renderHistory();
 
+  // Threads Trends: update gate on each visit
+  if (section === 'threads-trends') _onThreadsTrendsEnter();
+
   // Lazy init heavy sections on first visit
   if (!_lazyInited.has(section)) {
     _lazyInited.add(section);
@@ -7819,6 +7822,561 @@ function initEducation() {
   setTimeout(() => updateEduProgress(), 500);
 }
 
+// ─── THREADS TRENDS — Best parser: no API, no auth, Google Search + AI ──────
+// State
+let _threadsData = [];         // last fetched posts
+let _threadsExcludeBig = false;
+let _threadsLastResponse = null; // full API response for batch copy
+
+function initThreadsTrends() {
+  const searchBtn  = document.getElementById('threads-search-btn');
+  const statusEl   = document.getElementById('threads-status');
+  const resultsEl  = document.getElementById('threads-results');
+  const lockedEl   = document.getElementById('threads-locked');
+  const activeEl   = document.getElementById('threads-active');
+  const badgeEl    = document.getElementById('threads-source-badge');
+  const copyAllBtn = document.getElementById('threads-copy-all-btn');
+  const summaryEl  = document.getElementById('threads-summary');
+  const exTrack    = document.getElementById('threads-exclude-track');
+  const exThumb    = document.getElementById('threads-exclude-thumb');
+  const exCb       = document.getElementById('threads-exclude-big');
+  if (!searchBtn) return;
+
+  // ─ Quick topic chips ─
+  document.querySelectorAll('.threads-topic-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = document.getElementById('threads-query');
+      if (q) { q.value = chip.dataset.topic || ''; q.focus(); }
+      _saveThreadsFilters();
+      sfx.clickSoft();
+    });
+  });
+
+  // ─ Toggle for exclude-big ─
+  if (exTrack && exCb) {
+    exTrack.addEventListener('click', () => {
+      _threadsExcludeBig = !_threadsExcludeBig;
+      exCb.checked = _threadsExcludeBig;
+      exTrack.classList.toggle('bg-violet-600', _threadsExcludeBig);
+      exTrack.classList.toggle('bg-gray-700', !_threadsExcludeBig);
+      exTrack.classList.toggle('border-violet-500', _threadsExcludeBig);
+      if (exThumb) {
+        exThumb.classList.toggle('translate-x-4', _threadsExcludeBig);
+        exThumb.classList.toggle('bg-white', _threadsExcludeBig);
+        exThumb.classList.toggle('bg-gray-400', !_threadsExcludeBig);
+      }
+      _saveThreadsFilters();
+    });
+  }
+
+  // ─ Enter to search ─
+  document.getElementById('threads-query')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); searchBtn.click(); }
+  });
+
+  // ─ Persist filters on change ─
+  ['threads-lang','threads-freshness','threads-limit','threads-niche'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', _saveThreadsFilters);
+  });
+  document.getElementById('threads-query')?.addEventListener('input', _saveThreadsFilters);
+
+  // ─ Restore saved filters ─
+  _loadThreadsFilters();
+
+  // ─ Gating: show/hide on section entry ─
+  _updateThreadsGate();
+
+  // ─ Copy All button ─
+  if (copyAllBtn) {
+    copyAllBtn.addEventListener('click', () => {
+      if (!_threadsData.length) return;
+      const allText = _threadsData.map((p, i) => {
+        const header = `━━━ ПОСТ #${i + 1} ━━━`;
+        const original = `📝 Оригинал:\n${p.text}`;
+        const variants = (p.variants || []).map(v => `\n${_varStyleMeta[v.style]?.icon || '✦'} ${v.label}:\n${v.text}`).join('');
+        const hashtags = _allHashtags(p).join(' ');
+        const time = p.best_time?.time ? `\n⏰ Лучшее время: ${p.best_time.day || ''} ${p.best_time.time}` : '';
+        return `${header}\n${original}\n${variants}${hashtags ? '\n\n🏷️ Хэштеги: ' + hashtags : ''}${time}`;
+      }).join('\n\n\n');
+      navigator.clipboard.writeText(allText).then(() => {
+        copyAllBtn.textContent = '✓ Скопировано!'; sfx.copy();
+        setTimeout(() => { copyAllBtn.textContent = '📋 Копировать всё'; }, 2000);
+      });
+    });
+  }
+
+  // ─ Search button ─
+  searchBtn.addEventListener('click', async () => {
+    if (!isPromoValid()) {
+      if (lockedEl) lockedEl.classList.remove('hidden');
+      if (activeEl) activeEl.classList.add('hidden');
+      return;
+    }
+
+    const query     = (document.getElementById('threads-query')?.value || '').trim();
+    const lang      = document.getElementById('threads-lang')?.value || 'ru';
+    const freshness = document.getElementById('threads-freshness')?.value || '24h';
+    const niche     = document.getElementById('threads-niche')?.value || 'any';
+    const limit     = parseInt(document.getElementById('threads-limit')?.value) || 8;
+
+    searchBtn.disabled = true;
+    const btnLabel = document.getElementById('threads-btn-label');
+    if (btnLabel) btnLabel.textContent = 'Ищу тренды…';
+    if (copyAllBtn) copyAllBtn.classList.add('hidden');
+    if (summaryEl) summaryEl.classList.add('hidden');
+
+    if (statusEl) {
+      statusEl.classList.remove('hidden');
+      statusEl.innerHTML = `<div class="flex items-center gap-2">
+        <span class="text-violet-400 animate-pulse">🔍 Сканирую threads.net через Google Search…</span>
+        <span class="text-[9px] text-gray-600">обычно 15-30 сек</span>
+      </div>`;
+    }
+    if (resultsEl) resultsEl.innerHTML = _renderSkeletons(limit);
+    if (badgeEl) badgeEl.classList.add('hidden');
+
+    try {
+      const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+      const jwt    = localStorage.getItem('ferixdi_jwt');
+      const resp   = await fetch(`${apiUrl}/api/threads-trends`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
+        body: JSON.stringify({ query, lang, freshness, niche, limit, exclude_big: _threadsExcludeBig }),
+      });
+
+      let data;
+      try { const t = await resp.text(); data = t ? JSON.parse(t) : {}; } catch { data = {}; }
+
+      if (!resp.ok) {
+        if (statusEl) statusEl.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(data.error || `Ошибка ${resp.status}`)}</span>`;
+        if (resultsEl) resultsEl.innerHTML = '';
+        return;
+      }
+
+      _threadsData = data.posts || [];
+      _threadsLastResponse = data;
+
+      // Source badge
+      if (badgeEl) {
+        badgeEl.classList.remove('hidden');
+        if (data.used_grounding) {
+          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+          badgeEl.textContent = '🌐 Google Search';
+        } else {
+          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-gray-500/15 text-gray-400 border-gray-600/30';
+          badgeEl.textContent = '🧠 AI-анализ';
+        }
+      }
+
+      if (!_threadsData.length) {
+        if (statusEl) statusEl.innerHTML = '<span class="text-amber-400">⚠️ Посты не найдены. Попробуй другую тему или расширь фильтры.</span>';
+        if (resultsEl) resultsEl.innerHTML = '';
+        return;
+      }
+
+      // Status
+      if (statusEl) {
+        const src = data.used_grounding ? 'Google Search' : 'AI-анализ';
+        statusEl.innerHTML = `<span class="text-emerald-400">✓ Найдено ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>`;
+      }
+
+      // Summary stats
+      if (summaryEl) {
+        const avgScore = _threadsData.length ? Math.round(_threadsData.reduce((s, p) => s + (p.virality_score || 0), 0) / _threadsData.length) : 0;
+        const mostCommonTime = _threadsData.find(p => p.best_time?.time)?.best_time;
+        document.getElementById('threads-stat-count').textContent = _threadsData.length;
+        document.getElementById('threads-stat-avg').textContent = avgScore + '/100';
+        document.getElementById('threads-stat-time').textContent = mostCommonTime ? `${mostCommonTime.day || ''} ${mostCommonTime.time}` : '—';
+        document.getElementById('threads-stat-source').textContent = data.source_note || '';
+        summaryEl.classList.remove('hidden');
+      }
+
+      // Show copy all
+      if (copyAllBtn) copyAllBtn.classList.remove('hidden');
+
+      _renderThreadsPosts();
+      log('OK', 'THREADS', `Загружено ${_threadsData.length} трендовых постов`);
+
+    } catch (e) {
+      if (statusEl) statusEl.innerHTML = `<span class="text-red-400">❌ Ошибка сети: ${escapeHtml(e.message)}</span>`;
+      if (resultsEl) resultsEl.innerHTML = '';
+      log('ERR', 'THREADS', e.message);
+    } finally {
+      searchBtn.disabled = false;
+      if (btnLabel) btnLabel.textContent = 'Обновить';
+    }
+  });
+
+  // ─ Result interactions via delegation ─
+  if (resultsEl) {
+    resultsEl.addEventListener('click', e => {
+      // Copy post text
+      const copyPost = e.target.closest('.threads-copy-post');
+      if (copyPost) {
+        const text = copyPost.dataset.text || '';
+        navigator.clipboard.writeText(text).then(() => {
+          copyPost.textContent = '✓ Скопировано'; sfx.copy();
+          setTimeout(() => { copyPost.textContent = '📋 Копировать'; }, 1500);
+        });
+        return;
+      }
+      // Copy variant text
+      const copyVar = e.target.closest('.threads-copy-variant');
+      if (copyVar) {
+        const text = copyVar.dataset.text || '';
+        navigator.clipboard.writeText(text).then(() => {
+          copyVar.textContent = '✓'; sfx.copy();
+          setTimeout(() => { copyVar.textContent = '📋'; }, 1400);
+        });
+        return;
+      }
+      // Copy hashtags
+      const copyHash = e.target.closest('.threads-copy-hashtags');
+      if (copyHash) {
+        const text = copyHash.dataset.text || '';
+        navigator.clipboard.writeText(text).then(() => {
+          copyHash.textContent = '✓ Скопировано'; sfx.copy();
+          setTimeout(() => { copyHash.textContent = '📋 Копировать хэштеги'; }, 1500);
+        });
+        return;
+      }
+      // Variant style tab switch
+      const varTab = e.target.closest('.threads-var-tab');
+      if (varTab) {
+        const card = varTab.closest('[data-post-id]');
+        if (!card) return;
+        const style = varTab.dataset.style;
+        _switchVariantTab(card, style);
+        sfx.clickSoft();
+        return;
+      }
+      // Expand/collapse analysis
+      const toggleAnalysis = e.target.closest('.threads-toggle-analysis');
+      if (toggleAnalysis) {
+        const card = toggleAnalysis.closest('[data-post-id]');
+        const body = card?.querySelector('.threads-analysis-body');
+        if (!body) return;
+        const isHidden = body.classList.contains('hidden');
+        body.classList.toggle('hidden', !isHidden);
+        toggleAnalysis.textContent = isHidden ? '▲ Скрыть анализ' : '▼ Почему это вирусно';
+        sfx.clickSoft();
+        return;
+      }
+      // Expand/collapse reels
+      const toggleReels = e.target.closest('.threads-toggle-reels');
+      if (toggleReels) {
+        const card = toggleReels.closest('[data-post-id]');
+        const body = card?.querySelector('.threads-reels-body');
+        if (!body) return;
+        const isHidden = body.classList.contains('hidden');
+        body.classList.toggle('hidden', !isHidden);
+        toggleReels.textContent = isHidden ? '▲ Скрыть' : '🎬 Идеи для Reels';
+        sfx.clickSoft();
+        return;
+      }
+      // Expand/collapse hashtags
+      const toggleHash = e.target.closest('.threads-toggle-hashtags');
+      if (toggleHash) {
+        const card = toggleHash.closest('[data-post-id]');
+        const body = card?.querySelector('.threads-hashtags-body');
+        if (!body) return;
+        body.classList.toggle('hidden');
+        sfx.clickSoft();
+        return;
+      }
+    });
+  }
+}
+
+function _allHashtags(post) {
+  if (!post.hashtags) return [];
+  return [...(post.hashtags.high_volume || []), ...(post.hashtags.mid_volume || []), ...(post.hashtags.niche || [])];
+}
+
+function _onThreadsTrendsEnter() {
+  _updateThreadsGate();
+}
+
+function _updateThreadsGate() {
+  const lockedEl = document.getElementById('threads-locked');
+  const activeEl = document.getElementById('threads-active');
+  const lockNav  = document.getElementById('threads-nav-lock');
+  if (!lockedEl || !activeEl) return;
+  if (isPromoValid()) {
+    lockedEl.classList.add('hidden');
+    activeEl.classList.remove('hidden');
+    if (lockNav) { lockNav.textContent = 'VIP'; lockNav.className = 'ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold'; }
+  } else {
+    lockedEl.classList.remove('hidden');
+    activeEl.classList.add('hidden');
+    if (lockNav) { lockNav.textContent = '🔒'; lockNav.className = 'ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold'; }
+  }
+}
+
+function _saveThreadsFilters() {
+  try {
+    localStorage.setItem('ferixdi_threads_filters', JSON.stringify({
+      query:      document.getElementById('threads-query')?.value || '',
+      lang:       document.getElementById('threads-lang')?.value || 'ru',
+      freshness:  document.getElementById('threads-freshness')?.value || '24h',
+      niche:      document.getElementById('threads-niche')?.value || 'any',
+      limit:      document.getElementById('threads-limit')?.value || '8',
+      excludeBig: _threadsExcludeBig,
+    }));
+  } catch { /* quota */ }
+}
+
+function _loadThreadsFilters() {
+  try {
+    const saved = localStorage.getItem('ferixdi_threads_filters');
+    if (!saved) return;
+    const f = JSON.parse(saved);
+    const q   = document.getElementById('threads-query');
+    const l   = document.getElementById('threads-lang');
+    const fr  = document.getElementById('threads-freshness');
+    const ni  = document.getElementById('threads-niche');
+    const lim = document.getElementById('threads-limit');
+    if (q && f.query)      q.value = f.query;
+    if (l && f.lang)       l.value = f.lang;
+    if (fr && f.freshness) fr.value = f.freshness;
+    if (ni && f.niche)     ni.value = f.niche;
+    if (lim && f.limit)    lim.value = f.limit;
+    if (f.excludeBig) {
+      _threadsExcludeBig = true;
+      const track = document.getElementById('threads-exclude-track');
+      const thumb = document.getElementById('threads-exclude-thumb');
+      const cb    = document.getElementById('threads-exclude-big');
+      if (cb) cb.checked = true;
+      if (track) { track.classList.add('bg-violet-600','border-violet-500'); track.classList.remove('bg-gray-700'); }
+      if (thumb) { thumb.classList.add('translate-x-4','bg-white'); thumb.classList.remove('bg-gray-400'); }
+    }
+  } catch { /* ignore */ }
+}
+
+function _renderSkeletons(n) {
+  return Array.from({ length: Math.min(n, 4) }).map((_, i) => `
+    <div class="glass-panel p-0 overflow-hidden border border-gray-700/20 animate-pulse" style="animation-delay:${i * 0.1}s">
+      <div class="p-4 space-y-3">
+        <div class="flex gap-2"><div class="h-2.5 bg-gray-700/50 rounded w-16"></div><div class="h-2.5 bg-gray-700/40 rounded w-20"></div><div class="h-2.5 bg-gray-700/30 rounded w-12"></div></div>
+        <div class="h-3 bg-gray-700/50 rounded w-full"></div>
+        <div class="h-3 bg-gray-700/40 rounded w-5/6"></div>
+        <div class="h-3 bg-gray-700/30 rounded w-3/4"></div>
+        <div class="flex gap-2 mt-2"><div class="h-6 bg-gray-700/30 rounded w-24"></div><div class="h-6 bg-gray-700/20 rounded w-20"></div></div>
+      </div>
+      <div class="border-t border-gray-700/20 p-4 space-y-2">
+        <div class="h-2 bg-violet-500/10 rounded w-40"></div>
+        <div class="flex gap-1.5"><div class="h-6 bg-violet-500/10 rounded w-16"></div><div class="h-6 bg-violet-500/8 rounded w-14"></div><div class="h-6 bg-violet-500/5 rounded w-18"></div></div>
+        <div class="h-10 bg-violet-500/5 rounded w-full"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+const _confidenceMeta = {
+  high:   { label: 'Реальный пост',    cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
+  medium: { label: 'Из обсуждений',    cls: 'bg-amber-500/15 text-amber-400 border-amber-500/25',    dot: 'bg-amber-400' },
+  low:    { label: 'AI-реконструкция', cls: 'bg-gray-500/15 text-gray-400 border-gray-600/25',       dot: 'bg-gray-500' },
+};
+
+const _varStyleMeta = {
+  bold:      { icon: '🔥', label: 'Дерзкий' },
+  smart:     { icon: '🧠', label: 'Умный' },
+  emotional: { icon: '❤️', label: 'Эмоциональный' },
+  viral:     { icon: '📢', label: 'Вирусный' },
+  personal:  { icon: '💬', label: 'Личный' },
+};
+
+function _viralityColor(score) {
+  if (score >= 80) return { bar: 'bg-emerald-500', text: 'text-emerald-400', label: 'Огонь 🔥' };
+  if (score >= 60) return { bar: 'bg-violet-500',  text: 'text-violet-400',  label: 'Высокий' };
+  if (score >= 40) return { bar: 'bg-amber-500',   text: 'text-amber-400',   label: 'Средний' };
+  return                   { bar: 'bg-gray-500',    text: 'text-gray-400',    label: 'Низкий' };
+}
+
+function _renderThreadsPosts() {
+  const resultsEl = document.getElementById('threads-results');
+  if (!resultsEl || !_threadsData.length) return;
+
+  resultsEl.innerHTML = _threadsData.map((post, idx) => {
+    const conf  = _confidenceMeta[post.confidence] || _confidenceMeta.low;
+    const hasUrl = !!post.url;
+    const hasAuthor = !!post.author;
+    const sigLikes  = post.signals?.likes_est || 'неизвестно';
+    const sigComm   = post.signals?.comments_est || 'неизвестно';
+    const sigRepost = post.signals?.reposts_est || 'неизвестно';
+    const vScore = post.virality_score || 0;
+    const vColor = _viralityColor(vScore);
+    const sb = post.score_breakdown || {};
+
+    // Virality bar HTML
+    const viralityHtml = `
+      <div class="flex items-center gap-2.5">
+        <div class="flex-1 h-1.5 rounded-full bg-gray-800 overflow-hidden">
+          <div class="${vColor.bar} h-full rounded-full transition-all" style="width:${vScore}%"></div>
+        </div>
+        <span class="${vColor.text} text-[10px] font-bold tabular-nums">${vScore}</span>
+      </div>
+      <div class="flex gap-1.5 mt-1">
+        <span class="text-[8px] text-gray-600" title="Глубина мысли (0-30)">🧠${sb.depth || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Эмоция (0-25)">❤️${sb.emotion || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔁${sb.shareability || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Дебаты (0-20)">💬${sb.debate || 0}</span>
+      </div>`;
+
+    // Variants tabs HTML
+    const firstVar  = post.variants?.[0];
+    const varTabsHtml = (post.variants || []).map(v => {
+      const sm = _varStyleMeta[v.style] || { icon: '✦', label: v.label || v.style };
+      return `<button class="threads-var-tab px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all whitespace-nowrap
+        ${v.style === (firstVar?.style || 'bold')
+          ? 'bg-violet-600/30 text-violet-300 border-violet-500/40'
+          : 'bg-black/20 text-gray-500 border-gray-700/40 hover:text-gray-300 hover:border-gray-600/60'}"
+        data-style="${escapeHtml(v.style)}">${sm.icon} ${sm.label}</button>`;
+    }).join('');
+
+    const varPanelsHtml = (post.variants || []).map(v => {
+      const charCount = v.text?.length || 0;
+      const charColor = charCount <= 400 ? 'text-emerald-500' : charCount <= 500 ? 'text-amber-500' : 'text-red-500';
+      return `<div class="threads-var-panel ${v.style !== (firstVar?.style || 'bold') ? 'hidden' : ''}" data-style="${escapeHtml(v.style)}">
+        <div class="flex items-start gap-2">
+          <div class="flex-1 space-y-1.5">
+            <p class="text-sm text-gray-100 leading-relaxed whitespace-pre-wrap">${escapeHtml(v.text)}</p>
+            <div class="flex items-center gap-2">
+              <span class="${charColor} text-[9px] font-medium">${charCount} символов</span>
+              ${charCount <= 500 ? '<span class="text-[8px] text-emerald-600">✓ Threads OK</span>' : '<span class="text-[8px] text-red-600">⚠ Длинный</span>'}
+            </div>
+          </div>
+          <button class="threads-copy-variant flex-shrink-0 text-[9px] px-2 py-1 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 border border-violet-500/20 transition-all font-medium" data-text="${escapeHtml(v.text)}">📋</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Hashtags HTML
+    const allH = _allHashtags(post);
+    const hashtagsHtml = allH.length ? `
+      <div class="border-t border-gray-700/30 px-4 py-3 space-y-2 bg-fuchsia-500/3">
+        <div class="flex items-center justify-between">
+          <button class="threads-toggle-hashtags text-[10px] text-fuchsia-400 font-semibold uppercase tracking-wider hover:text-fuchsia-300 transition-colors">🏷️ Хэштеги (${allH.length})</button>
+          <button class="threads-copy-hashtags text-[9px] px-2 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 hover:bg-fuchsia-500/20 transition-all font-medium" data-text="${escapeHtml(allH.join(' '))}">📋 Копировать хэштеги</button>
+        </div>
+        <div class="threads-hashtags-body hidden space-y-1.5">
+          ${post.hashtags?.high_volume?.length ? `<div class="flex flex-wrap gap-1"><span class="text-[8px] text-gray-600 w-full">Популярные:</span>${post.hashtags.high_volume.map(h => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/15">${escapeHtml(h)}</span>`).join('')}</div>` : ''}
+          ${post.hashtags?.mid_volume?.length ? `<div class="flex flex-wrap gap-1"><span class="text-[8px] text-gray-600 w-full">Средние:</span>${post.hashtags.mid_volume.map(h => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/15">${escapeHtml(h)}</span>`).join('')}</div>` : ''}
+          ${post.hashtags?.niche?.length ? `<div class="flex flex-wrap gap-1"><span class="text-[8px] text-gray-600 w-full">Нишевые:</span>${post.hashtags.niche.map(h => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/15">${escapeHtml(h)}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>` : '';
+
+    // Reel ideas HTML
+    const reelFormatIcon = { 'talking head': '🗣️', 'text-on-screen': '📝', 'POV': '👀', 'greenscreen': '🟩', 'trending-audio': '🎵', 'storytelling': '📖' };
+    const reelHtml = (post.reel_ideas || []).map((r, i) => `
+      <div class="rounded-lg p-3 border border-cyan-500/15 bg-cyan-500/5 space-y-1.5">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center justify-center w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-bold flex-shrink-0">${i + 1}</span>
+          <span class="text-[11px] font-semibold text-cyan-300">${escapeHtml(r.hook)}</span>
+          ${r.format ? `<span class="ml-auto text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-500 border border-cyan-500/15">${reelFormatIcon[r.format] || '🎬'} ${escapeHtml(r.format)}</span>` : ''}
+        </div>
+        ${r.conflict ? `<div class="text-[10px] text-gray-400"><span class="text-amber-400/70 font-medium">Конфликт:</span> ${escapeHtml(r.conflict)}</div>` : ''}
+        ${r.direction ? `<div class="text-[10px] text-gray-400"><span class="text-violet-400/70 font-medium">Сценарий:</span> ${escapeHtml(r.direction)}</div>` : ''}
+        ${r.why_viral ? `<div class="text-[10px] text-emerald-400/70 italic">${escapeHtml(r.why_viral)}</div>` : ''}
+      </div>
+    `).join('');
+
+    // Best time HTML
+    const bestTimeHtml = post.best_time?.time ? `
+      <div class="flex items-center gap-1.5 text-[9px] text-cyan-400">
+        <span>⏰</span>
+        <span class="font-semibold">${escapeHtml(post.best_time.day || '')} ${escapeHtml(post.best_time.time)}</span>
+        ${post.best_time.reasoning ? `<span class="text-gray-600">— ${escapeHtml(post.best_time.reasoning)}</span>` : ''}
+      </div>` : '';
+
+    return `
+    <div class="glass-panel p-0 overflow-hidden border border-gray-700/40 hover:border-violet-500/30 transition-all" data-post-id="${escapeHtml(post.id)}">
+
+      <!-- Card header -->
+      <div class="p-4 pb-3 space-y-2">
+        <!-- Meta row -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="w-1.5 h-1.5 rounded-full ${conf.dot} flex-shrink-0"></span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full border ${conf.cls} font-medium flex-shrink-0">${conf.label}</span>
+          ${hasAuthor ? `<span class="text-[10px] text-cyan-400 font-medium">${escapeHtml(post.author)}</span>` : ''}
+          <span class="text-[10px] text-gray-500">${escapeHtml(post.freshness_label)}</span>
+          ${sigLikes !== 'неизвестно' ? `<span class="text-[9px] text-gray-500">❤️ ${escapeHtml(sigLikes)}</span>` : ''}
+          ${sigComm !== 'неизвестно' ? `<span class="text-[9px] text-gray-500">💬 ${escapeHtml(sigComm)}</span>` : ''}
+          ${sigRepost !== 'неизвестно' ? `<span class="text-[9px] text-gray-500">🔁 ${escapeHtml(sigRepost)}</span>` : ''}
+          ${post.topic_tag ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${escapeHtml(post.topic_tag)}</span>` : ''}
+          <span class="text-[9px] text-gray-600 ml-auto font-bold">#${idx + 1}</span>
+        </div>
+
+        <!-- Virality score bar -->
+        <div class="max-w-xs">${viralityHtml}</div>
+
+        <!-- Post text -->
+        <p class="text-sm text-gray-100 leading-relaxed whitespace-pre-wrap">${escapeHtml(post.text)}</p>
+
+        <!-- Best time -->
+        ${bestTimeHtml}
+
+        <!-- Actions row -->
+        <div class="flex items-center gap-2 flex-wrap pt-1">
+          <button class="threads-copy-post text-[10px] px-2.5 py-1 rounded-lg bg-gray-700/40 text-gray-400 hover:bg-gray-700/70 hover:text-gray-200 border border-gray-600/30 transition-all font-medium" data-text="${escapeHtml(post.text)}">📋 Копировать</button>
+          ${hasUrl ? `<a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 border border-violet-500/20 transition-all font-medium">🔗 Открыть</a>` : ''}
+          <button class="threads-toggle-analysis text-[10px] px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20 transition-all font-medium">▼ Почему это вирусно</button>
+        </div>
+      </div>
+
+      <!-- Analysis block (collapsed) -->
+      <div class="threads-analysis-body hidden border-t border-gray-700/30 px-4 py-3 space-y-2 bg-amber-500/3">
+        ${post.analysis?.key_insight ? `<div class="rounded-lg p-2.5 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-2"><div class="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider mb-1">💡 Ключевой инсайт</div><div class="text-[12px] text-emerald-200 font-medium leading-relaxed">${escapeHtml(post.analysis.key_insight)}</div></div>` : ''}
+        ${post.analysis?.why_works ? `<div class="text-[11px] text-gray-300 leading-relaxed">${escapeHtml(post.analysis.why_works)}</div>` : ''}
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 mt-2">
+          ${post.analysis?.hook ? `<div class="rounded-lg p-2.5 bg-black/30 border border-amber-500/15 space-y-1"><div class="text-[9px] text-amber-400 font-semibold uppercase tracking-wider">Хук</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.hook)}</div></div>` : ''}
+          ${post.analysis?.conflict ? `<div class="rounded-lg p-2.5 bg-black/30 border border-red-500/15 space-y-1"><div class="text-[9px] text-red-400 font-semibold uppercase tracking-wider">Конфликт</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.conflict)}</div></div>` : ''}
+          ${post.analysis?.audience_pain ? `<div class="rounded-lg p-2.5 bg-black/30 border border-violet-500/15 space-y-1"><div class="text-[9px] text-violet-400 font-semibold uppercase tracking-wider">Боль аудитории</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.audience_pain)}</div></div>` : ''}
+          ${post.analysis?.cta_potential ? `<div class="rounded-lg p-2.5 bg-black/30 border border-cyan-500/15 space-y-1"><div class="text-[9px] text-cyan-400 font-semibold uppercase tracking-wider">CTA-потенциал</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.cta_potential)}</div></div>` : ''}
+        </div>
+      </div>
+
+      <!-- Variants block -->
+      ${post.variants?.length ? `
+      <div class="border-t border-gray-700/30 px-4 py-3 space-y-3 bg-violet-500/3">
+        <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider">✦ Готовые посты для публикации</div>
+        <div class="flex gap-1.5 flex-wrap">${varTabsHtml}</div>
+        <div class="threads-var-panels">${varPanelsHtml}</div>
+      </div>` : ''}
+
+      <!-- Hashtags block -->
+      ${hashtagsHtml}
+
+      <!-- Reels block -->
+      ${post.reel_ideas?.length ? `
+      <div class="border-t border-gray-700/30 px-4 py-3 space-y-2 bg-cyan-500/3">
+        <button class="threads-toggle-reels text-[10px] text-cyan-400 font-semibold uppercase tracking-wider hover:text-cyan-300 transition-colors w-full text-left">🎬 Идеи для Reels (${post.reel_ideas.length})</button>
+        <div class="threads-reels-body hidden space-y-2">${reelHtml}</div>
+      </div>` : ''}
+
+    </div>`;
+  }).join('');
+}
+
+function _switchVariantTab(card, style) {
+  card.querySelectorAll('.threads-var-tab').forEach(t => {
+    const isActive = t.dataset.style === style;
+    t.className = `threads-var-tab px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all whitespace-nowrap ${
+      isActive
+        ? 'bg-violet-600/30 text-violet-300 border-violet-500/40'
+        : 'bg-black/20 text-gray-500 border-gray-700/40 hover:text-gray-300 hover:border-gray-600/60'
+    }`;
+  });
+  card.querySelectorAll('.threads-var-panel').forEach(p => {
+    p.classList.toggle('hidden', p.dataset.style !== style);
+  });
+}
+
+// Called from navigateTo when switching to threads-trends tab
+function _onThreadsTrendsEnter() {
+  _updateThreadsGate();
+}
+
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const _init = [
@@ -7839,6 +8397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initLocConstructor',initLocConstructor],
     ['initMatrixRain',initMatrixRain],
     ['initKeyboardShortcuts',initKeyboardShortcuts],
+    ['initThreadsTrends',initThreadsTrends],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
   try { initCharCounters(); } catch(e) { console.error('[FERIXDI] initCharCounters:', e); }

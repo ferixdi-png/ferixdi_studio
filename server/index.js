@@ -207,6 +207,7 @@ const RL_TRENDS  = { window: 60_000,  max: 4 };   // 4 per min
 const RL_PRODUCT = { window: 60_000,  max: 8 };   // 8 per min
 const RL_CONSULT = { window: 600_000, max: 5 };   // 5 per 10min per IP (free, no auth)
 const RL_GEMINI  = { window: 60_000, max: 1 };    // 1 Gemini request per user per 1min
+const RL_THREADS = { window: 300_000, max: 3 };   // 3 per 5min (heavier grounding call)
 
 // ─── GEMINI RESPONSE CACHE (in-memory, TTL 5 min) ──────────────────────────────────
 const _geminiCache = new Map();
@@ -2537,6 +2538,337 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
   } catch (e) {
     console.error('Trends API error:', e.message);
     res.status(500).json({ error: 'Ошибка при запросе трендов' });
+  }
+});
+
+// ─── POST /api/threads-trends — Best Threads parser: no API, no auth, Google Search grounding ──────
+app.post('/api/threads-trends', authMiddleware, async (req, res) => {
+  const GEMINI_KEY = nextGeminiKey();
+  if (!GEMINI_KEY) return res.status(503).json({ error: 'AI-движок не настроен.' });
+
+  const userId = req.user?.userId || req.user?.hash || getClientIP(req);
+  if (!checkRateLimit(`threads:${userId}`, RL_THREADS.window, RL_THREADS.max)) {
+    const entry = _rateBuckets.get(`threads:${userId}`);
+    const waitSec = entry ? Math.ceil((entry.windowStart + RL_THREADS.window - Date.now()) / 1000) : 300;
+    return res.status(429).json({ error: `Подождите ~${Math.ceil(waitSec / 60)} мин. перед следующим запросом.` });
+  }
+
+  const {
+    query = '',
+    lang = 'ru',
+    freshness = '24h',
+    limit = 8,
+    niche = 'any',
+    exclude_big = false,
+  } = req.body;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  const safeLimit = Math.min(Math.max(parseInt(limit) || 8, 3), 12);
+  const langLabel = lang === 'en' ? 'English' : 'Russian';
+  const langTag   = lang === 'en' ? 'EN' : 'RU';
+  const queryBlock = query ? `"${query}"` : 'any trending topic';
+  const freshnessLabel = freshness === '24h' ? 'last 24 hours' : freshness === '48h' ? 'last 48 hours' : 'last 7 days';
+  const nicheMap = {
+    any: '', business: 'business, entrepreneurship, startups', lifestyle: 'lifestyle, self-improvement, daily life',
+    tech: 'technology, AI, gadgets, software', finance: 'finance, investing, money, crypto',
+    fitness: 'fitness, health, gym, nutrition', marketing: 'marketing, SMM, branding, content',
+    psychology: 'psychology, relationships, mental health', humor: 'humor, memes, relatable content',
+    education: 'education, learning, career, skills',
+  };
+  const nicheBlock = nicheMap[niche] ? `\nNiche focus: ${nicheMap[niche]}` : '';
+  const excludeBlock = exclude_big ? '\nIMPORTANT: Exclude obvious celebrities/brands with 500K+ followers. Focus ONLY on organic breakout posts from creators with <100K followers — these are the posts regular people can replicate.' : '';
+
+  // ──── THE MEGA PROMPT ────
+  const prompt = `Today is ${dateStr}. You are the world's best Threads content analyst. You have Google Search access.
+
+━━━ MISSION ━━━
+Find ${safeLimit} REAL trending/viral public posts from threads.net about: ${queryBlock}
+Language: ${langLabel} | Freshness: ${freshnessLabel} | Platform: threads.net only${nicheBlock}${excludeBlock}
+
+━━━ QUALITY FILTER — THIS IS CRITICAL ━━━
+You are looking for SMART, THOUGHTFUL posts — NOT empty viral clickbait. Apply this filter ruthlessly:
+
+✅ INCLUDE posts that:
+- Contain a genuine INSIGHT, non-obvious observation, or original perspective
+- Present a counterintuitive take backed by logic or experience
+- Expose a hidden pattern, systemic problem, or "uncomfortable truth" that makes people think
+- Share a hard-won lesson from real experience (business, career, relationships, money)
+- Reframe a common belief in a way that genuinely changes how you see things
+- Use data, specific examples, or concrete details to make a point
+- Spark real intellectual debate (not just outrage bait)
+- Make the reader feel smarter after reading
+
+❌ REJECT and SKIP posts that are:
+- Generic motivational fluff ("верь в себя", "всё возможно", "никогда не сдавайся")
+- Empty provocation with no substance ("кто согласен ставьте 🔥")
+- Recycled quotes or stolen wisdom without original angle
+- Pure emotional manipulation without intellectual depth
+- Engagement bait with zero informational value ("напишите ваш знак зодиака")
+- AI-generated slop (generic, safe, hedge-everything tone)
+- Obvious humble-brags disguised as advice
+- Posts that state the obvious as if it's profound
+
+The posts you find should make the reader STOP scrolling and THINK. Quality of insight > quantity of likes.
+
+━━━ SEARCH STRATEGY (use ALL of these via Google Search) ━━━
+Phase 1 — Direct Threads crawl (prioritize thoughtful content):
+  • site:threads.net ${query || 'trending'} ${lang === 'ru' ? 'русский' : ''} insight
+  • site:threads.net "${query}" ${freshness === '24h' ? 'today' : 'this week'}
+  • "threads.net/@" ${query || 'viral'} thought-provoking ${now.getFullYear()}
+
+Phase 2 — Cross-platform signals (smart discussions):
+  • reddit.com "threads.net" "${query || 'great take'}" ${freshnessLabel}
+  • twitter.com OR x.com "threads" "great point" "${query}" ${freshnessLabel}
+  • "best thread" OR "smart take" threads.net ${query || ''} ${now.getFullYear()}
+
+Phase 3 — Intellectual trend context:
+  • Google Trends: what topics related to "${query || 'threads trends'}" are spiking right now
+  • news/opinion pieces mentioning threads.net insightful content ${query || ''}
+  • "must read" OR "nailed it" threads ${query || ''} ${now.getFullYear()}
+
+━━━ DATA EXTRACTION RULES ━━━
+For each post found:
+1. COPY the EXACT text from the search snippet/cached page. Do NOT rewrite or summarize the original.
+2. Extract @author handle if visible in URL or snippet
+3. Build direct URL: https://www.threads.net/@handle/post/ID — ONLY if you found the real URL. null otherwise.
+4. Estimate freshness from snippet dates, "ago" markers, or context
+5. Extract any visible engagement numbers (likes, comments, reposts, shares)
+6. Rate confidence: "high" = found real URL+text; "medium" = found via discussion/snippet; "low" = topic-inferred
+7. Rate virality_score 1-100 based on: INTELLECTUAL DEPTH (0-30), emotional resonance (0-25), shareability (0-25), debate potential (0-20)
+   ↑ Notice: intellectual depth is the HIGHEST weighted factor. A smart post with moderate engagement beats a dumb post with huge engagement.
+
+If fewer than ${safeLimit} real posts found → fill with INFERRED posts based on current Google Trends data.
+For inferred posts: generate the kind of SMART, INSIGHT-DRIVEN post that WOULD trend on this topic — based on real data, counterintuitive angles, or expert-level observations. NOT generic motivation.
+Mark inferred: confidence "low", signal_type "inferred", author null, url null.
+NEVER invent @handles or URLs for inferred posts.
+
+━━━ FOR EACH POST: GENERATE THE FOLLOWING ━━━
+
+1. 📊 VIRALITY SCORE (1-100):
+   Score based on: INTELLECTUAL DEPTH (0-30), emotional resonance (0-25), shareability (0-25), debate potential (0-20)
+   Intellectual depth = does the post teach something, reveal a hidden pattern, or reframe a common belief?
+   Also provide score_breakdown with each component score: { "depth": 0-30, "emotion": 0-25, "shareability": 0-25, "debate": 0-20 }
+
+2. 🧠 DEEP ANALYSIS:
+   - why_works: which INTELLECTUAL trigger fires (paradigm shift, hidden pattern, uncomfortable truth, expert contrarian view, data surprise, systemic exposure) — 2-3 sentences. Focus on WHY this makes people THINK, not just feel.
+   - hook: what grabs attention in first 1.5 seconds — what's the intellectual curiosity gap?
+   - conflict: the core tension/contradiction — what conventional wisdom does this challenge?
+   - audience_pain: the universal human pain/desire/question it touches
+   - cta_potential: how to turn readers into followers (1 sentence)
+   - key_insight: the ONE sentence takeaway that makes this post worth reading (this is what people will screenshot)
+
+3. ✍️ FIVE PUBLICATION-READY VARIANTS — this is the CORE value:
+   CRITICAL RULES for variants:
+   - Each variant is a COMPLETE ready-to-publish Threads post
+   - Include 3-5 relevant hashtags INSIDE each variant text (at the end)
+   - Threads optimal: 200-400 characters (sweet spot for engagement)
+   - First line = scroll-stopping hook. Must work WITHOUT context.
+   - ZERO AI smell: no "в мире где", no "давайте разберёмся", no "важно понимать что", no "на самом деле"
+   - Write like a real ${langTag} creator with 50K followers who is witty, sharp AND SMART
+   - Each variant must contain a GENUINE INSIGHT or NON-OBVIOUS OBSERVATION — not just emotion
+   - Each variant must be so different that they could come from 5 different people
+   - Include line breaks where natural (Threads loves scannable formatting)
+   - NEVER write generic motivation. Every variant must leave the reader with a new thought they didn't have before.
+
+   The 5 styles (ALL must be intellectually substantive):
+   a) "bold" (🔥 Дерзкий): Opens with a CONTROVERSIAL but SMART hot take backed by logic. Not just provocation — a real argument that challenges conventional thinking. The reader disagrees at first, then thinks "wait, actually..."
+   b) "smart" (🧠 Умный): Unexpected reframe, hidden pattern, or "aha" insight with data/specifics. The kind of post people screenshot and send to friends. Counterintuitive angle backed by evidence or experience.
+   c) "emotional" (❤️ Эмоциональный): Raw, vulnerable, first-person confession that reveals a NON-OBVIOUS truth about human nature. Not just "life is hard" — but a specific realization that came from a specific moment. Insight through vulnerability.
+   d) "viral" (📢 Вирусный): Engineered for shares BUT with real substance. Hook→tension→reveal where the reveal is a GENUINE insight, not a platitude. The kind of post where people share it saying "THIS. Everyone needs to read this."
+   e) "personal" (💬 Личный): Intimate micro-story with a SPECIFIC detail (date, place, exact words someone said) that leads to a universal insight. The story is the vehicle, but the destination is a thought the reader never had before.
+
+4. 🏷️ HASHTAGS — 8-12 hashtags per post:
+   - 3-4 high-volume (500K+ posts): broad reach
+   - 3-4 mid-volume (50K-500K): targeted reach
+   - 2-4 niche/trending: discoverable, less competition
+   - All hashtags must be in ${langLabel}
+
+5. 🎬 REEL/SHORT IDEAS — 3 ideas to turn this topic into vertical video:
+   - hook: first-frame text/visual/audio (5-7 words, must stop the scroll)
+   - conflict: what tension drives the 15-60 second video
+   - direction: full narrative arc in 1 sentence
+   - format: "talking head" | "text-on-screen" | "POV" | "greenscreen" | "trending-audio" | "storytelling"
+   - why_viral: why this specific format+topic combo would blow up
+
+6. ⏰ BEST TIME TO POST:
+   - best_time: recommended posting time in HH:MM format (24h, Moscow timezone for RU, EST for EN)
+   - best_day: best day of week for this topic
+   - reasoning: why this time (1 sentence)
+
+━━━ OUTPUT FORMAT ━━━
+Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
+
+[
+  {
+    "id": "th1",
+    "text": "exact original post text",
+    "author": "@handle or null",
+    "url": "https://www.threads.net/@handle/post/ID or null",
+    "freshness_label": "~2 ч назад",
+    "signals": { "likes_est": "1.2K+", "comments_est": "230+", "reposts_est": "неизвестно" },
+    "confidence": "high",
+    "signal_type": "direct",
+    "topic_tag": "short topic label",
+    "virality_score": 82,
+    "score_breakdown": { "depth": 25, "emotion": 20, "shareability": 21, "debate": 16 },
+    "analysis": {
+      "why_works": "...",
+      "hook": "...",
+      "conflict": "...",
+      "audience_pain": "...",
+      "cta_potential": "...",
+      "key_insight": "the ONE sentence people will screenshot"
+    },
+    "variants": [
+      { "style": "bold",      "label": "Дерзкий",        "text": "full post with\\n\\nline breaks\\n\\n#хэштег1 #хэштег2 #хэштег3" },
+      { "style": "smart",     "label": "Умный",           "text": "..." },
+      { "style": "emotional", "label": "Эмоциональный",   "text": "..." },
+      { "style": "viral",     "label": "Вирусный",        "text": "..." },
+      { "style": "personal",  "label": "Личный",          "text": "..." }
+    ],
+    "hashtags": {
+      "high_volume": ["#тренды", "#threads", "#мотивация"],
+      "mid_volume": ["#контентмейкер", "#smm"],
+      "niche": ["#threadstrends", "#вирусныйпост"]
+    },
+    "reel_ideas": [
+      { "hook": "...", "conflict": "...", "direction": "...", "format": "talking head", "why_viral": "..." }
+    ],
+    "best_time": { "time": "19:30", "day": "вторник", "reasoning": "..." }
+  }
+]`;
+
+  try {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GEMINI_KEY}`;
+
+    // Attempt 1: WITH Google Search grounding (finds real posts via web)
+    const ac1 = new AbortController();
+    const to1 = setTimeout(() => ac1.abort(), 120_000);
+    let resp = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ googleSearch: {} }],
+        generationConfig: { temperature: 0.85, maxOutputTokens: 32768 },
+      }),
+      signal: ac1.signal,
+    });
+    clearTimeout(to1);
+
+    let data;
+    try { data = await resp.json(); } catch { data = {}; }
+
+    let usedGrounding = false;
+
+    // Attempt 2: WITHOUT grounding if quota/region/billing issue
+    if (!resp.ok || !data.candidates) {
+      console.warn('[THREADS] Grounding attempt failed, retrying without:', data.error?.message);
+      const ac2 = new AbortController();
+      const to2 = setTimeout(() => ac2.abort(), 120_000);
+      resp = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.9, maxOutputTokens: 32768, responseMimeType: 'application/json' },
+        }),
+        signal: ac2.signal,
+      });
+      clearTimeout(to2);
+      data = await resp.json();
+      if (!resp.ok) return res.status(resp.status).json({ error: data.error?.message || 'AI error' });
+    } else {
+      usedGrounding = !!(data.candidates?.[0]?.groundingMetadata);
+    }
+
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawText) return res.status(422).json({ error: 'AI не вернул данные. Попробуйте ещё раз.' });
+
+    let posts;
+    try { posts = JSON.parse(rawText); } catch {
+      const m = rawText.match(/\[[\s\S]*\]/);
+      if (m) { try { posts = JSON.parse(m[0]); } catch { /* noop */ } }
+    }
+
+    if (!Array.isArray(posts)) {
+      return res.status(422).json({ error: 'AI вернул некорректный формат. Попробуйте ещё раз.' });
+    }
+
+    // Normalize + sanitize all fields
+    posts = posts.slice(0, safeLimit).map((p, i) => ({
+      id: String(p.id || `th${i + 1}`),
+      text: String(p.text || '').slice(0, 1500),
+      author: p.author ? String(p.author).slice(0, 60) : null,
+      url: (p.url && /^https:\/\/(www\.)?threads\.net\//.test(String(p.url))) ? String(p.url).slice(0, 250) : null,
+      freshness_label: String(p.freshness_label || 'недавно').slice(0, 40),
+      signals: {
+        likes_est: String((p.signals?.likes_est) || 'неизвестно').slice(0, 20),
+        comments_est: String((p.signals?.comments_est) || 'неизвестно').slice(0, 20),
+        reposts_est: String((p.signals?.reposts_est) || 'неизвестно').slice(0, 20),
+      },
+      confidence: ['high', 'medium', 'low'].includes(p.confidence) ? p.confidence : 'low',
+      signal_type: ['direct', 'inferred'].includes(p.signal_type) ? p.signal_type : 'inferred',
+      topic_tag: String(p.topic_tag || '').slice(0, 60),
+      virality_score: Math.min(100, Math.max(0, parseInt(p.virality_score) || 0)),
+      score_breakdown: {
+        depth: Math.min(30, parseInt(p.score_breakdown?.depth) || 0),
+        emotion: Math.min(25, parseInt(p.score_breakdown?.emotion) || 0),
+        shareability: Math.min(25, parseInt(p.score_breakdown?.shareability) || 0),
+        debate: Math.min(20, parseInt(p.score_breakdown?.debate) || 0),
+      },
+      analysis: {
+        why_works: String(p.analysis?.why_works || '').slice(0, 600),
+        hook: String(p.analysis?.hook || '').slice(0, 200),
+        conflict: String(p.analysis?.conflict || '').slice(0, 200),
+        audience_pain: String(p.analysis?.audience_pain || '').slice(0, 200),
+        cta_potential: String(p.analysis?.cta_potential || '').slice(0, 200),
+        key_insight: String(p.analysis?.key_insight || '').slice(0, 300),
+      },
+      variants: Array.isArray(p.variants) ? p.variants.slice(0, 5).map(v => ({
+        style: String(v.style || '').slice(0, 20),
+        label: String(v.label || '').slice(0, 30),
+        text: String(v.text || '').slice(0, 800),
+      })) : [],
+      hashtags: {
+        high_volume: Array.isArray(p.hashtags?.high_volume) ? p.hashtags.high_volume.slice(0, 5).map(h => String(h).slice(0, 40)) : [],
+        mid_volume: Array.isArray(p.hashtags?.mid_volume) ? p.hashtags.mid_volume.slice(0, 5).map(h => String(h).slice(0, 40)) : [],
+        niche: Array.isArray(p.hashtags?.niche) ? p.hashtags.niche.slice(0, 5).map(h => String(h).slice(0, 40)) : [],
+      },
+      reel_ideas: Array.isArray(p.reel_ideas) ? p.reel_ideas.slice(0, 5).map(r => ({
+        hook: String(r.hook || '').slice(0, 100),
+        conflict: String(r.conflict || '').slice(0, 200),
+        direction: String(r.direction || '').slice(0, 200),
+        format: String(r.format || 'talking head').slice(0, 30),
+        why_viral: String(r.why_viral || '').slice(0, 200),
+      })) : [],
+      best_time: {
+        time: String(p.best_time?.time || '19:00').slice(0, 5),
+        day: String(p.best_time?.day || '').slice(0, 20),
+        reasoning: String(p.best_time?.reasoning || '').slice(0, 200),
+      },
+    })).filter(p => p.text.length > 10);
+
+    // Sort by virality score descending
+    posts.sort((a, b) => b.virality_score - a.virality_score);
+
+    res.json({
+      posts,
+      query,
+      niche,
+      lang,
+      fetched_at: now.toISOString(),
+      used_grounding: usedGrounding,
+      source_note: usedGrounding
+        ? 'Посты найдены через Google Search в реальном времени. Ссылки ведут на реальные посты.'
+        : 'AI-анализ трендов на основе обученных данных. Реальные ссылки недоступны.',
+      total: posts.length,
+    });
+
+  } catch (e) {
+    console.error('[THREADS] Error:', e.message);
+    res.status(500).json({ error: `Ошибка анализа трендов: ${e.message}` });
   }
 });
 

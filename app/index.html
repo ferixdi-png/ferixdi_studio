@@ -106,6 +106,10 @@
           <div class="nav-item" data-section="ideas"><span>🔍</span><span>Поиск идей</span></div>
           <div class="nav-item" data-section="jokes"><span>😂</span><span>Библиотека шуток</span></div>
           <div class="nav-item" data-section="consult"><span>💬</span><span>AI-маркетолог</span></div>
+          <div class="nav-item relative" data-section="threads-trends" id="nav-threads-trends">
+            <span>🧵</span><span>Threads Trends</span>
+            <span id="threads-nav-lock" class="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold">VIP</span>
+          </div>
 
           <div class="px-2 pt-3 pb-1"><div class="text-[9px] text-gray-600 uppercase tracking-[0.2em] font-medium">Система</div></div>
           <div class="nav-item" data-section="settings"><span>⚙️</span><span>Настройки</span></div>
@@ -1871,6 +1875,148 @@
             <div class="text-xs text-cyan-400 font-semibold flex items-center gap-1.5">🔄 Studio постоянно обновляется</div>
             <p class="text-[11px] text-gray-400 leading-relaxed">Функционал системы улучшается каждую неделю — новые режимы генерации, персонажи, локации, фичи. Обновления внедряются на основе вашего пользовательского опыта: если чего-то не хватает или что-то можно сделать удобнее — напиши <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors" style="border-bottom:1px solid rgba(6,182,212,.3);text-decoration:none">@ferixdiii</a>. Я быстро внедряю новые функции — многие фичи Studio появились именно по запросам пользователей.</p>
             <p class="text-[11px] text-gray-400 leading-relaxed mt-1">📢 <a href="https://t.me/ferixdi_ai" target="_blank" class="text-amber-400 hover:text-amber-300 transition-colors font-medium" style="border-bottom:1px solid rgba(232,184,48,.3);text-decoration:none">Канал в Telegram</a> — все обновления, новые фичи, кейсы пользователей и новости. Подпишись, чтобы ничего не пропустить.</p>
+          </div>
+
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- THREADS TRENDS SECTION                             -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <section id="section-threads-trends" class="section-panel hidden space-y-4 animate-fade-in">
+
+          <!-- Header -->
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-3">
+              <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/30 text-xl">🧵</div>
+              <div>
+                <h2 class="text-base font-bold text-white">Threads Trends</h2>
+                <div class="text-[10px] text-gray-500">Парсер трендов · Готовые посты · Хэштеги · Вирусный анализ · Идеи для Reels</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div id="threads-source-badge" class="hidden text-[9px] px-2 py-1 rounded-full border font-medium"></div>
+              <button id="threads-copy-all-btn" class="hidden text-[9px] px-2.5 py-1 rounded-lg bg-violet-500/15 text-violet-400 border border-violet-500/25 hover:bg-violet-500/25 transition-all font-semibold">📋 Копировать всё</button>
+            </div>
+          </div>
+
+          <!-- How it works hint -->
+          <div class="rounded-xl p-3 border border-violet-500/15 bg-violet-500/5">
+            <div class="text-[10px] text-violet-400 font-semibold mb-1">💡 Как это работает</div>
+            <div class="text-[10px] text-gray-500 leading-relaxed">AI ищет вирусные посты на threads.net через Google Search в реальном времени (без API, без авторизации). Для каждого поста генерирует 5 уникальных версий разного стиля — готовых к публикации с хэштегами. Плюс анализ вирусности, идеи для Reels и лучшее время для постинга.</div>
+          </div>
+
+          <!-- Locked state (no promo) -->
+          <div id="threads-locked" class="hidden glass-panel p-6 text-center space-y-3 border border-amber-500/20">
+            <div class="text-3xl">🔒</div>
+            <div class="text-sm font-semibold text-amber-400">Только для VIP-пользователей</div>
+            <div class="text-xs text-gray-400 leading-relaxed max-w-xs mx-auto">Введи промо-код в настройках, чтобы получить доступ к Threads Trends</div>
+            <button onclick="navigateTo('settings')" class="mt-2 px-4 py-2 rounded-lg bg-amber-500/15 text-amber-400 text-xs font-semibold border border-amber-500/30 hover:bg-amber-500/25 transition-all">Ввести промо-код →</button>
+          </div>
+
+          <!-- Active state -->
+          <div id="threads-active">
+
+            <!-- Filter panel -->
+            <div class="glass-panel p-4 space-y-3">
+              <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-1">🔍 Параметры поиска</div>
+
+              <!-- Quick topic chips -->
+              <div class="flex flex-wrap gap-1.5" id="threads-quick-topics">
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="нейросети">🤖 Нейросети</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="бизнес">💼 Бизнес</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="маркетинг">📢 Маркетинг</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="финансы">💰 Финансы</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="психология">🧠 Психология</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="фитнес">💪 Фитнес</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="юмор">😂 Юмор</button>
+                <button class="threads-topic-chip px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all bg-black/20 text-gray-500 border-gray-700/40 hover:text-violet-400 hover:border-violet-500/40" data-topic="отношения">❤️ Отношения</button>
+              </div>
+
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <!-- Query -->
+                <div class="sm:col-span-2">
+                  <label class="text-[10px] text-gray-500 mb-1 block">Тема / ключевые слова</label>
+                  <input id="threads-query" type="text" placeholder="Например: выгорание, продуктивность, деньги, отношения…" class="w-full bg-black/30 border border-gray-700/60 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-violet-500/50 transition-colors" maxlength="120">
+                </div>
+                <!-- Niche + Lang -->
+                <div>
+                  <label class="text-[10px] text-gray-500 mb-1 block">Ниша</label>
+                  <select id="threads-niche" class="w-full bg-black/30 border border-gray-700/60 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-violet-500/50 transition-colors">
+                    <option value="any">🌐 Любая ниша</option>
+                    <option value="business">💼 Бизнес / Стартапы</option>
+                    <option value="marketing">📢 Маркетинг / SMM</option>
+                    <option value="tech">🤖 Технологии / AI</option>
+                    <option value="finance">💰 Финансы / Крипто</option>
+                    <option value="lifestyle">🌿 Лайфстайл</option>
+                    <option value="fitness">💪 Фитнес / Здоровье</option>
+                    <option value="psychology">🧠 Психология</option>
+                    <option value="humor">😂 Юмор / Мемы</option>
+                    <option value="education">📚 Образование</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-500 mb-1 block">Язык постов</label>
+                  <select id="threads-lang" class="w-full bg-black/30 border border-gray-700/60 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-violet-500/50 transition-colors">
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="en">🇬🇧 English</option>
+                  </select>
+                </div>
+                <!-- Freshness + Limit -->
+                <div>
+                  <label class="text-[10px] text-gray-500 mb-1 block">Свежесть</label>
+                  <select id="threads-freshness" class="w-full bg-black/30 border border-gray-700/60 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-violet-500/50 transition-colors">
+                    <option value="24h">🔥 Последние 24 часа</option>
+                    <option value="48h">📅 Последние 48 часов</option>
+                    <option value="week">📆 Последняя неделя</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-500 mb-1 block">Количество постов</label>
+                  <select id="threads-limit" class="w-full bg-black/30 border border-gray-700/60 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-violet-500/50 transition-colors">
+                    <option value="5">5 постов</option>
+                    <option value="8" selected>8 постов</option>
+                    <option value="10">10 постов</option>
+                    <option value="12">12 постов (макс)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Toggle row -->
+              <div class="flex items-center justify-between pt-1">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <div class="toggle-track w-9 h-5 rounded-full bg-gray-700 border border-gray-600 relative transition-all" id="threads-exclude-track">
+                    <div class="toggle-thumb w-3.5 h-3.5 rounded-full bg-gray-400 absolute top-0.5 left-0.5 transition-all" id="threads-exclude-thumb"></div>
+                  </div>
+                  <input type="checkbox" id="threads-exclude-big" class="hidden">
+                  <span class="text-[11px] text-gray-400">Только органика (без блогеров-миллионников)</span>
+                </label>
+                <span class="text-[9px] text-gray-600">3 запроса / 5 мин</span>
+              </div>
+
+              <!-- Search button -->
+              <button id="threads-search-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-violet-600/80 via-fuchsia-600/80 to-cyan-600/80 hover:from-violet-600 hover:via-fuchsia-600 hover:to-cyan-600 border border-violet-500/40 hover:border-violet-500/60 text-sm font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-violet-500/10">
+                <span>🧵</span> <span id="threads-btn-label">Найти трендовые посты</span>
+              </button>
+            </div>
+
+            <!-- Status bar -->
+            <div id="threads-status" class="hidden text-xs px-1"></div>
+
+            <!-- Summary stats (shown after results) -->
+            <div id="threads-summary" class="hidden glass-panel p-3 border border-violet-500/15">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-3 flex-wrap">
+                  <div class="text-[10px]"><span class="text-gray-500">Постов:</span> <span id="threads-stat-count" class="text-violet-400 font-bold">0</span></div>
+                  <div class="text-[10px]"><span class="text-gray-500">Ср. вирусность:</span> <span id="threads-stat-avg" class="text-emerald-400 font-bold">0</span></div>
+                  <div class="text-[10px]"><span class="text-gray-500">Лучшее время:</span> <span id="threads-stat-time" class="text-cyan-400 font-bold">—</span></div>
+                </div>
+                <div class="text-[9px] text-gray-600" id="threads-stat-source"></div>
+              </div>
+            </div>
+
+            <!-- Results -->
+            <div id="threads-results" class="space-y-4"></div>
+
           </div>
 
         </section>
