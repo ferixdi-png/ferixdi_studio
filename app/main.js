@@ -8250,11 +8250,6 @@ function _switchVariantTab(card, style) {
   });
 }
 
-// Called from navigateTo when switching to threads-trends tab
-function _onThreadsTrendsEnter() {
-  _updateThreadsGate();
-}
-
 // ─── INIT ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const _init = [
