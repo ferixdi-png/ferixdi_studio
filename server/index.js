@@ -2838,7 +2838,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
 ]`;
 
   try {
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_KEY}`;
 
     // Attempt 1: WITH Google Search grounding (finds real posts via web)
     const ac1 = new AbortController();
