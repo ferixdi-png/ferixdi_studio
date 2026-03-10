@@ -2338,7 +2338,7 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_KEY}`;
 
     // First try WITH online grounding for real-time data
-    // NOTE: responseMimeType:'application/json' is incompatible with googleSearch tools — omit it here
+    // NOTE: responseMimeType:'application/json' is incompatible with google_search tools — omit it here
     const acTrend = new AbortController();
     const toTrend = setTimeout(() => acTrend.abort(), 60_000); // 60s timeout
     let resp = await fetch(geminiUrl, {
@@ -2346,7 +2346,7 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        tools: [{ googleSearch: {} }],
+        tools: [{ google_search: {} }],
         generationConfig: {
           temperature: 0.95,
           maxOutputTokens: 16384,
@@ -2848,7 +2848,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        tools: [{ googleSearch: {} }],
+        tools: [{ google_search: {} }],
         generationConfig: { temperature: 0.85, maxOutputTokens: 32768 },
       }),
       signal: ac1.signal,
