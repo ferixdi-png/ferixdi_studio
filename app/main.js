@@ -3473,13 +3473,14 @@ function populateInstaTab(result) {
       <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">🚀 ${isEN ? 'Instagram Publishing Order' : 'Порядок публикации в Instagram'}</div>
       <div class="text-xs text-gray-300 leading-relaxed space-y-1.5">
         ${isEN ? `
-        <div>1. <span class="text-amber-300 font-medium">Title</span> → paste as Reels caption. Title only, no hashtags!</div>
+        <div>1. <span class="text-amber-300 font-medium">Full Caption</span> → paste in Reels description. Has title + desc + CTA. No hashtags!</div>
         <div>2. <span class="text-gray-200 font-medium">Publish</span> your Reel</div>
         <div>3. <span class="text-cyan-300 font-medium">Hashtags</span> → post as FIRST comment (IG doesn't throttle reach)</div>
         <div>4. <span class="text-emerald-300 font-medium">Pin</span> → write a second comment and pin it (triggers "send to a friend")</div>
-        <div>5. <span class="text-violet-300 font-medium">First comment</span> → post third comment 1-2 min later (sparks discussion)</div>
+        <div>5. <span class="text-violet-300 font-medium">Engagement comment</span> → post as 3rd comment (1-2 min later) — sparks discussion</div>
+        <div>6. <span class="text-orange-300 font-medium">Share bait</span> → DM to friends with the reel — triggers viral reshares</div>
         ` : `
-        <div>1. <span class="text-amber-300 font-medium">Заголовок</span> → вставь в описание Reels (caption). Только заголовок, без хештегов!</div>
+        <div>1. <span class="text-amber-300 font-medium">Полный текст описания</span> → вставь в описание Reels (caption). Только заголовок, без хештегов!</div>
         <div>2. <span class="text-gray-200 font-medium">Опубликуй</span> Reels</div>
         <div>3. <span class="text-cyan-300 font-medium">Хештеги</span> → напиши ПЕРВЫЙ комментарий с хештегами (IG не режет охват)</div>
         <div>4. <span class="text-emerald-300 font-medium">Закреп</span> → напиши второй коммент и закрепи его (провоцирует «отправь подруге»)</div>
