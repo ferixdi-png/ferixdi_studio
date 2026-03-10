@@ -2580,11 +2580,23 @@ app.post('/api/threads-trends', authMiddleware, async (req, res) => {
   const excludeBlock = exclude_big ? '\nIMPORTANT: Exclude obvious celebrities/brands with 500K+ followers. Focus ONLY on organic breakout posts from creators with <100K followers — these are the posts regular people can replicate.' : '';
 
   // ──── THE MEGA PROMPT ────
-  const prompt = `Today is ${dateStr}. You are the world's best Threads content analyst. You have Google Search access.
+  const prompt = `Today is ${dateStr}. You are the world's best Threads content analyst.
+
+⚠️ CRITICAL: You MUST use Google Search tool to find REAL posts. DO NOT generate from memory. Search threads.net RIGHT NOW.
 
 ━━━ MISSION ━━━
-Find ${safeLimit} REAL trending/viral public posts from threads.net about: ${queryBlock}
+STEP 1: Use Google Search to find REAL trending posts on threads.net. Search for: site:threads.net ${queryBlock} ${langLabel === 'Russian' ? 'русский' : ''}
+STEP 2: Extract ${safeLimit} REAL posts with real @handles and real URLs.
+STEP 3: If you cannot find enough real posts, fill remaining slots with INFERRED posts tied to SPECIFIC current events happening TODAY (${dateStr}).
+
 Language: ${langLabel} | Freshness: ${freshnessLabel} | Platform: threads.net only${nicheBlock}${excludeBlock}
+
+━━━ MANDATORY: CURRENT EVENTS ━━━
+Every post (real or inferred) MUST connect to something happening RIGHT NOW in the world. Use Google Search to find:
+- Today's top news stories, scandals, viral moments
+- Current prices, events, weather, holidays, cultural moments
+- Specific names, dates, numbers from TODAY — not generic observations
+DO NOT recycle generic themes like "прокрастинация", "лень", "авиабилеты" without tying them to a SPECIFIC current event or news story.
 
 ━━━ QUALITY FILTER — THIS IS CRITICAL ━━━
 You are looking for RELATABLE, PERSONAL, SHARP posts that make people feel "это про меня!" — NOT generic motivation or empty clickbait.
@@ -2611,8 +2623,9 @@ You are looking for RELATABLE, PERSONAL, SHARP posts that make people feel "эт
 
 The posts you find should make the reader STOP scrolling and feel "блин, это ж про меня". Relatability > polish.
 
-━━━ STYLE GUIDE — REAL VIRAL POSTS THAT GOT 50-400 LIKES (COPY THIS FORMAT!) ━━━
-These are REAL posts from a Russian Threads creator that went viral. EVERY variant you generate must match this quality, tone, structure, and formatting. Study them carefully:
+━━━ STYLE GUIDE — FORMAT REFERENCE ONLY ━━━
+⚠️ These are OLD examples for FORMAT/TONE reference ONLY. DO NOT copy their topics or text! Your posts must be about CURRENT events from Google Search.
+Study the STRUCTURE, LINE BREAKS, and TONE — then apply them to TODAY's trending topics:
 
 EXAMPLE 1 (386 ❤️, 39 💬 — relatability):
 "Интересно, сколько людей сейчас листают Threads перед сном.
@@ -2733,8 +2746,11 @@ For each post found:
 7. Rate virality_score 1-100 based on: RELATABILITY/ЖИЗА (0-30), emotional resonance (0-25), shareability (0-25), comment potential (0-20)
    ↑ Notice: relatability ("это про меня!") is the HIGHEST weighted factor. A relatable post with moderate polish beats a polished post with no soul.
 
-If fewer than ${safeLimit} real posts found → fill with INFERRED posts in the EXACT style of the STYLE GUIDE examples above.
-For inferred posts: generate the kind of RELATABLE, PERSONAL, SHARP post that WOULD trend — based on current Google Trends data, everyday situations, and the winning formats from the style guide. NOT generic motivation. Write as a REAL person, first person, with specific details.
+If fewer than ${safeLimit} real posts found → fill with INFERRED posts. BUT:
+⚠️ INFERRED POSTS MUST reference a SPECIFIC current event, news story, or trending topic you found via Google Search TODAY (${dateStr}).
+Examples of GOOD inferred: a post reacting to today's specific news headline, a specific price change, a viral moment, a celebrity scandal, a policy change.
+Examples of BAD inferred: generic "прокрастинация", "авиабилеты дорого", "лень", "ностальгия по детству" — these are BANNED unless tied to a specific current event.
+For each inferred post, include "current_event" field explaining WHAT real event inspired it.
 Mark inferred: confidence "low", signal_type "inferred", author null, url null.
 NEVER invent @handles or URLs for inferred posts.
 
@@ -2860,9 +2876,21 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
 
     let usedGrounding = false;
 
+    // Detailed grounding debug logging
+    console.log('[THREADS] Attempt 1 (grounding):', {
+      ok: resp.ok,
+      status: resp.status,
+      hasCandidates: !!data.candidates,
+      hasGroundingMeta: !!data.candidates?.[0]?.groundingMetadata,
+      hasSearchEntryPoint: !!data.candidates?.[0]?.groundingMetadata?.searchEntryPoint,
+      errorMsg: data.error?.message || 'none',
+      finishReason: data.candidates?.[0]?.finishReason,
+      partsCount: data.candidates?.[0]?.content?.parts?.length,
+    });
+
     // Attempt 2: WITHOUT grounding if quota/region/billing issue
     if (!resp.ok || !data.candidates) {
-      console.warn('[THREADS] Grounding attempt failed, retrying without:', data.error?.message);
+      console.warn('[THREADS] Grounding attempt failed, retrying without grounding. Error:', data.error?.message, '| Status:', resp.status);
       const ac2 = new AbortController();
       const to2 = setTimeout(() => ac2.abort(), 120_000);
       resp = await fetch(geminiUrl, {
@@ -2876,9 +2904,11 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       });
       clearTimeout(to2);
       data = await resp.json();
+      console.log('[THREADS] Attempt 2 (no grounding):', { ok: resp.ok, status: resp.status, hasCandidates: !!data.candidates });
       if (!resp.ok) return res.status(resp.status).json({ error: data.error?.message || 'AI error' });
     } else {
       usedGrounding = !!(data.candidates?.[0]?.groundingMetadata);
+      console.log('[THREADS] Grounding result:', usedGrounding ? 'GROUNDED' : 'NOT GROUNDED (model did not search)');
     }
 
     // Grounding responses may have multiple parts — concatenate all text parts
