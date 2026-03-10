@@ -2881,17 +2881,39 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       usedGrounding = !!(data.candidates?.[0]?.groundingMetadata);
     }
 
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    // Grounding responses may have multiple parts — concatenate all text parts
+    const parts = data.candidates?.[0]?.content?.parts || [];
+    const rawText = parts.map(p => p.text || '').join('').trim();
     if (!rawText) return res.status(422).json({ error: 'AI не вернул данные. Попробуйте ещё раз.' });
 
+    // Robust JSON extraction: strip markdown fences, try multiple strategies
     let posts;
-    try { posts = JSON.parse(rawText); } catch {
-      const m = rawText.match(/\[[\s\S]*\]/);
-      if (m) { try { posts = JSON.parse(m[0]); } catch { /* noop */ } }
+    const cleaned = rawText.replace(/```(?:json)?\s*/gi, '').replace(/```\s*/gi, '').trim();
+    // Strategy 1: direct parse
+    try { posts = JSON.parse(cleaned); } catch {}
+    // Strategy 2: extract outermost JSON array
+    if (!Array.isArray(posts)) {
+      const arrMatch = cleaned.match(/\[\s*\{[\s\S]*\}\s*\]/);
+      if (arrMatch) { try { posts = JSON.parse(arrMatch[0]); } catch {} }
+    }
+    // Strategy 3: if the response is an object wrapping an array (e.g. {"posts": [...]})
+    if (!Array.isArray(posts) && typeof posts === 'object' && posts !== null) {
+      const arrKey = Object.keys(posts).find(k => Array.isArray(posts[k]));
+      if (arrKey) posts = posts[arrKey];
+    }
+    // Strategy 4: last resort — try fixing common JSON issues (trailing commas)
+    if (!Array.isArray(posts)) {
+      try {
+        const fixed = cleaned.replace(/,\s*([\]\}])/g, '$1');
+        const arrMatch2 = fixed.match(/\[\s*\{[\s\S]*\}\s*\]/);
+        if (arrMatch2) posts = JSON.parse(arrMatch2[0]);
+      } catch {}
     }
 
+    console.log('[THREADS] rawText length:', rawText.length, '| parsed:', Array.isArray(posts) ? posts.length + ' posts' : 'FAILED', '| first 200 chars:', rawText.slice(0, 200));
+
     if (!Array.isArray(posts)) {
-      return res.status(422).json({ error: 'AI вернул некорректный формат. Попробуйте ещё раз.' });
+      return res.status(422).json({ error: 'AI вернул некорректный формат. Попробуйте ещё раз.', debug_preview: rawText.slice(0, 300) });
     }
 
     // Normalize + sanitize all fields
