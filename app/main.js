@@ -711,16 +711,26 @@ function renderCharacters(filter = {}) {
   const countEl = document.getElementById('welcome-char-count');
   if (countEl) countEl.textContent = `${state.characters.length}`;
 
+  const isSearchActive = !!(filter.search || filter.group || filter.compat);
   if (filter.search) {
-    const q = filter.search.toLowerCase();
+    const raw = filter.search.trim();
+    const q = raw.replace(/^#/, '').toLowerCase();
     const qNum = parseInt(q, 10);
-    chars = chars.filter(c => c.name_ru.toLowerCase().includes(q) || c.group.toLowerCase().includes(q) || c.tags.some(t => t.includes(q)) || (qNum && c.numeric_id === qNum) || (c.numeric_id && String(c.numeric_id).includes(q)));
+    const isNumericSearch = !isNaN(qNum) && /^\d+$/.test(q);
+    chars = chars.filter(c => {
+      if (isNumericSearch) {
+        if (c.numeric_id === qNum) return true;
+        if (c.numeric_id && String(c.numeric_id).includes(q)) return true;
+      }
+      return c.name_ru.toLowerCase().includes(q) || c.group.toLowerCase().includes(q) || c.tags.some(t => t.includes(q)) || (c.id && c.id.toLowerCase().includes(q));
+    });
   }
   if (filter.group) chars = chars.filter(c => c.group === filter.group);
   if (filter.compat) chars = chars.filter(c => c.compatibility === filter.compat);
 
   // Virtual scroll: render first page only, load more on demand
-  const _VS_PAGE = 48;
+  // When searching/filtering — show ALL results (no pagination)
+  const _VS_PAGE = isSearchActive ? chars.length : 80;
   state._charRenderAll = chars;
   state._charRenderPage = 1;
   const _slice = chars.slice(0, _VS_PAGE);
@@ -813,7 +823,7 @@ function loadMoreCharacters() {
   const grid = document.getElementById('char-grid');
   if (!grid || !state._charRenderAll) return;
   state._charRenderPage = (state._charRenderPage || 1) + 1;
-  const PAGE = 48;
+  const PAGE = 80;
   const slice = state._charRenderAll.slice(0, PAGE * state._charRenderPage);
   const hasMore = state._charRenderAll.length > slice.length;
   const remaining = state._charRenderAll.length - slice.length;
@@ -822,8 +832,9 @@ function loadMoreCharacters() {
   const moreBtn = document.getElementById('char-load-more');
   if (moreBtn) moreBtn.remove();
 
+  const newChars = slice.slice(slice.length - PAGE);
   const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = slice.slice(slice.length - PAGE).map(c => {
+  tempDiv.innerHTML = newChars.map(c => {
     const isA = state.selectedA?.id === c.id;
     const isB = state.selectedB?.id === c.id;
     const selCls = isA ? 'selected ring-2 ring-violet-500' : isB ? 'selected ring-2 ring-indigo-500' : '';
@@ -833,7 +844,17 @@ function loadMoreCharacters() {
     const anchors = c.identity_anchors || {};
     return `<div class="char-card ${selCls}" data-id="${c.id}"><div class="flex items-center justify-between mb-1"><div class="flex items-center gap-2 min-w-0">${getAvatarImg(c.id)}<span class="text-sm font-bold text-white truncate">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span></div><span class="tag text-[10px] ${tagCls} flex-shrink-0">${compatRu[c.compatibility] || c.compatibility}</span></div>${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}<div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2"><span>🎭 ${c.group}</span><span>⚡ ${paceRu[c.speech_pace] || c.speech_pace}</span><span>🔥 мат ${c.swear_level}/3</span><span>${c.role_default === 'A' ? '🅰️' : '🅱️'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span></div><div class="flex gap-2 mb-2"><button class="select-a flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isA ? 'bg-violet-600 text-white border-violet-500' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25'}" data-id="${c.id}">${isA ? '✓ Выбран A' : '🅰️ Выбрать A'}</button><button class="select-b flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isB ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-indigo-600/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-600/25'}" data-id="${c.id}">${isB ? '✓ Выбран B' : '🅱️ Выбрать B'}</button></div><button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}"><span>📋</span> Копировать промпт</button></div>`;
   }).join('');
-  tempDiv.querySelectorAll('.char-card').forEach(el => grid.appendChild(el));
+
+  // Move cards from temp to grid, then wire events on the moved elements
+  const addedCards = [...tempDiv.querySelectorAll('.char-card')];
+  addedCards.forEach(el => grid.appendChild(el));
+
+  // Wire up buttons on the newly added cards (they are now in the grid DOM)
+  addedCards.forEach(card => {
+    card.querySelectorAll('.select-a').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('A', btn.dataset.id); }));
+    card.querySelectorAll('.select-b').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('B', btn.dataset.id); }));
+    card.querySelectorAll('.copy-char-prompt').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); copyCharacterPrompt(btn.dataset.id); }));
+  });
 
   if (hasMore) {
     const newBtn = document.createElement('div');
@@ -843,12 +864,6 @@ function loadMoreCharacters() {
     grid.appendChild(newBtn);
   }
 
-  // Wire up new buttons
-  tempDiv.querySelectorAll('.select-a').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('A', btn.dataset.id); }));
-  tempDiv.querySelectorAll('.select-b').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('B', btn.dataset.id); }));
-  tempDiv.querySelectorAll('.copy-char-prompt').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); copyCharacterPrompt(btn.dataset.id); }));
-  grid.querySelectorAll('.select-a').forEach(btn => { if (!btn._wired) { btn._wired = true; btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('A', btn.dataset.id); }); } });
-  grid.querySelectorAll('.select-b').forEach(btn => { if (!btn._wired) { btn._wired = true; btn.addEventListener('click', (e) => { e.stopPropagation(); selectChar('B', btn.dataset.id); }); } });
   log('OK', 'LAZY', `Персонажи: страница ${state._charRenderPage}, показано ${slice.length}/${state._charRenderAll.length}`);
 }
 
