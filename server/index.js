@@ -2580,23 +2580,40 @@ app.post('/api/threads-trends', authMiddleware, async (req, res) => {
   const excludeBlock = exclude_big ? '\nIMPORTANT: Exclude obvious celebrities/brands with 500K+ followers. Focus ONLY on organic breakout posts from creators with <100K followers — these are the posts regular people can replicate.' : '';
 
   // ──── THE MEGA PROMPT ────
-  const prompt = `Today is ${dateStr}. You are the world's best Threads content analyst.
+  const prompt = `Today is ${dateStr}. You are the world's best Threads content strategist and trend analyst.
 
-⚠️ CRITICAL: You MUST use Google Search tool to find REAL posts. DO NOT generate from memory. Search threads.net RIGHT NOW.
+⚠️ CRITICAL INSTRUCTION: You MUST use Google Search to find what is ACTUALLY happening in the world RIGHT NOW.
+DO NOT generate generic posts from memory. Every post must be rooted in a REAL current event, news story, or trend.
 
 ━━━ MISSION ━━━
-STEP 1: Use Google Search to find REAL trending posts on threads.net. Search for: site:threads.net ${queryBlock} ${langLabel === 'Russian' ? 'русский' : ''}
-STEP 2: Extract ${safeLimit} REAL posts with real @handles and real URLs.
-STEP 3: If you cannot find enough real posts, fill remaining slots with INFERRED posts tied to SPECIFIC current events happening TODAY (${dateStr}).
+STEP 1: Use Google Search to find TODAY's hottest news, events, and trending topics:
+  - Search: "новости сегодня ${dateStr}" OR "trending news today ${dateStr}"
+  - Search: "${query || 'технологии AI бизнес'} новости ${now.getFullYear()}"
+  - Search: "Google Apple Tesla OpenAI Яндекс VK новости ${freshnessLabel}"
+  - Search: trending topics Russia ${now.getFullYear()} ${now.toLocaleString('en', {month: 'long'})}
+STEP 2: From the search results, identify ${safeLimit} SPECIFIC real events, announcements, scandals, price changes, tech launches, company news, viral moments.
+STEP 3: For EACH real event, create a killer Threads-style post that reacts to it with wit, irony, or sharp personal take.
 
-Language: ${langLabel} | Freshness: ${freshnessLabel} | Platform: threads.net only${nicheBlock}${excludeBlock}
+Language: ${langLabel} | Freshness: ${freshnessLabel}${nicheBlock}${excludeBlock}
 
-━━━ MANDATORY: CURRENT EVENTS ━━━
-Every post (real or inferred) MUST connect to something happening RIGHT NOW in the world. Use Google Search to find:
-- Today's top news stories, scandals, viral moments
-- Current prices, events, weather, holidays, cultural moments
-- Specific names, dates, numbers from TODAY — not generic observations
-DO NOT recycle generic themes like "прокрастинация", "лень", "авиабилеты" without tying them to a SPECIFIC current event or news story.
+━━━ MANDATORY: REAL EVENTS ONLY ━━━
+Each post MUST reference a SPECIFIC real thing you found via Google Search:
+- Company names (Apple, Google, Tesla, Яндекс, Сбер, Ozon, Wildberries, OpenAI, etc.)
+- Real product launches, updates, price changes, scandals
+- Real news headlines, political events, economic data, sports results
+- Real viral moments, celebrity news, cultural events
+- Real numbers: stock prices, exchange rates, product prices, statistics
+
+🚫 BANNED generic topics (without a real event anchor):
+"прокрастинация", "лень", "авиабилеты дорого" (without specific airline/price),
+"ностальгия по детству", "весенняя слякоть", "кризис возраста",
+"цифровой детокс", "отношения" (generic), "корпоративная культура" (generic)
+
+✅ GOOD examples of what to write about:
+- "OpenAI выкатил GPT-5, а у меня до сих пор автозамена меняет «нормально» на «нормальной»"
+- "Wildberries опять поднял комиссию до 25%. Скоро продавцы будут доплачивать за право продавать"
+- "Курс доллара 98₽. Мой план «накопить на отпуск» официально перешёл в категорию фантастики"
+- "Apple показал iPhone 17, а мне мать до сих пор звонит и спрашивает как фото отправить"
 
 ━━━ QUALITY FILTER — THIS IS CRITICAL ━━━
 You are looking for RELATABLE, PERSONAL, SHARP posts that make people feel "это про меня!" — NOT generic motivation or empty clickbait.
@@ -2623,28 +2640,10 @@ You are looking for RELATABLE, PERSONAL, SHARP posts that make people feel "эт
 
 The posts you find should make the reader STOP scrolling and feel "блин, это ж про меня". Relatability > polish.
 
-━━━ STYLE GUIDE — FORMAT REFERENCE ONLY ━━━
-⚠️ These are OLD examples for FORMAT/TONE reference ONLY. DO NOT copy their topics or text! Your posts must be about CURRENT events from Google Search.
-Study the STRUCTURE, LINE BREAKS, and TONE — then apply them to TODAY's trending topics:
+━━━ STYLE GUIDE — FORMAT/TONE REFERENCE ONLY ━━━
+⚠️ DO NOT copy these topics. These show STRUCTURE and TONE only. Your posts must be about REAL events from Google Search.
 
-EXAMPLE 1 (386 ❤️, 39 💬 — relatability):
-"Интересно, сколько людей сейчас листают Threads перед сном.
-
-И сколько из них буквально час назад
-говорили себе:
-«Сегодня лягу пораньше»."
-
-EXAMPLE 2 (198 ❤️, 25 💬 — nostalgia):
-"Я из того поколения 😊
-
-когда в первом классе сам шёл в школу
-и так же сам возвращался домой."
-
-EXAMPLE 3 (181 ❤️, 303 💬 — bold emotion):
-"Я русский и искренне горжусь своим происхождением, своим менталитетом
-и людьми, от которых иду. ❤️"
-
-EXAMPLE 4 (170 ❤️, 22 💬 — everyday observation + humor):
+FORMAT EXAMPLE 1 (humor + specific detail):
 "Меня одного всегда удивляет:
 
 билет туда — 5,000,
@@ -2653,40 +2652,15 @@ EXAMPLE 4 (170 ❤️, 22 💬 — everyday observation + humor):
 Как будто самолёт обратно летит
 с каким-то премиальным апгрейдом воздуха."
 
-EXAMPLE 5 (58 ❤️, 14 💬 — personal list):
-"Живу с женой уже 12 лет, и скажу честно:
-1. Мы поддерживаем друг друга — я финансово, она своей космической энергией
-2. У нас простой баланс: она красивая, я сильный
-3. Она на первом месте, на втором — собаки
-4. Иногда ловлю себя на мысли, что боюсь её потерять, просто вслух об этом не говорю
-5. Чувства всё такие же сильные
-6. И я стараюсь делать всё, чтобы она чувствовала себя единственной принцессой
-7. В общем, я правда очень счастлив"
-
-EXAMPLE 6 (39 ❤️, 44 💬 — counterintuitive take):
-"Не понимаю, почему «гуру питания» так демонизируют пельмени.
-
-По сути это же нормальная база:
-углеводы + белок.
-
-Добавил овощей для клетчатки —
-и вполне себе сбалансированная тарелка."
-
-EXAMPLE 7 (27 ❤️, 53 💬 — provocation):
+FORMAT EXAMPLE 2 (provocation + argument):
 "Бесит вот это слово «терпила».
 
 Тебя толпой отпиздили и ты написал заявление —
 «терпила».
 
-Сообщил о нарушении на дороге —
-«терпила».
+Как будто защищать себя вдруг стало чем-то постыдным."
 
-Пожаловался на реальную проблему —
-снова «терпила».
-
-Как будто защищать себя и требовать нормальных правил вдруг стало чем-то постыдным."
-
-EXAMPLE 8 (27 ❤️, 43 💬 — list with twist):
+FORMAT EXAMPLE 3 (list with twist):
 "Три буквы, от которых вас начинает тошнить.
 
 Мои:
@@ -2695,22 +2669,8 @@ EXAMPLE 8 (27 ❤️, 43 💬 — list with twist):
 ЖКХ
 ПДД"
 
-EXAMPLE 9 (43 ❤️ — movie quote + reflection):
-"Фраза из одного моего любимого фильма, смысл которой каждый раз
-цепляет глубже:
-
-«Декстер, я люблю тебя... но ты мне больше не нравишься.»
-
-Иногда между этими двумя чувствами оказывается
-целая жизнь."
-
-EXAMPLE 10 (13 ❤️, 16 💬 — humor with punch):
-"Смешно бывает, когда говорю, что смотрю **«Битву экстрасенсов»**, и
-сразу слышу:
-«Да там же всё не по-настоящему».
-
-Бля, а у тебя любимый фильм **«Аватар»** —
-что, думаешь, это документалка?"
+KEY FORMAT RULES: short hook (1 line) → \\n\\n → development (2-5 short lines) → \\n\\n → punchline.
+150-500 chars. First person. NO hashtags in body. Max 1-2 emoji. **Bold** for punch words.
 
 ━━━ VIRAL FORMAT RULES (from analysis of 50+ viral posts) ━━━
 STRUCTURE: short hook (1 line) → empty line → development (2-5 short lines, each on new line) → empty line → punchline/twist/question
@@ -2719,40 +2679,37 @@ LENGTH: 150-500 characters sweet spot. NO hashtags inside post body.
 TONE: first person, conversational, as if talking to a friend. NOT lecturing, NOT motivating.
 WINNING FORMATS: "Меня одного удивляет...", "Я из того поколения...", "Бесит вот это...", "Три [noun] от которых...", "Что вы никогда не пробовали?", "Живу с [person] N лет, и скажу честно:", "Интересно, сколько людей...", "Объясните мне одну вещь.", "Представьте ситуацию:", "Запомните простую вещь:"
 
-━━━ SEARCH STRATEGY (use ALL of these via Google Search) ━━━
-Phase 1 — Direct Threads crawl (prioritize thoughtful content):
-  • site:threads.net ${query || 'trending'} ${lang === 'ru' ? 'русский' : ''} insight
-  • site:threads.net "${query}" ${freshness === '24h' ? 'today' : 'this week'}
-  • "threads.net/@" ${query || 'viral'} thought-provoking ${now.getFullYear()}
+━━━ SEARCH STRATEGY (use Google Search for ALL of these) ━━━
+Phase 1 — TODAY's breaking news & events:
+  • "${query || 'главные новости'} сегодня ${dateStr}"
+  • "trending news Russia ${now.getFullYear()} ${now.toLocaleString('en', {month: 'long'})}"
+  • "${query || 'технологии бизнес скандал'} новости сегодня"
 
-Phase 2 — Cross-platform signals (smart discussions):
-  • reddit.com "threads.net" "${query || 'great take'}" ${freshnessLabel}
-  • twitter.com OR x.com "threads" "great point" "${query}" ${freshnessLabel}
-  • "best thread" OR "smart take" threads.net ${query || ''} ${now.getFullYear()}
+Phase 2 — Tech, companies, products:
+  • "Apple Google Tesla OpenAI Яндекс Сбер новости ${freshnessLabel}"
+  • "Wildberries Ozon VK Telegram обновление ${now.getFullYear()}"
+  • "${query || 'AI нейросети'} launch update announcement ${freshnessLabel}"
 
-Phase 3 — Intellectual trend context:
-  • Google Trends: what topics related to "${query || 'threads trends'}" are spiking right now
-  • news/opinion pieces mentioning threads.net insightful content ${query || ''}
-  • "must read" OR "nailed it" threads ${query || ''} ${now.getFullYear()}
+Phase 3 — Viral moments, prices, economy:
+  • "курс доллара рубль цены ${dateStr}"
+  • "вирусное видео скандал ${query || ''} ${freshnessLabel}"
+  • "что обсуждают в интернете сегодня ${dateStr}"
 
-━━━ DATA EXTRACTION RULES ━━━
-For each post found:
-1. COPY the EXACT text from the search snippet/cached page. Do NOT rewrite or summarize the original.
-2. Extract @author handle if visible in URL or snippet
-3. Build direct URL: https://www.threads.net/@handle/post/ID — ONLY if you found the real URL. null otherwise.
-4. Estimate freshness from snippet dates, "ago" markers, or context
-5. Extract any visible engagement numbers (likes, comments, reposts, shares)
-6. Rate confidence: "high" = found real URL+text; "medium" = found via discussion/snippet; "low" = topic-inferred
-7. Rate virality_score 1-100 based on: RELATABILITY/ЖИЗА (0-30), emotional resonance (0-25), shareability (0-25), comment potential (0-20)
-   ↑ Notice: relatability ("это про меня!") is the HIGHEST weighted factor. A relatable post with moderate polish beats a polished post with no soul.
+IMPORTANT: Extract SPECIFIC facts from search results: company names, product names, exact prices, exact dates, person names. Use these facts as anchors for your posts.
 
-If fewer than ${safeLimit} real posts found → fill with INFERRED posts. BUT:
-⚠️ INFERRED POSTS MUST reference a SPECIFIC current event, news story, or trending topic you found via Google Search TODAY (${dateStr}).
-Examples of GOOD inferred: a post reacting to today's specific news headline, a specific price change, a viral moment, a celebrity scandal, a policy change.
-Examples of BAD inferred: generic "прокрастинация", "авиабилеты дорого", "лень", "ностальгия по детству" — these are BANNED unless tied to a specific current event.
-For each inferred post, include "current_event" field explaining WHAT real event inspired it.
-Mark inferred: confidence "low", signal_type "inferred", author null, url null.
-NEVER invent @handles or URLs for inferred posts.
+━━━ DATA RULES ━━━
+For each of the ${safeLimit} posts:
+1. Write the post text as a Threads-style reaction to a REAL event from your Google Search results
+2. Set author to null (these are generated posts, not found posts)
+3. Set url to null
+4. Set "news_source": a 1-sentence description of the REAL news event that inspired this post (e.g. "OpenAI announced GPT-5 on March 10, 2026" or "Dollar exchange rate hit 98₽ on March 10")
+5. Set "news_url": URL of the news article you found via Google Search, or null
+6. Estimate engagement potential (likes, comments, reposts)
+7. Rate confidence: "high" = based on verified news from search; "medium" = based on trending topic; "low" = loosely inspired
+8. Rate virality_score 1-100: RELATABILITY (0-30) + emotion (0-25) + shareability (0-25) + debate (0-20)
+9. Set signal_type: "news_reaction" (post reacts to real news), "trend_take" (post comments on a real trend), "event_humor" (humorous take on real event)
+
+EVERY post must have a non-null news_source. Generic posts without a real event anchor will be rejected.
 
 ━━━ FOR EACH POST: GENERATE THE FOLLOWING ━━━
 
@@ -2816,13 +2773,15 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
 [
   {
     "id": "th1",
-    "text": "exact original post text",
-    "author": "@handle or null",
-    "url": "https://www.threads.net/@handle/post/ID or null",
-    "freshness_label": "~2 ч назад",
+    "text": "the viral post text you created, reacting to the real event",
+    "author": null,
+    "url": null,
+    "news_source": "Конкретное описание реального события из Google Search, например: OpenAI выпустил GPT-5 10 марта 2026",
+    "news_url": "https://example.com/article-url-from-search or null",
+    "freshness_label": "сегодня",
     "signals": { "likes_est": "1.2K+", "comments_est": "230+", "reposts_est": "неизвестно" },
     "confidence": "high",
-    "signal_type": "direct",
+    "signal_type": "news_reaction",
     "topic_tag": "short topic label",
     "virality_score": 82,
     "score_breakdown": { "depth": 25, "emotion": 20, "shareability": 21, "debate": 16 },

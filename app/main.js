@@ -7780,7 +7780,7 @@ function initThreadsTrends() {
     if (statusEl) {
       statusEl.classList.remove('hidden');
       statusEl.innerHTML = `<div class="flex items-center gap-2">
-        <span class="text-violet-400 animate-pulse">🔍 Сканирую threads.net через Google Search…</span>
+        <span class="text-violet-400 animate-pulse">🔍 Ищу актуальные новости и создаю вирусные посты…</span>
         <span class="text-[9px] text-gray-600">обычно 15-30 сек</span>
       </div>`;
     }
@@ -7813,10 +7813,10 @@ function initThreadsTrends() {
         badgeEl.classList.remove('hidden');
         if (data.used_grounding) {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-          badgeEl.textContent = '🌐 Google Search';
+          badgeEl.textContent = '📰 На основе реальных новостей';
         } else {
-          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-gray-500/15 text-gray-400 border-gray-600/30';
-          badgeEl.textContent = '🧠 AI-анализ';
+          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-violet-500/15 text-violet-400 border-violet-500/30';
+          badgeEl.textContent = '🧠 AI-тренды на основе актуальных событий';
         }
       }
 
@@ -7828,8 +7828,8 @@ function initThreadsTrends() {
 
       // Status
       if (statusEl) {
-        const src = data.used_grounding ? 'Google Search' : 'AI-анализ';
-        statusEl.innerHTML = `<span class="text-emerald-400">✓ Найдено ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>`;
+        const src = data.used_grounding ? 'на основе реальных новостей' : 'на основе AI-трендов';
+        statusEl.innerHTML = `<span class="text-emerald-400">✓ Создано ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>`;
       }
 
       // Summary stats
@@ -8029,9 +8029,9 @@ function _renderSkeletons(n) {
 }
 
 const _confidenceMeta = {
-  high:   { label: 'Реальный пост',    cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
-  medium: { label: 'Из обсуждений',    cls: 'bg-amber-500/15 text-amber-400 border-amber-500/25',    dot: 'bg-amber-400' },
-  low:    { label: 'AI-реконструкция', cls: 'bg-gray-500/15 text-gray-400 border-gray-600/25',       dot: 'bg-gray-500' },
+  high:   { label: '📰 На основе новости', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
+  medium: { label: '📊 На основе тренда',  cls: 'bg-amber-500/15 text-amber-400 border-amber-500/25',    dot: 'bg-amber-400' },
+  low:    { label: '💡 AI-генерация',      cls: 'bg-gray-500/15 text-gray-400 border-gray-600/25',       dot: 'bg-gray-500' },
 };
 
 const _varStyleMeta = {
@@ -8199,6 +8199,16 @@ function _renderThreadsPosts() {
 
         <!-- Post text -->
         <p class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap">${_formatThreadsText(post.text)}</p>
+
+        <!-- News source badge -->
+        ${post.news_source ? `
+        <div class="flex items-start gap-1.5 rounded-lg p-2 bg-cyan-500/5 border border-cyan-500/15">
+          <span class="text-[10px] flex-shrink-0">📰</span>
+          <div class="space-y-0.5">
+            <span class="text-[10px] text-cyan-400 leading-snug">${escapeHtml(post.news_source)}</span>
+            ${post.news_url ? `<a href="${escapeHtml(post.news_url)}" target="_blank" rel="noopener" class="block text-[9px] text-cyan-600 hover:text-cyan-400 truncate transition-colors">🔗 Источник</a>` : ''}
+          </div>
+        </div>` : ''}
 
         <!-- Best time -->
         ${bestTimeHtml}
