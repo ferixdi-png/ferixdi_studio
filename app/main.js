@@ -7857,14 +7857,7 @@ function initThreadsTrends() {
     exTrack.addEventListener('click', () => {
       _threadsExcludeBig = !_threadsExcludeBig;
       exCb.checked = _threadsExcludeBig;
-      exTrack.classList.toggle('bg-violet-600', _threadsExcludeBig);
-      exTrack.classList.toggle('bg-gray-700', !_threadsExcludeBig);
-      exTrack.classList.toggle('border-violet-500', _threadsExcludeBig);
-      if (exThumb) {
-        exThumb.classList.toggle('translate-x-4', _threadsExcludeBig);
-        exThumb.classList.toggle('bg-white', _threadsExcludeBig);
-        exThumb.classList.toggle('bg-gray-400', !_threadsExcludeBig);
-      }
+      exTrack.classList.toggle('active', _threadsExcludeBig);
       _saveThreadsFilters();
     });
   }
@@ -8144,20 +8137,22 @@ function _loadThreadsFilters() {
     if (f.excludeBig) {
       _threadsExcludeBig = true;
       const track = document.getElementById('threads-exclude-track');
-      const thumb = document.getElementById('threads-exclude-thumb');
       const cb    = document.getElementById('threads-exclude-big');
       if (cb) cb.checked = true;
-      if (track) { track.classList.add('bg-violet-600','border-violet-500'); track.classList.remove('bg-gray-700'); }
-      if (thumb) { thumb.classList.add('translate-x-4','bg-white'); thumb.classList.remove('bg-gray-400'); }
+      if (track) track.classList.add('active');
     }
   } catch { /* ignore */ }
 }
 
 function _renderSkeletons(n) {
   return Array.from({ length: Math.min(n, 4) }).map((_, i) => `
-    <div class="glass-panel p-0 overflow-hidden border border-gray-700/20 animate-pulse" style="animation-delay:${i * 0.1}s">
-      <div class="p-4 space-y-3">
-        <div class="flex gap-2"><div class="h-2.5 bg-gray-700/50 rounded w-16"></div><div class="h-2.5 bg-gray-700/40 rounded w-20"></div><div class="h-2.5 bg-gray-700/30 rounded w-12"></div></div>
+    <div class="threads-card animate-pulse" style="animation-delay:${i * 0.12}s">
+      <div class="p-5 space-y-3">
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-gray-700/40"></div>
+          <div class="flex-1 space-y-1.5"><div class="flex gap-2"><div class="h-2.5 bg-gray-700/50 rounded w-16"></div><div class="h-2.5 bg-gray-700/40 rounded w-20"></div></div><div class="h-2 bg-gray-700/30 rounded w-32"></div></div>
+          <div class="w-20 space-y-1"><div class="h-1.5 bg-gray-700/40 rounded w-full"></div><div class="h-2 bg-gray-700/30 rounded w-14 ml-auto"></div></div>
+        </div>
         <div class="h-3 bg-gray-700/50 rounded w-full"></div>
         <div class="h-3 bg-gray-700/40 rounded w-5/6"></div>
         <div class="h-3 bg-gray-700/30 rounded w-3/4"></div>
@@ -8254,15 +8249,17 @@ function _renderThreadsPosts() {
     // Hashtags HTML
     const allH = _allHashtags(post);
     const hashtagsHtml = allH.length ? `
-      <div class="border-t border-gray-700/30 px-4 py-3 space-y-2 bg-fuchsia-500/3">
+      <div class="border-t border-white/[0.04] px-5 py-4 space-y-2" style="background:rgba(232,121,168,0.02)">
         <div class="flex items-center justify-between">
-          <button class="threads-toggle-hashtags text-[10px] text-fuchsia-400 font-semibold uppercase tracking-wider hover:text-fuchsia-300 transition-colors">🏷️ Хэштеги (${allH.length})</button>
-          <button class="threads-copy-hashtags text-[9px] px-2 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 hover:bg-fuchsia-500/20 transition-all font-medium" data-text="${escapeHtml(allH.join(' '))}">📋 Копировать хэштеги</button>
+          <button class="threads-toggle-hashtags text-[10px] text-fuchsia-400 font-semibold uppercase tracking-[0.15em] hover:text-fuchsia-300 transition-colors flex items-center gap-1.5">
+            <span>🏷️</span> <span>Хэштеги (${allH.length})</span> <span class="text-gray-600">▼</span>
+          </button>
+          <button class="threads-copy-hashtags btn-neon-pink text-[9px] px-2 py-0.5" data-text="${escapeHtml(allH.join(' '))}">📋 Копировать</button>
         </div>
-        <div class="threads-hashtags-body hidden space-y-1.5">
-          ${post.hashtags?.high_volume?.length ? `<div class="flex flex-wrap gap-1"><span class="text-[8px] text-gray-600 w-full">Популярные:</span>${post.hashtags.high_volume.map(h => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/15">${escapeHtml(h)}</span>`).join('')}</div>` : ''}
-          ${post.hashtags?.mid_volume?.length ? `<div class="flex flex-wrap gap-1"><span class="text-[8px] text-gray-600 w-full">Средние:</span>${post.hashtags.mid_volume.map(h => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/15">${escapeHtml(h)}</span>`).join('')}</div>` : ''}
-          ${post.hashtags?.niche?.length ? `<div class="flex flex-wrap gap-1"><span class="text-[8px] text-gray-600 w-full">Нишевые:</span>${post.hashtags.niche.map(h => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/15">${escapeHtml(h)}</span>`).join('')}</div>` : ''}
+        <div class="threads-hashtags-body hidden space-y-2 pt-1">
+          ${post.hashtags?.high_volume?.length ? `<div class="space-y-1"><div class="text-[8px] text-gray-600 uppercase tracking-wider">Популярные</div><div class="flex flex-wrap gap-1">${post.hashtags.high_volume.map(h => `<span class="tag tag-green">${escapeHtml(h)}</span>`).join('')}</div></div>` : ''}
+          ${post.hashtags?.mid_volume?.length ? `<div class="space-y-1"><div class="text-[8px] text-gray-600 uppercase tracking-wider">Средние</div><div class="flex flex-wrap gap-1">${post.hashtags.mid_volume.map(h => `<span class="tag tag-purple">${escapeHtml(h)}</span>`).join('')}</div></div>` : ''}
+          ${post.hashtags?.niche?.length ? `<div class="space-y-1"><div class="text-[8px] text-gray-600 uppercase tracking-wider">Нишевые</div><div class="flex flex-wrap gap-1">${post.hashtags.niche.map(h => `<span class="tag" style="background:rgba(6,182,212,0.08);border-color:rgba(6,182,212,0.18);color:#22d3ee">${escapeHtml(h)}</span>`).join('')}</div></div>` : ''}
         </div>
       </div>` : '';
 
@@ -8290,56 +8287,82 @@ function _renderThreadsPosts() {
       </div>` : '';
 
     return `
-    <div class="glass-panel p-0 overflow-hidden border border-gray-700/40 hover:border-violet-500/30 transition-all" data-post-id="${escapeHtml(post.id)}">
+    <div class="threads-card" data-post-id="${escapeHtml(post.id)}">
 
       <!-- Card header -->
-      <div class="p-4 pb-3 space-y-2">
-        <!-- Meta row -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="w-1.5 h-1.5 rounded-full ${conf.dot} flex-shrink-0"></span>
-          <span class="text-[9px] px-2 py-0.5 rounded-full border ${conf.cls} font-medium flex-shrink-0">${conf.label}</span>
-          ${hasAuthor ? `<span class="text-[10px] text-cyan-400 font-medium">${escapeHtml(post.author)}</span>` : ''}
-          <span class="text-[10px] text-gray-500">${escapeHtml(post.freshness_label)}</span>
-          ${sigLikes !== 'неизвестно' ? `<span class="text-[9px] text-gray-500">❤️ ${escapeHtml(sigLikes)}</span>` : ''}
-          ${sigComm !== 'неизвестно' ? `<span class="text-[9px] text-gray-500">💬 ${escapeHtml(sigComm)}</span>` : ''}
-          ${sigRepost !== 'неизвестно' ? `<span class="text-[9px] text-gray-500">🔁 ${escapeHtml(sigRepost)}</span>` : ''}
-          ${post.topic_tag ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${escapeHtml(post.topic_tag)}</span>` : ''}
-          <span class="text-[9px] text-gray-600 ml-auto font-bold">#${idx + 1}</span>
+      <div class="p-5 pb-4 space-y-3">
+
+        <!-- Top row: number + meta + score -->
+        <div class="flex items-start gap-3">
+          <!-- Left: rank badge -->
+          <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 text-[11px] font-bold text-violet-400 flex-shrink-0">${idx + 1}</div>
+
+          <!-- Center: meta info -->
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[9px] px-2 py-0.5 rounded-full border ${conf.cls} font-medium">${conf.label}</span>
+              ${hasAuthor ? `<span class="text-[10px] text-cyan-400 font-medium truncate">${escapeHtml(post.author)}</span>` : ''}
+              ${post.topic_tag ? `<span class="text-[9px] px-1.5 py-0.5 rounded-md bg-white/[0.03] text-gray-500 border border-white/[0.06]">${escapeHtml(post.topic_tag)}</span>` : ''}
+            </div>
+            <div class="flex items-center gap-2 text-[9px] text-gray-600">
+              ${post.freshness_label ? `<span>${escapeHtml(post.freshness_label)}</span>` : ''}
+              ${sigLikes !== 'неизвестно' ? `<span>❤️ ${escapeHtml(sigLikes)}</span>` : ''}
+              ${sigComm !== 'неизвестно' ? `<span>💬 ${escapeHtml(sigComm)}</span>` : ''}
+              ${sigRepost !== 'неизвестно' ? `<span>🔁 ${escapeHtml(sigRepost)}</span>` : ''}
+            </div>
+          </div>
+
+          <!-- Right: virality score -->
+          <div class="flex-shrink-0 text-right space-y-1" style="min-width:80px">
+            <div class="flex items-center gap-2">
+              <div class="flex-1 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                <div class="${vColor.bar} h-full rounded-full transition-all" style="width:${vScore}%"></div>
+              </div>
+              <span class="${vColor.text} text-xs font-bold tabular-nums" style="font-family:'JetBrains Mono',monospace">${vScore}</span>
+            </div>
+            <div class="flex gap-1.5 justify-end">
+              <span class="text-[8px] text-gray-600" title="Глубина (0-30)">🧠${sb.depth || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Эмоция (0-25)">❤️${sb.emotion || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔁${sb.shareability || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Дебаты (0-20)">💬${sb.debate || 0}</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Virality score bar -->
-        <div class="max-w-xs">${viralityHtml}</div>
-
         <!-- Post text -->
-        <p class="text-sm text-gray-100 leading-relaxed whitespace-pre-wrap">${escapeHtml(post.text)}</p>
+        <p class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeHtml(post.text)}</p>
 
         <!-- Best time -->
         ${bestTimeHtml}
 
         <!-- Actions row -->
         <div class="flex items-center gap-2 flex-wrap pt-1">
-          <button class="threads-copy-post text-[10px] px-2.5 py-1 rounded-lg bg-gray-700/40 text-gray-400 hover:bg-gray-700/70 hover:text-gray-200 border border-gray-600/30 transition-all font-medium" data-text="${escapeHtml(post.text)}">📋 Копировать</button>
-          ${hasUrl ? `<a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 border border-violet-500/20 transition-all font-medium">🔗 Открыть</a>` : ''}
-          <button class="threads-toggle-analysis text-[10px] px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20 transition-all font-medium">▼ Почему это вирусно</button>
+          <button class="threads-copy-post btn-neon text-[10px] px-2.5 py-1" data-text="${escapeHtml(post.text)}">📋 Копировать</button>
+          ${hasUrl ? `<a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="btn-neon text-[10px] px-2.5 py-1" style="text-decoration:none">🔗 Открыть</a>` : ''}
+          <button class="threads-toggle-analysis text-[10px] px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20 transition-all font-medium">▼ Анализ</button>
         </div>
       </div>
 
       <!-- Analysis block (collapsed) -->
-      <div class="threads-analysis-body hidden border-t border-gray-700/30 px-4 py-3 space-y-2 bg-amber-500/3">
-        ${post.analysis?.key_insight ? `<div class="rounded-lg p-2.5 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-2"><div class="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider mb-1">💡 Ключевой инсайт</div><div class="text-[12px] text-emerald-200 font-medium leading-relaxed">${escapeHtml(post.analysis.key_insight)}</div></div>` : ''}
-        ${post.analysis?.why_works ? `<div class="text-[11px] text-gray-300 leading-relaxed">${escapeHtml(post.analysis.why_works)}</div>` : ''}
-        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 mt-2">
-          ${post.analysis?.hook ? `<div class="rounded-lg p-2.5 bg-black/30 border border-amber-500/15 space-y-1"><div class="text-[9px] text-amber-400 font-semibold uppercase tracking-wider">Хук</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.hook)}</div></div>` : ''}
-          ${post.analysis?.conflict ? `<div class="rounded-lg p-2.5 bg-black/30 border border-red-500/15 space-y-1"><div class="text-[9px] text-red-400 font-semibold uppercase tracking-wider">Конфликт</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.conflict)}</div></div>` : ''}
-          ${post.analysis?.audience_pain ? `<div class="rounded-lg p-2.5 bg-black/30 border border-violet-500/15 space-y-1"><div class="text-[9px] text-violet-400 font-semibold uppercase tracking-wider">Боль аудитории</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.audience_pain)}</div></div>` : ''}
-          ${post.analysis?.cta_potential ? `<div class="rounded-lg p-2.5 bg-black/30 border border-cyan-500/15 space-y-1"><div class="text-[9px] text-cyan-400 font-semibold uppercase tracking-wider">CTA-потенциал</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.cta_potential)}</div></div>` : ''}
+      <div class="threads-analysis-body hidden border-t border-white/[0.04] px-5 py-4 space-y-3" style="background:rgba(245,158,11,0.02)">
+        ${post.analysis?.key_insight ? `
+        <div class="rounded-xl p-3 bg-gradient-to-r from-emerald-500/8 to-cyan-500/5 border border-emerald-500/15">
+          <div class="text-[9px] text-emerald-500 font-semibold uppercase tracking-[0.15em] mb-1">Ключевой инсайт</div>
+          <div class="text-[12px] text-emerald-200 font-medium leading-relaxed">${escapeHtml(post.analysis.key_insight)}</div>
+        </div>` : ''}
+        ${post.analysis?.why_works ? `<div class="text-[11px] text-gray-400 leading-relaxed">${escapeHtml(post.analysis.why_works)}</div>` : ''}
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          ${post.analysis?.hook ? `<div class="rounded-lg p-2.5 bg-black/20 border border-amber-500/10 space-y-1"><div class="text-[9px] text-amber-400/80 font-semibold uppercase tracking-[0.1em]">Хук</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.hook)}</div></div>` : ''}
+          ${post.analysis?.conflict ? `<div class="rounded-lg p-2.5 bg-black/20 border border-red-500/10 space-y-1"><div class="text-[9px] text-red-400/80 font-semibold uppercase tracking-[0.1em]">Конфликт</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.conflict)}</div></div>` : ''}
+          ${post.analysis?.audience_pain ? `<div class="rounded-lg p-2.5 bg-black/20 border border-violet-500/10 space-y-1"><div class="text-[9px] text-violet-400/80 font-semibold uppercase tracking-[0.1em]">Боль аудитории</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.audience_pain)}</div></div>` : ''}
+          ${post.analysis?.cta_potential ? `<div class="rounded-lg p-2.5 bg-black/20 border border-cyan-500/10 space-y-1"><div class="text-[9px] text-cyan-400/80 font-semibold uppercase tracking-[0.1em]">CTA-потенциал</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.cta_potential)}</div></div>` : ''}
         </div>
       </div>
 
       <!-- Variants block -->
       ${post.variants?.length ? `
-      <div class="border-t border-gray-700/30 px-4 py-3 space-y-3 bg-violet-500/3">
-        <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider">✦ Готовые посты для публикации</div>
+      <div class="border-t border-white/[0.04] px-5 py-4 space-y-3" style="background:rgba(124,92,252,0.02)">
+        <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-[0.15em]">Готовые посты для публикации</div>
         <div class="flex gap-1.5 flex-wrap">${varTabsHtml}</div>
         <div class="threads-var-panels">${varPanelsHtml}</div>
       </div>` : ''}
@@ -8349,8 +8372,10 @@ function _renderThreadsPosts() {
 
       <!-- Reels block -->
       ${post.reel_ideas?.length ? `
-      <div class="border-t border-gray-700/30 px-4 py-3 space-y-2 bg-cyan-500/3">
-        <button class="threads-toggle-reels text-[10px] text-cyan-400 font-semibold uppercase tracking-wider hover:text-cyan-300 transition-colors w-full text-left">🎬 Идеи для Reels (${post.reel_ideas.length})</button>
+      <div class="border-t border-white/[0.04] px-5 py-4 space-y-2" style="background:rgba(6,182,212,0.02)">
+        <button class="threads-toggle-reels text-[10px] text-cyan-400 font-semibold uppercase tracking-[0.15em] hover:text-cyan-300 transition-colors w-full text-left flex items-center gap-1.5">
+          <span>🎬</span> <span>Идеи для Reels (${post.reel_ideas.length})</span> <span class="text-gray-600 ml-auto">▼</span>
+        </button>
         <div class="threads-reels-body hidden space-y-2">${reelHtml}</div>
       </div>` : ''}
 
