@@ -315,53 +315,6 @@ function initWelcomeBanner() {
   if (btn && !isPromoValid()) {
     btn.addEventListener('click', () => navigateTo('settings'));
   }
-  initStatsTicker();
-}
-
-// ─── ANIMATED STATS TICKER ────────────────────
-function initStatsTicker() {
-  const reachEl = document.getElementById('stat-reach');
-  const promptsEl = document.getElementById('stat-prompts');
-  const usersEl = document.getElementById('stat-users');
-  if (!reachEl) return;
-
-  // Animate counter from 0 to target
-  function animateCount(el, target, duration, prefix = '', suffix = '') {
-    const start = performance.now();
-    const initial = 0;
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-      const current = Math.round(initial + (target - initial) * eased);
-      el.textContent = prefix + current.toLocaleString('ru-RU') + suffix;
-      if (progress < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-
-  // Initial count-up animation
-  animateCount(reachEl, 847000, 2500);
-  animateCount(promptsEl, 12400, 2000);
-  animateCount(usersEl, 340, 1800);
-
-  // Organic reach keeps growing slowly (simulates real-time growth)
-  let currentReach = 847000;
-  let currentPrompts = 12400;
-  setInterval(() => {
-    currentReach += Math.floor(Math.random() * 180 + 40);
-    reachEl.textContent = currentReach.toLocaleString('ru-RU');
-  }, 3000);
-  setInterval(() => {
-    currentPrompts += Math.floor(Math.random() * 3 + 1);
-    promptsEl.textContent = currentPrompts.toLocaleString('ru-RU');
-  }, 8000);
-
-  // Users count slowly grows
-  let currentUsers = 340;
-  setInterval(() => {
-    currentUsers += Math.floor(Math.random() * 2 + 1);
-    usersEl.textContent = currentUsers.toLocaleString('ru-RU');
-  }, 20000);
 }
 
 function initApp() {
