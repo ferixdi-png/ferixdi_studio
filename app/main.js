@@ -7899,7 +7899,7 @@ function initThreadsTrends() {
   }
 
   // ─ Search button ─
-  searchBtn.addEventListener('click', async () => {
+  async function _doThreadsSearch() {
     if (!isPromoValid()) {
       if (lockedEl) lockedEl.classList.remove('hidden');
       if (activeEl) activeEl.classList.add('hidden');
@@ -7998,7 +7998,9 @@ function initThreadsTrends() {
       searchBtn.disabled = false;
       if (btnLabel) btnLabel.textContent = 'Обновить';
     }
-  });
+  }
+  searchBtn.addEventListener('click', _doThreadsSearch);
+  window._threadsSearch = _doThreadsSearch;
 
   // ─ Result interactions via delegation ─
   if (resultsEl) {
