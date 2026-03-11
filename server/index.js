@@ -2706,101 +2706,101 @@ ${hasRssNews ? '🚫 DO NOT INVENT OR FABRICATE news events. ONLY use the headli
 - Events like Apple iPad crush ad, Scarlett Johansson vs OpenAI, Telegram Stars launch, first Neuralink implant — these are OLD (2024). DO NOT USE THEM.
 
 ━━━ MISSION ━━━
-${hasRssNews ? `STEP 1: Review the VERIFIED REAL NEWS HEADLINES above. Pick the ${safeLimit} most interesting, viral-worthy, relatable topics.
-STEP 2: For EACH chosen headline, create a killer Threads-style post that reacts to it with wit, irony, or sharp personal take.
-STEP 3: Set "news_source" to the EXACT headline title and "news_url" to the link provided.`
+${hasRssNews ? `STEP 1: Review the VERIFIED REAL NEWS HEADLINES above. Pick the ${safeLimit} most provocative, debate-worthy, relatable topics — ones that touch EVERYONE's daily life.
+STEP 2: For EACH headline, ask: "What does this mean for a regular person? What will they feel? What will they argue about?"
+STEP 3: Write a STANDALONE Threads post that uses the headline as a SEED — but delivers a THOUGHT, PROVOCATION, or QUESTION. The news = 1 line max. The rest = your hot take that makes people comment.
+STEP 4: Set "news_source" to the headline title, "news_url" to the link, and "engagement_hook" to WHY people will comment.`
 : `STEP 1: Use Google Search to find TODAY's hottest news, events, and trending topics:
   - Search: "новости сегодня ${dateStr}" OR "trending news today ${dateStr}"
   - Search: "${query || 'технологии AI бизнес'} новости ${now.getFullYear()}"
   - Search: "Google Apple Tesla OpenAI Яндекс VK новости ${freshnessLabel}"
   - Search: trending topics Russia ${now.getFullYear()} ${now.toLocaleString('en', {month: 'long'})}
-STEP 2: From the search results, identify ${safeLimit} SPECIFIC real events, announcements, scandals, price changes, tech launches, company news, viral moments.
-STEP 3: For EACH real event, create a killer Threads-style post that reacts to it with wit, irony, or sharp personal take.`}
+STEP 2: From search results, pick ${safeLimit} events that TOUCH PEOPLE'S DAILY LIVES — prices, apps, services, companies, scandals, decisions that affect EVERYONE.
+STEP 3: For EACH event, ask: "What will a regular person FEEL about this? What argument will this start? What question does this raise?"
+STEP 4: Write a STANDALONE Threads post: news = 1 line seed, the rest = your provocative thought/question/observation that FORCES people to comment.`}
 
 Language: ${langLabel} | Freshness: ${freshnessLabel}${nicheBlock}${excludeBlock}
 
-━━━ MANDATORY: REAL EVENTS ONLY ━━━
-Each post MUST reference a SPECIFIC real thing you found via Google Search:
-- Company names (Apple, Google, Tesla, Яндекс, Сбер, Ozon, Wildberries, OpenAI, etc.)
-- Real product launches, updates, price changes, scandals
-- Real news headlines, political events, economic data, sports results
-- Real viral moments, celebrity news, cultural events
-- Real numbers: stock prices, exchange rates, product prices, statistics
+━━━ CORE PHILOSOPHY: NEWS = SEED, POST = ENGAGEMENT WEAPON ━━━
+⚠️ YOU ARE NOT A NEWS REPORTER. You are a Threads content creator with 100K+ followers.
+The news headline is just a TRIGGER — a springboard. The post itself must be:
+- A standalone THOUGHT that makes people stop scrolling
+- A PROVOCATION that forces people to comment "да!" or "нет, ты не прав"
+- A RELATABLE OBSERVATION that makes people tag friends
+- A QUESTION that people can't scroll past without answering in their head
+
+🧠 THE GOLDEN RULE: Read the news headline → Ask yourself "Что это значит для ОБЫЧНОГО ЧЕЛОВЕКА в его повседневной жизни?" → Write about THAT, not about the news itself.
+
+Example transformation:
+❌ NEWS SUMMARY: "Wildberries поднял комиссию до 25%. Это ударит по продавцам."
+✅ THREADS POST: "Wildberries поднял комиссию до 25%.\\n\\nСкоро покупка носков на маркетплейсе будет требовать кредитный рейтинг выше, чем на ипотеку.\\n\\nА мы ещё удивляемся, почему бабушки до сих пор ходят на рынок. Может, они просто **умнее нас**?"
+
+See the difference? The news is mentioned in ONE line. The rest is a THOUGHT that provokes, amuses, and makes people want to comment.
+
+━━━ ENGAGEMENT TECHNIQUES (use at least 2 per post) ━━━
+
+🎣 COMMENT BAIT — make it IMPOSSIBLE to not reply:
+- End with a controversial opinion people will argue about
+- Present two sides: "Либо X, либо Y. Третьего нет. Где вы?"
+- Make a bold claim: "Через 5 лет этого не будет. Запомните этот пост."
+- Use "Unpopular opinion:" or "Скажу то, за что меня закидают помидорами:"
+- Ask a SPECIFIC question: "Сколько вы тратите на [thing from news] в месяц? Только честно."
+
+🧠 THOUGHT HOOKS — make them THINK:
+- Flip the obvious: "Все говорят [common opinion]. А что если всё наоборот?"
+- Connect two unrelated things: news event + everyday life situation
+- "Задумайтесь: [obvious thing reframed in surprising way]"
+- Future projection: "Если [news event] продолжится, через год мы будем [absurd but logical consequence]"
+- Uncomfortable truth: "Никто не говорит вслух, но [consequence of news event that everyone feels]"
+
+😂 HUMOR PATTERNS — make them LAUGH and SHARE:
+- Absurd escalation: take the news → push it to ridiculous logical extreme
+- Self-deprecation: "Я тот самый человек, который [relatable embarrassing reaction to news]"
+- Comparison: "Раньше [old way]. Теперь [new absurd way because of news]. Прогресс."
+- Specific detail humor: use EXACT numbers, brand names, app names for comedic precision
+- Sarcastic gratitude: "Спасибо, [company], теперь я [absurd consequence]"
+
+💥 OPEN LOOPS — make them read to the END:
+- Start with mystery: "Одна цифра из сегодняшних новостей изменила мое отношение к [topic]."
+- Counterintuitive opener: "Лучшее, что случилось сегодня — это [seemingly bad news]."
+- Personal confession tied to news: "Когда я прочитал про [news], я понял, что 10 лет делал [thing] неправильно."
 
 🚫 BANNED generic topics (without a real event anchor):
-"прокрастинация", "лень", "авиабилеты дорого" (without specific airline/price),
-"ностальгия по детству", "весенняя слякоть", "кризис возраста",
+"прокрастинация", "лень", "ностальгия по детству", "кризис возраста",
 "цифровой детокс", "отношения" (generic), "корпоративная культура" (generic)
 
-✅ GOOD examples of what to write about:
-- "OpenAI выкатил GPT-5, а у меня до сих пор автозамена меняет «нормально» на «нормальной»"
-- "Wildberries опять поднял комиссию до 25%. Скоро продавцы будут доплачивать за право продавать"
-- "Курс доллара 98₽. Мой план «накопить на отпуск» официально перешёл в категорию фантастики"
-- "Apple показал iPhone 17, а мне мать до сих пор звонит и спрашивает как фото отправить"
-
-━━━ QUALITY FILTER — THIS IS CRITICAL ━━━
-You are looking for RELATABLE, PERSONAL, SHARP posts that make people feel "это про меня!" — NOT generic motivation or empty clickbait.
-
-✅ INCLUDE posts that:
-- Describe a SPECIFIC everyday situation everyone recognizes ("билет туда 5000, обратно 20000")
-- Share a personal observation from first-person perspective with raw honesty
-- Present an "uncomfortable truth" or non-obvious life observation that sparks debate
-- Use CONCRETE details (numbers, names, places, exact quotes) — not abstractions
-- Trigger nostalgia, pride, frustration, or humor through RELATABLE experiences
-- Ask a question that FORCES the reader to answer in their head
-- Use list format with an unexpected twist at the end
-- Make the reader immediately want to send it to a friend saying "это ж про нас!"
-
-❌ REJECT and SKIP posts that are:
-- Generic motivational fluff ("верь в себя", "всё возможно", "никогда не сдавайся")
+❌ REJECT posts that are:
+- News summaries disguised as opinions ("Сегодня стало известно, что..." — это не Threads пост, это заголовок Ленты)
+- Generic motivational fluff ("верь в себя", "всё возможно")
 - Empty provocation with no substance ("кто согласен ставьте 🔥")
-- Recycled quotes or stolen wisdom without original angle
-- AI-generated slop ("в мире где", "давайте разберёмся", "важно понимать", "на самом деле")
-- Engagement bait with zero value ("напишите ваш знак зодиака")
-- Obvious humble-brags disguised as advice
-- Posts that state the obvious as if it's profound
-- Abstract philosophical rambling with no concrete anchor
+- AI-generated slop ("в мире где", "давайте разберёмся", "важно понимать", "на самом деле", "в современном мире")
+- Posts that STATE the news without adding a PERSONAL angle or PROVOCATION
+- Humble-brags, obvious statements, abstract philosophy
 
-The posts you find should make the reader STOP scrolling and feel "блин, это ж про меня". Relatability > polish.
+━━━ STYLE GUIDE — STRUCTURE AND TONE ━━━
+⚠️ These show STRUCTURE only. Your posts must be about REAL events from the news above.
 
-━━━ STYLE GUIDE — FORMAT/TONE REFERENCE ONLY ━━━
-⚠️ DO NOT copy these topics. These show STRUCTURE and TONE only. Your posts must be about REAL events from Google Search.
+PATTERN A — "Горячий комментарий" (comment bait):
+"[Company] сделал [thing from news].\\n\\nЗнаете, что это значит?\\n\\nЧто через полгода [absurd but logical consequence].\\n\\nА потом нам будут говорить, что мы **сами виноваты**.\\n\\nКто согласен, что это уже перебор?"
 
-FORMAT EXAMPLE 1 (humor + specific detail):
-"Меня одного всегда удивляет:
+PATTERN B — "Наблюдение" (thought-provoking):
+"Заметил кое-что после новости про [event].\\n\\nМы платим за [thing 1].\\nМы платим за [thing 2].\\nМы платим за [thing 3].\\n\\nА потом удивляемся, что на еду остается столько же, сколько в [year].\\n\\nЭто не инфляция. Это **дизайн**."
 
-билет туда — 5,000,
-а обратно — уже 20,000.
+PATTERN C — "Личная история + новость" (emotional + relatable):
+"Прочитал сегодня про [news event].\\n\\nИ вспомнил, как [personal relatable moment].\\n\\n[Specific detail that everyone recognizes].\\n\\nМир реально изменился. И я не уверен, что в лучшую сторону."
 
-Как будто самолёт обратно летит
-с каким-то премиальным апгрейдом воздуха."
+PATTERN D — "Список с панчлайном" (viral shares):
+"Три вещи, которые я понял из новостей за сегодня:\\n\\n1. [Insight from news 1]\\n2. [Insight from news 2]\\n3. [Unexpected twist that makes people laugh or think]\\n\\nОсобенно третий пункт."
 
-FORMAT EXAMPLE 2 (provocation + argument):
-"Бесит вот это слово «терпила».
+PATTERN E — "Провокация" (debate starter):
+"Непопулярное мнение: [controversial take on today's news].\\n\\nДа, я знаю, что большинство думает иначе.\\n\\nНо объясните мне тогда, почему [logical argument based on specific fact]?\\n\\nЖду ваших аргументов."
 
-Тебя толпой отпиздили и ты написал заявление —
-«терпила».
-
-Как будто защищать себя вдруг стало чем-то постыдным."
-
-FORMAT EXAMPLE 3 (list with twist):
-"Три буквы, от которых вас начинает тошнить.
-
-Мои:
-
-НДС
-ЖКХ
-ПДД"
-
-KEY FORMAT RULES: short hook (1 line) → \\n\\n → development (2-5 short lines) → \\n\\n → punchline.
-150-500 chars. First person. NO hashtags in body. Max 1-2 emoji. **Bold** for punch words.
-
-━━━ VIRAL FORMAT RULES (from analysis of 50+ viral posts) ━━━
-STRUCTURE: short hook (1 line) → empty line → development (2-5 short lines, each on new line) → empty line → punchline/twist/question
-FORMATTING: short lines, lots of line breaks (\\n\\n), **bold** for emphasis, max 1-2 emoji per post or zero
-LENGTH: 150-500 characters sweet spot. NO hashtags inside post body.
-TONE: first person, conversational, as if talking to a friend. NOT lecturing, NOT motivating.
-WINNING FORMATS: "Меня одного удивляет...", "Я из того поколения...", "Бесит вот это...", "Три [noun] от которых...", "Что вы никогда не пробовали?", "Живу с [person] N лет, и скажу честно:", "Интересно, сколько людей...", "Объясните мне одну вещь.", "Представьте ситуацию:", "Запомните простую вещь:"
+FORMAT RULES:
+- Short hook (1 line) → \\n\\n → development (2-5 short lines) → \\n\\n → punchline OR question
+- 150-500 chars. First person. NO hashtags in body. Max 1-2 emoji or ZERO.
+- **Bold** for 1-2 punch words maximum
+- EVERY post must end with either: a QUESTION, a BOLD CLAIM, or a PUNCHLINE that makes you exhale
+- The first line must work WITHOUT any context — someone scrolling must stop on it ALONE
 
 ━━━ SEARCH STRATEGY (use Google Search for ALL of these) ━━━
 Phase 1 — TODAY's breaking news & events:
@@ -2822,73 +2822,90 @@ IMPORTANT: Extract SPECIFIC facts from search results: company names, product na
 
 ━━━ DATA RULES ━━━
 For each of the ${safeLimit} posts:
-1. Write the post text as a Threads-style reaction to a REAL event from your Google Search results
-2. Set author to null (these are generated posts, not found posts)
-3. Set url to null
-4. Set "news_source": a 1-sentence description of the REAL news event that inspired this post (e.g. "OpenAI announced GPT-5 on March 10, 2026" or "Dollar exchange rate hit 98₽ on March 10")
-5. Set "news_url": URL of the news article you found via Google Search, or null
-6. Estimate engagement potential (likes, comments, reposts)
-7. Rate confidence: "high" = based on verified news from search; "medium" = based on trending topic; "low" = loosely inspired
-8. Rate virality_score 1-100: RELATABILITY (0-30) + emotion (0-25) + shareability (0-25) + debate (0-20)
-9. Set signal_type: "news_reaction" (post reacts to real news), "trend_take" (post comments on a real trend), "event_humor" (humorous take on real event)
+1. The "text" field = your BEST variant. A standalone Threads post that uses the news as a SEED but delivers a thought/provocation/question. NOT a news summary!
+2. author: null, url: null
+3. "news_source": 1 sentence describing the real event that INSPIRED (not that IS) the post
+4. "news_url": URL from search/RSS or null
+5. "engagement_hook": describe in 1 sentence WHY someone would comment on this (e.g. "Forces reader to pick a side", "Asks a question everyone has an opinion on", "Makes a bold claim people will argue about")
+6. Estimate engagement: likes, comments (THIS IS THE MOST IMPORTANT METRIC), reposts
+7. confidence: "high" = verified news source; "medium" = trending topic; "low" = loosely inspired
+8. virality_score 1-100 weighted for ENGAGEMENT:
+   - comment_potential (0-30): Will people ARGUE? Will they ANSWER a question? Will they TAG friends?
+   - relatability (0-25): Does the reader think "это про меня"?
+   - shareability (0-25): Will people repost or send to friends?
+   - emotion (0-20): Does it trigger a strong feeling (anger, laughter, nostalgia, surprise)?
+9. signal_type: "debate_starter" | "thought_bomb" | "relatable_take" | "humor_hook" | "hot_take"
 
-EVERY post must have a non-null news_source. Generic posts without a real event anchor will be rejected.
+EVERY post must have a non-null news_source AND a non-null engagement_hook.
 
 ━━━ FOR EACH POST: GENERATE THE FOLLOWING ━━━
 
-1. 📊 VIRALITY SCORE (1-100):
-   Score based on: RELATABILITY/ЖИЗА (0-30), emotional resonance (0-25), shareability (0-25), comment potential (0-20)
-   Relatability = does the reader instantly think "это про меня"? Does it describe a specific situation everyone recognizes?
-   Also provide score_breakdown with each component score: { "depth": 0-30, "emotion": 0-25, "shareability": 0-25, "debate": 0-20 }
+1. 📊 VIRALITY SCORE (1-100) — ENGAGEMENT-WEIGHTED:
+   score_breakdown: { "comment_potential": 0-30, "relatability": 0-25, "shareability": 0-25, "emotion": 0-20 }
+   comment_potential is THE KING metric. A post with 500 comments and 100 likes > a post with 5000 likes and 10 comments.
+   Ask yourself: "If I posted this, how many people would feel COMPELLED to write a comment?" If < 50, rewrite.
 
 2. 🧠 DEEP ANALYSIS:
-   - why_works: which VIRAL trigger fires (жиза/relatability, nostalgia, provocation, unexpected twist, list-with-punch, uncomfortable truth, humor) — 2-3 sentences. Focus on WHY people will SHARE this and COMMENT.
-   - hook: what grabs attention in first 1.5 seconds — what makes the reader stop scrolling?
-   - conflict: the core tension/contradiction — what everyday frustration or observation does this tap into?
-   - audience_pain: the universal human pain/desire/question it touches
-   - cta_potential: how to turn readers into followers (1 sentence)
-   - key_insight: the ONE sentence people will screenshot and send to friends
+   - why_works: which engagement trigger fires — 2-3 sentences focusing on WHY people will COMMENT and DEBATE
+   - hook: the first line that stops the scroll (must work alone, without context)
+   - conflict: the tension that FORCES a reaction — what makes this post impossible to ignore?
+   - audience_pain: the universal frustration/desire/question it exploits
+   - cta_potential: how to turn commenters into followers (1 sentence)
+   - key_insight: the ONE phrase people will quote in their own posts
+   - predicted_comments: 3 example comments real people would write under this post (e.g. "Бля, это прям про меня", "Не согласен, потому что...", "Отправила мужу 😂")
 
-3. ✍️ FIVE PUBLICATION-READY VARIANTS — this is the CORE value:
-   CRITICAL RULES for variants:
-   - Each variant is a COMPLETE ready-to-publish Threads post — COPY AND POST
-   - NO hashtags inside the post text! Hashtags go ONLY in the separate hashtags field
-   - Length: 150-500 characters (sweet spot for Threads engagement)
-   - First line = scroll-stopping hook. Must work WITHOUT context.
-   - ZERO AI smell: no "в мире где", no "давайте разберёмся", no "важно понимать что", no "на самом деле", no "в современном мире"
-   - Write like a REAL ${langTag} person with 50K followers — sharp, personal, conversational
-   - Write in FIRST PERSON — "Меня удивляет...", "Я из того поколения...", "Живу с женой 12 лет..."
-   - Use SPECIFIC DETAILS: numbers, places, exact quotes, brand names — NOT abstractions
-   - Each variant must be so different that they could come from 5 different people
-   - Use LINE BREAKS (\\n\\n) between every 1-2 sentences — Threads is MOBILE, short lines win
-   - Use **bold text** for key words/phrases that carry the punch
-   - Max 1-2 emoji per post, or ZERO. No emoji spam.
-   - NEVER write generic motivation. Every post must make the reader feel "это про меня" or "надо переслать"
+3. ✍️ FIVE PUBLICATION-READY VARIANTS — ENGAGEMENT-OPTIMIZED:
+   CRITICAL RULES:
+   - Each variant = COMPLETE ready-to-copy-paste Threads post
+   - NO hashtags in text! Hashtags go in separate field
+   - 150-500 chars. Short lines. \\n\\n between sentences. **Bold** for 1-2 punch words.
+   - First line = SCROLL STOPPER. Must work alone without any context.
+   - ZERO AI smell: ban "в мире где", "давайте разберёмся", "важно понимать", "на самом деле", "в современном мире", "не секрет что"
+   - Write as a REAL ${langTag} person with opinions, not a news bot
+   - FIRST PERSON only: "Я заметил...", "Меня бесит...", "Мне 30, и я до сих пор..."
+   - Each variant MUST end with one of: a QUESTION, a BOLD CLAIM people will argue about, or a PUNCHLINE
+   - Each variant must feel like it came from a DIFFERENT person with a different personality
+   - The news fact should take max 1 line. The REST = your thought/provocation/observation
 
-   The 5 styles (ALL must be COPY-PASTE READY, matching the STYLE GUIDE examples above):
-   a) "bold" (🔥 Дерзкий): Provocation + argument + unexpected conclusion. Opener formats: "Бесит вот это...", "Объясните мне одну вещь.", "Не понимаю, почему...". Reader first disagrees, then thinks "а ведь правда...". Like Example 7 or 10 from style guide.
-   b) "smart" (🧠 Умный): Non-obvious everyday observation + specific details + insight. Formats: "Меня одного удивляет:", "Замечали, что...", "Запомните простую вещь:". The kind of post people screenshot. Like Example 4 or 6 from style guide.
-   c) "emotional" (❤️ Эмоциональный): Raw first-person story with vulnerability + universal truth. Formats: "Живу с женой N лет, и скажу честно:", "Я из того поколения...", "Мне N лет, и я до сих пор...". Specific moment → universal feeling. Like Example 2, 3, or 5 from style guide.
-   d) "viral" (📢 Вирусный): Maximum shares. Formats: "Три [noun] от которых [verb]:", numbered list with twist at the end, "Интересно, сколько людей сейчас...". Structure: hook → list/buildup → unexpected last item or punchline. Like Example 1 or 8 from style guide.
-   e) "personal" (💬 Личный): Question that forces engagement OR micro-confession. Formats: "Что вы никогда не пробовали?", "Какой совет вы бы дали себе в 18?", "Скажу то, что многие думают, но молчат:". Maximum comments. Like Example 9 from style guide.
+   The 5 styles — each optimized for a DIFFERENT type of engagement:
 
-4. 🏷️ HASHTAGS — 8-12 hashtags per post:
-   - 3-4 high-volume (500K+ posts): broad reach
-   - 3-4 mid-volume (50K-500K): targeted reach
-   - 2-4 niche/trending: discoverable, less competition
-   - All hashtags must be in ${langLabel}
+   a) "bold" (🔥 Провокатор) — GOAL: максимум СПОРОВ в комментах
+      Technique: State a controversial opinion about the news. Make 50% agree and 50% disagree.
+      Structure: Bold claim (1 line) → Why you think so (2-3 lines) → Even bolder conclusion that splits the audience
+      Endings: "Измените мое мнение." / "Или я не прав?" / "Докажите обратное."
+      Example openers: "Непопулярное мнение:", "Скажу то, за что меня закидают:", "Все думают X. Я думаю Y."
 
-5. 🎬 REEL/SHORT IDEAS — 3 ideas to turn this topic into vertical video:
-   - hook: first-frame text/visual/audio (5-7 words, must stop the scroll)
-   - conflict: what tension drives the 15-60 second video
-   - direction: full narrative arc in 1 sentence
-   - format: "talking head" | "text-on-screen" | "POV" | "greenscreen" | "trending-audio" | "storytelling"
-   - why_viral: why this specific format+topic combo would blow up
+   b) "smart" (🧠 Аналитик) — GOAL: скриншоты и сохранения
+      Technique: Take the news and extract a non-obvious INSIGHT that makes people think "блин, а ведь правда".
+      Structure: Observation (1 line) → Connect dots no one else connected (2-3 lines) → Mind-blowing conclusion
+      Endings: "Задумайтесь." / "И это только начало." / Statement so good people screenshot it.
+      Example openers: "Заметил кое-что:", "Одна цифра, которая всё объясняет:", "Никто не говорит вслух, но..."
 
-6. ⏰ BEST TIME TO POST:
-   - best_time: recommended posting time in HH:MM format (24h, Moscow timezone for RU, EST for EN)
-   - best_day: best day of week for this topic
-   - reasoning: why this time (1 sentence)
+   c) "emotional" (❤️ Личная история) — GOAL: "отправила подруге", лайки, сохранения
+      Technique: Connect the news to a PERSONAL moment everyone relates to. Vulnerability + specificity.
+      Structure: "When I read about [news]..." → Personal memory/feeling (2-3 lines) → Universal truth
+      Endings: "И я не уверен, что стало лучше." / "Или это только у меня так?" / Nostalgic punchline
+      Example openers: "Прочитал про [news] и вспомнил:", "Мне N лет, и после такого:", "Моя мама до сих пор..."
+
+   d) "viral" (📢 Вирусный) — GOAL: максимум РЕПОСТОВ и пересылок
+      Technique: Package the news into a format people MUST share — list with twist, absurd escalation, or "this is SO us" moment.
+      Structure: Hook (1 line) → Buildup of 3-4 items → UNEXPECTED last item or punchline that flips everything
+      Endings: "Особенно последний пункт." / Twist that makes you exhale / Self-aware humor
+      Example openers: "Три вещи после сегодняшних новостей:", "Стадии принятия [news event]:", "Краткое содержание [year]:"
+
+   e) "personal" (💬 Вопрос залу) — GOAL: максимум КОММЕНТАРИЕВ
+      Technique: Ask a question tied to the news that EVERYONE has an opinion on. Or make a confession that others will echo.
+      Structure: Context from news (1 line) → Personal confession or dilemma → Direct question to audience
+      Endings: ALWAYS a question. "А вы?" / "Сколько у вас?" / "Только честно." / "Или я один такой?"
+      Example openers: "После новости про [X], вопрос:", "Только честно:", "Интересно, сколько из вас..."
+
+4. 🏷️ HASHTAGS — 8-12 per post in ${langLabel}:
+   3-4 high-volume, 3-4 mid-volume, 2-4 niche/trending
+
+5. 🎬 REEL/SHORT IDEAS — 3 ideas for vertical video:
+   Each: hook (5-7 words), conflict, direction, format ("talking head"|"text-on-screen"|"POV"|"greenscreen"|"trending-audio"|"storytelling"), why_viral
+
+6. ⏰ BEST TIME: time (HH:MM, Moscow for RU / EST for EN), day, reasoning (1 sentence)
 
 ━━━ OUTPUT FORMAT ━━━
 Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
@@ -2896,40 +2913,42 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
 [
   {
     "id": "th1",
-    "text": "the viral post text you created, reacting to the real event",
+    "text": "The BEST variant text — a standalone Threads post that uses news as seed but delivers a provocation/thought/question",
     "author": null,
     "url": null,
-    "news_source": "Конкретное описание реального события из Google Search, например: OpenAI выпустил GPT-5 10 марта 2026",
-    "news_url": "https://example.com/article-url-from-search or null",
+    "news_source": "1-sentence description of the real event that INSPIRED this post",
+    "news_url": "https://... or null",
+    "engagement_hook": "Why someone would comment: e.g. Forces reader to pick a side on [topic]",
     "freshness_label": "сегодня",
-    "signals": { "likes_est": "1.2K+", "comments_est": "230+", "reposts_est": "неизвестно" },
+    "signals": { "likes_est": "1.2K+", "comments_est": "500+", "reposts_est": "300+" },
     "confidence": "high",
-    "signal_type": "news_reaction",
+    "signal_type": "debate_starter",
     "topic_tag": "short topic label",
-    "virality_score": 82,
-    "score_breakdown": { "depth": 25, "emotion": 20, "shareability": 21, "debate": 16 },
+    "virality_score": 85,
+    "score_breakdown": { "comment_potential": 28, "relatability": 22, "shareability": 20, "emotion": 15 },
     "analysis": {
-      "why_works": "...",
-      "hook": "...",
-      "conflict": "...",
-      "audience_pain": "...",
-      "cta_potential": "...",
-      "key_insight": "the ONE sentence people will screenshot"
+      "why_works": "Forces readers to take a side on [topic], triggering argument chains in comments...",
+      "hook": "First line that stops the scroll",
+      "conflict": "The tension that makes this impossible to ignore",
+      "audience_pain": "Universal frustration everyone feels but rarely articulates",
+      "cta_potential": "Comment section becomes a debate → follow for more hot takes",
+      "key_insight": "The ONE phrase people will quote",
+      "predicted_comments": ["Бля, это прям про меня 😂", "Не согласен, потому что...", "Отправила мужу"]
     },
     "variants": [
-      { "style": "bold",      "label": "Дерзкий",        "text": "Бесит вот это слово «экономия».\\n\\nКупил кофе за 300 —\\nтебе говорят: «дорого».\\n\\nА потом эти же люди\\nберут кредит на **айфон**.\\n\\nЭкономия, говоришь?" },
-      { "style": "smart",     "label": "Умный",           "text": "..." },
-      { "style": "emotional", "label": "Эмоциональный",   "text": "..." },
-      { "style": "viral",     "label": "Вирусный",        "text": "..." },
-      { "style": "personal",  "label": "Личный",          "text": "..." }
+      { "style": "bold",      "label": "Провокатор",      "text": "Непопулярное мнение после [news]:\\n\\n[Bold claim].\\n\\nПотому что [argument].\\n\\nА [counter-point] — это просто [reframe].\\n\\nИзмените моё мнение." },
+      { "style": "smart",     "label": "Аналитик",         "text": "Заметил кое-что после [news]:\\n\\n[Insight line 1].\\n[Insight line 2].\\n\\nИ вот что это **на самом деле** значит:\\n\\n[Mind-blowing conclusion]." },
+      { "style": "emotional", "label": "Личная история",   "text": "Прочитал про [news] и вспомнил...\\n\\n[Personal moment].\\n\\n[Specific detail].\\n\\nМир реально изменился.\\nИ я не уверен, что в лучшую сторону." },
+      { "style": "viral",     "label": "Вирусный",         "text": "Стадии принятия [news event]:\\n\\n1. Не может быть\\n2. Ладно, может\\n3. [Unexpected twist]\\n\\nЯ на третьей." },
+      { "style": "personal",  "label": "Вопрос залу",      "text": "После новости про [X]:\\n\\n[Personal confession].\\n\\n[Specific relatable detail].\\n\\nИли я один такой?" }
     ],
     "hashtags": {
-      "high_volume": ["#тренды", "#threads", "#мотивация"],
-      "mid_volume": ["#контентмейкер", "#smm"],
+      "high_volume": ["#тренды", "#threads", "#мнение"],
+      "mid_volume": ["#горячиеновости", "#дискуссия"],
       "niche": ["#threadstrends", "#вирусныйпост"]
     },
     "reel_ideas": [
-      { "hook": "...", "conflict": "...", "direction": "...", "format": "talking head", "why_viral": "..." }
+      { "hook": "5-7 word scroll stopper", "conflict": "...", "direction": "...", "format": "talking head", "why_viral": "..." }
     ],
     "best_time": { "time": "19:30", "day": "вторник", "reasoning": "..." }
   }

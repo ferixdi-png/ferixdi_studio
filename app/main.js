@@ -8044,11 +8044,11 @@ const _confidenceMeta = {
 };
 
 const _varStyleMeta = {
-  bold:      { icon: '🔥', label: 'Дерзкий' },
-  smart:     { icon: '🧠', label: 'Умный' },
-  emotional: { icon: '❤️', label: 'Эмоциональный' },
+  bold:      { icon: '🔥', label: 'Провокатор' },
+  smart:     { icon: '🧠', label: 'Аналитик' },
+  emotional: { icon: '❤️', label: 'Личная история' },
   viral:     { icon: '📢', label: 'Вирусный' },
-  personal:  { icon: '💬', label: 'Личный' },
+  personal:  { icon: '💬', label: 'Вопрос залу' },
 };
 
 function _viralityColor(score) {
@@ -8089,10 +8089,10 @@ function _renderThreadsPosts() {
         <span class="${vColor.text} text-[10px] font-bold tabular-nums">${vScore}</span>
       </div>
       <div class="flex gap-1.5 mt-1">
-        <span class="text-[8px] text-gray-600" title="Узнаваемость/жиза (0-30)">🧠${sb.depth || 0}</span>
-        <span class="text-[8px] text-gray-600" title="Эмоция (0-25)">❤️${sb.emotion || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Комменты (0-30)">💬${sb.comment_potential || sb.debate || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Узнаваемость (0-25)">🧠${sb.relatability || sb.depth || 0}</span>
         <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔁${sb.shareability || 0}</span>
-        <span class="text-[8px] text-gray-600" title="Комменты (0-20)">💬${sb.debate || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Эмоция (0-20)">❤️${sb.emotion || 0}</span>
       </div>`;
 
     // Variants tabs HTML
@@ -8198,16 +8198,23 @@ function _renderThreadsPosts() {
               <span class="${vColor.text} text-xs font-bold tabular-nums" style="font-family:'JetBrains Mono',monospace">${vScore}</span>
             </div>
             <div class="flex gap-1.5 justify-end">
-              <span class="text-[8px] text-gray-600" title="Узнаваемость (0-30)">🧠${sb.depth || 0}</span>
-              <span class="text-[8px] text-gray-600" title="Эмоция (0-25)">❤️${sb.emotion || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Комменты (0-30)">💬${sb.comment_potential || sb.debate || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Узнаваемость (0-25)">🧠${sb.relatability || sb.depth || 0}</span>
               <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔁${sb.shareability || 0}</span>
-              <span class="text-[8px] text-gray-600" title="Комменты (0-20)">💬${sb.debate || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Эмоция (0-20)">❤️${sb.emotion || 0}</span>
             </div>
           </div>
         </div>
 
         <!-- Post text -->
         <p class="text-[13px] text-gray-200 leading-relaxed whitespace-pre-wrap">${_formatThreadsText(post.text)}</p>
+
+        <!-- Engagement hook badge -->
+        ${post.engagement_hook ? `
+        <div class="flex items-start gap-1.5 rounded-lg p-2 bg-violet-500/5 border border-violet-500/15">
+          <span class="text-[10px] flex-shrink-0">🎯</span>
+          <span class="text-[10px] text-violet-300 leading-snug font-medium">${escapeHtml(post.engagement_hook)}</span>
+        </div>` : ''}
 
         <!-- News source badge -->
         ${post.news_source ? `
@@ -8244,6 +8251,11 @@ function _renderThreadsPosts() {
           ${post.analysis?.audience_pain ? `<div class="rounded-lg p-2.5 bg-black/20 border border-violet-500/10 space-y-1"><div class="text-[9px] text-violet-400/80 font-semibold uppercase tracking-[0.1em]">Боль аудитории</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.audience_pain)}</div></div>` : ''}
           ${post.analysis?.cta_potential ? `<div class="rounded-lg p-2.5 bg-black/20 border border-cyan-500/10 space-y-1"><div class="text-[9px] text-cyan-400/80 font-semibold uppercase tracking-[0.1em]">CTA-потенциал</div><div class="text-[11px] text-gray-300">${escapeHtml(post.analysis.cta_potential)}</div></div>` : ''}
         </div>
+        ${post.analysis?.predicted_comments?.length ? `
+        <div class="rounded-xl p-3 bg-gradient-to-r from-violet-500/5 to-fuchsia-500/5 border border-violet-500/15 space-y-2">
+          <div class="text-[9px] text-violet-400 font-semibold uppercase tracking-[0.15em]">💬 Предсказанные комментарии</div>
+          ${post.analysis.predicted_comments.map(c => `<div class="text-[11px] text-gray-300 pl-3 border-l-2 border-violet-500/20">"${escapeHtml(c)}"</div>`).join('')}
+        </div>` : ''}
       </div>
 
       <!-- Variants block -->
