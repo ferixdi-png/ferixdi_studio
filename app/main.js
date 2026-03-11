@@ -23,6 +23,7 @@ const state = {
   videoMeta: null,
   productInfo: null, // { image_base64, mime_type, description_en }
   referenceStyle: null, // { description_en } — visual style from reference photo
+  surpriseCharMode: 'auto', // 'auto' = AI picks characters, 'manual' = user selects
   options: { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false },
   lastResult: null,
   settingsMode: 'api',
@@ -1011,6 +1012,9 @@ function updateCharDisplay() {
   document.getElementById('gen-char-a').textContent = state.selectedA?.name_ru || '—';
   document.getElementById('gen-char-b').textContent = state.selectedB?.name_ru || '—';
 
+  // Sync surprise mode manual slots
+  updateSurpriseCharSlots();
+
   // Compatibility badge
   const badge = document.getElementById('char-compat-badge');
   if (state.selectedA && state.selectedB) {
@@ -1967,9 +1971,62 @@ function selectCharacter(charId) {
   }
 }
 
+// ─── SURPRISE CHARACTER MODE ─────────────────
+function setSurpriseCharMode(mode) {
+  state.surpriseCharMode = mode;
+  const autoBtn = document.getElementById('surprise-char-auto');
+  const manualBtn = document.getElementById('surprise-char-manual');
+  const hint = document.getElementById('surprise-char-hint');
+  const manualSlots = document.getElementById('surprise-char-manual-slots');
+
+  if (mode === 'auto') {
+    if (autoBtn) {
+      autoBtn.className = 'flex-1 py-2 px-3 rounded-lg text-[11px] font-medium transition-all border bg-emerald-600/20 text-emerald-300 border-emerald-500/40 ring-1 ring-emerald-500/50';
+    }
+    if (manualBtn) {
+      manualBtn.className = 'flex-1 py-2 px-3 rounded-lg text-[11px] font-medium transition-all border bg-black/30 text-gray-400 border-gray-700/50 hover:bg-black/40 hover:text-gray-300';
+    }
+    if (hint) {
+      hint.textContent = 'AI сам подберёт лучшую пару персонажей под тему';
+      hint.className = 'text-[10px] text-emerald-400/70 mt-1.5';
+    }
+    if (manualSlots) manualSlots.classList.add('hidden');
+  } else {
+    if (autoBtn) {
+      autoBtn.className = 'flex-1 py-2 px-3 rounded-lg text-[11px] font-medium transition-all border bg-black/30 text-gray-400 border-gray-700/50 hover:bg-black/40 hover:text-gray-300';
+    }
+    if (manualBtn) {
+      manualBtn.className = 'flex-1 py-2 px-3 rounded-lg text-[11px] font-medium transition-all border bg-purple-600/20 text-purple-300 border-purple-500/40 ring-1 ring-purple-500/50';
+    }
+    if (hint) {
+      hint.textContent = 'Выберите персонажей вручную на шаге 3';
+      hint.className = 'text-[10px] text-purple-400/70 mt-1.5';
+    }
+    if (manualSlots) manualSlots.classList.remove('hidden');
+    updateSurpriseCharSlots();
+  }
+
+  updateReadiness();
+  log('INFO', 'СЮРПРИЗ', `Персонажи: ${mode === 'auto' ? 'AI подберёт' : 'вручную'}`);
+}
+
+function updateSurpriseCharSlots() {
+  const aDisplay = document.getElementById('surprise-char-a-display');
+  const bDisplay = document.getElementById('surprise-char-b-display');
+  if (aDisplay) {
+    aDisplay.textContent = state.selectedA ? `${state.selectedA.name_ru}` : 'не выбран';
+    aDisplay.className = state.selectedA ? 'text-[11px] text-white' : 'text-[11px] text-gray-400';
+  }
+  if (bDisplay) {
+    bDisplay.textContent = state.selectedB ? `${state.selectedB.name_ru}` : 'опционально';
+    bDisplay.className = state.selectedB ? 'text-[11px] text-white' : 'text-[11px] text-gray-400';
+  }
+}
+
 // Make functions globally available for HTML onclick handlers
 window.selectCharacter = selectCharacter;
 window.showCharacterRecommendations = showCharacterRecommendations;
+window.setSurpriseCharMode = setSurpriseCharMode;
 
 // ─── INPUT MODES ─────────────────────────────
 function initModeSwitcher() {
@@ -2426,7 +2483,8 @@ function updateReadiness() {
   const checks = {
     mode: !!state.generationMode,
     // Video mode: characters optional — AI copies from original video
-    chars: state.generationMode === 'video' ? true : !!state.selectedA,
+    // Suggested mode with auto chars: AI picks characters automatically
+    chars: state.generationMode === 'video' ? true : (state.generationMode === 'suggested' && state.surpriseCharMode === 'auto') ? true : !!state.selectedA,
     content: _hasContent(),
     promo: isPromoValid(),
   };
@@ -2462,12 +2520,13 @@ function updateReadiness() {
     checks.mode ? '' : '← выберите на шаге 1',
     checks.mode ? null : () => navigateTo('generation-mode'));
 
+  const isSurpriseAuto = state.generationMode === 'suggested' && state.surpriseCharMode === 'auto';
   const charsLabel = checks.chars
-    ? (state.selectedB ? `${state.selectedA.name_ru} × ${state.selectedB.name_ru}` : `${state.selectedA.name_ru} (соло)`)
+    ? (isSurpriseAuto && !state.selectedA ? 'AI подберёт персонажей' : state.selectedB ? `${state.selectedA.name_ru} × ${state.selectedB.name_ru}` : state.selectedA ? `${state.selectedA.name_ru} (соло)` : 'AI подберёт персонажей')
     : 'Персонаж A (минимум 1)';
   _updateCheckItem('readiness-chars', checks.chars,
     charsLabel,
-    checks.chars ? '' : '← выберите на шаге 3',
+    checks.chars ? (isSurpriseAuto && !state.selectedA ? 'Авто (AI подберёт)' : '') : '← выберите на шаге 3',
     checks.chars ? null : () => navigateTo('characters'));
 
   // Location is always "ready" (auto if not selected), but show which one
@@ -3742,10 +3801,12 @@ function initGenerate() {
       topicText = document.getElementById('idea-input-suggested')?.value || document.getElementById('idea-input')?.value || '';
     }
     // script and video modes: topicText stays empty — their content comes from script_ru / video_meta
+    const isSurpriseAutoChars = state.generationMode === 'suggested' && state.surpriseCharMode === 'auto';
     const input = {
       input_mode: state.generationMode || state.inputMode,
-      character1_id: state.selectedA?.id || null,
-      character2_id: state.selectedB ? state.selectedB.id : null,
+      character1_id: isSurpriseAutoChars ? null : (state.selectedA?.id || null),
+      character2_id: isSurpriseAutoChars ? null : (state.selectedB ? state.selectedB.id : null),
+      surprise_char_mode: state.generationMode === 'suggested' ? state.surpriseCharMode : undefined,
       roles_locked: true,
       context_ru: topicText,
       script_ru: state.generationMode === 'script' ? {

@@ -1801,6 +1801,7 @@ export function generate(input) {
   const {
     input_mode = 'idea',
     character1_id, character2_id,
+    surprise_char_mode,
     roles_locked = false,
     context_ru, script_ru, scene_hint_ru,
     category, thread_memory, video_meta,
@@ -1829,7 +1830,18 @@ export function generate(input) {
     compatibility: []
   };
   let rawA = characters.find(c => c.id === character1_id) || characters[0];
-  const soloMode = !character2_id;
+  let soloMode = !character2_id;
+
+  // Suggested mode with auto chars — pick a random contrasting pair from pool
+  if (input_mode === 'suggested' && surprise_char_mode !== 'manual' && !character1_id && characters.length >= 2) {
+    const shuffled = [...characters].sort(() => rng() - 0.5);
+    rawA = shuffled[0];
+    const partner = shuffled.slice(1).find(c => c.compatibility !== shuffled[0].compatibility) || shuffled[1];
+    soloMode = false;
+    warnings.push('Сюрприз-режим: AI автоматически подобрал персонажей');
+    // We'll set rawB below after this block
+    var _autoPickedB = partner;
+  }
 
   if (!rawA) {
     if (input_mode === 'video') {
@@ -1841,9 +1853,11 @@ export function generate(input) {
     }
   }
 
-  const rawB = soloMode
-    ? rawA  // solo: reuse A as B placeholder (downstream functions need both)
-    : (characters.find(c => c.id === character2_id) || characters[1] || rawA);
+  const rawB = _autoPickedB
+    ? _autoPickedB
+    : soloMode
+      ? rawA  // solo: reuse A as B placeholder (downstream functions need both)
+      : (characters.find(c => c.id === character2_id) || characters[1] || rawA);
   if (soloMode) {
     warnings.push('Соло-режим: один персонаж, монолог');
   }
@@ -2809,7 +2823,8 @@ ${engage.firstComment}
     // Context for API mode — sent to server for AI refinement
     _apiContext: {
       charA, charB, category: cat, topic_ru: topicRu, scene_hint: sceneHint,
-      input_mode, video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode, enableLaughter,
+      input_mode, surprise_char_mode, autoPickedChars: !!_autoPickedB,
+      video_meta, product_info, reference_style, location, wardrobeA, wardrobeB, soloMode, enableLaughter,
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       dialogue_override: dialogue_override || null,

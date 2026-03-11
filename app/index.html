@@ -402,6 +402,33 @@
               <textarea id="idea-input-suggested" class="input-field h-12 resize-none text-sm" placeholder="Вставьте тему из «Поиск идей» или напишите свою — AI сам подберёт"></textarea>
             </div>
             <div class="text-[10px] text-gray-600">🔥 Выберите тему из раздела «Поиск идей» или оставьте пустым — AI найдёт актуальную тему сам</div>
+
+            <!-- Character selection mode for surprise -->
+            <div class="border-t border-gray-800/50 pt-3 mt-1">
+              <div class="text-[10px] text-gray-500 mb-2 font-medium">🎭 Персонажи:</div>
+              <div class="flex gap-2">
+                <button id="surprise-char-auto" class="flex-1 py-2 px-3 rounded-lg text-[11px] font-medium transition-all border bg-emerald-600/20 text-emerald-300 border-emerald-500/40 ring-1 ring-emerald-500/50" onclick="setSurpriseCharMode('auto')">
+                  🤖 AI подберёт
+                </button>
+                <button id="surprise-char-manual" class="flex-1 py-2 px-3 rounded-lg text-[11px] font-medium transition-all border bg-black/30 text-gray-400 border-gray-700/50 hover:bg-black/40 hover:text-gray-300" onclick="setSurpriseCharMode('manual')">
+                  ✋ Выбрать вручную
+                </button>
+              </div>
+              <div id="surprise-char-hint" class="text-[10px] text-emerald-400/70 mt-1.5">AI сам подберёт лучшую пару персонажей под тему</div>
+              <div id="surprise-char-manual-slots" class="hidden mt-3 space-y-2">
+                <div class="text-[10px] text-gray-500">Выберите 1 или 2 персонажа на шаге <button onclick="navigateTo('characters')" class="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 transition-colors">3 · Персонажи</button>:</div>
+                <div class="flex gap-2 items-center">
+                  <div class="glass-panel p-2 flex-1 min-h-[40px] flex items-center">
+                    <span class="text-[10px] text-cyan-400 mr-1.5">A:</span>
+                    <span id="surprise-char-a-display" class="text-[11px] text-gray-400">не выбран</span>
+                  </div>
+                  <div class="glass-panel p-2 flex-1 min-h-[40px] flex items-center">
+                    <span class="text-[10px] text-purple-400 mr-1.5">B:</span>
+                    <span id="surprise-char-b-display" class="text-[11px] text-gray-400">опционально</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- MODE: script -->

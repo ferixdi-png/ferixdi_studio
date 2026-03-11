@@ -1521,6 +1521,25 @@ app.post('/api/generate', authMiddleware, async (req, res) => {
     context.charA = { id: 'none', name_ru: 'Оригинал', prompt_tokens: {}, identity_anchors: {}, biology_override: {}, group: '', vibe_archetype: '' };
     context.charB = context.charA;
     context.soloMode = true;
+  } else if (context.input_mode === 'suggested' && (!context.charA || !context.charA.id) && context.surprise_char_mode !== 'manual') {
+    // Suggested mode with auto characters — pick a random pair from available characters
+    const pool = Array.isArray(context.characters) ? context.characters.filter(c => c && c.id && c.name_ru) : [];
+    if (pool.length >= 2) {
+      // Pick two random distinct characters, prefer contrasting compatibility types
+      const shuffled = pool.sort(() => Math.random() - 0.5);
+      context.charA = shuffled[0];
+      // Try to find a contrasting partner
+      const partner = shuffled.slice(1).find(c => c.compatibility !== shuffled[0].compatibility) || shuffled[1];
+      context.charB = partner;
+      context.autoPickedChars = true;
+    } else if (pool.length === 1) {
+      context.charA = pool[0];
+      context.charB = pool[0];
+      context.soloMode = true;
+      context.autoPickedChars = true;
+    } else {
+      return res.status(400).json({ error: 'Нет доступных персонажей для авто-подбора. Добавьте персонажей или выберите вручную.' });
+    }
   } else if (!context.charA || !context.charA.id || !context.charA.name_ru) {
     return res.status(400).json({ error: 'Character A with id and name_ru is required' });
   }
