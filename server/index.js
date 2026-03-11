@@ -2660,14 +2660,14 @@ app.post('/api/threads-trends', authMiddleware, async (req, res) => {
     query = '',
     lang = 'ru',
     freshness = '24h',
-    limit = 8,
+    limit = 12,
     niche = 'any',
     exclude_big = false,
   } = req.body;
 
   const now = new Date();
   const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-  const safeLimit = Math.min(Math.max(parseInt(limit) || 8, 3), 12);
+  const safeLimit = Math.min(Math.max(parseInt(limit) || 12, 3), 20);
   const langLabel = lang === 'en' ? 'English' : 'Russian';
   const langTag   = lang === 'en' ? 'EN' : 'RU';
   const queryBlock = query ? `"${query}"` : 'any trending topic';
@@ -2822,134 +2822,163 @@ IMPORTANT: Extract SPECIFIC facts from search results: company names, product na
 
 ━━━ DATA RULES ━━━
 For each of the ${safeLimit} posts:
-1. The "text" field = your BEST variant. A standalone Threads post that uses the news as a SEED but delivers a thought/provocation/question. NOT a news summary!
+1. "text" = your BEST variant. Standalone Threads post. News = 1 line seed. Rest = YOUR thought/provocation/question. NOT a news summary!
 2. author: null, url: null
-3. "news_source": 1 sentence describing the real event that INSPIRED (not that IS) the post
+3. "news_source": 1 sentence — the real event that INSPIRED (not that IS) the post
 4. "news_url": URL from search/RSS or null
-5. "engagement_hook": describe in 1 sentence WHY someone would comment on this (e.g. "Forces reader to pick a side", "Asks a question everyone has an opinion on", "Makes a bold claim people will argue about")
-6. Estimate engagement: likes, comments (THIS IS THE MOST IMPORTANT METRIC), reposts
-7. confidence: "high" = verified news source; "medium" = trending topic; "low" = loosely inspired
-8. virality_score 1-100 weighted for ENGAGEMENT:
-   - comment_potential (0-30): Will people ARGUE? Will they ANSWER a question? Will they TAG friends?
-   - relatability (0-25): Does the reader think "это про меня"?
-   - shareability (0-25): Will people repost or send to friends?
-   - emotion (0-20): Does it trigger a strong feeling (anger, laughter, nostalgia, surprise)?
+5. "engagement_hook": ⚠️ MANDATORY, NEVER null/empty. 1 sentence explaining WHY someone would comment.
+   Examples: "Заставляет выбрать сторону", "Вопрос на который у каждого свой ответ", "Провокационное утверждение с которым 50% не согласятся", "Личный опыт в котором каждый узнает себя"
+6. Estimate engagement: likes, comments (MOST IMPORTANT), reposts — use realistic numbers
+7. confidence: "high" = verified news; "medium" = trending topic; "low" = loosely inspired
+8. "score_breakdown" — ⚠️ CRITICAL JSON FIELD NAMES (use EXACTLY these, not any other names):
+   {
+     "comment_potential": number 0-30,  ← ⚠️ NOT "debate", NOT "comments", EXACTLY "comment_potential"
+     "relatability": number 0-25,       ← ⚠️ NOT "depth", EXACTLY "relatability"
+     "shareability": number 0-25,
+     "emotion": number 0-20
+   }
+   🚫 DO NOT use field names "depth" or "debate" — they are WRONG and will break the UI.
+   All 4 fields must have NON-ZERO values. If comment_potential is 0 your post is bad — rewrite it.
+   virality_score = sum of all 4 components.
 9. signal_type: "debate_starter" | "thought_bomb" | "relatable_take" | "humor_hook" | "hot_take"
 
-EVERY post must have a non-null news_source AND a non-null engagement_hook.
+⚠️ EVERY post MUST have: non-null "news_source", non-null "engagement_hook", non-zero score_breakdown values, and "predicted_comments" array with 3 items.
+
+━━━ 🚫 ANTI-REPETITION RULES (CRITICAL) ━━━
+Your ${safeLimit} posts MUST be DIVERSE. If they feel samey, you FAILED.
+
+STRUCTURE DIVERSITY — across all ${safeLimit} posts, you MUST use at LEAST 5 different structures:
+- Bold claim → argument → punchline (max 2 posts)
+- Observation → escalation → question (max 2 posts)
+- Personal story → connection to news → reflection (max 2 posts)
+- List/stages/phases format (at least 1 post)
+- Absurd comparison/metaphor (at least 1 post)
+- "What if" / future projection (at least 1 post)
+- Sarcastic commentary / dark humor (at least 1 post)
+- Mini-story with twist ending (at least 1 post)
+
+ENDING DIVERSITY — NOT every post should end with a question! Mix:
+- Questions: max 40% of posts (${Math.ceil(safeLimit * 0.4)} posts)
+- Bold claims/statements: at least 30%
+- Punchlines/mic drops: at least 20%
+- Cliffhangers ("Продолжение в комментах" / "Запомните этот пост"): at least 1 post
+
+OPENER DIVERSITY — NEVER repeat the same opener pattern. Vary between:
+- Direct provocation: "Хватит [verb]..."
+- Number hook: "3 причины почему..."
+- Confession: "Я тот человек, который..."
+- Bold claim: "Непопулярное мнение:"
+- Mystery: "Одна новость сегодня всё изменила."
+- Sarcasm: "Спасибо, [company/person], за..."
+- Comparison: "Раньше... Теперь..."
+- Question lead: "Почему никто не говорит о..."
+
+TONE DIVERSITY — mix across posts:
+- 2-3 angry/provocative
+- 2-3 funny/sarcastic
+- 2-3 thoughtful/insightful
+- 2-3 personal/vulnerable
+- 1-2 absurdist/surreal
 
 ━━━ FOR EACH POST: GENERATE THE FOLLOWING ━━━
 
-1. 📊 VIRALITY SCORE (1-100) — ENGAGEMENT-WEIGHTED:
-   score_breakdown: { "comment_potential": 0-30, "relatability": 0-25, "shareability": 0-25, "emotion": 0-20 }
-   comment_potential is THE KING metric. A post with 500 comments and 100 likes > a post with 5000 likes and 10 comments.
-   Ask yourself: "If I posted this, how many people would feel COMPELLED to write a comment?" If < 50, rewrite.
+1. 📊 VIRALITY SCORE — score_breakdown with EXACTLY these field names:
+   "score_breakdown": { "comment_potential": N, "relatability": N, "shareability": N, "emotion": N }
+   🚫 WRONG: "depth", "debate" — DO NOT USE THESE
+   ✅ RIGHT: "comment_potential", "relatability", "shareability", "emotion"
+   ALL values must be > 0. comment_potential is king: a post with many comments > a post with many likes.
 
-2. 🧠 DEEP ANALYSIS:
-   - why_works: which engagement trigger fires — 2-3 sentences focusing on WHY people will COMMENT and DEBATE
-   - hook: the first line that stops the scroll (must work alone, without context)
-   - conflict: the tension that FORCES a reaction — what makes this post impossible to ignore?
-   - audience_pain: the universal frustration/desire/question it exploits
-   - cta_potential: how to turn commenters into followers (1 sentence)
-   - key_insight: the ONE phrase people will quote in their own posts
-   - predicted_comments: 3 example comments real people would write under this post (e.g. "Бля, это прям про меня", "Не согласен, потому что...", "Отправила мужу 😂")
+2. 🧠 DEEP ANALYSIS (inside "analysis" object):
+   - "why_works": 2-3 sentences on WHY people will COMMENT
+   - "hook": first scroll-stopping line
+   - "conflict": the tension that forces reaction
+   - "audience_pain": universal frustration it exploits
+   - "cta_potential": how to convert commenters to followers
+   - "key_insight": the ONE quotable phrase
+   - "predicted_comments": ⚠️ MANDATORY array of EXACTLY 3 realistic comments, e.g.:
+     ["Жиза, отправила подруге 😂", "Не согласен, вот почему: ...", "У меня точно так же, только хуже"]
 
-3. ✍️ FIVE PUBLICATION-READY VARIANTS — ENGAGEMENT-OPTIMIZED:
-   CRITICAL RULES:
-   - Each variant = COMPLETE ready-to-copy-paste Threads post
-   - NO hashtags in text! Hashtags go in separate field
-   - 150-500 chars. Short lines. \\n\\n between sentences. **Bold** for 1-2 punch words.
-   - First line = SCROLL STOPPER. Must work alone without any context.
-   - ZERO AI smell: ban "в мире где", "давайте разберёмся", "важно понимать", "на самом деле", "в современном мире", "не секрет что"
-   - Write as a REAL ${langTag} person with opinions, not a news bot
-   - FIRST PERSON only: "Я заметил...", "Меня бесит...", "Мне 30, и я до сих пор..."
-   - Each variant MUST end with one of: a QUESTION, a BOLD CLAIM people will argue about, or a PUNCHLINE
-   - Each variant must feel like it came from a DIFFERENT person with a different personality
-   - The news fact should take max 1 line. The REST = your thought/provocation/observation
+3. ✍️ FIVE VARIANTS — each a DIFFERENT style with EXACT style values:
+   ⚠️ CRITICAL: Use EXACTLY these "style" values in JSON. Do NOT translate them:
+   - "bold"      → label: "Провокатор"
+   - "smart"     → label: "Аналитик"
+   - "emotional" → label: "Личная история"
+   - "viral"     → label: "Вирусный"
+   - "personal"  → label: "Вопрос залу"
+   🚫 WRONG style values: "дерзкий", "умный", "эмоциональный", "личный", "provocateur", "analyst"
+   ✅ RIGHT style values: "bold", "smart", "emotional", "viral", "personal" (English, lowercase)
 
-   The 5 styles — each optimized for a DIFFERENT type of engagement:
+   Rules for ALL variants:
+   - Complete ready-to-paste post, 150-500 chars
+   - NO hashtags in text
+   - First line = SCROLL STOPPER
+   - Short lines with \\n\\n breaks
+   - **Bold** 1-2 words max
+   - First person voice
+   - Each variant feels like a DIFFERENT person wrote it
+   - 🚫 Ban: "в мире где", "давайте разберёмся", "важно понимать", "в современном мире", "не секрет что"
 
-   a) "bold" (🔥 Провокатор) — GOAL: максимум СПОРОВ в комментах
-      Technique: State a controversial opinion about the news. Make 50% agree and 50% disagree.
-      Structure: Bold claim (1 line) → Why you think so (2-3 lines) → Even bolder conclusion that splits the audience
-      Endings: "Измените мое мнение." / "Или я не прав?" / "Докажите обратное."
-      Example openers: "Непопулярное мнение:", "Скажу то, за что меня закидают:", "Все думают X. Я думаю Y."
+   Style goals:
+   a) "bold" → максимум СПОРОВ: controversial take, 50/50 split opinion, ends with challenge
+   b) "smart" → скриншоты: non-obvious insight, connecting dots, mind-blowing conclusion
+   c) "emotional" → пересылки: personal memory + news, vulnerability, "это про меня" moment
+   d) "viral" → репосты: list with twist, absurd escalation, "this is SO us" format
+   e) "personal" → комменты: direct question to audience, confession everyone relates to
 
-   b) "smart" (🧠 Аналитик) — GOAL: скриншоты и сохранения
-      Technique: Take the news and extract a non-obvious INSIGHT that makes people think "блин, а ведь правда".
-      Structure: Observation (1 line) → Connect dots no one else connected (2-3 lines) → Mind-blowing conclusion
-      Endings: "Задумайтесь." / "И это только начало." / Statement so good people screenshot it.
-      Example openers: "Заметил кое-что:", "Одна цифра, которая всё объясняет:", "Никто не говорит вслух, но..."
+4. 🏷️ HASHTAGS — 8-12 per post in ${langLabel}: 3-4 high_volume, 3-4 mid_volume, 2-4 niche
 
-   c) "emotional" (❤️ Личная история) — GOAL: "отправила подруге", лайки, сохранения
-      Technique: Connect the news to a PERSONAL moment everyone relates to. Vulnerability + specificity.
-      Structure: "When I read about [news]..." → Personal memory/feeling (2-3 lines) → Universal truth
-      Endings: "И я не уверен, что стало лучше." / "Или это только у меня так?" / Nostalgic punchline
-      Example openers: "Прочитал про [news] и вспомнил:", "Мне N лет, и после такого:", "Моя мама до сих пор..."
+5. 🎬 REEL/SHORT IDEAS — 1-3 ideas: hook, conflict, direction, format, why_viral
 
-   d) "viral" (📢 Вирусный) — GOAL: максимум РЕПОСТОВ и пересылок
-      Technique: Package the news into a format people MUST share — list with twist, absurd escalation, or "this is SO us" moment.
-      Structure: Hook (1 line) → Buildup of 3-4 items → UNEXPECTED last item or punchline that flips everything
-      Endings: "Особенно последний пункт." / Twist that makes you exhale / Self-aware humor
-      Example openers: "Три вещи после сегодняшних новостей:", "Стадии принятия [news event]:", "Краткое содержание [year]:"
-
-   e) "personal" (💬 Вопрос залу) — GOAL: максимум КОММЕНТАРИЕВ
-      Technique: Ask a question tied to the news that EVERYONE has an opinion on. Or make a confession that others will echo.
-      Structure: Context from news (1 line) → Personal confession or dilemma → Direct question to audience
-      Endings: ALWAYS a question. "А вы?" / "Сколько у вас?" / "Только честно." / "Или я один такой?"
-      Example openers: "После новости про [X], вопрос:", "Только честно:", "Интересно, сколько из вас..."
-
-4. 🏷️ HASHTAGS — 8-12 per post in ${langLabel}:
-   3-4 high-volume, 3-4 mid-volume, 2-4 niche/trending
-
-5. 🎬 REEL/SHORT IDEAS — 3 ideas for vertical video:
-   Each: hook (5-7 words), conflict, direction, format ("talking head"|"text-on-screen"|"POV"|"greenscreen"|"trending-audio"|"storytelling"), why_viral
-
-6. ⏰ BEST TIME: time (HH:MM, Moscow for RU / EST for EN), day, reasoning (1 sentence)
+6. ⏰ BEST TIME: { "time": "HH:MM", "day": "...", "reasoning": "..." }
 
 ━━━ OUTPUT FORMAT ━━━
-Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
+Return ONLY a valid JSON array of ${safeLimit} objects. No markdown. No preamble. No explanation.
+
+⚠️ FINAL CHECKLIST before outputting:
+□ score_breakdown uses "comment_potential" and "relatability" (NOT "depth" or "debate")
+□ ALL score_breakdown values are > 0
+□ engagement_hook is a non-empty string for EVERY post
+□ predicted_comments is an array of 3 strings for EVERY post
+□ variant styles are EXACTLY: "bold", "smart", "emotional", "viral", "personal"
+□ variant labels are: "Провокатор", "Аналитик", "Личная история", "Вирусный", "Вопрос залу"
+□ Posts use at least 5 different structures (not all "news → opinion → question")
+□ Max 40% of posts end with a question
+□ Each post's text is a STANDALONE thought, not a news summary
 
 [
   {
     "id": "th1",
-    "text": "The BEST variant text — a standalone Threads post that uses news as seed but delivers a provocation/thought/question",
+    "text": "Standalone Threads post — news is 1 line, rest is YOUR provocative thought",
     "author": null,
     "url": null,
-    "news_source": "1-sentence description of the real event that INSPIRED this post",
+    "news_source": "Real event that inspired this post",
     "news_url": "https://... or null",
-    "engagement_hook": "Why someone would comment: e.g. Forces reader to pick a side on [topic]",
+    "engagement_hook": "WHY someone would comment (NEVER null or empty)",
     "freshness_label": "сегодня",
     "signals": { "likes_est": "1.2K+", "comments_est": "500+", "reposts_est": "300+" },
     "confidence": "high",
     "signal_type": "debate_starter",
-    "topic_tag": "short topic label",
+    "topic_tag": "short topic",
     "virality_score": 85,
     "score_breakdown": { "comment_potential": 28, "relatability": 22, "shareability": 20, "emotion": 15 },
     "analysis": {
-      "why_works": "Forces readers to take a side on [topic], triggering argument chains in comments...",
-      "hook": "First line that stops the scroll",
-      "conflict": "The tension that makes this impossible to ignore",
-      "audience_pain": "Universal frustration everyone feels but rarely articulates",
-      "cta_potential": "Comment section becomes a debate → follow for more hot takes",
-      "key_insight": "The ONE phrase people will quote",
-      "predicted_comments": ["Бля, это прям про меня 😂", "Не согласен, потому что...", "Отправила мужу"]
+      "why_works": "...",
+      "hook": "...",
+      "conflict": "...",
+      "audience_pain": "...",
+      "cta_potential": "...",
+      "key_insight": "...",
+      "predicted_comments": ["Comment 1", "Comment 2", "Comment 3"]
     },
     "variants": [
-      { "style": "bold",      "label": "Провокатор",      "text": "Непопулярное мнение после [news]:\\n\\n[Bold claim].\\n\\nПотому что [argument].\\n\\nА [counter-point] — это просто [reframe].\\n\\nИзмените моё мнение." },
-      { "style": "smart",     "label": "Аналитик",         "text": "Заметил кое-что после [news]:\\n\\n[Insight line 1].\\n[Insight line 2].\\n\\nИ вот что это **на самом деле** значит:\\n\\n[Mind-blowing conclusion]." },
-      { "style": "emotional", "label": "Личная история",   "text": "Прочитал про [news] и вспомнил...\\n\\n[Personal moment].\\n\\n[Specific detail].\\n\\nМир реально изменился.\\nИ я не уверен, что в лучшую сторону." },
-      { "style": "viral",     "label": "Вирусный",         "text": "Стадии принятия [news event]:\\n\\n1. Не может быть\\n2. Ладно, может\\n3. [Unexpected twist]\\n\\nЯ на третьей." },
-      { "style": "personal",  "label": "Вопрос залу",      "text": "После новости про [X]:\\n\\n[Personal confession].\\n\\n[Specific relatable detail].\\n\\nИли я один такой?" }
+      { "style": "bold",      "label": "Провокатор",      "text": "..." },
+      { "style": "smart",     "label": "Аналитик",         "text": "..." },
+      { "style": "emotional", "label": "Личная история",   "text": "..." },
+      { "style": "viral",     "label": "Вирусный",         "text": "..." },
+      { "style": "personal",  "label": "Вопрос залу",      "text": "..." }
     ],
-    "hashtags": {
-      "high_volume": ["#тренды", "#threads", "#мнение"],
-      "mid_volume": ["#горячиеновости", "#дискуссия"],
-      "niche": ["#threadstrends", "#вирусныйпост"]
-    },
-    "reel_ideas": [
-      { "hook": "5-7 word scroll stopper", "conflict": "...", "direction": "...", "format": "talking head", "why_viral": "..." }
-    ],
+    "hashtags": { "high_volume": [...], "mid_volume": [...], "niche": [...] },
+    "reel_ideas": [{ "hook": "...", "conflict": "...", "direction": "...", "format": "talking head", "why_viral": "..." }],
     "best_time": { "time": "19:30", "day": "вторник", "reasoning": "..." }
   }
 ]`;
@@ -2966,7 +2995,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         tools: [{ google_search: {} }],
-        generationConfig: { temperature: 0.85, maxOutputTokens: 32768 },
+        generationConfig: { temperature: 0.92, maxOutputTokens: 65536 },
       }),
       signal: ac1.signal,
     });
@@ -3002,7 +3031,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
             tools: [{ google_search_retrieval: { dynamic_retrieval_config: { mode: 'MODE_DYNAMIC', dynamic_threshold: 0.1 } } }],
-            generationConfig: { temperature: 0.85, maxOutputTokens: 32768 },
+            generationConfig: { temperature: 0.92, maxOutputTokens: 65536 },
           }),
           signal: ac1b.signal,
         });
@@ -3042,7 +3071,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.9, maxOutputTokens: 32768, responseMimeType: 'application/json' },
+          generationConfig: { temperature: 0.92, maxOutputTokens: 65536, responseMimeType: 'application/json' },
         }),
         signal: ac2.signal,
       });
@@ -3100,16 +3129,17 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
         reposts_est: String((p.signals?.reposts_est) || 'неизвестно').slice(0, 20),
       },
       confidence: ['high', 'medium', 'low'].includes(p.confidence) ? p.confidence : 'low',
-      signal_type: ['direct', 'inferred', 'news_reaction', 'trend_take', 'event_humor'].includes(p.signal_type) ? p.signal_type : 'inferred',
+      signal_type: ['direct', 'inferred', 'news_reaction', 'trend_take', 'event_humor', 'debate_starter', 'thought_bomb', 'relatable_take', 'humor_hook', 'hot_take'].includes(p.signal_type) ? p.signal_type : 'inferred',
       news_source: p.news_source ? String(p.news_source).slice(0, 300) : null,
       news_url: (p.news_url && /^https?:\/\//.test(String(p.news_url))) ? String(p.news_url).slice(0, 500) : null,
+      engagement_hook: String(p.engagement_hook || '').slice(0, 300) || null,
       topic_tag: String(p.topic_tag || '').slice(0, 60),
       virality_score: Math.min(100, Math.max(0, parseInt(p.virality_score) || 0)),
       score_breakdown: {
-        depth: Math.min(30, parseInt(p.score_breakdown?.depth) || 0),
-        emotion: Math.min(25, parseInt(p.score_breakdown?.emotion) || 0),
+        comment_potential: Math.min(30, parseInt(p.score_breakdown?.comment_potential ?? p.score_breakdown?.debate ?? p.score_breakdown?.depth) || 0),
+        relatability: Math.min(25, parseInt(p.score_breakdown?.relatability ?? p.score_breakdown?.depth) || 0),
         shareability: Math.min(25, parseInt(p.score_breakdown?.shareability) || 0),
-        debate: Math.min(20, parseInt(p.score_breakdown?.debate) || 0),
+        emotion: Math.min(20, parseInt(p.score_breakdown?.emotion) || 0),
       },
       analysis: {
         why_works: String(p.analysis?.why_works || '').slice(0, 600),
@@ -3118,6 +3148,7 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
         audience_pain: String(p.analysis?.audience_pain || '').slice(0, 200),
         cta_potential: String(p.analysis?.cta_potential || '').slice(0, 200),
         key_insight: String(p.analysis?.key_insight || '').slice(0, 300),
+        predicted_comments: Array.isArray(p.analysis?.predicted_comments) ? p.analysis.predicted_comments.slice(0, 3).map(c => String(c).slice(0, 200)) : [],
       },
       variants: Array.isArray(p.variants) ? p.variants.slice(0, 5).map(v => ({
         style: String(v.style || '').slice(0, 20),

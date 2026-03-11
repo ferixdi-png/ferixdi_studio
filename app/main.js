@@ -7773,7 +7773,7 @@ function initThreadsTrends() {
     const lang      = document.getElementById('threads-lang')?.value || 'ru';
     const freshness = document.getElementById('threads-freshness')?.value || '24h';
     const niche     = document.getElementById('threads-niche')?.value || 'any';
-    const limit     = parseInt(document.getElementById('threads-limit')?.value) || 8;
+    const limit     = parseInt(document.getElementById('threads-limit')?.value) || 12;
 
     searchBtn.disabled = true;
     const btnLabel = document.getElementById('threads-btn-label');
@@ -7983,7 +7983,7 @@ function _saveThreadsFilters() {
       lang:       document.getElementById('threads-lang')?.value || 'ru',
       freshness:  document.getElementById('threads-freshness')?.value || '24h',
       niche:      document.getElementById('threads-niche')?.value || 'any',
-      limit:      document.getElementById('threads-limit')?.value || '8',
+      limit:      document.getElementById('threads-limit')?.value || '12',
       excludeBig: _threadsExcludeBig,
     }));
   } catch { /* quota */ }
