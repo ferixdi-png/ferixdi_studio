@@ -2567,6 +2567,83 @@ ${niche === 'realestate' ? `• «Ипотека под 6% — через год
   }
 });
 
+// ─── RSS News Fetcher — real headlines as fallback for Google Search grounding ──────
+const _rssCache = { headlines: [], fetchedAt: 0 };
+const RSS_CACHE_TTL = 15 * 60_000; // 15 min
+const RSS_FEEDS = [
+  'https://lenta.ru/rss/news',
+  'https://ria.ru/export/rss2/index.xml',
+  'https://tass.com/rss/v2.xml',
+];
+
+async function fetchRealHeadlines(query = '') {
+  // Return cache if fresh
+  if (_rssCache.headlines.length && Date.now() - _rssCache.fetchedAt < RSS_CACHE_TTL) {
+    console.log('[RSS] Using cached headlines:', _rssCache.headlines.length);
+    return _rssCache.headlines;
+  }
+
+  const allItems = [];
+  const now = Date.now();
+  const cutoff = now - 48 * 3600_000; // last 48h
+
+  for (const feedUrl of RSS_FEEDS) {
+    try {
+      const ac = new AbortController();
+      const to = setTimeout(() => ac.abort(), 8000);
+      const resp = await fetch(feedUrl, {
+        signal: ac.signal,
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; FerixdiBot/1.0)' },
+      });
+      clearTimeout(to);
+      if (!resp.ok) continue;
+      const xml = await resp.text();
+
+      // Simple XML parsing — extract <item> blocks with <title>, <pubDate>, <link>, <description>
+      const items = [...xml.matchAll(/<item[\s>]([\s\S]*?)<\/item>/gi)];
+      for (const m of items) {
+        const block = m[1];
+        const title = block.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i)?.[1]?.trim();
+        const link = block.match(/<link>([\s\S]*?)<\/link>/i)?.[1]?.trim();
+        const pubDate = block.match(/<pubDate>([\s\S]*?)<\/pubDate>/i)?.[1]?.trim();
+        const desc = block.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i)?.[1]?.trim();
+
+        if (!title) continue;
+        const ts = pubDate ? new Date(pubDate).getTime() : 0;
+        if (ts && ts < cutoff) continue; // skip old items
+
+        allItems.push({
+          title: title.replace(/<[^>]+>/g, '').slice(0, 200),
+          link: link || null,
+          date: pubDate || null,
+          desc: desc ? desc.replace(/<[^>]+>/g, '').slice(0, 300) : null,
+          source: feedUrl.includes('lenta') ? 'Lenta.ru' : feedUrl.includes('ria') ? 'РИА Новости' : 'ТАСС',
+        });
+      }
+    } catch (e) {
+      console.warn(`[RSS] Failed to fetch ${feedUrl}:`, e.message);
+    }
+  }
+
+  // Deduplicate by title similarity
+  const seen = new Set();
+  const unique = allItems.filter(item => {
+    const key = item.title.toLowerCase().slice(0, 50);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  // Sort by date (newest first), take top 30
+  unique.sort((a, b) => (b.date ? new Date(b.date).getTime() : 0) - (a.date ? new Date(a.date).getTime() : 0));
+  const headlines = unique.slice(0, 30);
+
+  _rssCache.headlines = headlines;
+  _rssCache.fetchedAt = now;
+  console.log(`[RSS] Fetched ${headlines.length} headlines from ${RSS_FEEDS.length} feeds`);
+  return headlines;
+}
+
 // ─── POST /api/threads-trends — Best Threads parser: no API, no auth, Google Search grounding ──────
 app.post('/api/threads-trends', authMiddleware, async (req, res) => {
   const GEMINI_KEY = nextGeminiKey();
@@ -2605,25 +2682,40 @@ app.post('/api/threads-trends', authMiddleware, async (req, res) => {
   const nicheBlock = nicheMap[niche] ? `\nNiche focus: ${nicheMap[niche]}` : '';
   const excludeBlock = exclude_big ? '\nIMPORTANT: Exclude obvious celebrities/brands with 500K+ followers. Focus ONLY on organic breakout posts from creators with <100K followers — these are the posts regular people can replicate.' : '';
 
+  // ──── Fetch REAL headlines from RSS feeds ────
+  let rssHeadlines = [];
+  try {
+    rssHeadlines = await fetchRealHeadlines(query);
+  } catch (e) {
+    console.warn('[THREADS] RSS fetch failed:', e.message);
+  }
+  const hasRssNews = rssHeadlines.length > 0;
+  const rssBlock = hasRssNews
+    ? `\n\n━━━ VERIFIED REAL NEWS HEADLINES (from RSS feeds, ${dateStr}) ━━━\n⚠️ USE ONLY THESE HEADLINES as the basis for your posts. DO NOT invent news that is not in this list.\n\n${rssHeadlines.slice(0, 20).map((h, i) => `${i + 1}. [${h.source}] ${h.title}${h.link ? ' — ' + h.link : ''}${h.desc ? '\n   ' + h.desc.slice(0, 150) : ''}`).join('\n')}\n\n⚠️ EVERY post MUST be based on one of the headlines above. Copy the headline title into the "news_source" field. Set "news_url" to the link from the headline. DO NOT FABRICATE events that are not in this list.\n`
+    : '';
+
   // ──── THE MEGA PROMPT ────
   const prompt = `Today is ${dateStr}. You are the world's best Threads content strategist and trend analyst.
-
-⚠️ CRITICAL INSTRUCTION: You MUST use Google Search to find what is ACTUALLY happening in the world RIGHT NOW (today is ${dateStr}).
+${rssBlock}
+⚠️ CRITICAL INSTRUCTION: ${hasRssNews ? 'Use the VERIFIED REAL NEWS HEADLINES above as the basis for ALL your posts.' : 'You MUST use Google Search to find what is ACTUALLY happening in the world RIGHT NOW.'}
 DO NOT generate generic posts from memory. DO NOT recycle old news from 2024 or 2025. Every post must be rooted in a REAL current event from the LAST 48 HOURS.
-
+${hasRssNews ? '🚫 DO NOT INVENT OR FABRICATE news events. ONLY use the headlines provided above. If a headline is not in the list, DO NOT write about it.' : ''}
 🚫 STALENESS CHECK: Before outputting ANY post, verify:
 - Is this event from the last 48 hours? If NO → SKIP IT
 - Would a reader TODAY say "это же старая новость"? If YES → SKIP IT
 - Events like Apple iPad crush ad, Scarlett Johansson vs OpenAI, Telegram Stars launch, first Neuralink implant — these are OLD (2024). DO NOT USE THEM.
 
 ━━━ MISSION ━━━
-STEP 1: Use Google Search to find TODAY's hottest news, events, and trending topics:
+${hasRssNews ? `STEP 1: Review the VERIFIED REAL NEWS HEADLINES above. Pick the ${safeLimit} most interesting, viral-worthy, relatable topics.
+STEP 2: For EACH chosen headline, create a killer Threads-style post that reacts to it with wit, irony, or sharp personal take.
+STEP 3: Set "news_source" to the EXACT headline title and "news_url" to the link provided.`
+: `STEP 1: Use Google Search to find TODAY's hottest news, events, and trending topics:
   - Search: "новости сегодня ${dateStr}" OR "trending news today ${dateStr}"
   - Search: "${query || 'технологии AI бизнес'} новости ${now.getFullYear()}"
   - Search: "Google Apple Tesla OpenAI Яндекс VK новости ${freshnessLabel}"
   - Search: trending topics Russia ${now.getFullYear()} ${now.toLocaleString('en', {month: 'long'})}
 STEP 2: From the search results, identify ${safeLimit} SPECIFIC real events, announcements, scandals, price changes, tech launches, company news, viral moments.
-STEP 3: For EACH real event, create a killer Threads-style post that reacts to it with wit, irony, or sharp personal take.
+STEP 3: For EACH real event, create a killer Threads-style post that reacts to it with wit, irony, or sharp personal take.`}
 
 Language: ${langLabel} | Freshness: ${freshnessLabel}${nicheBlock}${excludeBlock}
 
@@ -3032,6 +3124,18 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       },
     })).filter(p => p.text.length > 10);
 
+    // ── Confidence override: prevent fake "📰 На основе новости" badges ──
+    // When grounding is off AND no RSS headlines were used, the AI FABRICATES news.
+    // Force confidence to "low" and clear fake news_url to be honest with the user.
+    if (!usedGrounding && !hasRssNews) {
+      console.warn('[THREADS] ⚠️ No grounding + no RSS → forcing all confidence to "low" (AI-fabricated content)');
+      posts.forEach(p => {
+        p.confidence = 'low';
+        p.news_url = null; // AI-fabricated URLs are not real
+        if (p.news_source) p.news_source = `[⚠️ НЕ ПРОВЕРЕНО] ${p.news_source}`;
+      });
+    }
+
     // ── Staleness detection: flag posts referencing known old events ──
     const _stalePatterns = [
       /ipad.*пресс|crush.*ad|гидравлич.*пресс.*ipad/i,
@@ -3056,8 +3160,8 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
     // Clean up internal flag
     posts.forEach(p => { delete p._stale; });
 
-    const hasFreshContent = staleCount < posts.length;
-    const effectiveGrounding = usedGrounding && hasFreshContent;
+    // Determine effective source quality
+    const effectiveGrounding = usedGrounding || hasRssNews;
 
     res.json({
       posts,
@@ -3065,12 +3169,14 @@ Return ONLY a valid JSON array. No markdown fences. No preamble. No explanation.
       niche,
       lang,
       fetched_at: now.toISOString(),
-      used_grounding: effectiveGrounding,
-      source_note: effectiveGrounding
+      used_grounding: usedGrounding,
+      has_rss: hasRssNews,
+      rss_count: rssHeadlines.length,
+      source_note: usedGrounding
         ? '📰 На основе реальных новостей (Google Search). Каждый пост привязан к актуальному событию.'
-        : staleCount > posts.length / 2
-          ? '⚠️ AI не смог найти свежие новости. Часть постов может быть основана на старых событиях.'
-          : '🧠 AI-тренды на основе актуальных событий. Без привязки к конкретным новостям.',
+        : hasRssNews
+          ? `📰 На основе ${rssHeadlines.length} реальных новостей (RSS: Lenta, РИА, ТАСС). Посты привязаны к проверенным заголовкам.`
+          : '⚠️ Нет доступа к новостям. Посты могут содержать вымышленные события — проверяйте перед публикацией!',
       stale_count: staleCount,
       total: posts.length,
     });

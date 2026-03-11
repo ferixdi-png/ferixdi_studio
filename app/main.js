@@ -7812,18 +7812,18 @@ function initThreadsTrends() {
       _threadsData = data.posts || [];
       _threadsLastResponse = data;
 
-      // Source badge — 3 states: grounded / stale warning / AI-only
+      // Source badge — 4 states: Google grounded / RSS grounded / stale warning / AI-fabricated
       if (badgeEl) {
         badgeEl.classList.remove('hidden');
         if (data.used_grounding) {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-          badgeEl.textContent = '📰 На основе реальных новостей';
-        } else if (data.stale_count > _threadsData.length / 2) {
-          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-amber-500/15 text-amber-400 border-amber-500/30';
-          badgeEl.textContent = '⚠️ Часть постов может быть неактуальна';
+          badgeEl.textContent = '📰 Google Search · реальные новости';
+        } else if (data.has_rss) {
+          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-blue-500/15 text-blue-400 border-blue-500/30';
+          badgeEl.textContent = `📰 RSS · ${data.rss_count || ''} реальных заголовков`;
         } else {
-          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-violet-500/15 text-violet-400 border-violet-500/30';
-          badgeEl.textContent = '🧠 AI-тренды на основе актуальных событий';
+          badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-red-500/15 text-red-400 border-red-500/30';
+          badgeEl.textContent = '⚠️ Нет источников · события могут быть вымышлены';
         }
       }
 
@@ -7835,9 +7835,10 @@ function initThreadsTrends() {
 
       // Status
       if (statusEl) {
-        const src = data.used_grounding ? 'на основе реальных новостей' : 'на основе AI-трендов';
+        const src = data.used_grounding ? 'на основе реальных новостей (Google)' : data.has_rss ? `на основе ${data.rss_count} реальных заголовков (RSS)` : '⚠️ без проверенных источников';
         const staleWarn = data.stale_count > 0 ? ` · <span class="text-amber-400">${data.stale_count} устаревших</span>` : '';
-        statusEl.innerHTML = `<span class="text-emerald-400">✓ Создано ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>${staleWarn}`;
+        const srcColor = (data.used_grounding || data.has_rss) ? 'text-emerald-400' : 'text-amber-400';
+        statusEl.innerHTML = `<span class="${srcColor}">✓ Создано ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>${staleWarn}`;
       }
 
       // Summary stats
@@ -8039,7 +8040,7 @@ function _renderSkeletons(n) {
 const _confidenceMeta = {
   high:   { label: '📰 На основе новости', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
   medium: { label: '📊 На основе тренда',  cls: 'bg-amber-500/15 text-amber-400 border-amber-500/25',    dot: 'bg-amber-400' },
-  low:    { label: '💡 AI-генерация',      cls: 'bg-gray-500/15 text-gray-400 border-gray-600/25',       dot: 'bg-gray-500' },
+  low:    { label: '⚠️ Не проверено',      cls: 'bg-red-500/15 text-red-400 border-red-600/25',          dot: 'bg-red-500' },
 };
 
 const _varStyleMeta = {
