@@ -1057,6 +1057,79 @@ ${mixBlock}
     res.json({ ok: true, paused: false });
   });
 
+  // ── QUICK-ADD (from main app, key-based auth, no session) ─────────────
+  router.post('/api/quick-add', (req, res) => {
+    const { key, posts } = req.body;
+    if (!key || key !== TOOL_PASSWORD) {
+      return res.status(401).json({ error: 'Неверный ключ' });
+    }
+    if (!Array.isArray(posts) || posts.length === 0) {
+      return res.status(400).json({ error: 'Posts array required' });
+    }
+
+    const now = new Date().toISOString();
+    const batchId = `quick_${Date.now().toString(36)}`;
+    let added = 0, skipped = 0;
+
+    for (const p of posts) {
+      const text = String(p.text || '').slice(0, THREADS_CHAR_LIMIT);
+      if (text.length < 20) { skipped++; continue; }
+      const hash = textHash(text);
+
+      // Skip duplicates
+      if (_sentHashes.has(hash) || _reservoir.find(r => r.text_hash === hash)) { skipped++; continue; }
+
+      const candidate = {
+        id: `q_${Date.now().toString(36)}_${added}`,
+        text,
+        signal_id: p.signal_id || '',
+        post_type: p.post_type || p.style || 'quick',
+        source_signal: String(p.source || p.topic || '').slice(0, 150),
+        scores: { topicality_today: 7, hook_strength: 7, comment_bait: 8, novelty: 6, emotional_tension: 7, clarity: 8, contrarian_pull: 6, social_relatability: 7, freshness_score: 8 },
+        total_score: 130,
+        text_hash: hash,
+        selected: true,
+        internal_status: 'pending_send',
+        buffer_status: null,
+        approved_at: now,
+        queued_at: null,
+        buffer_post_id: null,
+        last_send_attempt_at: null,
+        send_attempts: 0,
+        refill_batch_id: null,
+        stale_after: new Date(Date.now() + 24 * 3600_000).toISOString(),
+        priority_score: 130,
+        freshness_decay_score: 10,
+        send_error: null,
+        scheduled_at: null,
+      };
+
+      _reservoir.push(candidate);
+      if (_reservoir.length > MAX_RESERVOIR) _reservoir.shift();
+      added++;
+    }
+
+    _audit('quick_add', 'api', true, `batch=${batchId} added=${added} skipped=${skipped}`);
+    console.log(`[TQ] Quick-add: ${added} posts → reservoir, ${skipped} skipped`);
+
+    const pending = _reservoir.filter(p => p.internal_status === 'pending_send').length;
+    res.json({ ok: true, added, skipped, reservoir_pending: pending, reservoir_total: _reservoir.length });
+  });
+
+  // ── QUEUE-INFO (public, no auth — for main app status badge) ──────────
+  router.get('/api/queue-info', (req, res) => {
+    const pending = _reservoir.filter(p => p.internal_status === 'pending_send').length;
+    const sent = _reservoir.filter(p => p.internal_status === 'sent_to_buffer').length;
+    res.json({
+      pending, sent,
+      queue_depth: _bufferQueueCache.depth,
+      target: BUFFER_TARGET_QUEUE,
+      free_slots: _bufferQueueCache.depth !== null ? Math.max(0, BUFFER_TARGET_QUEUE - _bufferQueueCache.depth) : null,
+      refill_paused: _refillPaused,
+      buffer_ok: !!(BUFFER_API_KEY && BUFFER_CHANNEL_ID),
+    });
+  });
+
   // ── HISTORY ────────────────────────────────────────────────────────────
   router.get('/api/history', toolAuth, (req, res) => {
     const summary = _batches.map(b => ({

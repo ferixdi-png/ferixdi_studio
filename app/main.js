@@ -7945,8 +7945,10 @@ function initThreadsTrends() {
         summaryEl.classList.remove('hidden');
       }
 
-      // Show copy all
+      // Show copy all + autopost button
       if (copyAllBtn) copyAllBtn.classList.remove('hidden');
+      const _autoBtn = document.getElementById('threads-autopost-btn');
+      if (_autoBtn) _autoBtn.classList.remove('hidden');
 
       _renderThreadsPosts();
       log('OK', 'THREADS', `Загружено ${_threadsData.length} трендовых постов`);
@@ -7984,6 +7986,20 @@ function initThreadsTrends() {
           copyVar.textContent = '✓'; sfx.copy();
           setTimeout(() => { copyVar.textContent = '📋'; }, 1400);
         });
+        return;
+      }
+      // Queue single post
+      const queuePost = e.target.closest('.threads-queue-post');
+      if (queuePost) {
+        const idx = parseInt(queuePost.dataset.postIdx);
+        const post = _threadsData[idx];
+        if (!post) return;
+        // Use the currently visible variant text, or main text
+        const card = queuePost.closest('[data-post-id]');
+        const visiblePanel = card?.querySelector('.threads-var-panel:not(.hidden)');
+        const varText = visiblePanel?.querySelector('p')?.textContent?.trim();
+        const text = varText || post.text;
+        _sendToThreadsQueue([{ text, topic: post.news_source || post.topic_tag || '', style: 'quick' }], queuePost);
         return;
       }
       // Copy hashtags
@@ -8049,8 +8065,90 @@ function _allHashtags(post) {
   return [...(post.hashtags.high_volume || []), ...(post.hashtags.mid_volume || []), ...(post.hashtags.niche || [])];
 }
 
+// ─── THREADS AUTOPOST — Buffer Rolling Queue Integration ──────────────────
+
+const _THREADS_QUEUE_KEY = 'ferixdiai';
+const _THREADS_QUEUE_BASE = '/internal/threads-queue';
+
+async function _sendToThreadsQueue(posts, triggerBtn) {
+  if (!posts?.length) return;
+  const origText = triggerBtn?.textContent;
+  if (triggerBtn) { triggerBtn.textContent = '⏳...'; triggerBtn.disabled = true; }
+  try {
+    const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const resp = await fetch(`${apiUrl}${_THREADS_QUEUE_BASE}/api/quick-add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: _THREADS_QUEUE_KEY, posts }),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+    if (triggerBtn) {
+      triggerBtn.textContent = `✓ ${data.added} в очередь`;
+      triggerBtn.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20');
+      triggerBtn.classList.add('bg-emerald-500/25', 'text-emerald-300', 'border-emerald-500/40');
+      setTimeout(() => {
+        triggerBtn.textContent = origText;
+        triggerBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20');
+        triggerBtn.classList.remove('bg-emerald-500/25', 'text-emerald-300', 'border-emerald-500/40');
+        triggerBtn.disabled = false;
+      }, 2500);
+    }
+    _updateThreadsQueueBadge();
+    try { sfx.copy(); } catch {}
+    return data;
+  } catch (e) {
+    console.error('[THREADS QUEUE]', e.message);
+    if (triggerBtn) {
+      triggerBtn.textContent = '❌ Ошибка';
+      setTimeout(() => { triggerBtn.textContent = origText; triggerBtn.disabled = false; }, 2000);
+    }
+  }
+}
+
+async function _sendAllToThreadsQueue() {
+  if (!_threadsData?.length) return;
+  const autoBtn = document.getElementById('threads-autopost-btn');
+  // Collect the "bold" variant (first variant) for each post, or main text
+  const posts = _threadsData.map(post => {
+    const boldVar = post.variants?.find(v => v.style === 'bold');
+    return {
+      text: boldVar?.text || post.variants?.[0]?.text || post.text,
+      topic: post.news_source || post.topic_tag || '',
+      style: boldVar?.style || 'quick',
+    };
+  });
+  await _sendToThreadsQueue(posts, autoBtn);
+}
+
+async function _updateThreadsQueueBadge() {
+  const badge = document.getElementById('threads-queue-badge');
+  if (!badge) return;
+  try {
+    const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+    const resp = await fetch(`${apiUrl}${_THREADS_QUEUE_BASE}/api/queue-info`);
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) { badge.classList.add('hidden'); return; }
+    badge.classList.remove('hidden');
+    const depth = data.queue_depth !== null ? `${data.queue_depth}/${data.target}` : '?';
+    badge.textContent = `📮 ${data.pending} ожид · Buffer: ${depth}`;
+    badge.title = `Reservoir: ${data.pending} pending, ${data.sent} sent\nBuffer: ${depth}\nFree slots: ${data.free_slots ?? '?'}`;
+  } catch { badge.classList.add('hidden'); }
+}
+
+function _initThreadsAutopost() {
+  const autoBtn = document.getElementById('threads-autopost-btn');
+  if (autoBtn) {
+    autoBtn.addEventListener('click', _sendAllToThreadsQueue);
+  }
+  // Update badge on load and periodically
+  _updateThreadsQueueBadge();
+  setInterval(_updateThreadsQueueBadge, 120_000);
+}
+
 function _onThreadsTrendsEnter() {
   _updateThreadsGate();
+  _updateThreadsQueueBadge();
 }
 
 function _updateThreadsGate() {
@@ -8325,6 +8423,7 @@ function _renderThreadsPosts() {
         <!-- Actions row -->
         <div class="flex items-center gap-2 flex-wrap pt-1">
           <button class="threads-copy-post btn-neon text-[10px] px-2.5 py-1" data-text="${escapeHtml(post.text)}">📋 Копировать</button>
+          <button class="threads-queue-post text-[10px] px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all font-medium" data-post-idx="${idx}">🚀 В очередь</button>
           ${hasUrl ? `<a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="btn-neon text-[10px] px-2.5 py-1" style="text-decoration:none">🔗 Открыть</a>` : ''}
           <button class="threads-toggle-analysis text-[10px] px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20 transition-all font-medium">▼ Анализ</button>
         </div>
@@ -8410,6 +8509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initMatrixRain',initMatrixRain],
     ['initKeyboardShortcuts',initKeyboardShortcuts],
     ['initThreadsTrends',initThreadsTrends],
+    ['initThreadsAutopost',_initThreadsAutopost],
   ];
   for (const [n,f] of _init) { try { f(); } catch(e) { console.error(`[FERIXDI] ${n}:`,e); } }
   try { initCharCounters(); } catch(e) { console.error('[FERIXDI] initCharCounters:', e); }
