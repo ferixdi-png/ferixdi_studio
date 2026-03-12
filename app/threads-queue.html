@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Threads Queue — Internal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { background: #0a0a0f; color: #e0e0e8; font-family: 'Inter', system-ui, sans-serif; }
+  .card { background: #13131d; border: 1px solid #1e1e2e; border-radius: 12px; }
+  .btn { padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all .15s; border: none; }
+  .btn-primary { background: #6c5ce7; color: #fff; }
+  .btn-primary:hover { background: #7c6cf7; }
+  .btn-danger { background: #e74c3c; color: #fff; }
+  .btn-danger:hover { background: #c0392b; }
+  .btn-ghost { background: transparent; border: 1px solid #2a2a3e; color: #a0a0b8; }
+  .btn-ghost:hover { background: #1a1a2e; color: #e0e0e8; }
+  .btn-success { background: #27ae60; color: #fff; }
+  .btn-success:hover { background: #2ecc71; }
+  .input { background: #0e0e18; border: 1px solid #2a2a3e; border-radius: 8px; padding: 8px 12px; color: #e0e0e8; width: 100%; }
+  .input:focus { outline: none; border-color: #6c5ce7; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 50px; font-size: 11px; font-weight: 600; }
+  .badge-draft { background: #2a2a3e; color: #a0a0b8; }
+  .badge-sent { background: #27ae6022; color: #2ecc71; }
+  .badge-sending { background: #f39c1222; color: #f39c12; }
+  .badge-failed { background: #e74c3c22; color: #e74c3c; }
+  .badge-partial { background: #f39c1222; color: #f39c12; }
+  .score-bar { height: 6px; border-radius: 3px; background: #1a1a2e; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width .3s; }
+  .cand-card { background: #0e0e18; border: 1px solid #1e1e2e; border-radius: 10px; padding: 14px; transition: border-color .2s; }
+  .cand-card.selected { border-color: #6c5ce7; }
+  .cand-card:hover { border-color: #3a3a5e; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #6c5ce740; border-top-color: #6c5ce7; border-radius: 50%; animation: spin .6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  textarea.input { min-height: 60px; resize: vertical; }
+  .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; font-weight: 600; z-index: 100; animation: fadeIn .3s; }
+  .type-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #6c5ce722; color: #9b8ff0; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center">
+  <div class="card p-8 w-full max-w-sm text-center">
+    <h1 class="text-xl font-bold mb-1 text-white">🔒 Threads Queue</h1>
+    <p class="text-sm text-gray-500 mb-6">Internal Tool — Authorized Access Only</p>
+    <input id="login-pass" type="password" class="input mb-3" placeholder="Пароль" autocomplete="off">
+    <div id="login-error" class="text-red-400 text-sm mb-3 hidden"></div>
+    <button id="login-btn" class="btn btn-primary w-full" onclick="doLogin()">Войти</button>
+  </div>
+</div>
+
+<!-- MAIN APP (hidden until auth) -->
+<div id="app" class="hidden max-w-6xl mx-auto px-4 py-6">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-lg font-bold text-white">📮 Threads Rolling Queue</h1>
+      <p class="text-xs text-gray-500">Генерация → Одобрение → Авто-дозаливка Buffer</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="status-indicators" class="text-xs text-gray-500"></span>
+      <button class="btn btn-ghost text-sm" onclick="showHistory()">📋</button>
+      <button class="btn btn-ghost text-sm" onclick="doLogout()">Выход</button>
+    </div>
+  </div>
+
+  <!-- QUEUE STATUS PANEL -->
+  <div id="queue-panel" class="card p-4 mb-4 fade-in">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+      <div>
+        <div class="text-2xl font-bold text-white" id="q-depth">—</div>
+        <div class="text-xs text-gray-500">Buffer Queue</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-purple-400" id="q-pending">—</div>
+        <div class="text-xs text-gray-500">Reservoir Pending</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-green-400" id="q-free">—</div>
+        <div class="text-xs text-gray-500">Free Slots</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-yellow-400" id="q-next">—</div>
+        <div class="text-xs text-gray-500">Next Refill</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-gray-400" id="q-stale">—</div>
+        <div class="text-xs text-gray-500">Stale</div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-800">
+      <div class="text-xs text-gray-500">
+        <span id="q-refill-status">—</span> · Последний: <span id="q-last-refill">никогда</span>
+      </div>
+      <div class="flex gap-2">
+        <button id="refill-now-btn" class="btn btn-ghost text-xs py-1 px-3" onclick="doRefillNow()">⚡ Refill Now</button>
+        <button id="refill-pause-btn" class="btn btn-ghost text-xs py-1 px-3" onclick="toggleRefill()">⏸ Pause</button>
+        <button class="btn btn-ghost text-xs py-1 px-3" onclick="refreshQueueStatus()">🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: SETTINGS + HARVEST -->
+  <div id="step-settings" class="card p-5 mb-4 fade-in">
+    <h2 class="font-bold text-white mb-3">⚡ Шаг 1: Сбор сигналов</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+      <div>
+        <label class="text-xs text-gray-400">Постов в день</label>
+        <input id="cfg-count" type="number" class="input" value="36" min="5" max="60">
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Окно: начало</label>
+        <input id="cfg-start" type="time" class="input" value="08:00">
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Окно: конец</label>
+        <input id="cfg-end" type="time" class="input" value="23:30">
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Режим</label>
+        <select id="cfg-mode" class="input">
+          <option value="normal">Normal</option>
+          <option value="aggressive">Aggressive</option>
+          <option value="custom">Custom (equal)</option>
+        </select>
+      </div>
+    </div>
+    <button id="harvest-btn" class="btn btn-primary" onclick="doHarvest()">
+      🔍 Собрать сигналы дня
+    </button>
+    <span id="harvest-status" class="ml-3 text-sm text-gray-500"></span>
+  </div>
+
+  <!-- STEP 2: SIGNALS REVIEW -->
+  <div id="step-signals" class="card p-5 mb-4 hidden fade-in">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-white">📡 Шаг 2: Сигналы дня (<span id="signals-count">0</span>)</h2>
+      <button id="generate-btn" class="btn btn-primary" onclick="doGenerate()">
+        ✨ Сгенерировать посты
+      </button>
+    </div>
+    <div id="signals-list" class="space-y-2 max-h-64 overflow-y-auto"></div>
+    <span id="generate-status" class="text-sm text-gray-500 mt-2 block"></span>
+  </div>
+
+  <!-- STEP 3: CANDIDATES -->
+  <div id="step-candidates" class="card p-5 mb-4 hidden fade-in">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-white">📝 Шаг 3: Кандидаты (<span id="cand-selected">0</span>/<span id="cand-total">0</span> выбрано)</h2>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost text-sm" onclick="selectAll(true)">Все</button>
+        <button class="btn btn-ghost text-sm" onclick="selectAll(false)">Снять</button>
+        <button id="approve-btn" class="btn btn-success" onclick="doApprove()">
+          ✅ Одобрить → Reservoir
+        </button>
+      </div>
+    </div>
+    <div id="cand-stats" class="text-xs text-gray-500 mb-3"></div>
+    <div id="candidates-list" class="space-y-3"></div>
+    <span id="approve-status" class="text-sm text-gray-500 mt-2 block"></span>
+  </div>
+
+  <!-- HISTORY MODAL -->
+  <div id="history-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="card p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-bold text-white">📋 История батчей</h2>
+        <button class="btn btn-ghost text-sm" onclick="document.getElementById('history-modal').classList.add('hidden')">✕</button>
+      </div>
+      <div id="history-list" class="space-y-2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE = '/internal/threads-queue';
+let currentBatchId = null;
+let currentCandidates = [];
+let currentSignals = [];
+let _queuePollTimer = null;
+
+// ── API HELPERS ────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin' };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(BASE + path, opts);
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+  return data;
+}
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type === 'error' ? 'bg-red-900/90 text-red-200' : type === 'success' ? 'bg-green-900/90 text-green-200' : 'bg-gray-800/90 text-gray-200'}`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+function setLoading(btnId, loading, text) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  if (loading) {
+    btn.dataset.origText = btn.innerHTML;
+    btn.innerHTML = `<span class="spinner"></span> ${text || '...'}`;
+  } else {
+    btn.innerHTML = btn.dataset.origText || btn.innerHTML;
+  }
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+// ── AUTH ────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pass = document.getElementById('login-pass').value.trim();
+  if (!pass) return;
+  const errEl = document.getElementById('login-error');
+  errEl.classList.add('hidden');
+  setLoading('login-btn', true, 'Проверка...');
+  try {
+    await api('POST', '/login', { password: pass });
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    await initApp();
+    toast('Вход выполнен', 'success');
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove('hidden');
+  } finally {
+    setLoading('login-btn', false);
+  }
+}
+document.getElementById('login-pass')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogout() {
+  if (_queuePollTimer) clearInterval(_queuePollTimer);
+  try { await api('POST', '/logout'); } catch {}
+  location.reload();
+}
+
+async function checkAuth() {
+  try {
+    await api('GET', '/api/status');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    await initApp();
+  } catch {}
+}
+
+async function initApp() {
+  await loadStatus();
+  await refreshQueueStatus();
+  // Poll queue status every 60s
+  if (_queuePollTimer) clearInterval(_queuePollTimer);
+  _queuePollTimer = setInterval(refreshQueueStatus, 60_000);
+}
+
+async function loadStatus() {
+  try {
+    const s = await api('GET', '/api/status');
+    const parts = [];
+    parts.push(s.gemini_ok ? '🟢 Gemini' : '🔴 Gemini');
+    parts.push(s.buffer_ok ? '🟢 Buffer' : '🔴 Buffer');
+    parts.push(`📦 ${s.reservoir?.pending || 0} pending`);
+    document.getElementById('status-indicators').textContent = parts.join(' · ');
+    if (s.defaults) {
+      document.getElementById('cfg-count').value = s.defaults.posts_count;
+      document.getElementById('cfg-start').value = s.defaults.window_start;
+      document.getElementById('cfg-end').value = s.defaults.window_end;
+    }
+  } catch {}
+}
+
+// ── QUEUE STATUS ───────────────────────────────────────────────────────
+async function refreshQueueStatus() {
+  try {
+    const q = await api('GET', '/api/queue-status');
+    const b = q.buffer || {};
+    const r = q.reservoir || {};
+    const rf = q.refill || {};
+
+    document.getElementById('q-depth').textContent = b.queue_depth !== null ? `${b.queue_depth}/${b.target_depth}` : '?';
+    document.getElementById('q-pending').textContent = r.pending || 0;
+    document.getElementById('q-free').textContent = b.free_slots !== null ? b.free_slots : '?';
+    document.getElementById('q-next').textContent = rf.next_would_send !== null ? rf.next_would_send : '—';
+    document.getElementById('q-stale').textContent = r.stale || 0;
+
+    // Refill status
+    const statusMap = { ok: '🟢 OK', partial: '🟡 Partial', error: '🔴 Error', empty: '⚪ Empty', queue_full: '🔵 Full', safe_mode: '🟠 Safe', paused: '⏸ Paused', idle: '⚪ Idle', locked: '🔒 Locked' };
+    const lastStatus = rf.last?.status || 'idle';
+    const pauseLabel = rf.paused ? '⏸ PAUSED' : `Auto every ${rf.interval_min}m`;
+    document.getElementById('q-refill-status').textContent = `${pauseLabel} · ${statusMap[lastStatus] || lastStatus}`;
+
+    if (rf.last?.ts) {
+      const ago = Math.round((Date.now() - new Date(rf.last.ts).getTime()) / 60_000);
+      document.getElementById('q-last-refill').textContent = `${ago}m ago (sent: ${rf.last.sent || 0})`;
+    }
+
+    // Update pause button
+    const pauseBtn = document.getElementById('refill-pause-btn');
+    pauseBtn.textContent = rf.paused ? '▶ Resume' : '⏸ Pause';
+
+    if (b.error) {
+      document.getElementById('q-depth').classList.add('text-red-400');
+    } else {
+      document.getElementById('q-depth').classList.remove('text-red-400');
+    }
+  } catch {}
+}
+
+async function doRefillNow() {
+  setLoading('refill-now-btn', true, '...');
+  try {
+    const r = await api('POST', '/api/refill-now');
+    toast(`Refill: ${r.status}, sent: ${r.sent || 0}`, r.sent > 0 ? 'success' : 'info');
+    await refreshQueueStatus();
+  } catch (e) { toast(e.message, 'error'); }
+  finally { setLoading('refill-now-btn', false); }
+}
+
+async function toggleRefill() {
+  const btn = document.getElementById('refill-pause-btn');
+  const isPaused = btn.textContent.includes('Resume');
+  try {
+    await api('POST', isPaused ? '/api/refill-resume' : '/api/refill-pause');
+    toast(isPaused ? 'Refill resumed' : 'Refill paused', 'success');
+    await refreshQueueStatus();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ── STEP 1: HARVEST ────────────────────────────────────────────────────
+async function doHarvest() {
+  setLoading('harvest-btn', true, 'Сбор...');
+  document.getElementById('harvest-status').textContent = 'Gemini + RSS...';
+  try {
+    const data = await api('POST', '/api/harvest');
+    currentSignals = data.signals || [];
+    renderSignals();
+    document.getElementById('step-signals').classList.remove('hidden');
+    document.getElementById('harvest-status').textContent =
+      `✓ ${currentSignals.length} сигналов (RSS: ${data.rss_count}, grounding: ${data.grounding ? 'да' : 'нет'})`;
+    toast(`${currentSignals.length} сигналов`, 'success');
+  } catch (e) {
+    document.getElementById('harvest-status').textContent = `❌ ${e.message}`;
+    toast(e.message, 'error');
+  } finally { setLoading('harvest-btn', false); }
+}
+
+function renderSignals() {
+  const el = document.getElementById('signals-list');
+  document.getElementById('signals-count').textContent = currentSignals.length;
+  el.innerHTML = currentSignals.map(s => `
+    <div class="flex items-center gap-3 p-2 rounded-lg bg-[#0a0a14] text-sm">
+      <span class="type-tag">${s.category}</span>
+      <span class="flex-1 text-gray-300">${esc(s.topic_ru)}</span>
+      <span class="text-xs text-gray-500">${s.emotion}</span>
+      <span class="text-xs font-bold ${s.bait_potential >= 70 ? 'text-green-400' : s.bait_potential >= 40 ? 'text-yellow-400' : 'text-gray-500'}">${s.bait_potential}%</span>
+    </div>
+  `).join('');
+}
+
+// ── STEP 2: GENERATE ───────────────────────────────────────────────────
+async function doGenerate() {
+  const count = parseInt(document.getElementById('cfg-count').value) || 36;
+  setLoading('generate-btn', true, 'Генерация...');
+  document.getElementById('generate-status').textContent = 'Gemini (30-60 сек)...';
+  try {
+    const data = await api('POST', '/api/generate', { signals: currentSignals, posts_count: count });
+    currentBatchId = data.batch_id;
+    currentCandidates = data.candidates || [];
+    renderCandidates();
+    document.getElementById('step-candidates').classList.remove('hidden');
+    document.getElementById('generate-status').textContent =
+      `✓ ${data.stats.total} → dedup: ${data.stats.after_dedup} → shortlist: ${data.stats.shortlisted}`;
+    toast(`${currentCandidates.length} кандидатов`, 'success');
+  } catch (e) {
+    document.getElementById('generate-status').textContent = `❌ ${e.message}`;
+    toast(e.message, 'error');
+  } finally { setLoading('generate-btn', false); }
+}
+
+// ── STEP 3: CANDIDATES ─────────────────────────────────────────────────
+function renderCandidates() {
+  const el = document.getElementById('candidates-list');
+  updateCandCounts();
+  el.innerHTML = currentCandidates.map((c, i) => {
+    const maxScore = 190;
+    const pct = Math.round((c.total_score / maxScore) * 100);
+    const color = pct >= 70 ? '#2ecc71' : pct >= 45 ? '#f39c12' : '#e74c3c';
+    const statusBadge =
+      c.internal_status === 'pending_send' ? '<span class="badge" style="background:#6c5ce722;color:#9b8ff0">⏳ В очереди</span>' :
+      c.internal_status === 'sent_to_buffer' ? '<span class="badge badge-sent">✓ В Buffer</span>' :
+      c.internal_status === 'stale' ? '<span class="badge badge-failed">⌛ Stale</span>' :
+      c.send_error ? `<span class="badge badge-failed" title="${esc(c.send_error)}">❌</span>` : '';
+    return `
+    <div class="cand-card ${c.selected ? 'selected' : ''}" id="cand-${c.id}">
+      <div class="flex items-start gap-3">
+        <input type="checkbox" ${c.selected ? 'checked' : ''} onchange="toggleSelect('${c.id}', this.checked)" class="mt-1 accent-purple-500" ${c.internal_status !== 'generated' ? 'disabled' : ''}>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-xs font-bold text-gray-400">#${i + 1}</span>
+            <span class="type-tag">${esc(c.post_type)}</span>
+            <span class="text-xs text-gray-500 truncate max-w-[200px]">${esc(c.source_signal)}</span>
+            ${statusBadge}
+            <span class="ml-auto text-xs font-bold" style="color:${color}">${c.total_score}pts</span>
+          </div>
+          <div class="cand-text text-sm text-gray-200 whitespace-pre-line mb-2" id="text-${c.id}">${esc(c.text)}</div>
+          <div class="flex items-center gap-3">
+            <div class="score-bar w-32"><div class="score-fill" style="width:${pct}%;background:${color}"></div></div>
+            ${c.internal_status === 'generated' ? `
+              <button class="btn btn-ghost text-xs py-1 px-2" onclick="editCandidate('${c.id}')">✏️</button>
+              <button class="btn btn-ghost text-xs py-1 px-2" onclick="regenCandidate('${c.id}')">🔄</button>
+              <button class="btn btn-ghost text-xs py-1 px-2 text-red-400" onclick="deleteCandidate('${c.id}')">🗑</button>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateCandCounts() {
+  const sel = currentCandidates.filter(c => c.selected).length;
+  document.getElementById('cand-selected').textContent = sel;
+  document.getElementById('cand-total').textContent = currentCandidates.length;
+  const types = [...new Set(currentCandidates.map(c => c.post_type))];
+  const pending = currentCandidates.filter(c => c.internal_status === 'pending_send').length;
+  const sent = currentCandidates.filter(c => c.internal_status === 'sent_to_buffer').length;
+  document.getElementById('cand-stats').textContent =
+    `Типы: ${types.join(', ')} · В очереди: ${pending} · В Buffer: ${sent}`;
+}
+
+function toggleSelect(id, checked) {
+  const c = currentCandidates.find(x => x.id === id);
+  if (c) c.selected = checked;
+  document.getElementById(`cand-${id}`)?.classList.toggle('selected', checked);
+  updateCandCounts();
+  api('PUT', '/api/candidate', { batch_id: currentBatchId, candidate_id: id, selected: checked }).catch(() => {});
+}
+
+function selectAll(val) {
+  currentCandidates.forEach(c => { if (c.internal_status === 'generated') c.selected = val; });
+  renderCandidates();
+}
+
+function editCandidate(id) {
+  const c = currentCandidates.find(x => x.id === id);
+  if (!c || c.internal_status !== 'generated') return;
+  const textEl = document.getElementById(`text-${id}`);
+  if (!textEl) return;
+  const ta = document.createElement('textarea');
+  ta.className = 'input text-sm';
+  ta.value = c.text;
+  ta.style.minHeight = '80px';
+  textEl.replaceWith(ta);
+  ta.focus();
+  ta.addEventListener('blur', async () => {
+    const newText = ta.value.trim();
+    if (newText && newText !== c.text) {
+      try {
+        const res = await api('PUT', '/api/candidate', { batch_id: currentBatchId, candidate_id: id, text: newText });
+        c.text = res.candidate.text;
+        c.text_hash = res.candidate.text_hash;
+        toast('Сохранено', 'success');
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    renderCandidates();
+  });
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Escape') renderCandidates();
+    if (e.key === 'Enter' && e.ctrlKey) ta.blur();
+  });
+}
+
+async function regenCandidate(id) {
+  const cardEl = document.getElementById(`cand-${id}`);
+  if (cardEl) cardEl.style.opacity = '0.5';
+  try {
+    const res = await api('POST', '/api/candidate/regenerate', { batch_id: currentBatchId, candidate_id: id });
+    const c = currentCandidates.find(x => x.id === id);
+    if (c) Object.assign(c, res.candidate);
+    toast('Перегенерирован', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+  renderCandidates();
+}
+
+async function deleteCandidate(id) {
+  if (!confirm('Удалить?')) return;
+  try {
+    await api('DELETE', '/api/candidate', { batch_id: currentBatchId, candidate_id: id });
+    currentCandidates = currentCandidates.filter(c => c.id !== id);
+    renderCandidates();
+    toast('Удалён', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ── STEP 4: APPROVE → RESERVOIR ────────────────────────────────────────
+async function doApprove() {
+  const selected = currentCandidates.filter(c => c.selected && c.internal_status === 'generated');
+  if (selected.length === 0) return toast('Нет новых выбранных постов', 'error');
+  if (!confirm(`Одобрить ${selected.length} постов в Reservoir?\nRefill engine будет автоматически заполнять Buffer.`)) return;
+
+  setLoading('approve-btn', true, 'Одобрение...');
+  document.getElementById('approve-status').textContent = '';
+  try {
+    const data = await api('POST', '/api/approve', { batch_id: currentBatchId });
+    // Update local state
+    for (const c of currentCandidates) {
+      if (c.selected && c.internal_status === 'generated') {
+        c.internal_status = 'pending_send';
+        c.approved_at = new Date().toISOString();
+      }
+    }
+    renderCandidates();
+    document.getElementById('approve-status').textContent =
+      `✓ ${data.approved} одобрено → Reservoir (${data.reservoir_pending} pending)`;
+    toast(`${data.approved} постов в Reservoir!`, 'success');
+    await refreshQueueStatus();
+  } catch (e) {
+    document.getElementById('approve-status').textContent = `❌ ${e.message}`;
+    toast(e.message, 'error');
+  } finally { setLoading('approve-btn', false); }
+}
+
+// ── HISTORY ────────────────────────────────────────────────────────────
+async function showHistory() {
+  document.getElementById('history-modal').classList.remove('hidden');
+  const el = document.getElementById('history-list');
+  el.innerHTML = '<div class="spinner mx-auto"></div>';
+  try {
+    const data = await api('GET', '/api/history');
+    if (!data.batches?.length) { el.innerHTML = '<p class="text-gray-500 text-center">Нет батчей</p>'; return; }
+    el.innerHTML = data.batches.map(b => `
+      <div class="p-3 rounded-lg bg-[#0a0a14] flex items-center gap-3 cursor-pointer hover:bg-[#12121e]" onclick="loadBatch('${b.id}')">
+        <span class="badge badge-${b.status}">${b.status}</span>
+        <span class="flex-1 text-sm">${new Date(b.created_at).toLocaleString('ru-RU')}</span>
+        <span class="text-xs text-gray-500">${b.sent_count} sent · ${b.approved_count || 0} pending · ${b.candidates_count} total</span>
+      </div>
+    `).join('');
+  } catch (e) { el.innerHTML = `<p class="text-red-400">${e.message}</p>`; }
+}
+
+async function loadBatch(id) {
+  try {
+    const batch = await api('GET', `/api/batch/${id}`);
+    currentBatchId = batch.id;
+    currentCandidates = batch.candidates || [];
+    renderCandidates();
+    document.getElementById('step-candidates').classList.remove('hidden');
+    document.getElementById('history-modal').classList.add('hidden');
+    toast(`Батч загружен`, 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>

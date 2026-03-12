@@ -11,6 +11,7 @@ import { readFileSync } from 'fs';
 import zlib from 'zlib';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import createThreadsTool from './threads-tool.js';
 
 // ─── GitHub Persistence for Custom Characters/Locations ─────
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
@@ -303,6 +304,7 @@ const appDir = join(__dirname, '..', 'app');
 // Block access to sensitive data files
 app.use('/data/users.json', (req, res) => res.status(403).json({ error: 'Forbidden' }));
 app.use('/data/access_keys.json', (req, res) => res.status(403).json({ error: 'Forbidden' }));
+app.use('/threads-queue.html', (req, res) => res.status(403).json({ error: 'Forbidden' }));
 app.use(express.static(appDir));
 
 // ─── Cookie helper ─────────────────────────────────────────
@@ -4000,6 +4002,10 @@ process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully');
   process.exit(0);
 });
+
+// ─── MOUNT THREADS BATCH TOOL ────────────────────
+const threadsTool = createThreadsTool({ nextGeminiKey, fetchRealHeadlines, checkRateLimit, getClientIP });
+app.use('/internal/threads-queue', express.json({ limit: '5mb' }), threadsTool);
 
 // ─── START SERVER ───────────────────────────────
 // Load data from GitHub BEFORE accepting requests (users must be loaded for auth)
