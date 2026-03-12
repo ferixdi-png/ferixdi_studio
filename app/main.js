@@ -4459,6 +4459,13 @@ function applyDialogueUpdate(newA, newB) {
   const ctx = state.lastResult._apiContext || {};
   const isSolo = ctx.soloMode || (!state.selectedB || state.selectedA?.id === state.selectedB?.id);
 
+  // ── Snapshot old dialogue BEFORE any mutation (needed for veo prompt patching) ──
+  const _bpSnap = state.lastResult.blueprint_json;
+  const _vpSnap = state.lastResult.video_prompt_en_json;
+  const _oldA = ctx._prevDialogueA || _bpSnap?.dialogue_segments?.find(s => s.speaker === 'A')?.text_ru || '';
+  const _oldB = ctx._prevDialogueB || _bpSnap?.dialogue_segments?.find(s => s.speaker === 'B')?.text_ru || '';
+  const _oldKw = _vpSnap?.dialogue?.killer_word || _bpSnap?.killer_word || '';
+
   // Update blueprint
   const bp = state.lastResult.blueprint_json;
   if (bp?.dialogue_segments) {
@@ -4526,20 +4533,27 @@ function applyDialogueUpdate(newA, newB) {
   document.querySelector('#tab-video pre').textContent = JSON.stringify(state.lastResult.video_prompt_en_json, null, 2);
   document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(state.lastResult.blueprint_json, null, 2);
 
-  // Re-render Veo prompt if dialogue changed (replace old dialogue lines)
+  // Re-render Veo prompt — robust old→new replacement (works for both normal & remake formats)
   if (state.lastResult.veo_prompt) {
     let veo = state.lastResult.veo_prompt;
-    if (isSolo) {
-      // Solo: replace "Character speaks in Russian to the camera: ..." line
-      veo = veo.replace(/(Character speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
-    } else {
-      veo = veo.replace(/(A speaks in Russian to the camera: ")[^"]*(")/, `$1${newA.replace(/\s*\|\s*/g, '... ')}$2`);
-      veo = veo.replace(/(B responds in Russian: ")[^"]*(")/, `$1${newB.replace(/\s*\|\s*/g, '... ')}$2`);
+    const _veoPause = (t) => (t || '').replace(/\s*\|\s*/g, '... ').trim();
+    const oldVeoA = _veoPause(_oldA);
+    const newVeoA = _veoPause(newA);
+    const oldVeoB = _veoPause(_oldB);
+    const newVeoB = _veoPause(newB);
+    // Replace quoted dialogue A (matches any prefix: "A speaks:", "Character speaks in Russian to the camera:", etc.)
+    if (oldVeoA && newVeoA !== oldVeoA) {
+      veo = veo.split('"' + oldVeoA + '"').join('"' + newVeoA + '"');
     }
-    // Also update killer_word references in Veo prompt
-    const newKwVeo = vp?.dialogue?.killer_word || '';
-    if (newKwVeo) {
-      veo = veo.replace(/(The word ")[^"]*(?=" is the punchline)/, `$1${newKwVeo}`);
+    // Replace quoted dialogue B
+    if (!isSolo && oldVeoB && newVeoB !== oldVeoB) {
+      veo = veo.split('"' + oldVeoB + '"').join('"' + newVeoB + '"');
+    }
+    // Update killer_word references — both normal (Killer word "...") and remake (The word "..." is the punchline)
+    const newKw = vp?.dialogue?.killer_word || '';
+    if (newKw && _oldKw && newKw !== _oldKw) {
+      veo = veo.replace(/(Killer word ")[^"]*(")(?=\s*[:\.])/g, `$1${newKw}$2`);
+      veo = veo.replace(/(The word ")[^"]*(?=" is the punchline)/g, `$1${newKw}`);
     }
     state.lastResult.veo_prompt = veo;
     const veoEl = document.getElementById('veo-prompt-text');
@@ -4572,8 +4586,8 @@ function applyDialogueUpdate(newA, newB) {
   // Update share_bait, caption, and other insta content that references dialogue
   const result = state.lastResult;
   if (result) {
-    const oldA = ctx._prevDialogueA || '';
-    const oldB = ctx._prevDialogueB || '';
+    const oldA = _oldA;
+    const oldB = _oldB;
     const engage = result.log?.engagement;
     const instaPack = result.log?.instagram_pack;
 
@@ -6899,11 +6913,29 @@ async function generateABVariants() {
         applyDialogueUpdate(v.a, v.b === '—' ? '' : v.b);
         // Override killer word with the variant's specific one (applyDialogueUpdate derives from last word)
         if (v.killer && state.lastResult.blueprint_json) {
+          const prevKw = state.lastResult.blueprint_json.killer_word || '';
           state.lastResult.blueprint_json.killer_word = v.killer;
           const vp = state.lastResult.video_prompt_en_json;
           if (vp?.dialogue) vp.dialogue.killer_word = v.killer;
           const kwEl = document.getElementById('gen-killer-word');
           if (kwEl) kwEl.textContent = `💥 killer word: ${v.killer}`;
+          // Patch killer word in veo prompt & ru_package
+          if (prevKw && prevKw !== v.killer && state.lastResult.veo_prompt) {
+            let veo = state.lastResult.veo_prompt;
+            veo = veo.replace(/(Killer word ")[^"]*(")(?=\s*[:\.])/g, `$1${v.killer}$2`);
+            veo = veo.replace(/(The word ")[^"]*(?=" is the punchline)/g, `$1${v.killer}`);
+            state.lastResult.veo_prompt = veo;
+            const veoEl = document.getElementById('veo-prompt-text');
+            if (veoEl) veoEl.textContent = veo;
+          }
+          if (state.lastResult.ru_package) {
+            state.lastResult.ru_package = state.lastResult.ru_package.replace(/(KILLER WORD \u00ab)[^\u00bb]*(\u00bb)/, `$1${v.killer}$2`);
+            const ruPre = document.querySelector('#tab-ru pre');
+            if (ruPre) ruPre.textContent = state.lastResult.ru_package;
+          }
+          // Re-render JSON tabs
+          document.querySelector('#tab-video pre').textContent = JSON.stringify(state.lastResult.video_prompt_en_json, null, 2);
+          document.querySelector('#tab-blueprint pre').textContent = JSON.stringify(state.lastResult.blueprint_json, null, 2);
         }
         populateStoryboard(state.lastResult);
         // Update active state in UI
