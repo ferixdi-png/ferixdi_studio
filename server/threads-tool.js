@@ -18,7 +18,7 @@ export default function createThreadsTool(deps) {
   // ── ENV CONFIG ──────────────────────────────────────────────────────────
   const BUFFER_API_KEY       = process.env.BUFFER_API_KEY || '';
   const BUFFER_CHANNEL_ID    = process.env.BUFFER_THREADS_CHANNEL_ID || '';
-  const PASSWORD_HASH        = process.env.THREADS_TOOL_PASSWORD_HASH || '';
+  const TOOL_PASSWORD         = process.env.THREADS_TOOL_PASSWORD || 'ferixdiai';
   const GEMINI_MODEL         = process.env.GEMINI_MODEL || 'gemini-2.5-flash-preview-05-20';
   const USE_GROUNDING        = process.env.GEMINI_USE_GROUNDING !== 'false';
   const TZ                   = process.env.THREADS_TOOL_TIMEZONE || 'Europe/Moscow';
@@ -560,23 +560,15 @@ export default function createThreadsTool(deps) {
       _audit('login', ip, false, 'rate_limited');
       return res.status(429).json({ error: 'Слишком много попыток. Подождите 15 минут.' });
     }
-    if (!PASSWORD_HASH) {
-      return res.status(503).json({ error: 'THREADS_TOOL_PASSWORD_HASH not configured on server' });
-    }
     const { password } = req.body;
     if (!password || typeof password !== 'string') {
       return res.status(400).json({ error: 'Password required' });
     }
 
-    let bcrypt;
-    try { bcrypt = await import('bcryptjs'); } catch {
-      return res.status(503).json({ error: 'bcryptjs not available' });
-    }
-    const compare = bcrypt.default?.compareSync || bcrypt.compareSync;
-    if (!compare(password, PASSWORD_HASH)) {
+    if (password !== TOOL_PASSWORD) {
       await new Promise(r => setTimeout(r, 800 + Math.random() * 400));
       _audit('login', ip, false, 'wrong_password');
-      return res.status(401).json({ error: 'Неверный пароль' });
+      return res.status(401).json({ error: 'Неверный ключ доступа' });
     }
 
     const sid = crypto.randomBytes(32).toString('hex');

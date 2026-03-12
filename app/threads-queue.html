@@ -25,6 +25,7 @@
   .badge-sending { background: #f39c1222; color: #f39c12; }
   .badge-failed { background: #e74c3c22; color: #e74c3c; }
   .badge-partial { background: #f39c1222; color: #f39c12; }
+  .badge-approved { background: #6c5ce722; color: #9b8ff0; }
   .score-bar { height: 6px; border-radius: 3px; background: #1a1a2e; overflow: hidden; }
   .score-fill { height: 100%; border-radius: 3px; transition: width .3s; }
   .cand-card { background: #0e0e18; border: 1px solid #1e1e2e; border-radius: 10px; padding: 14px; transition: border-color .2s; }
@@ -46,7 +47,7 @@
   <div class="card p-8 w-full max-w-sm text-center">
     <h1 class="text-xl font-bold mb-1 text-white">🔒 Threads Queue</h1>
     <p class="text-sm text-gray-500 mb-6">Internal Tool — Authorized Access Only</p>
-    <input id="login-pass" type="password" class="input mb-3" placeholder="Пароль" autocomplete="off">
+    <input id="login-pass" type="password" class="input mb-3" placeholder="Ключ доступа" autocomplete="off">
     <div id="login-error" class="text-red-400 text-sm mb-3 hidden"></div>
     <button id="login-btn" class="btn btn-primary w-full" onclick="doLogin()">Войти</button>
   </div>
