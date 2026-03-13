@@ -4546,10 +4546,10 @@ function applyDialogueUpdate(newA, newB) {
     let pkg = state.lastResult.ru_package;
     if (isSolo) {
       // Solo: replace monologue line «old text» > «new text» (after ?? section)
-      pkg = pkg.replace(/(??[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newA}$2`);
+      pkg = pkg.replace(/(\?\?[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newA}$2`);
     } else {
-      pkg = pkg.replace(/(???[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newA}$2`);
-      pkg = pkg.replace(/(???[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newB}$2`);
+      pkg = pkg.replace(/(\?\?\?[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newA}$2`);
+      pkg = pkg.replace(/(\?\?\?[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newB}$2`);
     }
     // Also update killer_word line in ru_package
     const newKw = vp?.dialogue?.killer_word || '';
