@@ -334,6 +334,7 @@ function initApp() {
   }
 
   // Initialize mobile menu + account system
+  initLayoutToggle();
   initMobileMenu();
   initAccountSystem();
   
@@ -359,14 +360,62 @@ function initApp() {
   }
 }
 
+// --- LAYOUT TOGGLE (PC / Mobile) ---
+function initLayoutToggle() {
+  const btnPc = document.getElementById('layout-btn-pc');
+  const btnMob = document.getElementById('layout-btn-mobile');
+  if (!btnPc || !btnMob) return;
+
+  const saved = localStorage.getItem('ferixdi_layout');
+  if (saved === 'mobile') applyMobileLayout();
+
+  btnPc.addEventListener('click', () => {
+    applyPcLayout();
+    localStorage.setItem('ferixdi_layout', 'pc');
+  });
+  btnMob.addEventListener('click', () => {
+    applyMobileLayout();
+    localStorage.setItem('ferixdi_layout', 'mobile');
+  });
+}
+
+function applyMobileLayout() {
+  document.body.classList.add('force-mobile');
+  const btnPc = document.getElementById('layout-btn-pc');
+  const btnMob = document.getElementById('layout-btn-mobile');
+  if (btnPc) btnPc.classList.remove('active');
+  if (btnMob) btnMob.classList.add('active');
+  // Show hamburger menu
+  const toggle = document.getElementById('mobile-menu-toggle');
+  if (toggle) toggle.classList.remove('hidden');
+  // Close sidebar if open
+  document.getElementById('sidebar')?.classList.remove('mobile-open');
+  log('INFO', 'LAYOUT', 'Mobile mode activated');
+}
+
+function applyPcLayout() {
+  document.body.classList.remove('force-mobile');
+  const btnPc = document.getElementById('layout-btn-pc');
+  const btnMob = document.getElementById('layout-btn-mobile');
+  if (btnPc) btnPc.classList.add('active');
+  if (btnMob) btnMob.classList.remove('active');
+  // Hide hamburger if screen is wide enough
+  const toggle = document.getElementById('mobile-menu-toggle');
+  if (toggle && window.innerWidth > 768) toggle.classList.add('hidden');
+  // Reset sidebar
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) { sidebar.classList.remove('mobile-open'); sidebar.style.transform = ''; }
+  log('INFO', 'LAYOUT', 'PC mode activated');
+}
 function initMobileMenu() {
   const mobileToggle = document.getElementById('mobile-menu-toggle');
   if (window.innerWidth <= 768 && mobileToggle) {
     mobileToggle.classList.remove('hidden');
   }
   
-  // Show/hide based on screen size
+  // Show/hide based on screen size (respect force-mobile toggle)
   window.addEventListener('resize', () => {
+    if (document.body.classList.contains('force-mobile')) return;
     if (window.innerWidth <= 768) {
       mobileToggle?.classList.remove('hidden');
     } else {
