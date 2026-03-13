@@ -5650,7 +5650,7 @@ function initConsultation() {
               .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-3"><strong class="text-amber-400/70">$1.</strong> $2</li>')
               .replace(/((?:<li[^>]*>.*<\/li>\n?)+)/g, '<ul class="space-y-1 my-1.5">$1</ul>')
               .replace(/^(={3,}|-{3,})$/gm, '<hr class="border-gray-700/50 my-2"/>')
-              .replace(/^(?|?|??|??|===)(.*)$/gm, '<div class="font-semibold mt-2">$1$2</div>')
+              .replace(/^(\?{1,2}|===)(.*)$/gm, '<div class="font-semibold mt-2">$1$2</div>')
               .replace(/@ferixdiii/g, '<a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition-colors">@ferixdiii</a>')
               .replace(/@ferixdi\.ai/g, '<a href="https://www.instagram.com/ferixdi.ai/" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition-colors">@ferixdi.ai</a>')
               .replace(/\n/g, '<br/>');
