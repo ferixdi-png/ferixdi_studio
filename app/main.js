@@ -7778,6 +7778,166 @@ function initEducation() {
   setTimeout(() => updateEduProgress(), 500);
 }
 
+// ─── PHOTO → PROMPT — Image analysis for Google ImageFX / Flow recreation ───
+function initPhotoPrompt() {
+  const fileInput  = document.getElementById('photo-prompt-input');
+  const dropzone   = document.getElementById('photo-prompt-dropzone');
+  const placeholder = document.getElementById('photo-prompt-placeholder');
+  const preview    = document.getElementById('photo-prompt-preview');
+  const imgEl      = document.getElementById('photo-prompt-img');
+  const clearBtn   = document.getElementById('photo-prompt-clear');
+  const styleInput = document.getElementById('photo-prompt-style');
+  const genBtn     = document.getElementById('photo-prompt-generate');
+  const btnIcon    = document.getElementById('photo-prompt-btn-icon');
+  const btnLabel   = document.getElementById('photo-prompt-btn-label');
+  const statusEl   = document.getElementById('photo-prompt-status');
+  const resultEl   = document.getElementById('photo-prompt-result');
+
+  if (!fileInput || !genBtn) return;
+
+  let _photoBase64 = null;
+  let _photoMime = null;
+
+  function _showPreview(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    if (file.size > 10 * 1024 * 1024) {
+      statusEl.textContent = '⚠️ Файл слишком большой (макс 10 МБ)';
+      statusEl.classList.remove('hidden');
+      return;
+    }
+    _photoMime = file.type;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      _photoBase64 = dataUrl.split(',')[1]; // strip data:image/...;base64,
+      imgEl.src = dataUrl;
+      placeholder.classList.add('hidden');
+      preview.classList.remove('hidden');
+      genBtn.disabled = false;
+      statusEl.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function _clearPhoto() {
+    _photoBase64 = null;
+    _photoMime = null;
+    fileInput.value = '';
+    imgEl.src = '';
+    preview.classList.add('hidden');
+    placeholder.classList.remove('hidden');
+    genBtn.disabled = true;
+    resultEl.classList.add('hidden');
+    statusEl.classList.add('hidden');
+  }
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files?.[0]) _showPreview(e.target.files[0]);
+  });
+
+  if (clearBtn) clearBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    _clearPhoto();
+  });
+
+  // Drag & drop visual feedback
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-pink-500/50', 'bg-pink-500/[0.04]'); });
+  dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('border-pink-500/50', 'bg-pink-500/[0.04]'); });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-pink-500/50', 'bg-pink-500/[0.04]');
+    if (e.dataTransfer?.files?.[0]) _showPreview(e.dataTransfer.files[0]);
+  });
+
+  // Copy buttons
+  document.addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('.photo-prompt-copy');
+    if (!copyBtn) return;
+    const targetId = copyBtn.dataset.target;
+    const textEl = document.getElementById(targetId);
+    if (!textEl) return;
+    navigator.clipboard.writeText(textEl.textContent).then(() => {
+      const orig = copyBtn.textContent;
+      copyBtn.textContent = '✓';
+      setTimeout(() => { copyBtn.textContent = orig; }, 1500);
+    });
+  });
+
+  // Generate
+  genBtn.addEventListener('click', async () => {
+    if (!_photoBase64) return;
+    if (!isPromoValid()) {
+      statusEl.innerHTML = '<span class="text-amber-400">🔒 Введи промо-код в настройках</span>';
+      statusEl.classList.remove('hidden');
+      return;
+    }
+
+    genBtn.disabled = true;
+    btnIcon.textContent = '⏳';
+    btnLabel.textContent = 'AI анализирует фото…';
+    statusEl.innerHTML = '<span class="text-gray-500">🔍 Анализирую каждую деталь изображения…</span>';
+    statusEl.classList.remove('hidden');
+    resultEl.classList.add('hidden');
+
+    try {
+      const apiUrl = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
+      const resp = await fetch(`${apiUrl}/api/photo-to-prompt`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('ferixdi_jwt') || ''}`,
+        },
+        body: JSON.stringify({
+          image: _photoBase64,
+          mime: _photoMime,
+          style_hint: styleInput?.value?.trim() || '',
+          lang: 'ru',
+        }),
+      });
+
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || 'Ошибка сервера');
+
+      const r = data.result;
+      if (!r || !r.prompt_en) throw new Error('AI не вернул промпт');
+
+      // Render result
+      document.getElementById('photo-prompt-en-text').textContent = r.prompt_en;
+      document.getElementById('photo-prompt-neg-text').textContent = r.negative_prompt_en || '—';
+      document.getElementById('photo-prompt-ru-text').textContent = r.prompt_ru || '';
+      document.getElementById('photo-prompt-detected').textContent = r.detected_style || '';
+
+      // Complexity badge
+      const cplx = document.getElementById('photo-prompt-complexity');
+      const cMap = { simple: ['Простой', 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25'], medium: ['Средний', 'bg-amber-500/15 text-amber-400 border-amber-500/25'], complex: ['Сложный', 'bg-red-500/15 text-red-400 border-red-500/25'] };
+      const cInfo = cMap[r.complexity] || cMap.medium;
+      cplx.textContent = cInfo[0];
+      cplx.className = `text-[9px] px-2 py-0.5 rounded-full border font-medium ${cInfo[1]}`;
+
+      // Style tags
+      const tagsEl = document.getElementById('photo-prompt-tags');
+      tagsEl.innerHTML = (r.style_tags || []).map(t => `<span class="text-[9px] px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">${t}</span>`).join('');
+
+      // Tips
+      const tipsList = document.getElementById('photo-prompt-tips-list');
+      tipsList.innerHTML = (r.tips || []).map(t => `<li class="text-[11px] text-gray-400 leading-relaxed flex items-start gap-1.5"><span class="text-amber-400 flex-shrink-0">•</span><span>${t}</span></li>`).join('');
+
+      resultEl.classList.remove('hidden');
+      statusEl.innerHTML = '<span class="text-emerald-400">✓ Промпт готов! Скопируй и вставь в ImageFX</span>';
+      log('OK', 'PHOTO-PROMPT', `Generated ${r.complexity} prompt`);
+
+    } catch (e) {
+      statusEl.innerHTML = `<span class="text-red-400">❌ ${e.message}</span>`;
+      log('ERR', 'PHOTO-PROMPT', e.message);
+    } finally {
+      genBtn.disabled = !_photoBase64;
+      btnIcon.textContent = '✨';
+      btnLabel.textContent = 'Сгенерировать промпт';
+    }
+  });
+}
+
 // ─── THREADS TRENDS — Best parser: no API, no auth, Google Search + AI ──────
 // State
 let _threadsData = [];         // last fetched posts
@@ -8508,6 +8668,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['initLocConstructor',initLocConstructor],
     ['initMatrixRain',initMatrixRain],
     ['initKeyboardShortcuts',initKeyboardShortcuts],
+    ['initPhotoPrompt',initPhotoPrompt],
     ['initThreadsTrends',initThreadsTrends],
     ['initThreadsAutopost',_initThreadsAutopost],
   ];

@@ -106,6 +106,7 @@
           <div class="nav-item" data-section="ideas"><span>🔍</span><span>Поиск идей</span></div>
           <div class="nav-item" data-section="jokes"><span>😂</span><span>Источники шуток</span></div>
           <div class="nav-item" data-section="consult"><span>💬</span><span>AI-маркетолог</span></div>
+          <div class="nav-item" data-section="photo-prompt"><span>🖼️</span><span>Фото → Промпт</span></div>
           <div class="nav-item relative" data-section="threads-trends" id="nav-threads-trends">
             <span>🧵</span><span>Threads Trends</span>
             <span id="threads-nav-lock" class="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold">VIP</span>
@@ -2215,6 +2216,127 @@
             <div class="text-xs text-cyan-400 font-semibold flex items-center gap-1.5">🔄 Studio постоянно обновляется</div>
             <p class="text-[11px] text-gray-400 leading-relaxed">Функционал системы улучшается каждую неделю — новые режимы генерации, персонажи, локации, фичи. Обновления внедряются на основе вашего пользовательского опыта: если чего-то не хватает или что-то можно сделать удобнее — напиши <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors" style="border-bottom:1px solid rgba(6,182,212,.3);text-decoration:none">@ferixdiii</a>. Я быстро внедряю новые функции — многие фичи Studio появились именно по запросам пользователей.</p>
             <p class="text-[11px] text-gray-400 leading-relaxed mt-1">📢 <a href="https://t.me/ferixdi_ai" target="_blank" class="text-amber-400 hover:text-amber-300 transition-colors font-medium" style="border-bottom:1px solid rgba(232,184,48,.3);text-decoration:none">Канал в Telegram</a> — все обновления, новые фичи, кейсы пользователей и новости. Подпишись, чтобы ничего не пропустить.</p>
+          </div>
+
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- PHOTO → PROMPT SECTION                             -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <section id="section-photo-prompt" class="section-panel hidden space-y-5 animate-fade-in">
+
+          <!-- Header -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 via-orange-500/15 to-amber-500/10 border border-pink-500/25 text-xl shadow-lg shadow-pink-500/5">🖼️</div>
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Фото → Промпт</h2>
+              <div class="text-[10px] text-gray-500 mt-0.5">Загрузи фото — получи детальный промпт для воссоздания в Google ImageFX / Flow</div>
+            </div>
+          </div>
+
+          <!-- How it works -->
+          <details class="glass-panel overflow-hidden group">
+            <summary class="px-4 py-3 flex items-center gap-2 cursor-pointer select-none hover:bg-white/[0.02] transition-colors">
+              <span class="text-pink-400 text-xs">💡</span>
+              <span class="text-[11px] text-gray-400 font-medium">Как это работает</span>
+              <span class="ml-auto text-[10px] text-gray-600 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="px-4 pb-3 text-[11px] text-gray-500 leading-relaxed border-t border-white/[0.04] pt-3">
+              AI анализирует загруженное фото и создаёт <span class="text-pink-400">детализированный промпт</span> на английском языке для воссоздания изображения в <span class="text-amber-400">Google Labs ImageFX</span> (модель Imagen 3 / Flow). Промпт включает описание субъекта, освещения, композиции, стиля и технических деталей. Просто скопируй и вставь в ImageFX.
+            </div>
+          </details>
+
+          <!-- Upload area -->
+          <div class="glass-panel-solid p-5 space-y-4">
+
+            <!-- Drop zone -->
+            <div id="photo-prompt-dropzone" class="relative border-2 border-dashed border-gray-700/60 rounded-xl p-8 text-center cursor-pointer hover:border-pink-500/40 hover:bg-pink-500/[0.02] transition-all group">
+              <input type="file" id="photo-prompt-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10">
+              <div id="photo-prompt-placeholder" class="space-y-3">
+                <div class="text-4xl group-hover:scale-110 transition-transform">📷</div>
+                <div class="text-sm text-gray-400 font-medium">Перетащи фото сюда или нажми для выбора</div>
+                <div class="text-[10px] text-gray-600">JPG, PNG, WebP · до 10 МБ</div>
+              </div>
+              <div id="photo-prompt-preview" class="hidden">
+                <img id="photo-prompt-img" class="max-h-64 mx-auto rounded-lg shadow-lg shadow-black/30 border border-white/[0.06]" alt="Preview">
+                <button id="photo-prompt-clear" class="mt-3 text-[10px] text-red-400 hover:text-red-300 transition-colors">✕ Убрать фото</button>
+              </div>
+            </div>
+
+            <!-- Style hint -->
+            <div>
+              <label class="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-1.5 block">Пожелания по стилю (необязательно)</label>
+              <input id="photo-prompt-style" type="text" placeholder="Например: сделай более кинематографичным, добавь неон, стиль аниме…" class="input-field" maxlength="200">
+            </div>
+
+            <!-- Generate button -->
+            <button id="photo-prompt-generate" class="w-full py-3 rounded-xl font-semibold text-sm transition-all bg-gradient-to-r from-pink-500/20 via-orange-500/20 to-amber-500/20 border border-pink-500/30 hover:border-pink-500/50 hover:from-pink-500/30 hover:via-orange-500/30 hover:to-amber-500/30 text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              <span id="photo-prompt-btn-icon">✨</span>
+              <span id="photo-prompt-btn-label">Сгенерировать промпт</span>
+            </button>
+
+            <!-- Status -->
+            <div id="photo-prompt-status" class="hidden text-center text-[11px] text-gray-500"></div>
+          </div>
+
+          <!-- Result -->
+          <div id="photo-prompt-result" class="hidden space-y-4">
+
+            <!-- Detected style -->
+            <div class="glass-panel p-4 space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] text-pink-400 font-semibold uppercase tracking-[0.15em]">🎨 Обнаруженный стиль</span>
+                <span id="photo-prompt-complexity" class="text-[9px] px-2 py-0.5 rounded-full border font-medium"></span>
+              </div>
+              <div id="photo-prompt-detected" class="text-[12px] text-gray-300 leading-relaxed"></div>
+              <div id="photo-prompt-tags" class="flex flex-wrap gap-1.5 pt-1"></div>
+            </div>
+
+            <!-- Main prompt EN -->
+            <div class="glass-panel-solid overflow-hidden">
+              <div class="px-5 py-3 flex items-center justify-between border-b border-white/[0.04]" style="background:rgba(236,72,153,0.03)">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">🇬🇧</span>
+                  <span class="text-[11px] text-pink-400 font-semibold uppercase tracking-[0.12em]">Промпт для ImageFX (EN)</span>
+                </div>
+                <button class="photo-prompt-copy text-[10px] px-2.5 py-1 rounded-lg bg-pink-500/10 text-pink-400 hover:bg-pink-500/20 border border-pink-500/20 transition-all font-medium" data-target="photo-prompt-en-text">📋 Копировать</button>
+              </div>
+              <div class="px-5 py-4">
+                <p id="photo-prompt-en-text" class="text-[13px] text-gray-100 leading-relaxed whitespace-pre-wrap font-mono"></p>
+              </div>
+            </div>
+
+            <!-- Negative prompt -->
+            <div class="glass-panel p-4 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-red-400/80 font-semibold uppercase tracking-[0.15em]">🚫 Негативный промпт</span>
+                <button class="photo-prompt-copy text-[9px] px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all" data-target="photo-prompt-neg-text">📋</button>
+              </div>
+              <p id="photo-prompt-neg-text" class="text-[11px] text-red-300/70 leading-relaxed"></p>
+            </div>
+
+            <!-- Russian translation -->
+            <details class="glass-panel overflow-hidden group">
+              <summary class="px-4 py-3 flex items-center gap-2 cursor-pointer select-none hover:bg-white/[0.02] transition-colors">
+                <span class="text-sm">🇷🇺</span>
+                <span class="text-[11px] text-gray-400 font-medium">Промпт на русском</span>
+                <span class="ml-auto text-[10px] text-gray-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div class="px-4 pb-4 border-t border-white/[0.04] pt-3">
+                <p id="photo-prompt-ru-text" class="text-[12px] text-gray-400 leading-relaxed whitespace-pre-wrap"></p>
+              </div>
+            </details>
+
+            <!-- Tips -->
+            <div id="photo-prompt-tips" class="glass-panel p-4 space-y-2">
+              <span class="text-[10px] text-amber-400 font-semibold uppercase tracking-[0.15em]">💡 Советы для ImageFX</span>
+              <ul id="photo-prompt-tips-list" class="space-y-1.5"></ul>
+            </div>
+
+            <!-- Open ImageFX button -->
+            <a href="https://aitestkitchen.withgoogle.com/tools/image-fx" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all bg-gradient-to-r from-blue-500/15 to-cyan-500/15 border border-blue-500/25 hover:border-blue-500/40 text-blue-300 hover:text-blue-200" style="text-decoration:none">
+              🚀 Открыть Google ImageFX
+            </a>
           </div>
 
         </section>
