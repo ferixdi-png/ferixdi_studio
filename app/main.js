@@ -367,46 +367,38 @@ function initLayoutToggle() {
   if (!btnPc || !btnMob) return;
 
   const saved = localStorage.getItem('ferixdi_layout');
-  if (saved === 'mobile') applyMobileLayout();
+  if (saved === 'mobile') {
+    applyMobileLayout(btnPc, btnMob);
+  } else {
+    applyPcLayout(btnPc, btnMob);
+  }
 
-  btnPc.addEventListener('click', () => {
-    applyPcLayout();
-    localStorage.setItem('ferixdi_layout', 'pc');
-  });
-  btnMob.addEventListener('click', () => {
-    applyMobileLayout();
-    localStorage.setItem('ferixdi_layout', 'mobile');
-  });
+  btnPc.addEventListener('click', () => applyPcLayout(btnPc, btnMob));
+  btnMob.addEventListener('click', () => applyMobileLayout(btnPc, btnMob));
 }
 
-function applyMobileLayout() {
+function applyMobileLayout(btnPc, btnMob) {
   document.body.classList.add('force-mobile');
-  const btnPc = document.getElementById('layout-btn-pc');
-  const btnMob = document.getElementById('layout-btn-mobile');
-  if (btnPc) btnPc.classList.remove('active');
+  localStorage.setItem('ferixdi_layout', 'mobile');
   if (btnMob) btnMob.classList.add('active');
-  // Show hamburger menu
+  if (btnPc) btnPc.classList.remove('active');
   const toggle = document.getElementById('mobile-menu-toggle');
   if (toggle) toggle.classList.remove('hidden');
-  // Close sidebar if open
-  document.getElementById('sidebar')?.classList.remove('mobile-open');
   log('INFO', 'LAYOUT', 'Mobile mode activated');
 }
 
-function applyPcLayout() {
+function applyPcLayout(btnPc, btnMob) {
   document.body.classList.remove('force-mobile');
-  const btnPc = document.getElementById('layout-btn-pc');
-  const btnMob = document.getElementById('layout-btn-mobile');
+  localStorage.setItem('ferixdi_layout', 'pc');
   if (btnPc) btnPc.classList.add('active');
   if (btnMob) btnMob.classList.remove('active');
-  // Hide hamburger if screen is wide enough
   const toggle = document.getElementById('mobile-menu-toggle');
   if (toggle && window.innerWidth > 768) toggle.classList.add('hidden');
-  // Reset sidebar
   const sidebar = document.getElementById('sidebar');
   if (sidebar) { sidebar.classList.remove('mobile-open'); sidebar.style.transform = ''; }
   log('INFO', 'LAYOUT', 'PC mode activated');
 }
+
 function initMobileMenu() {
   const mobileToggle = document.getElementById('mobile-menu-toggle');
   if (window.innerWidth <= 768 && mobileToggle) {
@@ -1578,12 +1570,12 @@ function initNavigation() {
     navigateTo('characters');
   });
 
-  // "< ������� ����������" on generate > go back to characters
   // "Dalee -> Sobrat' prompt" on characters > go to generate
   document.getElementById('btn-chars-to-generate')?.addEventListener('click', () => {
     navigateTo('generate');
   });
 
+  // "< ������� ����������" on generate > go back to characters
   document.getElementById('gen-back-chars')?.addEventListener('click', () => {
     navigateTo('characters');
   });
