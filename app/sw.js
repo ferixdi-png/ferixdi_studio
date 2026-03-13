@@ -1,7 +1,7 @@
 // FERIXDI Studio — Service Worker v1
 // Strategy: stale-while-revalidate for static assets; skip API routes
 
-const CACHE_NAME = 'ferixdi-v2';
+const CACHE_NAME = 'ferixdi-v3';
 const STATIC_ASSETS = [
   '/', '/index.html', '/main.js', '/engine/generator.js',
   '/manifest.webmanifest',
@@ -31,13 +31,18 @@ self.addEventListener('fetch', (e) => {
   // Skip non-GET and API requests — always network
   if (request.method !== 'GET' || url.pathname.startsWith('/api/')) return;
 
-  // Network-first for HTML
-  if (request.headers.get('accept')?.includes('text/html')) {
-    e.respondWith(fetch(request).catch(() => caches.match(request)));
+  // Network-first for HTML AND JS/JSON (prevent stale code from breaking buttons)
+  if (request.headers.get('accept')?.includes('text/html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.json')) {
+    e.respondWith(
+      fetch(request).then(res => {
+        if (res.ok) caches.open(CACHE_NAME).then(c => c.put(request, res.clone()));
+        return res;
+      }).catch(() => caches.match(request))
+    );
     return;
   }
 
-  // Stale-while-revalidate for JS/JSON/assets
+  // Stale-while-revalidate for other assets (css, images, fonts)
   e.respondWith(
     caches.open(CACHE_NAME).then(cache =>
       cache.match(request).then(cached => {

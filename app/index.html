@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -522,7 +522,7 @@
         </section>
 
         <!-- SECTION: Characters (Step 3) -->
-        <section id="section-characters" class="section-panel space-y-5">
+        <section id="section-characters" class="section-panel hidden space-y-5">
           <!-- Step indicator -->
           <div class="flex items-center gap-3 mb-2">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-600 text-white text-sm font-bold">3</div>
@@ -2566,5 +2566,35 @@
   </div>
 
   <script type="module" src="./main.js"></script>
+  <!-- Safety net: if ES module fails to load, ensure critical buttons still work -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        // If navigateTo wasn't set by the module, the module failed to load
+        if (typeof window.navigateTo !== 'function') {
+          console.error('[FERIXDI] Module failed to load — activating fallback');
+          // Basic navigateTo fallback
+          window.navigateTo = function(section) {
+            document.querySelectorAll('.section-panel').forEach(function(s) { s.classList.add('hidden'); });
+            var target = document.getElementById('section-' + section);
+            if (target) target.classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+            var nav = document.querySelector('.nav-item[data-section="' + section + '"]');
+            if (nav) nav.classList.add('active');
+          };
+          // Attach nav clicks
+          document.querySelectorAll('.nav-item[data-section]').forEach(function(n) {
+            n.style.cursor = 'pointer';
+            n.addEventListener('click', function() { window.navigateTo(this.dataset.section); });
+          });
+          // Welcome banner button
+          var wb = document.getElementById('welcome-go-settings');
+          if (wb) wb.addEventListener('click', function() { window.navigateTo('settings'); });
+          // Show generation-mode by default
+          window.navigateTo('generation-mode');
+        }
+      }, 3000);
+    });
+  </script>
 </body>
 </html>

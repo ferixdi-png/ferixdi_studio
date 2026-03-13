@@ -1400,6 +1400,14 @@ mark {
   font-family: 'JetBrains Mono', monospace;
   position: relative;
 }
+/* ── Safety: interactive elements always clickable ── */
+#app button, #app a, #app input, #app select, #app textarea,
+#app .nav-item, #app .btn-neon, #app .btn-primary, #app .char-card,
+#app .generation-mode-card, #app .loc-card {
+  pointer-events: auto !important;
+  position: relative;
+}
+
 .threads-score-ring::before {
   content: '';
   position: absolute; inset: -2px;
