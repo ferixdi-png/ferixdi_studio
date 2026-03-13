@@ -1458,7 +1458,6 @@ mark {
 #app .nav-item, #app .btn-neon, #app .btn-primary, #app .char-card,
 #app .generation-mode-card, #app .loc-card {
   pointer-events: auto !important;
-  position: relative;
 }
 
 .threads-score-ring::before {

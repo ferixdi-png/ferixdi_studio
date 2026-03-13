@@ -1,7 +1,7 @@
 // FERIXDI Studio — Service Worker v1
 // Strategy: stale-while-revalidate for static assets; skip API routes
 
-const CACHE_NAME = 'ferixdi-v3';
+const CACHE_NAME = 'ferixdi-v4';
 const STATIC_ASSETS = [
   '/', '/index.html', '/main.js', '/engine/generator.js',
   '/manifest.webmanifest',
