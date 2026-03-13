@@ -10,9 +10,11 @@
   <meta name="theme-color" content="#00d4ff">
   <!-- Tailwind CDN (no build required) -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Service worker disabled — was causing recurring stale cache issues -->
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+      navigator.serviceWorker.getRegistrations().then(function(r) { r.forEach(function(sw) { sw.unregister(); }); });
+      caches.keys().then(function(k) { k.forEach(function(n) { caches.delete(n); }); });
     }
   </script>
   <script>
@@ -2584,11 +2586,14 @@
     <div id="log-output" class="hidden"></div>
   </div>
 
-  <!-- Force SW update: nuke old stale service workers immediately -->
+  <!-- Nuke ALL service workers + caches to prevent stale files forever -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs) {
-        regs.forEach(function(r) { r.update(); });
+        regs.forEach(function(r) { r.unregister(); });
+      });
+      caches.keys().then(function(names) {
+        names.forEach(function(n) { caches.delete(n); });
       });
     }
   </script>
