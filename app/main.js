@@ -2215,6 +2215,9 @@ function handleVideoFile(file) {
     // Auto-switch to video mode
     state.inputMode = 'video';
 
+    // Auto-match characters from video (no manual selection needed)
+    setTimeout(() => { if (state.characters?.length) autoMatchCast(); }, 300);
+
     log('OK', 'ВИДЕО', `?? Загружено: ${file.name} (${state.videoMeta.duration}с) — готово к анализу`);
     updateReadiness();
   };
