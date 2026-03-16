@@ -2743,7 +2743,13 @@ ${engage.firstComment}
       { speaker: 'A', text_ru: dialogueA, start: GRID_V2.act_A.start, end: GRID_V2.act_A.end, word_range: '4-10' },
       { speaker: 'B', text_ru: dialogueB, start: GRID_V2.act_B.start, end: GRID_V2.act_B.end, word_range: '4-12' },
     ],
-    timing_grid: {
+    timing_grid: soloMode ? {
+      total: 8.0,
+      hook: [GRID_V2.hook.start, GRID_V2.hook.end],
+      A: [GRID_V2.act_A.start, GRID_V2.act_B.end],
+      release: [GRID_V2.release.start, GRID_V2.release.end],
+      killer_word_at: 6.8,
+    } : {
       total: 8.0,
       hook: [GRID_V2.hook.start, GRID_V2.hook.end],
       A: [GRID_V2.act_A.start, GRID_V2.act_A.end],
@@ -2895,6 +2901,30 @@ export function mergeAIResult(localResult, aiData) {
     if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
     if (g.killer_word) {
       r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
+      // Sync killer_word into scenes speech_hints
+      if (r.blueprint_json && r.blueprint_json.scenes) {
+        r.blueprint_json.scenes.forEach(sc => {
+          if (sc.speech_hints && sc.speech_hints.includes('killer word "')) {
+            sc.speech_hints = sc.speech_hints.replace(/killer word "[^"]*"/, `killer word "${g.killer_word}"`);
+          }
+        });
+      }
+      // Sync killer_word into scenes speech_hints
+      if (r.blueprint_json && r.blueprint_json.scenes) {
+        r.blueprint_json.scenes.forEach(sc => {
+          if (sc.speech_hints && sc.speech_hints.includes('killer word "')) {
+            sc.speech_hints = sc.speech_hints.replace(/killer word "[^"]*"/, `killer word "${g.killer_word}"`);
+          }
+        });
+      }
+      // Sync killer_word into scenes speech_hints
+      if (r.blueprint_json && r.blueprint_json.scenes) {
+        r.blueprint_json.scenes.forEach(sc => {
+          if (sc.speech_hints && sc.speech_hints.includes('killer word "')) {
+            sc.speech_hints = sc.speech_hints.replace(/killer word "[^"]*"/, `killer word "${g.killer_word}"`);
+          }
+        });
+      }
       // Sync killer_word into vibe.punchline so it matches actual dialogue
       if (r.video_prompt_en_json.vibe?.punchline) {
         r.video_prompt_en_json.vibe.punchline = r.video_prompt_en_json.vibe.punchline
