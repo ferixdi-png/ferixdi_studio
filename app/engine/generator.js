@@ -1821,13 +1821,17 @@ export function generate(input) {
   
   // Validate characters — solo mode: character2_id can be null
   const _VIDEO_PLACEHOLDER = {
-    id: 'none', name_ru: 'Персонаж из оригинала', name_en: 'Original Cast',
+    id: 'video_original', name_ru: 'Персонаж из оригинала', name_en: 'Original Cast',
     group: '', vibe_archetype: 'authentic', speech_pace: 'natural',
-    prompt_tokens: { main: [], secondary: [] },
-    identity_anchors: { face_silhouette: null },
-    biology_override: { age: '30s' },
+    speech_style_ru: 'как в оригинальном видео',
+    prompt_tokens: { main: [], secondary: [], character_en: '' },
+    identity_anchors: { face_silhouette: null, wardrobe_anchor: '', signature_element: '' },
+    biology_override: { age: 'as in source video' },
     modifiers: {},
-    compatibility: []
+    compatibility: [],
+    role_default: 'A',
+    swear_level: 0,
+    world_aesthetic: '',
   };
   let rawA = characters.find(c => c.id === character1_id) || characters[0];
   let soloMode = !character2_id;
@@ -1845,7 +1849,6 @@ export function generate(input) {
 
   if (!rawA) {
     if (input_mode === 'video') {
-      // Video mode: no character required — AI will copy original cast from video
       rawA = _VIDEO_PLACEHOLDER;
       warnings.push('Видео-режим: персонажи будут скопированы из оригинального видео');
     } else {
@@ -1853,7 +1856,19 @@ export function generate(input) {
     }
   }
 
-  const rawB = _autoPickedB
+  // ── VIDEO MODE: ALWAYS use placeholder cast ──
+  // Gemini analyzes the original video and extracts real character descriptions.
+  // DB characters must NEVER leak into video mode output — the result must be
+  // a faithful copy (but better) of the ORIGINAL video's characters.
+  if (input_mode === 'video') {
+    rawA = _VIDEO_PLACEHOLDER;
+    soloMode = true; // default solo — AI engine will determine actual cast from video
+    warnings.push('Видео-режим: персонажи будут скопированы из оригинального видео');
+  }
+
+  const rawB = input_mode === 'video'
+    ? _VIDEO_PLACEHOLDER
+    : _autoPickedB
     ? _autoPickedB
     : soloMode
       ? rawA  // solo: reuse A as B placeholder (downstream functions need both)
@@ -2868,7 +2883,7 @@ export function mergeAIResult(localResult, aiData) {
     const idA = cA?.prompt_tokens?.character_en;
     const idB = cB?.prompt_tokens?.character_en;
     let photoScene = g.photo_scene_en;
-    if (idA || idB) {
+    if ((idA || idB) && ctx.input_mode !== 'video') {
       const _idLockParts = (c, id, wFallback) => {
         const ia = c?.identity_anchors || {};
         const bio = c?.biology_override || {};
