@@ -1984,6 +1984,11 @@ export function generate(input) {
   // Category: random structural hint for location/props — AI engine picks the real one
   let cat = category || pickRandom(HUMOR_CATEGORIES, rng);
 
+  // Video mode: category will be determined by Gemini based on video content
+  if (input_mode === 'video' && !category) {
+    cat = { ru: 'юмор', en: 'humor' }; // generic — Gemini determines real category
+  }
+
   // topicRu and sceneHint already declared above (before category detection)
   const topicEn = topicRu ? `The comedic argument is specifically about: "${topicRu}".` : '';
   const topicForScene = topicRu ? ` The argument topic: ${cat.en.toLowerCase()} — ${topicRu}.` : ` The argument topic: ${cat.en.toLowerCase()}.`;
@@ -2031,7 +2036,20 @@ export function generate(input) {
   const indoorMoods = LIGHTING_MOODS.filter(m => !['organic chaos', 'golden confrontation', 'exposed clarity'].includes(m.mood));
   const outdoorMoods = LIGHTING_MOODS.filter(m => ['organic chaos', 'golden confrontation', 'exposed clarity', 'calm before storm'].includes(m.mood));
   const lightingPool = isOutdoor ? (outdoorMoods.length ? outdoorMoods : LIGHTING_MOODS) : (indoorMoods.length ? indoorMoods : LIGHTING_MOODS);
-  const lightingMood = pickRandom(lightingPool, rng);
+  let lightingMood = pickRandom(lightingPool, rng);
+
+  // ── VIDEO MODE: override lighting to defer to Gemini ──
+  if (input_mode === 'video') {
+    lightingMood = {
+      style: 'as in original video — AI engine describes lighting from video analysis',
+      mood: 'as in original video',
+      sources: 'as in original video',
+      direction: 'as in original video',
+      shadow_softness: 'as in original video',
+      overexposure_budget: 'as in original video',
+      color_temp: 'as in original video',
+    };
+  }
 
   // ── Wardrobe from character anchors (full description, not just a keyword) ──
   const _isVideoMode = input_mode === 'video';
@@ -2041,6 +2059,12 @@ export function generate(input) {
   const wardrobeB = _isVideoMode && charB.id === 'video_original'
     ? 'as in original video — AI describes wardrobe from video analysis'
     : (charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt');
+
+  // ── VIDEO MODE: override location/lighting/props to defer to Gemini ──
+  if (_isVideoMode && charA.id === 'video_original') {
+    location = 'Location from original video — AI engine describes setting based on video analysis';
+    locationObj = null;
+  }
 
   // ── Hook & Release (character-aware) ──
   // Character A's hook_style determines the hook action — NOT random
@@ -2109,6 +2133,16 @@ export function generate(input) {
     if (historyCache.hasProp(propAnchor)) {
       propAnchor = pool[(propIdx + 1) % pool.length];
     }
+  }
+
+  // ── VIDEO MODE: override hook/release/prop to defer to Gemini ──
+  if (_isVideoMode && charA.id === 'video_original') {
+    mergedHookObj.action_en = 'hook action as in original video — AI engine describes from video analysis';
+    mergedHookObj.action_ru = 'хук из оригинального видео';
+    mergedHookObj.audio = 'as in original video';
+    releaseObj.action_en = 'release as in original video — AI engine describes from video analysis';
+    releaseObj.action_ru = 'финал из оригинального видео';
+    propAnchor = 'props as in original video — AI engine describes from video analysis';
   }
 
   // ── Dialogue based on mode ──
@@ -2225,7 +2259,9 @@ export function generate(input) {
   const cameraPreset = buildCameraPreset();
   const timingGrid = buildTimingGridV2(mergedHookObj, releaseObj);
   const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, mergedHookObj, releaseObj, propAnchor);
-  const aesthetic = _aestheticToEn(charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют');
+  const aesthetic = _isVideoMode && charA.id === 'video_original'
+    ? 'as in original video — AI describes aesthetic from video analysis'
+    : _aestheticToEn(charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют');
   const nameEnA = charA.name_en || charA.id || 'Character A';
   const nameEnB = charB.name_en || charB.id || 'Character B';
   const vibeEnA = _vibeToEn(charA.vibe_archetype, 'provocateur');
