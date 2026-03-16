@@ -467,24 +467,24 @@ function renderLocations(filterGroup = '') {
   const autoSel = !state.selectedLocation;
   grid.innerHTML = `
     <div class="loc-card ${autoSel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
-      <div class="text-sm">??</div>
+      <div class="text-sm"></div>
       <div class="text-[11px] font-medium text-violet-300">Авто</div>
       <div class="text-[10px] text-gray-500 mb-2">AI подберёт</div>
-      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${autoSel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="">${autoSel ? '? Выбрано' : '?? Выбрать'}</button>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${autoSel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="">${autoSel ? '? Выбрано' : '📌 Выбрать'}</button>
     </div>
   ` + locs.map(l => {
     const sel = state.selectedLocation === l.id;
-    const moodIcon = l.mood === 'nostalgic warmth' ? '??' : l.mood === 'sterile tension' ? '??' : l.mood === 'organic chaos' ? '??' : l.mood === 'dramatic intimacy' ? '???' : '??';
+    const moodIcon = l.mood === 'nostalgic warmth' ? '✨' : l.mood === 'sterile tension' ? '✨' : l.mood === 'organic chaos' ? '✨' : l.mood === 'dramatic intimacy' ? '🅰️' : '✨';
     return `
     <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
       <div class="text-sm">${moodIcon}</div>
       <div class="text-[11px] font-medium text-white leading-tight">${l.numeric_id ? `<span class="text-[9px] text-gray-500 font-mono mr-1">#${l.numeric_id}</span>` : ''}${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug mb-2">${l.tagline_ru}</div>
-      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '? Выбрано' : '?? Выбрать'}</button>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '? Выбрано' : '📌 Выбрать'}</button>
       <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
-        <span>??</span> Промпт
+        <span>📝</span> Промпт
       </button>
-      ${l._custom ? `<button onclick="deleteCustomLoc('${l.id}')" class="text-[9px] px-2 py-1 rounded-md font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 w-full mt-1 flex items-center justify-center gap-1">?? Удалить</button>` : ''}
+      ${l._custom ? `<button onclick="deleteCustomLoc('${l.id}')" class="text-[9px] px-2 py-1 rounded-md font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 w-full mt-1 flex items-center justify-center gap-1">💡 Удалить</button>` : ''}
     </div>`;
   }).join('');
 
@@ -502,7 +502,7 @@ function updateLocationInfo() {
   if (!loc) { info.classList.add('hidden'); return; }
   info.classList.remove('hidden');
   const tags = (loc.tags || []).map(t => `<span class="tag text-[10px]">${t}</span>`).join(' ');
-  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium">?? ${loc.name_ru}</span>${tags}<button onclick="deselectLocation()" class="text-[10px] text-red-400/60 hover:text-red-400 transition-colors ml-1" title="Сбросить локацию">? сбросить</button></div><div class="text-[10px] text-gray-500 mt-1">${loc.tagline_ru}</div>`;
+  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium">💡 ${loc.name_ru}</span>${tags}<button onclick="deselectLocation()" class="text-[10px] text-red-400/60 hover:text-red-400 transition-colors ml-1" title="Сбросить локацию">? сбросить</button></div><div class="text-[10px] text-gray-500 mt-1">${loc.tagline_ru}</div>`;
 }
 
 function deselectLocation() {
@@ -548,7 +548,7 @@ function initLocationPicker() {
     state.selectedLocation = rand.id;
     renderLocations(filtered || '');
     renderLocationsBrowse(document.getElementById('loc-browse-group-filter')?.value || '');
-    log('INFO', 'ЛОКАЦИЯ', `?? Случайная: ${rand.name_ru}`);
+    log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
     updateProgress();
     _scheduleDraftSave();
   });
@@ -793,10 +793,10 @@ function renderCharacters(filter = {}) {
       </div>
       ${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}
       <div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2">
-        <span>?? ${c.group}</span>
+        <span>💡 ${c.group}</span>
         <span>? ${paceRu[c.speech_pace] || c.speech_pace}</span>
-        <span>?? мат ${c.swear_level}/3</span>
-        <span>${c.role_default === 'A' ? '???' : '???'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span>
+        <span>💡 мат ${c.swear_level}/3</span>
+        <span>${c.role_default === 'A' ? '🅰️' : '🅱️'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span>
       </div>
 
       <!-- Select buttons — large & clear -->
@@ -807,28 +807,28 @@ function renderCharacters(filter = {}) {
 
       <!-- Copy Prompt Button -->
       <button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}" title="Скопировать детализированный промпт для Veo">
-        <span>??</span> Копировать промпт
+        <span>📋</span> Копировать промпт
       </button>
-      ${c._custom ? `<button onclick="deleteCustomChar('${c.id}')" class="text-[10px] px-2 py-1 rounded-md font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 w-full mt-1 flex items-center justify-center gap-1">?? Удалить</button>` : ''}
+      ${c._custom ? `<button onclick="deleteCustomChar('${c.id}')" class="text-[10px] px-2 py-1 rounded-md font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 w-full mt-1 flex items-center justify-center gap-1">💡 Удалить</button>` : ''}
 
       <!-- Expandable detail -->
       <details class="group">
         <summary class="text-[11px] text-gray-500 cursor-pointer hover:text-gray-300 transition-colors select-none">Подробнее ?</summary>
         <div class="mt-2 space-y-2.5 text-[11px] border-t border-gray-800/60 pt-2.5">
 
-          ${c.vibe_archetype ? `<div class="mb-1.5"><span class="text-violet-400 font-medium">?? Архетип:</span> <span class="text-gray-200 font-medium">${c.vibe_archetype}</span></div>` : ''}
+          ${c.vibe_archetype ? `<div class="mb-1.5"><span class="text-violet-400 font-medium">💡 Архетип:</span> <span class="text-gray-200 font-medium">${c.vibe_archetype}</span></div>` : ''}
 
-          ${c.speech_style_ru ? `<div><span class="text-violet-400 font-medium">?? Речь:</span> <span class="text-gray-300">${c.speech_style_ru}</span></div>` : ''}
+          ${c.speech_style_ru ? `<div><span class="text-violet-400 font-medium">💡 Речь:</span> <span class="text-gray-300">${c.speech_style_ru}</span></div>` : ''}
 
           ${anchors.signature_element ? `<div><span class="text-violet-400 font-medium">? Фишка:</span> <span class="text-gray-300">${translateEnRu(anchors.signature_element)}</span></div>` : ''}
 
-          ${anchors.micro_gesture ? `<div><span class="text-violet-400 font-medium">?? Жест:</span> <span class="text-gray-300">${translateEnRu(anchors.micro_gesture)}</span></div>` : ''}
+          ${anchors.micro_gesture ? `<div><span class="text-violet-400 font-medium">💡 Жест:</span> <span class="text-gray-300">${translateEnRu(anchors.micro_gesture)}</span></div>` : ''}
 
-          ${c.modifiers?.hook_style ? `<div><span class="text-violet-400 font-medium">?? Хук:</span> <span class="text-gray-300">${translateEnRu(c.modifiers.hook_style)}</span></div>` : ''}
-          ${c.modifiers?.laugh_style ? `<div><span class="text-violet-400 font-medium">?? Смех:</span> <span class="text-gray-300">${translateEnRu(c.modifiers.laugh_style)}</span></div>` : ''}
+          ${c.modifiers?.hook_style ? `<div><span class="text-violet-400 font-medium">💡 Хук:</span> <span class="text-gray-300">${translateEnRu(c.modifiers.hook_style)}</span></div>` : ''}
+          ${c.modifiers?.laugh_style ? `<div><span class="text-violet-400 font-medium">💡 Смех:</span> <span class="text-gray-300">${translateEnRu(c.modifiers.laugh_style)}</span></div>` : ''}
 
           <div class="mt-2">
-            <div class="text-violet-400 font-medium mb-1">?? Внешность:</div>
+            <div class="text-violet-400 font-medium mb-1">💡 Внешность:</div>
             <div class="text-[10px] text-gray-400 leading-relaxed">${c.appearance_ru}</div>
           </div>
         </div>
@@ -877,7 +877,7 @@ function loadMoreCharacters() {
     const compatRu = { meme: 'мем', conflict: 'конфликт', chaotic: 'хаос', calm: 'спокойный', balanced: 'баланс' };
     const paceRu = { fast: 'быстрая', normal: 'средняя', slow: 'медленная' };
     const anchors = c.identity_anchors || {};
-    return `<div class="char-card ${selCls}" data-id="${c.id}"><div class="flex items-center justify-between mb-1"><div class="flex items-center gap-2 min-w-0">${getAvatarImg(c.id)}<span class="text-sm font-bold text-white truncate">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span></div><span class="tag text-[10px] ${tagCls} flex-shrink-0">${compatRu[c.compatibility] || c.compatibility}</span></div>${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}<div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2"><span>?? ${c.group}</span><span>? ${paceRu[c.speech_pace] || c.speech_pace}</span><span>?? мат ${c.swear_level}/3</span><span>${c.role_default === 'A' ? '???' : '???'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span></div><div class="flex gap-2 mb-2"><button class="select-a flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isA ? 'bg-violet-600 text-white border-violet-500' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25'}" data-id="${c.id}">${isA ? '? Выбран A' : '??? Выбрать A'}</button><button class="select-b flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isB ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-indigo-600/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-600/25'}" data-id="${c.id}">${isB ? '? Выбран B' : '??? Выбрать B'}</button></div><button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}"><span>??</span> Копировать промпт</button></div>`;
+    return `<div class="char-card ${selCls}" data-id="${c.id}"><div class="flex items-center justify-between mb-1"><div class="flex items-center gap-2 min-w-0">${getAvatarImg(c.id)}<span class="text-sm font-bold text-white truncate">${c.numeric_id ? `<span class="text-[10px] text-gray-500 font-mono mr-1">#${c.numeric_id}</span>` : ''}${c.name_ru}</span></div><span class="tag text-[10px] ${tagCls} flex-shrink-0">${compatRu[c.compatibility] || c.compatibility}</span></div>${c.tagline_ru ? `<div class="text-[11px] text-violet-300/90 mb-1.5 leading-snug">${c.tagline_ru}</div>` : ''}<div class="text-[10px] text-gray-500 mb-2 flex flex-wrap gap-x-2"><span>💡 ${c.group}</span><span>? ${paceRu[c.speech_pace] || c.speech_pace}</span><span>💡 мат ${c.swear_level}/3</span><span>${c.role_default === 'A' ? '🅰️' : '🅱️'} ${c.role_default === 'A' ? 'провокатор' : 'панчлайн'}</span></div><div class="flex gap-2 mb-2"><button class="select-a flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isA ? 'bg-violet-600 text-white border-violet-500' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25'}" data-id="${c.id}">${isA ? '? Выбран A' : '??? Выбрать A'}</button><button class="select-b flex-1 py-2.5 rounded-lg text-[12px] font-bold transition-all border ${isB ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-indigo-600/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-600/25'}" data-id="${c.id}">${isB ? '? Выбран B' : '??? Выбрать B'}</button></div><button class="copy-char-prompt text-[10px] px-2 py-1.5 rounded-md font-medium bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full flex items-center justify-center gap-1" data-id="${c.id}"><span>📋</span> Копировать промпт</button></div>`;
   }).join('');
 
   // Move cards from temp to grid, then wire events on the moved elements
@@ -1054,10 +1054,10 @@ function updateCharDisplay() {
   if (state.selectedA && state.selectedB) {
     const combos = [state.selectedA.compatibility, state.selectedB.compatibility];
     let label = 'сбалансированная пара';
-    if (combos.includes('chaotic') && combos.includes('calm')) label = '?? взрывная пара!';
-    else if (combos.every(c => c === 'meme')) label = '?? мем-пара';
+    if (combos.includes('chaotic') && combos.includes('calm')) label = '📌 взрывная пара!';
+    else if (combos.every(c => c === 'meme')) label = '📌 мем-пара';
     else if (combos.every(c => c === 'conflict')) label = '? конфликт!';
-    else if (combos.includes('chaotic')) label = '?? хаос!';
+    else if (combos.includes('chaotic')) label = '📌 хаос!';
     if (badge) { badge.classList.remove('hidden'); badge.querySelector('.tag').textContent = label; }
   } else {
     if (badge) badge.classList.add('hidden');
@@ -1108,7 +1108,7 @@ function updateSmartMatch() {
   if (charA && charB) {
     const chemScore = calcPairChemistry(charA, charB);
     scores.push(chemScore.score);
-    details.push({ label: '?? Химия пары', value: chemScore.score, text: chemScore.text });
+    details.push({ label: '📌 Химия пары', value: chemScore.score, text: chemScore.text });
     if (chemScore.tip) tips.push(chemScore.tip);
   }
 
@@ -1116,7 +1116,7 @@ function updateSmartMatch() {
   if (topic && (charA || charB)) {
     const topicScore = calcTopicRelevance(topic, charA, charB);
     scores.push(topicScore.score);
-    details.push({ label: '?? Тема + персонажи', value: topicScore.score, text: topicScore.text });
+    details.push({ label: '📌 Тема + персонажи', value: topicScore.score, text: topicScore.text });
     if (topicScore.tip) tips.push(topicScore.tip);
   }
 
@@ -1124,7 +1124,7 @@ function updateSmartMatch() {
   if (loc && (charA || charB)) {
     const locScore = calcLocationMatch(loc, charA, charB);
     scores.push(locScore.score);
-    details.push({ label: '?? Локация + персонажи', value: locScore.score, text: locScore.text });
+    details.push({ label: '📌 Локация + персонажи', value: locScore.score, text: locScore.text });
     if (locScore.tip) tips.push(locScore.tip);
   }
 
@@ -1132,7 +1132,7 @@ function updateSmartMatch() {
   if (charA && charB) {
     const roleScore = calcRoleBalance(charA, charB);
     scores.push(roleScore.score);
-    details.push({ label: '?? Баланс ролей', value: roleScore.score, text: roleScore.text });
+    details.push({ label: '📌 Баланс ролей', value: roleScore.score, text: roleScore.text });
     if (roleScore.tip) tips.push(roleScore.tip);
   }
 
@@ -1354,7 +1354,7 @@ function calcRoleBalance(a, b) {
   } else {
     score = 50;
     text = 'Оба панчлайнеры — кто будет провоцировать?';
-    tip = 'Нужен хотя бы один провокатор (A) — посмотри персонажей с ???';
+    tip = 'Нужен хотя бы один провокатор (A) — посмотри персонажей с 🅰️';
   }
 
   return { score, text, tip };
@@ -1392,7 +1392,7 @@ function initRandomPair() {
     if (idxB >= idxA) idxB++;
     selectChar('A', chars[idxA].id);
     selectChar('B', chars[idxB].id);
-    log('INFO', 'ПЕРСОНАЖИ', `?? Случайная пара: ${chars[idxA].name_ru} ? ${chars[idxB].name_ru}`);
+    log('INFO', 'ПЕРСОНАЖИ', `🎲 Случайная пара: ${chars[idxA].name_ru} ? ${chars[idxB].name_ru}`);
   });
 }
 
@@ -1401,7 +1401,7 @@ function navigateTo(section) {
   sfx.nav();
   // Gentle reminder if user skips mode selection (don't block)
   if ((section === 'content' || section === 'characters') && !state.generationMode) {
-    showNotification('?? Совет: сначала выберите режим генерации на шаге 1', 'warning');
+    showNotification('⚠️ Совет: сначала выберите режим генерации на шаге 1', 'warning');
   }
 
   // When navigating to content section, show the right mode panel
@@ -1552,7 +1552,7 @@ function initNavigation() {
   // "Далее" button on characters > go to generate (step 4: location + generate)
   document.getElementById('btn-go-generate')?.addEventListener('click', () => {
     if (!state.selectedA) {
-      showNotification('?? Сначала выберите хотя бы одного персонажа (A)', 'warning');
+      showNotification('⚠️ Сначала выберите хотя бы одного персонажа (A)', 'warning');
       return;
     }
     navigateTo('generate');
@@ -1575,12 +1575,12 @@ function initNavigation() {
   // Add location continue button
   document.getElementById('btn-go-generate-from-locations')?.addEventListener('click', () => {
     if (!state.generationMode) {
-      showNotification('?? Сначала выберите режим генерации', 'warning');
+      showNotification('⚠️ Сначала выберите режим генерации', 'warning');
       navigateTo('generation-mode');
       return;
     }
     if (!state.selectedA) {
-      showNotification('?? Сначала выберите хотя бы одного персонажа', 'warning');
+      showNotification('⚠️ Сначала выберите хотя бы одного персонажа', 'warning');
       navigateTo('characters');
       return;
     }
@@ -1603,7 +1603,7 @@ function initGenerationMode() {
     if (state.generationMode) {
       navigateTo('content');
     } else {
-      showNotification('?? Сначала выберите режим генерации из списка выше', 'warning');
+      showNotification('⚠️ Сначала выберите режим генерации из списка выше', 'warning');
     }
   });
 
@@ -1642,10 +1642,10 @@ function selectGenerationMode(mode) {
   if (display && nameEl && continueBtn) {
     display.classList.remove('hidden');
     const modeNames = {
-      idea: '?? Своя идея',
-      suggested: '?? Готовые идеи',
-      script: '?? Свой диалог / монолог',
-      video: '?? По видео'
+      idea: '📌 Своя идея',
+      suggested: '📌 Готовые идеи',
+      script: '📌 Свой диалог / монолог',
+      video: '🎬 По видео'
     };
     nameEl.textContent = modeNames[mode] || mode;
     continueBtn.disabled = false;
@@ -1655,10 +1655,10 @@ function selectGenerationMode(mode) {
     const hintEl = document.getElementById('selected-mode-hint');
     if (hintEl) {
       const hints = {
-        idea: '?? На следующем шаге опишите свою идею, затем выберете персонажей.',
-        suggested: '?? На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
-        script: '?? Напишите свой диалог (A + B) или монолог (только A). Оставьте B пустым для соло.',
-        video: '?? На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка. Персонажи опциональны — можно просто скопировать креатив.',
+        idea: '📌 На следующем шаге опишите свою идею, затем выберете персонажей.',
+        suggested: '📌 На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
+        script: '📌 Напишите свой диалог (A + B) или монолог (только A). Оставьте B пустым для соло.',
+        video: '🎬 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка. Персонажи опциональны — можно просто скопировать креатив.',
       };
       const hint = hints[mode] || '';
       if (hint) {
@@ -1763,7 +1763,7 @@ async function loadTrendingIdeas() {
   if (!grid) return;
   
   // Show loading state
-  grid.innerHTML = '<div class="text-xs text-gray-500 text-center">?? Загружаем популярные темы...</div>';
+  grid.innerHTML = '<div class="text-xs text-gray-500 text-center">💡 Загружаем популярные темы...</div>';
   
   try {
     const response = await fetch('/api/trending');
@@ -1786,7 +1786,7 @@ async function loadTrendingIdeas() {
         });
       });
     } else {
-      grid.innerHTML = '<div class="text-xs text-gray-500 text-center">?? Идеи временно недоступны</div>';
+      grid.innerHTML = '<div class="text-xs text-gray-500 text-center">💡 Идеи временно недоступны</div>';
     }
   } catch (error) {
     grid.innerHTML = '<div class="text-xs text-red-400 text-center">? Ошибка загрузки идей</div>';
@@ -1799,7 +1799,7 @@ async function loadTrendingIdeasMain() {
   const grid = document.getElementById('trending-ideas-main');
   if (!grid) return;
 
-  grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">?? Загружаем популярные темы...</div>';
+  grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">💡 Загружаем популярные темы...</div>';
 
   try {
     const response = await fetch('/api/trending');
@@ -1817,10 +1817,10 @@ async function loadTrendingIdeasMain() {
         card.addEventListener('click', () => selectTrendingIdeaMain(card.dataset.trend));
       });
     } else {
-      grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">?? Идеи временно недоступны — напишите свою тему ниже</div>';
+      grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">💡 Идеи временно недоступны — напишите свою тему ниже</div>';
     }
   } catch (error) {
-    grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">?? Идеи загрузятся позже — пока напишите свою тему ниже</div>';
+    grid.innerHTML = '<div class="text-xs text-gray-500 text-center py-3">💡 Идеи загрузятся позже — пока напишите свою тему ниже</div>';
     console.error('Error loading trending ideas (main):', error);
   }
 }
@@ -1961,7 +1961,7 @@ function showCharacterRecommendations() {
   panel.className = 'glass-panel p-4 space-y-3 border-l-2 border-amber-500/40';
   panel.innerHTML = `
     <div class="text-sm font-semibold text-amber-400 flex items-center gap-2">
-      <span>??</span> Подходящие персонажи под вашу тему
+      <span>🎭</span> Подходящие персонажи под вашу тему
     </div>
     <div class="space-y-2">
       ${recommendedChars.map(char => `
@@ -2097,7 +2097,7 @@ function initModeSwitcher() {
     setTimeout(() => {
       const text = e.target.value.trim();
       if (text.includes('instagram.com/')) {
-        log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключи в режим «?? По видео» и загрузи файл');
+        log('INFO', 'РЕЖИМ', 'Обнаружена ссылка на видео — переключи в режим «🎬 По видео» и загрузи файл');
         // Switch to video mode UI (both advanced and main page)
         document.querySelectorAll('#section-advanced .mode-btn').forEach(b => b.classList.remove('active'));
         const videoBtn = document.querySelector('#section-advanced .mode-btn[data-mode="video"]');
@@ -2182,7 +2182,7 @@ function handleVideoFile(file) {
     return;
   }
   if (sizeMB > 20) {
-    showNotification(`?? Большое видео (${sizeMB.toFixed(1)} МБ) — передача займёт дольше. Рекомендуем до 20 МБ.`, 'warning');
+    showNotification(`⚠️ Большое видео (${sizeMB.toFixed(1)} МБ) — передача займёт дольше. Рекомендуем до 20 МБ.`, 'warning');
     log('WARN', 'ВИДЕО', `Большой файл: ${sizeMB.toFixed(1)} MB`);
   }
 
@@ -2198,7 +2198,7 @@ function handleVideoFile(file) {
     const videoBase64 = reader.result.split(',')[1]; // strip data:video/mp4;base64, prefix
     state._videoFileBase64 = videoBase64;
     state._videoFileMime = file.type; // video/mp4 or video/quicktime
-    log('OK', 'ВИДЕО', `?? Видео закодировано (${(file.size / 1024 / 1024).toFixed(1)} MB) — готово к анализу`);
+    log('OK', 'ВИДЕО', `🎬 Видео закодировано (${(file.size / 1024 / 1024).toFixed(1)} MB) — готово к анализу`);
   };
   reader.readAsDataURL(file);
 
@@ -2216,7 +2216,7 @@ function handleVideoFile(file) {
     const metaHtml = `
       <div class="flex items-center gap-2">
         <span class="text-emerald-400">?</span>
-        <span>?? ${escapeHtml(file.name)}</span>
+        <span>💡 ${escapeHtml(file.name)}</span>
       </div>
       <div>? ${duration}s · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
     `;
@@ -2256,7 +2256,7 @@ function handleVideoFile(file) {
     // Auto-match characters from video (no manual selection needed)
     setTimeout(() => { if (state.characters?.length) autoMatchCast(); }, 300);
 
-    log('OK', 'ВИДЕО', `?? Загружено: ${file.name} (${state.videoMeta.duration}с) — готово к анализу`);
+    log('OK', 'ВИДЕО', `✅ Загружено: ${file.name} (${state.videoMeta.duration}с) — готово к анализу`);
     updateReadiness();
   };
 
@@ -2286,7 +2286,7 @@ async function autoMatchCast() {
 
   const token = localStorage.getItem('ferixdi_jwt');
   const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
-  if (!token) { log('WARN', 'ПОДБОР', 'Нет авторизации'); if (btn) { btn.disabled = false; btn.textContent = '?? Подобрать персонажей и локацию автоматически'; } return; }
+  if (!token) { log('WARN', 'ПОДБОР', 'Нет авторизации'); if (btn) { btn.disabled = false; btn.textContent = '📌 Подобрать персонажей и локацию автоматически'; } return; }
 
   // Build compact catalogs
   const characters = state.characters.map(c => ({
@@ -2363,14 +2363,14 @@ async function autoMatchCast() {
     updateReadiness();
 
     if (resultEl && reasons.length) {
-      resultEl.innerHTML = '?? <strong>AI подобрал:</strong><br>' + reasons.join('<br>');
+      resultEl.innerHTML = '💬 <strong>AI подобрал:</strong><br>' + reasons.join('<br>');
       resultEl.classList.remove('hidden');
     }
     log('OK', 'ПОДБОР', `Готово — ${reasons.length} элементов подобрано`);
   } catch (e) {
     log('ERR', 'ПОДБОР', `Ошибка: ${e.message}`);
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '?? Подобрать персонажей и локацию автоматически'; }
+    if (btn) { btn.disabled = false; btn.textContent = '📌 Подобрать персонажей и локацию автоматически'; }
   }
 }
 window.autoMatchCast = autoMatchCast;
@@ -2498,7 +2498,7 @@ function startRateLimitCountdown() {
     }
     btn.disabled = true;
     btn.textContent = `? Подождите ${remaining}с...`;
-    showGenStatus(`?? Лимит: 1 запрос в минуту. Осталось ${remaining}с`, 'text-amber-400');
+    showGenStatus(`⏳ Лимит: 1 запрос в минуту. Осталось ${remaining}с`, 'text-amber-400');
   };
   update();
   state._rateLimitTimer = setInterval(update, 1000);
@@ -2536,7 +2536,7 @@ function updateReadiness() {
   if (allReady) {
     btn.disabled = false;
     btn.classList.remove('opacity-50', 'cursor-not-allowed');
-    btn.innerHTML = '<span class="flex items-center justify-center gap-2">?? Собрать промпт<span class="text-xs opacity-60">Ctrl+Enter</span></span>';
+    btn.innerHTML = '<span class="flex items-center justify-center gap-2">💡 Собрать промпт<span class="text-xs opacity-60">Ctrl+Enter</span></span>';
   } else {
     btn.disabled = true;
     btn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -2545,7 +2545,7 @@ function updateReadiness() {
     if (!checks.chars) missing.push('персонажи');
     if (!checks.content) missing.push('контент');
     if (!checks.promo) missing.push('промо-код');
-    btn.innerHTML = `<span class="flex items-center justify-center gap-2">?? Не хватает: ${missing.join(', ')}</span>`;
+    btn.innerHTML = `<span class="flex items-center justify-center gap-2">💡 Не хватает: ${missing.join(', ')}</span>`;
   }
 
   // Update checklist panel
@@ -2574,7 +2574,7 @@ function updateReadiness() {
   const locSelected = !!state.selectedLocation;
   const locName = locSelected ? (state.locations.find(l => l.id === state.selectedLocation)?.name_ru || 'Выбрана') : 'Авто (AI подберёт)';
   _updateCheckItem('readiness-location', true,
-    locSelected ? `?? ${locName}` : 'Локация',
+    locSelected ? `📍 ${locName}` : 'Локация',
     locSelected ? '' : 'Авто (AI подберёт)',
     null);
 
@@ -2624,7 +2624,7 @@ function _contentLabel() {
 }
 
 function _modeLabel(m) {
-  return { idea: '?? Своя идея', suggested: '?? Готовые идеи', script: '?? Свой диалог', video: '?? По видео' }[m] || m;
+  return { idea: '📌 Своя идея', suggested: '📌 Готовые идеи', script: '📌 Свой диалог', video: '🎬 По видео' }[m] || m;
 }
 
 function _updateCheckItem(elId, ok, label, hint, onClick) {
@@ -2678,7 +2678,7 @@ function initProductUpload() {
     document.getElementById('product-preview').classList.add('hidden');
     document.getElementById('product-status').classList.add('hidden');
     document.getElementById('product-preview-zone').innerHTML = `
-      <div class="text-2xl mb-1">??</div>
+      <div class="text-2xl mb-1"></div>
       <div class="text-xs text-gray-500">Перетащи фото или нажми</div>
       <div class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP</div>
     `;
@@ -2689,7 +2689,7 @@ function initProductUpload() {
 async function handleProductFile(file) {
   // Проверка промо-кода перед анализом товара
   if (!isPromoValid()) {
-    showProductStatus('?? Для анализа товара нужен промо-код. Введите его в разделе «Настройки».', 'text-amber-400');
+    showProductStatus('📌 Для анализа товара нужен промо-код. Введите его в разделе «Настройки».', 'text-amber-400');
     log('WARN', 'ТОВАР', 'Промо-код не введён — анализ товара заблокирован');
     return;
   }
@@ -2787,7 +2787,7 @@ function initPostGenPhoto() {
     _postPhotoMode = 'reference';
     document.getElementById('post-photo-mode-ref').classList.add('ring-2', 'ring-violet-500');
     document.getElementById('post-photo-mode-prod').classList.remove('ring-2', 'ring-emerald-500');
-    document.getElementById('post-photo-icon').textContent = '??';
+    document.getElementById('post-photo-icon').textContent = '✨';
     document.getElementById('post-photo-label').textContent = 'Загрузи фото-референс (стиль, настроение, эстетика)';
     dropzone.classList.remove('hidden');
     document.getElementById('post-photo-lang-toggle')?.classList.remove('hidden');
@@ -2798,7 +2798,7 @@ function initPostGenPhoto() {
     _postPhotoMode = 'product';
     document.getElementById('post-photo-mode-prod').classList.add('ring-2', 'ring-emerald-500');
     document.getElementById('post-photo-mode-ref').classList.remove('ring-2', 'ring-violet-500');
-    document.getElementById('post-photo-icon').textContent = '??';
+    document.getElementById('post-photo-icon').textContent = '✨';
     document.getElementById('post-photo-label').textContent = 'Загрузи фото товара (появится в кадре)';
     dropzone.classList.remove('hidden');
     document.getElementById('post-photo-lang-toggle')?.classList.remove('hidden');
@@ -2891,8 +2891,8 @@ async function handlePostGenPhoto(file) {
       const langLabel = data.language === 'ru' ? 'RU' : 'EN';
       if (resultTitle) {
         resultTitle.textContent = _postPhotoMode === 'reference'
-          ? `?? ОПИСАНИЕ РЕФЕРЕНСА (${langLabel})`
-          : `?? ОПИСАНИЕ ТОВАРА (${langLabel})`;
+          ? `🖼️ ОПИСАНИЕ РЕФЕРЕНСА (${langLabel})`
+          : `🛍️ ОПИСАНИЕ ТОВАРА (${langLabel})`;
         resultTitle.className = `text-[10px] font-semibold uppercase tracking-wider mb-1 ${_postPhotoMode === 'reference' ? 'text-violet-400' : 'text-emerald-400'}`;
       }
       document.getElementById('post-photo-description').textContent = data.description_en;
@@ -2943,7 +2943,7 @@ function applyPostGenPhoto() {
     // RU package
     const ruEl = document.querySelector('#tab-ru pre');
     if (ruEl) {
-      ruEl.textContent = (ruEl.textContent || '') + `\n\n?? ТОВАР В КАДРЕ (добавлено по фото):\n${desc}\n?? Товар строго как на загруженном фото — цвета, форма, бренд!`;
+      ruEl.textContent = (ruEl.textContent || '') + `\n\n🛍️ ТОВАР В КАДРЕ (добавлено по фото):\n${desc}\n🛍️ Товар строго как на загруженном фото — цвета, форма, бренд!`;
     }
 
     // Also save to state for future regenerations
@@ -2963,7 +2963,7 @@ function applyPostGenPhoto() {
         <div class="flex items-start gap-2">
           ${prodImg}
           <div class="min-w-0">
-            <div class="text-[10px] font-bold text-emerald-400">?? Товар добавлен в промпт ?</div>
+            <div class="text-[10px] font-bold text-emerald-400">💡 Товар добавлен в промпт ?</div>
             <div class="text-[9px] text-gray-400 leading-tight mt-0.5">${escapeHtml(prodDesc)}</div>
             <div class="text-[9px] text-emerald-500/60 mt-0.5">Строго как на загруженном фото</div>
           </div>
@@ -2998,7 +2998,7 @@ function applyPostGenPhoto() {
     // RU package
     const ruEl = document.querySelector('#tab-ru pre');
     if (ruEl) {
-      ruEl.textContent = (ruEl.textContent || '') + `\n\n?? ВИЗУАЛЬНЫЙ РЕФЕРЕНС (добавлено по фото):\n${desc}\n?? Повтори освещение, цветовую палитру и настроение с загруженного фото`;
+      ruEl.textContent = (ruEl.textContent || '') + `\n\n🖼️ ВИЗУАЛЬНЫЙ РЕФЕРЕНС (добавлено по фото):\n${desc}\n🖼️ Повтори освещение, цветовую палитру и настроение с загруженного фото`;
     }
 
     // Save reference style to state for future regenerations
@@ -3062,25 +3062,25 @@ function renderPreflight(localResult) {
   // Timing estimate
   const est = localResult.duration_estimate || {};
   const riskColor = est.risk === 'high' ? 'text-red-400' : est.risk === 'medium' ? 'text-amber-400' : 'text-emerald-400';
-  const riskIcon = est.risk === 'high' ? '??' : est.risk === 'medium' ? '??' : '??';
+  const riskIcon = est.risk === 'high' ? '✨' : est.risk === 'medium' ? '✨' : '✨';
 
   // Translate risk
   const riskRu = { high: 'высокий', medium: 'средний', low: 'низкий' };
 
   // Build pillar summaries (short) — user-friendly terms
   const pillars = [
-    { icon: '??', name: 'Освещение', val: `${lm.mood} · ${lm.sources || '1 источник'}`, detail: lm.style?.slice(0, 60) + '...' },
-    { icon: '??', name: 'Камера', val: 'Селфи-режим', detail: `Объектив: ${cin.optics?.focal_length || '24-28мм'} · Диафрагма: ${cin.optics?.aperture || 'f/1.9-2.2'}` },
-    { icon: '??', name: 'Съёмка', val: 'Ручная съёмка', detail: 'Естественное микро-дрожание телефона' },
-    { icon: '??', name: 'Анимация', val: 'Жесты и дыхание', detail: 'Моргание 3-5с · Дыхание 3-4с · Независимые движения' },
-    { icon: '??', name: 'Лицо', val: '׸ткие губы', detail: `Поворот ?25° · Автофокус на лицо` },
-    { icon: '??', name: 'Взгляд', val: '4 фазы взгляда', detail: `Хук: прямо в камеру · Естественные движения глаз` },
-    { icon: '??', name: 'Композиция', val: `макс. ${cin.frame_cleanliness?.detail_budget || '7'} деталей`, detail: `60-70% персонажи · Формат 9:16` },
-    { icon: '??', name: 'Детализация', val: 'Реалистичные текстуры', detail: 'Поры, морщины, текстура кожи, ткани' },
-    { icon: '??', name: 'Цвет', val: 'Естественные тона', detail: `Без оранжевого и серого · 5 зон кожи` },
-    { icon: '??', name: 'Звук', val: 'Запись с телефона', detail: `Микрофон 35-60см · Фон -20/-30дБ` },
-    { icon: '??', name: 'Начало', val: 'Яркий хук', detail: `Энергия: ?80% · Взгляд в камеру` },
-    { icon: '??', name: 'Монтаж', val: 'Динамика', detail: `80>90>60>95>100>70% · Авто-усиление` },
+    { icon: '✨', name: 'Освещение', val: `${lm.mood} · ${lm.sources || '1 источник'}`, detail: lm.style?.slice(0, 60) + '...' },
+    { icon: '✨', name: 'Камера', val: 'Селфи-режим', detail: `Объектив: ${cin.optics?.focal_length || '24-28мм'} · Диафрагма: ${cin.optics?.aperture || 'f/1.9-2.2'}` },
+    { icon: '✨', name: 'Съёмка', val: 'Ручная съёмка', detail: 'Естественное микро-дрожание телефона' },
+    { icon: '✨', name: 'Анимация', val: 'Жесты и дыхание', detail: 'Моргание 3-5с · Дыхание 3-4с · Независимые движения' },
+    { icon: '✨', name: 'Лицо', val: '׸ткие губы', detail: `Поворот ?25° · Автофокус на лицо` },
+    { icon: '✨', name: 'Взгляд', val: '4 фазы взгляда', detail: `Хук: прямо в камеру · Естественные движения глаз` },
+    { icon: '✨', name: 'Композиция', val: `макс. ${cin.frame_cleanliness?.detail_budget || '7'} деталей`, detail: `60-70% персонажи · Формат 9:16` },
+    { icon: '✨', name: 'Детализация', val: 'Реалистичные текстуры', detail: 'Поры, морщины, текстура кожи, ткани' },
+    { icon: '✨', name: 'Цвет', val: 'Естественные тона', detail: `Без оранжевого и серого · 5 зон кожи` },
+    { icon: '✨', name: 'Звук', val: 'Запись с телефона', detail: `Микрофон 35-60см · Фон -20/-30дБ` },
+    { icon: '✨', name: 'Начало', val: 'Яркий хук', detail: `Энергия: ?80% · Взгляд в камеру` },
+    { icon: '✨', name: 'Монтаж', val: 'Динамика', detail: `80>90>60>95>100>70% · Авто-усиление` },
   ];
 
   el.classList.remove('hidden');
@@ -3090,7 +3090,7 @@ function renderPreflight(localResult) {
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <div class="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600/20 border border-cyan-500/30">
-            <span class="text-xs">??</span>
+            <span class="text-xs">✨</span>
           </div>
           <div>
             <div class="text-xs font-semibold text-cyan-400 tracking-wide">ПАРАМЕТРЫ СБОРКИ</div>
@@ -3211,7 +3211,7 @@ function displayResult(result) {
   }
 
   // Restore default tab names and visibility
-  const _tabDefaults = { veo: '?? Промпт для Veo', photo: '?? Фото (кадр 0)', video: '?? Видео JSON', insta: '?? Инста', ru: '???? Пост', blueprint: '?? План' };
+  const _tabDefaults = { veo: '📝 Промпт для Veo', photo: '📸 Фото (кадр 0)', video: '🎬 Видео JSON', insta: '📱 Инста', ru: '✏️ Пост', blueprint: '📋 План' };
   document.querySelectorAll('#gen-results .mode-btn').forEach(b => {
     if (b.dataset.tab && _tabDefaults[b.dataset.tab]) {
       b.textContent = _tabDefaults[b.dataset.tab];
@@ -3240,7 +3240,7 @@ function displayResult(result) {
         <div class="flex items-start gap-2">
           ${prodImg}
           <div class="min-w-0">
-            <div class="text-[10px] font-bold text-emerald-400">?? Товар в промпте ?</div>
+            <div class="text-[10px] font-bold text-emerald-400">💡 Товар в промпте ?</div>
             <div class="text-[9px] text-gray-400 leading-tight mt-0.5">${escapeHtml(prodDesc)}</div>
             <div class="text-[9px] text-emerald-500/60 mt-0.5">Строго как на исходном фото — цвета, форма, бренд</div>
           </div>
@@ -3264,13 +3264,13 @@ function displayResult(result) {
   const hasRef = !!(state.referenceStyle?.description_en);
   if (!hasProduct && !hasRef) {
     // No photos loaded — show prominent reminder
-    showNotification('?? Загрузи фото товара ?? или референс фона ?? ниже — AI встроит их в промпт!', 'info');
+    showNotification('ℹ️ Загрузи фото товара • или референс фона • ниже — AI встроит их в промпт!', 'info');
   } else if (hasProduct && !hasRef) {
-    showNotification('?? Товар в промпте ? | ?? Можешь добавить ещё референс фона ??', 'success');
+    showNotification('✅ Товар в промпте ? | • Можешь добавить ещё референс фона •', 'success');
   } else if (!hasProduct && hasRef) {
-    showNotification('?? Референс в промпте ? | ?? Можешь добавить ещё фото товара ??', 'success');
+    showNotification('✅ Референс в промпте ? | • Можешь добавить ещё фото товара •', 'success');
   } else {
-    showNotification('?? Товар ? ?? Референс ? — промпты обогащены по максимуму!', 'success');
+    showNotification('✅ Товар ? • Референс ? — промпты обогащены по максимуму!', 'success');
   }
 
   // Reference badge in Veo tab
@@ -3282,9 +3282,9 @@ function displayResult(result) {
       veoRefBadge.classList.remove('hidden');
       veoRefBadge.innerHTML = `
         <div class="flex items-start gap-2">
-          <div class="text-2xl flex-shrink-0">??</div>
+          <div class="text-2xl flex-shrink-0"></div>
           <div class="min-w-0">
-            <div class="text-[10px] font-bold text-violet-400">?? Референс стиля в промпте ?</div>
+            <div class="text-[10px] font-bold text-violet-400">💡 Референс стиля в промпте ?</div>
             <div class="text-[9px] text-gray-400 leading-tight mt-0.5">${escapeHtml(refShort)}</div>
           </div>
         </div>`;
@@ -3308,26 +3308,26 @@ function displayResult(result) {
     let warningsHtml = '';
     
     if (infoWarnings.length > 0) {
-      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-cyan-400 mb-1">?? Информация:</div>';
-      warningsHtml += infoWarnings.map(w => `<div class="text-xs text-cyan-300">?? ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-cyan-400 mb-1">💡 Информация:</div>';
+      warningsHtml += infoWarnings.map(w => `<div class="text-xs text-cyan-300">💡 ${escapeHtml(w)}</div>`).join('');
       warningsHtml += '</div>';
     }
     
     if (actionWarnings.length > 0) {
-      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-amber-400 mb-1">?? Предупреждения:</div>';
-      warningsHtml += actionWarnings.map(w => `<div class="text-xs text-amber-300">?? ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-amber-400 mb-1">💡 Предупреждения:</div>';
+      warningsHtml += actionWarnings.map(w => `<div class="text-xs text-amber-300">💡 ${escapeHtml(w)}</div>`).join('');
       warningsHtml += '</div>';
     }
     
     if (systemWarnings.length > 0) {
-      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-orange-400 mb-1">?? Система:</div>';
-      warningsHtml += systemWarnings.map(w => `<div class="text-xs text-orange-300">?? ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-orange-400 mb-1">💡 Система:</div>';
+      warningsHtml += systemWarnings.map(w => `<div class="text-xs text-orange-300">💡 ${escapeHtml(w)}</div>`).join('');
       warningsHtml += '</div>';
     }
     
     if (otherWarnings.length > 0) {
-      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-gray-400 mb-1">?? Другое:</div>';
-      warningsHtml += otherWarnings.map(w => `<div class="text-xs text-gray-300">?? ${escapeHtml(w)}</div>`).join('');
+      warningsHtml += '<div class="mb-2"><div class="text-xs font-semibold text-gray-400 mb-1">💡 Другое:</div>';
+      warningsHtml += otherWarnings.map(w => `<div class="text-xs text-gray-300">💡 ${escapeHtml(w)}</div>`).join('');
       warningsHtml += '</div>';
     }
     
@@ -3355,7 +3355,7 @@ function displayResult(result) {
   // Reset English mode on new generation
   result._isEnglish = false;
   const ruTabBtn = document.querySelector('#gen-results .mode-btn[data-tab="ru"]');
-  if (ruTabBtn) ruTabBtn.textContent = '???? Пост';
+  if (ruTabBtn) ruTabBtn.textContent = '📦 Пост';
 
   // Show English adaptation button
   const translatePanel = document.getElementById('translate-panel');
@@ -3364,7 +3364,7 @@ function displayResult(result) {
     const btn = document.getElementById('btn-translate-en');
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '???? Адаптация на English';
+      btn.innerHTML = '📦 Адаптация на English';
     }
   }
 
@@ -3429,16 +3429,16 @@ function populateContextBlock(result) {
   const labelA = dA?.closest('.bg-black\\/30')?.querySelector('.text-cyan-400');
   const bBlock = dB?.closest('.bg-black\\/30');
   if (isSolo) {
-    if (labelA) labelA.textContent = '?? Монолог:';
+    if (labelA) labelA.textContent = '📌 Монолог:';
     if (bBlock) bBlock.classList.add('hidden');
   } else {
-    if (labelA) labelA.textContent = '??? Реплика A (провокация):';
+    if (labelA) labelA.textContent = '🅰️ Реплика A (провокация):';
     if (bBlock) bBlock.classList.remove('hidden');
   }
 
   if (dA) dA.textContent = `«${dialogueA}»`;
   if (dB && !isSolo) dB.textContent = `«${dialogueB}»${dialogueA2 ? ` > A: «${dialogueA2}»` : ''}`;
-  if (kw && killerWord) kw.textContent = `?? Killer word: «${killerWord}»`;
+  if (kw && killerWord) kw.textContent = `💀 Killer word: «${killerWord}»`;
 
   // Meta grid
   metaEl.innerHTML = `
@@ -3479,7 +3479,7 @@ function populateInstaTab(result) {
     <!-- Viral Title -->
     <div class="glass-panel p-4 relative">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
-      <div class="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Viral Title' : 'Вирусный заголовок'}</div>
+      <div class="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Viral Title' : 'Вирусный заголовок'}</div>
       <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(viralTitle)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Paste as Reels caption — hooks viewers in the feed' : 'Вставь как заголовок Reels — цепляет в ленте'}</div>
     </div>
@@ -3487,7 +3487,7 @@ function populateInstaTab(result) {
     <!-- Share Bait (video description for forwarding) -->
     <div class="glass-panel p-4 relative border-l-2 border-orange-400/40">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
-      <div class="text-[10px] text-orange-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Video Description · share bait' : 'Описание видео · для пересылки'}</div>
+      <div class="text-[10px] text-orange-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Video Description · share bait' : 'Описание видео · для пересылки'}</div>
       <div class="copy-target text-sm text-gray-100 font-medium leading-relaxed">${escapeHtml(shareBait)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Send to a friend with this line — bait for shares' : 'Скинь другу с этой фразой — байт на пересылку в контексте видео'}</div>
     </div>
@@ -3495,7 +3495,7 @@ function populateInstaTab(result) {
     <!-- Instagram Caption (full post text) -->
     ${instaCaption ? `<div class="glass-panel p-4 relative border-l-2 border-pink-400/40">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
-      <div class="text-[10px] text-pink-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Full Caption (description)' : 'Полный текст описания (caption)'}</div>
+      <div class="text-[10px] text-pink-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Full Caption (description)' : 'Полный текст описания (caption)'}</div>
       <div class="copy-target text-sm text-gray-100 leading-relaxed">${escapeHtml(instaCaption)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Paste as Reels description — includes CTA' : 'Вставь в описание Reels — уже с CTA и эмодзи'}</div>
     </div>` : ''}
@@ -3503,7 +3503,7 @@ function populateInstaTab(result) {
     <!-- Hook Texts (for video overlay) -->
     ${instaHookTexts.length > 0 ? `<div class="glass-panel p-4 relative">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').innerText.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
-      <div class="text-[10px] text-rose-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Hook Texts (on-screen)' : 'Тексты-хуки (на экран в начало)'}</div>
+      <div class="text-[10px] text-rose-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Hook Texts (on-screen)' : 'Тексты-хуки (на экран в начало)'}</div>
       <div class="copy-target space-y-1.5">
         ${instaHookTexts.map((h, i) => `<div class="text-sm text-gray-200 bg-black/30 rounded px-3 py-1.5">«${escapeHtml(h)}»</div>`).join('')}
       </div>
@@ -3522,7 +3522,7 @@ function populateInstaTab(result) {
     <!-- Pin Comment (bait for shares) -->
     <div class="glass-panel p-4 relative">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
-      <div class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Pinned Comment' : 'Закреплённый комментарий'}</div>
+      <div class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Pinned Comment' : 'Закреплённый комментарий'}</div>
       <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(pinComment)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Pin this — triggers shares and saves' : 'Закрепи — провоцирует пересылки и сохранения'}</div>
     </div>
@@ -3530,20 +3530,20 @@ function populateInstaTab(result) {
     <!-- First Comment -->
     <div class="glass-panel p-4 relative">
       <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.glass-panel').querySelector('.copy-target').textContent.trim());this.textContent='${copiedLabel}';setTimeout(()=>this.textContent='${copyLabel}',1500)">${copyLabel}</button>
-      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'First Comment' : 'Первый комментарий'}</div>
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'First Comment' : 'Первый комментарий'}</div>
       <div class="copy-target text-sm text-gray-200 leading-relaxed">${escapeHtml(firstComment)}</div>
       <div class="text-[9px] text-gray-600 mt-2">${isEN ? 'Post right after publishing — sparks discussion' : 'Напиши сразу после публикации — запускает обсуждение'}</div>
     </div>
 
     <!-- Engagement Tip -->
     ${instaEngagementTip ? `<div class="glass-panel p-4 relative border-l-2 border-teal-400/40">
-      <div class="text-[10px] text-teal-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Engagement Tip' : 'Лайфхак для охватов'}</div>
+      <div class="text-[10px] text-teal-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Engagement Tip' : 'Лайфхак для охватов'}</div>
       <div class="text-sm text-gray-200 leading-relaxed whitespace-pre-line">${escapeHtml(instaEngagementTip)}</div>
     </div>` : ''}
 
     <!-- Share bait tip -->
     <div class="bg-gradient-to-r from-violet-500/8 to-cyan-500/8 rounded-lg p-4 border border-violet-500/15">
-      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">?? ${isEN ? 'Instagram Publishing Order' : 'Порядок публикации в Instagram'}</div>
+      <div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wider mb-2">💡 ${isEN ? 'Instagram Publishing Order' : 'Порядок публикации в Instagram'}</div>
       <div class="text-xs text-gray-300 leading-relaxed space-y-1.5">
         ${isEN ? `
         <div>1. <span class="text-amber-300 font-medium">Full Caption</span> > paste in Reels description. Has title + desc + CTA. No hashtags!</div>
@@ -3590,10 +3590,10 @@ function populateDialogueEditor(result) {
   const labelA = inputA?.previousElementSibling || inputA?.closest('div')?.querySelector('label');
   if (isSolo) {
     if (bRow && inputB) inputB.closest('.bg-black\\/30, div[class*=editor]')?.classList.add('hidden');
-    if (labelA) labelA.textContent = '?? Монолог';
+    if (labelA) labelA.textContent = '📌 Монолог';
   } else {
     if (bRow && inputB) inputB.closest('.bg-black\\/30, div[class*=editor]')?.classList.remove('hidden');
-    if (labelA) labelA.textContent = '??? Реплика A';
+    if (labelA) labelA.textContent = '🅰️ Реплика A';
   }
 
   updateEditorEstimates();
@@ -3744,14 +3744,14 @@ function initGenerate() {
 
     // Validate complete workflow
     if (!state.generationMode) {
-      showGenStatus('?? Сначала выберите режим генерации на шаге 1', 'text-orange-400');
+      showGenStatus('📌 Сначала выберите режим генерации на шаге 1', 'text-orange-400');
       navigateTo('generation-mode');
       return;
     }
     
     // Video mode: characters are optional (AI copies from original)
     if (!state.selectedA && state.generationMode !== 'video') {
-      showGenStatus('?? Сначала выберите хотя бы одного персонажа на шаге 3', 'text-orange-400');
+      showGenStatus('📌 Сначала выберите хотя бы одного персонажа на шаге 3', 'text-orange-400');
       navigateTo('characters');
       return;
     }
@@ -3761,7 +3761,7 @@ function initGenerate() {
       const scriptA = document.getElementById('script-a')?.value.trim();
       const scriptB = document.getElementById('script-b')?.value.trim();
       if (!scriptA && !scriptB) {
-        showGenStatus('?? Напиши хотя бы одну реплику (A или B)', 'text-orange-400');
+        showGenStatus('📌 Напиши хотя бы одну реплику (A или B)', 'text-orange-400');
         return;
       }
       
@@ -3771,11 +3771,11 @@ function initGenerate() {
       const maxWordsA = isSoloScript ? 30 : 15;
       const maxWordsB = 18;
       if (scriptA && scriptA.split(/\s+/).length > maxWordsA) {
-        showGenStatus(`?? Реплика A слишком длинная (${scriptA.split(/\s+/).length} слов). Максимум: ${maxWordsA} слов`, 'text-orange-400');
+        showGenStatus(`📌 Реплика A слишком длинная (${scriptA.split(/\s+/).length} слов). Максимум: ${maxWordsA} слов`, 'text-orange-400');
         return;
       }
       if (scriptB && scriptB.split(/\s+/).length > maxWordsB) {
-        showGenStatus(`?? Реплика B слишком длинная (${scriptB.split(/\s+/).length} слов). Максимум: ${maxWordsB} слов`, 'text-orange-400');
+        showGenStatus(`📌 Реплика B слишком длинная (${scriptB.split(/\s+/).length} слов). Максимум: ${maxWordsB} слов`, 'text-orange-400');
         return;
       }
     }
@@ -3784,13 +3784,13 @@ function initGenerate() {
     if (state.generationMode === 'idea') {
       const topicVal = document.getElementById('idea-input')?.value.trim();
       if (!topicVal) {
-        showGenStatus('?? Напишите идею для генерации', 'text-orange-400');
+        showGenStatus('📌 Напишите идею для генерации', 'text-orange-400');
         return;
       }
     }
     
     if (state.generationMode === 'video' && !state.videoMeta) {
-      showGenStatus('?? Загрузите видео-файл выше ^ в секции «?? Видео-референс»', 'text-orange-400');
+      showGenStatus('📌 Загрузите видео-файл выше ^ в секции «🎬 Видео-референс»', 'text-orange-400');
       document.getElementById('remix-video')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
@@ -3805,7 +3805,7 @@ function initGenerate() {
     if (state.generationMode === 'video') {
       const sceneHint = (document.getElementById('scene-hint-main')?.value || document.getElementById('scene-hint')?.value || '').trim();
       if (sceneHint && sceneHint.length > 200) {
-        showGenStatus('?? Описание видео слишком длинное (максимум 200 символов). Сократите текст.', 'text-orange-400');
+        showGenStatus('📌 Описание видео слишком длинное (максимум 200 символов). Сократите текст.', 'text-orange-400');
         return;
       }
     }
@@ -3814,7 +3814,7 @@ function initGenerate() {
 
     // Проверка промо-кода перед генерацией
     if (!isPromoValid()) {
-      showGenStatus('?? Для генерации нужен промо-код. Введите его в разделе «Настройки».', 'text-amber-400');
+      showGenStatus('📌 Для генерации нужен промо-код. Введите его в разделе «Настройки».', 'text-amber-400');
       log('WARN', 'ГЕНЕРАЦИЯ', 'Промо-код не введён — генерация заблокирована');
       return;
     }
@@ -3826,7 +3826,7 @@ function initGenerate() {
     sfx.generate();
     btn.disabled = true;
     btn.textContent = '? Анализирую контекст...';
-    setGenProgress(8, '?? Анализирую тему и подбираю параметры...');
+    setGenProgress(8, '📌 Анализирую тему и подбираю параметры...');
 
     // Reset previous results, error overlay, and preflight status
     document.getElementById('gen-error-overlay')?.remove();
@@ -3881,7 +3881,7 @@ function initGenerate() {
       showGenStatus(`? Ошибка генерации: ${e.message}`, 'text-red-400');
       log('ERR', 'GEN', e.message);
       btn.disabled = false;
-      btn.textContent = '?? Собрать промпт';
+      btn.textContent = '⚡ Собрать промпт';
       return;
     }
 
@@ -3889,13 +3889,13 @@ function initGenerate() {
       state._generationInFlight = false;
       displayResult(localResult);
       btn.disabled = false;
-      btn.textContent = '?? Собрать промпт';
+      btn.textContent = '⚡ Собрать промпт';
       return;
     }
 
     // Step 1.5: Show pre-flight parameter breakdown
     btn.textContent = '? Подготавливаю промпты...';
-    setGenProgress(22, '?? Структура готова, создаю промпты для AI...');
+    setGenProgress(22, '📌 Структура готова, создаю промпты для AI...');
     renderPreflight(localResult);
 
     // Step 2: If API mode — send context to AI engine for creative refinement
@@ -3903,7 +3903,7 @@ function initGenerate() {
 
     if (isApiMode && localResult._apiContext) {
       btn.textContent = '? AI собирает промпт...';
-      setGenProgress(35, '?? FERIXDI AI собирает промпт и сюжет... (15-30с)');
+      setGenProgress(35, '📌 FERIXDI AI собирает промпт и сюжет... (15-30с)');
       startGenProgressSimulation(35, 88, 25000); // animate over ~25s
       log('INFO', 'AI', 'Собираю промпт и диалог...');
 
@@ -3921,7 +3921,7 @@ function initGenerate() {
         } else {
           // No JWT token — try to auto-auth and show local result for now
           log('WARN', 'AI', 'Нет токена — показываю локальный результат');
-          updatePreflightStatus('?? Нет токена — показан локальный шаблон', 'bg-amber-500/8 text-amber-400 border border-amber-500/15');
+          updatePreflightStatus('📌 Нет токена — показан локальный шаблон', 'bg-amber-500/8 text-amber-400 border border-amber-500/15');
           if (isPromoValid()) autoAuth();
           saveGenerationHistory(localResult);
           displayResult(localResult);
@@ -3938,7 +3938,7 @@ function initGenerate() {
         let errorTitle = 'Сервис временно недоступен';
         let errorDesc = escapeHtml(apiErr.message);
         let errorAction = 'Попробуйте снова через несколько минут';
-        let errorIcon = '??';
+        let errorIcon = '✨';
         let errorButtons = '';
 
         if (apiErr.message?.includes('429') || apiErr.message?.includes('rate limit') || apiErr.message?.includes('Лимит')) {
@@ -3950,10 +3950,10 @@ function initGenerate() {
           errorTitle = 'Слишком много запросов';
           errorDesc = 'Превышен лимит запросов. Кнопка разблокируется автоматически.';
           errorAction = `Ожидайте ${waitSec}с — кнопка автоматически разблокируется`;
-          errorIcon = '??';
+          errorIcon = '✨';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
-              ?? Попробовать снова
+              • Попробовать снова
             </button>
           `;
         } else if (apiErr.message?.includes('401') || apiErr.message?.includes('unauthorized') || apiErr.message?.toLowerCase().includes('invalid token') || apiErr.message?.toLowerCase().includes('token expired')) {
@@ -3961,56 +3961,56 @@ function initGenerate() {
           errorTitle = 'Ошибка авторизации';
           errorDesc = 'Промо-код истёк или недействителен. Проверьте настройки.';
           errorAction = 'Введите новый промо-код в разделе «Настройки»';
-          errorIcon = '??';
+          errorIcon = '✨';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();navigateTo('settings')" class="px-4 py-2 bg-violet-500/20 text-violet-400 rounded-lg hover:bg-violet-500/30 transition-colors text-sm">
-              ?? Перейти к настройкам
+              • Перейти к настройкам
             </button>
           `;
         } else if (apiErr.message?.includes('502') || apiErr.message?.includes('503') || apiErr.message?.includes('504')) {
           errorTitle = 'Сервер перезагружается';
           errorDesc = 'AI-движок обновляется или перезапускается. Это занимает 30–60 секунд.';
           errorAction = 'Нажмите «Собрать промпт» повторно через минуту';
-          errorIcon = '??';
+          errorIcon = '✨';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
-              ?? Собрать промпт снова
+              • Собрать промпт снова
             </button>
           `;
         } else if (apiErr.message?.includes('timeout') || apiErr.message?.includes('network') || apiErr.message?.includes('Failed to fetch')) {
           errorTitle = 'Проблемы с соединением';
           errorDesc = 'Не удалось подключиться к AI. Проверьте интернет-соединение.';
           errorAction = 'Попробуйте снова или проверьте подключение';
-          errorIcon = '??';
+          errorIcon = '✨';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
-              ?? Попробовать снова
+              • Попробовать снова
             </button>
           `;
         } else if (apiErr.message?.includes('quota') || apiErr.message?.includes('exceeded')) {
           errorTitle = 'Лимит генераций исчерпан';
           errorDesc = 'Достигнут лимит генераций. Попробуйте позже или напишите в поддержку.';
           errorAction = 'Подождите немного или свяжитесь с @ferixdiii в Telegram';
-          errorIcon = '??';
+          errorIcon = '✨';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
-              ?? Попробовать снова
+              • Попробовать снова
             </button>
             <button onclick="window.open('https://t.me/ferixdiii', '_blank')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
-              ?? Поддержка
+              • Поддержка
             </button>
           `;
         } else {
           errorTitle = 'Ошибка сборки промпта';
           errorDesc = escapeHtml(apiErr.message || 'Непредвиденная ошибка');
           errorAction = 'Попробуйте снова через несколько секунд';
-          errorIcon = '??';
+          errorIcon = '✨';
           errorButtons = `
             <button onclick="document.getElementById('gen-error-overlay')?.remove();document.getElementById('btn-generate')?.click()" class="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-colors text-sm">
-              ?? Попробовать снова
+              • Попробовать снова
             </button>
             <button onclick="window.open('https://t.me/ferixdiii', '_blank')" class="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
-              ?? Поддержка
+              • Поддержка
             </button>
           `;
         }
@@ -4034,7 +4034,7 @@ function initGenerate() {
     } else {
       // Demo mode or API without _apiContext — show local result with better UX
       const hasPromo = isPromoValid();
-      updatePreflightStatus(hasPromo ? '?? Локальная генерация · AI-движок недоступен' : '?? Демо-режим · Введите промо-код для полной генерации', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
+      updatePreflightStatus(hasPromo ? '📌 Локальная генерация · AI-движок недоступен' : '📌 Демо-режим · Введите промо-код для полной генерации', 'bg-gray-500/8 text-gray-400 border border-gray-500/15');
       
       // Add helpful info about local vs AI generation
       if (!hasPromo) {
@@ -4051,7 +4051,7 @@ function initGenerate() {
 
     state._generationInFlight = false;
     btn.disabled = false;
-    btn.textContent = '?? Собрать промпт';
+    btn.textContent = '⚡ Собрать промпт';
   });
 
   // Result tabs
@@ -4137,7 +4137,7 @@ function initTranslate() {
       token = localStorage.getItem('ferixdi_jwt');
       if (!token) {
         btn.innerHTML = '? Нет токена — введите промо-код в Настройках';
-        setTimeout(() => { btn.innerHTML = '???? Адаптация на English'; btn.disabled = false; }, 2500);
+        setTimeout(() => { btn.innerHTML = '📦 Адаптация на English'; btn.disabled = false; }, 2500);
         return;
       }
       log('OK', 'TRANSLATE', 'JWT получен после переавторизации');
@@ -4177,7 +4177,7 @@ function initTranslate() {
       const kw = document.getElementById('gen-killer-word');
       if (dA && en.dialogue_A_en) dA.textContent = `«${en.dialogue_A_en}»`;
       if (dB && en.dialogue_B_en) dB.textContent = `«${en.dialogue_B_en}»`;
-      if (kw && en.killer_word_en) kw.textContent = `?? Killer word: «${en.killer_word_en}»`;
+      if (kw && en.killer_word_en) kw.textContent = `💀 Killer word: «${en.killer_word_en}»`;
 
       // Update Veo prompt (both DOM and state)
       // REMAKE mode: veo_prompt is already remake_veo_prompt_en (fully English, ultra-detailed)
@@ -4236,9 +4236,9 @@ function initTranslate() {
       if (edA && en.dialogue_A_en) edA.value = en.dialogue_A_en;
       if (edB && en.dialogue_B_en) edB.value = en.dialogue_B_en;
 
-      // Switch tab label from ???? to ????
+      // Switch tab label emoji after generation
       const ruTabBtn = document.querySelector('#gen-results .mode-btn[data-tab="ru"]');
-      if (ruTabBtn) ruTabBtn.textContent = '???? Post';
+      if (ruTabBtn) ruTabBtn.textContent = '📦 Post';
 
       // Sync _apiContext with English values so downstream readers stay consistent
       const trCtx = result._apiContext || {};
@@ -4248,14 +4248,14 @@ function initTranslate() {
 
       btn.innerHTML = '? English готово!';
       log('OK', 'TRANSLATE', `Адаптация на English: A="${en.dialogue_A_en?.slice(0, 40)}..." B="${en.dialogue_B_en?.slice(0, 40)}..."`);
-      showNotification('???? Весь контент адаптирован на английский — диалог, инста-пакет, хештеги, описание!', 'success');
+      showNotification('✅ Весь контент адаптирован на английский — диалог, инста-пакет, хештеги, описание!', 'success');
 
-      setTimeout(() => { btn.innerHTML = '???? Адаптация на English'; btn.disabled = false; }, 3000);
+      setTimeout(() => { btn.innerHTML = '📦 Адаптация на English'; btn.disabled = false; }, 3000);
 
     } catch (e) {
       log('ERR', 'TRANSLATE', e.message);
       btn.innerHTML = `? ${e.message?.slice(0, 40) || 'Ошибка'}`;
-      setTimeout(() => { btn.innerHTML = '???? Адаптация на English'; btn.disabled = false; }, 3000);
+      setTimeout(() => { btn.innerHTML = '📦 Адаптация на English'; btn.disabled = false; }, 3000);
     }
   });
 }
@@ -4281,7 +4281,7 @@ function renderQCGate(qc) {
     groups[g].push(c);
   });
 
-  const groupIcons = { 'лицо': '??', 'камера': '??', 'тело': '??', 'аудио': '??', 'тайминг': '?', 'сцена': '??', 'другое': '??' };
+  const groupIcons = { 'лицо': '✨', 'камера': '✨', 'тело': '✨', 'аудио': '✨', 'тайминг': '?', 'сцена': '✨', 'другое': '✨' };
 
   qcEl.innerHTML = `
     <div class="space-y-3">
@@ -4289,7 +4289,7 @@ function renderQCGate(qc) {
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <div class="text-xs font-medium ${hasIssues ? 'text-amber-400' : 'neon-text-green'}">
-            ?? Контроль качества
+            • Контроль качества
           </div>
           <span class="text-[10px] text-gray-600 font-mono">${qc.total} проверок</span>
         </div>
@@ -4305,14 +4305,14 @@ function renderQCGate(qc) {
 
       <!-- Status badge -->
       <div id="qc-status-badge" class="text-center py-1.5 rounded-lg text-xs font-medium ${hasIssues ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 neon-text-green border border-emerald-500/20'}">
-        ${hasIssues ? `?? Найдено ${failedChecks.length} ${failedChecks.length === 1 ? 'проблема' : failedChecks.length < 5 ? 'проблемы' : 'проблем'} — можно исправить автоматически` : '? Все проверки пройдены — промпт готов к использованию'}
+        ${hasIssues ? `📌 Найдено ${failedChecks.length} ${failedChecks.length === 1 ? 'проблема' : failedChecks.length < 5 ? 'проблемы' : 'проблем'} — можно исправить автоматически` : '? Все проверки пройдены — промпт готов к использованию'}
       </div>
 
       <!-- Checks grid -->
       <div class="space-y-2" id="qc-checks-list">
         ${Object.entries(groups).map(([group, checks]) => `
           <div>
-            <div class="text-[9px] text-gray-600 uppercase tracking-wider mb-1">${groupIcons[group] || '??'} ${group}</div>
+            <div class="text-[9px] text-gray-600 uppercase tracking-wider mb-1">${groupIcons[group] || '✨'} ${group}</div>
             ${checks.map(c => `
               <div class="flex items-center gap-2 py-0.5 qc-check-row" data-id="${c.id}">
                 <span class="qc-icon w-4 text-center text-xs ${c.pass ? 'text-emerald-500' : 'text-red-400'}">${c.pass ? '?' : '?'}</span>
@@ -4347,7 +4347,7 @@ function renderQCGate(qc) {
   if (fixBtn) {
     fixBtn.addEventListener('click', () => {
       fixBtn.disabled = true;
-      fixBtn.innerHTML = '<span class="inline-block animate-spin mr-1">??</span> Анализирую и исправляю...';
+      fixBtn.innerHTML = '<span class="inline-block animate-spin mr-1">⏳</span> Анализирую и исправляю...';
       fixBtn.classList.replace('from-violet-600', 'from-gray-700');
       fixBtn.classList.replace('to-indigo-600', 'to-gray-600');
 
@@ -4545,7 +4545,7 @@ function applyDialogueUpdate(newA, newB) {
   if (state.lastResult.ru_package) {
     let pkg = state.lastResult.ru_package;
     if (isSolo) {
-      // Solo: replace monologue line «old text» > «new text» (after ?? section)
+      // Solo: replace monologue line «old text» > «new text» (after • section)
       pkg = pkg.replace(/(\?\?[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newA}$2`);
     } else {
       pkg = pkg.replace(/(\?\?\?[^\n]*\n\s*\u00ab)[^\u00bb]*(\u00bb)/, `$1${newA}$2`);
@@ -4616,7 +4616,7 @@ function applyDialogueUpdate(newA, newB) {
   const kwEl = document.getElementById('gen-killer-word');
   if (dAEl) dAEl.textContent = `«${newA}»`;
   if (dBEl && !isSolo) dBEl.textContent = `«${newB}»`;
-  if (kwEl && killerWord) kwEl.textContent = `?? Killer word: «${killerWord}»`;
+  if (kwEl && killerWord) kwEl.textContent = `💀 Killer word: «${killerWord}»`;
 
   // Sync _apiContext fallback values so downstream readers get correct dialogue
   if (ctx.dialogueA !== undefined) ctx.dialogueA = newA;
@@ -4685,7 +4685,7 @@ function updateEditorEstimates() {
     if (estBEl) estBEl.innerHTML = '<span class="text-gray-600">— соло —</span>';
 
     const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
-    const riskLabel = risk === 'high' ? '?? ПРЕВЫШЕНИЕ' : risk === 'medium' ? '?? БЛИЗКО' : '? ОК';
+    const riskLabel = risk === 'high' ? '📌 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '📌 БЛИЗКО' : '? ОК';
     document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Монолог: ${estA.duration.toFixed(2)}с / 6.3с ${riskLabel}</span>`;
 
     const badge = document.getElementById('editor-timing-badge');
@@ -4709,7 +4709,7 @@ function updateEditorEstimates() {
     document.getElementById('editor-est-b').innerHTML = `<span class="${overB ? 'text-red-400' : wordsB > 12 ? 'text-orange-400' : 'text-gray-500'}">${estB.duration}с / 4.0с · ${wordsB} слов${overB ? ' — НЕ ВЛЕЗЕТ!' : wordsB > 12 ? ' — много' : ''}</span>`;
 
     const riskColor = risk === 'high' ? 'text-red-400' : risk === 'medium' ? 'text-yellow-400' : 'neon-text-green';
-    const riskLabel = risk === 'high' ? '?? ПРЕВЫШЕНИЕ' : risk === 'medium' ? '?? БЛИЗКО' : '? ОК';
+    const riskLabel = risk === 'high' ? '📌 ПРЕВЫШЕНИЕ' : risk === 'medium' ? '📌 БЛИЗКО' : '? ОК';
     document.getElementById('editor-total').innerHTML = `<span class="${riskColor}">Речь: ${total.toFixed(2)}с / 6.3с ${riskLabel}</span>`;
 
     const badge = document.getElementById('editor-timing-badge');
@@ -4794,7 +4794,7 @@ async function logoutUser() {
     await fetch(`${apiUrl}/api/auth/logout`, { method: 'POST', credentials: 'include' });
   } catch { /* ignore */ }
   ['ferixdi_jwt', 'ferixdi_promo', 'ferixdi_username', 'ferixdi_user_id'].forEach(k => localStorage.removeItem(k));
-  showNotification('?? Вы вышли из системы', 'info');
+  showNotification('ℹ️ Вы вышли из системы', 'info');
   setTimeout(() => window.location.reload(), 1000);
 }
 window.logoutUser = logoutUser;
@@ -4884,7 +4884,7 @@ function deleteCustomChar(id) {
   if (state.selectedB?.id === id) state.selectedB = null;
   renderCharacters(getCurrentFilters());
   updateCharDisplay();
-  showNotification('?? Персонаж удалён', 'info');
+  showNotification('ℹ️ Персонаж удалён', 'info');
   log('INFO', 'CHAR-DELETE', `Удалён кастомный персонаж: ${id}`);
 }
 window.deleteCustomChar = deleteCustomChar;
@@ -4900,7 +4900,7 @@ function deleteCustomLoc(id) {
   if (state.selectedLocation?.id === id) state.selectedLocation = null;
   renderLocations();
   renderLocationsBrowse();
-  showNotification('?? Локация удалена', 'info');
+  showNotification('ℹ️ Локация удалена', 'info');
   log('INFO', 'LOC-DELETE', `Удалена кастомная локация: ${id}`);
 }
 window.deleteCustomLoc = deleteCustomLoc;
@@ -4930,7 +4930,7 @@ function initMatrixRain() {
   resize();
   window.addEventListener('resize', resize);
 
-  const chars = '??????????????????????????????????????????????0123456789ABCDEF<>{}[]=/\\';
+  const chars = '═══════════════════════0123456789ABCDEF<>{}[]=/\\';
   const fontSize = 12;
   const columns = Math.floor(canvas.width / fontSize);
   const drops = Array(columns).fill(1);
@@ -5008,7 +5008,7 @@ function _toggleTrendSave(topic) {
 async function fetchTrends() {
   if (!isPromoValid()) {
     const st = document.getElementById('trends-status');
-    if (st) { st.classList.remove('hidden'); st.innerHTML = '<span class="text-red-400">?? Для доступа к трендам нужен промо-код. Перейди в «Настройки» > введи код.</span>'; }
+    if (st) { st.classList.remove('hidden'); st.innerHTML = '<span class="text-red-400">💡 Для доступа к трендам нужен промо-код. Перейди в «Настройки» > введи код.</span>'; }
     return;
   }
 
@@ -5055,14 +5055,14 @@ async function fetchTrends() {
       st.innerHTML = `<span class="text-red-400">? Сервер вернул некорректный ответ (${resp.status}). Попробуй ещё раз.</span>`;
       log('ERR', 'ТРЕНДЫ', `JSON parse error: ${parseErr.message}, status: ${resp.status}`);
       btn.disabled = false;
-      btn.innerHTML = '<span>??</span> Попробовать ещё раз';
+      btn.innerHTML = '<span>✨</span> Попробовать ещё раз';
       return;
     }
 
     if (!resp.ok) {
       st.innerHTML = `<span class="text-red-400">? ${escapeHtml(data.error || `Ошибка сервера (${resp.status})`)}</span>`;
       btn.disabled = false;
-      btn.innerHTML = '<span>??</span> Попробовать ещё раз';
+      btn.innerHTML = '<span>✨</span> Попробовать ещё раз';
       return;
     }
 
@@ -5075,10 +5075,10 @@ async function fetchTrends() {
 
     // Status badge
     const groundedBadge = data.grounded
-      ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">?? Онлайн</span>'
-      : '<span class="text-[9px] bg-gray-500/15 text-gray-500 px-1.5 py-0.5 rounded ml-2">?? AI-анализ</span>';
+      ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded ml-2">💡 Онлайн</span>'
+      : '<span class="text-[9px] bg-gray-500/15 text-gray-500 px-1.5 py-0.5 rounded ml-2">💡 AI-анализ</span>';
     const nicheBadge = niche !== 'universal'
-      ? `<span class="text-[9px] bg-cyan-500/15 text-cyan-400 px-1.5 py-0.5 rounded ml-2">?? ${nicheName}</span>`
+      ? `<span class="text-[9px] bg-cyan-500/15 text-cyan-400 px-1.5 py-0.5 rounded ml-2">💡 ${nicheName}</span>`
       : '';
     st.innerHTML = `<span class="text-emerald-400">? ${_trendsData.length} идей · ${escapeHtml(data.weekday || '')}, ${escapeHtml(data.date)}</span>${groundedBadge}${nicheBadge}`;
 
@@ -5099,7 +5099,7 @@ async function fetchTrends() {
   }
 
   btn.disabled = false;
-  btn.innerHTML = '<span>??</span> Обновить тренды';
+  btn.innerHTML = '<span>✨</span> Обновить тренды';
 }
 
 function _renderTrendStats() {
@@ -5111,12 +5111,12 @@ function _renderTrendStats() {
   avgViral = (avgViral / _trendsData.length).toFixed(1);
   const maxViral = Math.max(..._trendsData.map(t => t.virality));
   el.innerHTML = `
-    <div class="trend-stat"><span>??</span> <span class="trend-stat-value">${_trendsData.length}</span> идей</div>
+    <div class="trend-stat"><span>✨</span> <span class="trend-stat-value">${_trendsData.length}</span> идей</div>
     <div class="trend-stat"><span>?</span> O <span class="trend-stat-value">${avgViral}</span>/10</div>
-    <div class="trend-stat"><span>??</span> Max <span class="trend-stat-value">${maxViral}</span>/10</div>
-    <div class="trend-stat"><span>??</span> <span class="trend-stat-value">${cats.hot || 0}</span></div>
-    <div class="trend-stat"><span>??</span> <span class="trend-stat-value">${cats.pain || 0}</span></div>
-    <div class="trend-stat"><span>??</span> <span class="trend-stat-value">${cats.format || 0}</span></div>
+    <div class="trend-stat"><span>✨</span> Max <span class="trend-stat-value">${maxViral}</span>/10</div>
+    <div class="trend-stat"><span>✨</span> <span class="trend-stat-value">${cats.hot || 0}</span></div>
+    <div class="trend-stat"><span>✨</span> <span class="trend-stat-value">${cats.pain || 0}</span></div>
+    <div class="trend-stat"><span>✨</span> <span class="trend-stat-value">${cats.format || 0}</span></div>
     <div class="trend-stat"><span>?</span> <span class="trend-stat-value">${_trendsSaved.length}</span> сохр</div>
   `;
 }
@@ -5126,9 +5126,9 @@ function _renderTrends() {
   if (!res) return;
 
   const catMeta = {
-    hot:    { icon: '??', label: 'Горячее сегодня',  border: 'border-red-500/30',    bg: 'bg-red-500/5',    badge: 'bg-red-500/20 text-red-400',    glow: 'hover:border-red-500/50' },
-    pain:   { icon: '??', label: 'Вечная боль',       border: 'border-amber-500/30',  bg: 'bg-amber-500/5',  badge: 'bg-amber-500/20 text-amber-400',glow: 'hover:border-amber-500/50' },
-    format: { icon: '??', label: 'Вирусный формат',   border: 'border-violet-500/30', bg: 'bg-violet-500/5', badge: 'bg-violet-500/20 text-violet-400', glow: 'hover:border-violet-500/50' },
+    hot:    { icon: '✨', label: 'Горячее сегодня',  border: 'border-red-500/30',    bg: 'bg-red-500/5',    badge: 'bg-red-500/20 text-red-400',    glow: 'hover:border-red-500/50' },
+    pain:   { icon: '✨', label: 'Вечная боль',       border: 'border-amber-500/30',  bg: 'bg-amber-500/5',  badge: 'bg-amber-500/20 text-amber-400',glow: 'hover:border-amber-500/50' },
+    format: { icon: '✨', label: 'Вирусный формат',   border: 'border-violet-500/30', bg: 'bg-violet-500/5', badge: 'bg-violet-500/20 text-violet-400', glow: 'hover:border-violet-500/50' },
   };
 
   // Filter
@@ -5189,9 +5189,9 @@ function _renderTrends() {
         <div class="flex-1 min-w-0">
           <div class="text-[13px] font-semibold text-white leading-snug">${escapeHtml(t.topic)}</div>
           <div class="flex items-center gap-2 mt-1.5 flex-wrap">
-            ${t.viral_format ? `<span class="text-[9px] text-violet-400/80 bg-violet-500/10 px-1.5 py-0.5 rounded">?? ${escapeHtml(t.viral_format)}</span>` : ''}
+            ${t.viral_format ? `<span class="text-[9px] text-violet-400/80 bg-violet-500/10 px-1.5 py-0.5 rounded">💡 ${escapeHtml(t.viral_format)}</span>` : ''}
             ${t.theme_tag ? `<span class="text-[9px] px-2 py-0.5 rounded-full bg-gray-800/80 text-gray-500 border border-gray-700/50">#${escapeHtml(t.theme_tag)}</span>` : ''}
-            <span class="reach-badge ${reach.color}">?? ${reach.text}</span>
+            <span class="reach-badge ${reach.color}">💡 ${reach.text}</span>
           </div>
         </div>
         <div class="flex flex-col items-end gap-1 flex-shrink-0">
@@ -5208,43 +5208,43 @@ function _renderTrends() {
       <!-- Context: WHY trending -->
       ${(t.trend_context || t.why_trending) ? `
       <div class="text-[11px] text-gray-300 bg-black/30 rounded-lg px-3 py-2 border-l-2 border-cyan-500/30">
-        <span class="text-cyan-400/80 font-semibold">?? Почему сейчас:</span> ${escapeHtml(t.trend_context || t.why_trending)}
+        <span class="text-cyan-400/80 font-semibold">💡 Почему сейчас:</span> ${escapeHtml(t.trend_context || t.why_trending)}
       </div>` : ''}
 
       <!-- Comedy angle -->
-      ${t.comedy_angle ? `<div class="text-[11px] text-gray-400 leading-relaxed"><span class="text-amber-400">??</span> ${escapeHtml(t.comedy_angle)}</div>` : ''}
+      ${t.comedy_angle ? `<div class="text-[11px] text-gray-400 leading-relaxed"><span class="text-amber-400">🎭</span> ${escapeHtml(t.comedy_angle)}</div>` : ''}
 
       <!-- Dialogue block with per-line copy -->
       <div class="trend-dialogue bg-black/40 rounded-xl p-3.5 space-y-2 border border-white/[0.03]">
         <div class="flex items-center justify-between mb-0.5">
-          <div class="text-[10px] text-gray-500 font-semibold">?? Готовый диалог:</div>
+          <div class="text-[10px] text-gray-500 font-semibold">💡 Готовый диалог:</div>
           <div class="flex items-center gap-2">
-            ${t.killer_word ? `<div class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">?? <span class="font-bold">${escapeHtml(t.killer_word)}</span></div>` : ''}
-            <button class="trend-copy-both text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-gray-400 hover:bg-cyan-500/15 hover:text-cyan-400 border border-white/10 transition-colors" data-a="${_escForAttr(t.dialogue_A)}" data-b="${_escForAttr(t.dialogue_B)}" title="Скопировать оба">?? оба</button>
+            ${t.killer_word ? `<div class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">💡 <span class="font-bold">${escapeHtml(t.killer_word)}</span></div>` : ''}
+            <button class="trend-copy-both text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-gray-400 hover:bg-cyan-500/15 hover:text-cyan-400 border border-white/10 transition-colors" data-a="${_escForAttr(t.dialogue_A)}" data-b="${_escForAttr(t.dialogue_B)}" title="Скопировать оба">💡 оба</button>
           </div>
         </div>
         <div class="flex items-start gap-2 group">
           <div class="flex-1 text-[11px]"><span class="text-cyan-400 font-bold">A:</span> <span class="text-gray-200">«${dialogA}»</span></div>
           <div class="flex items-center gap-1 flex-shrink-0">
             <span class="text-[8px] text-gray-600 font-mono">${_wordCount(t.dialogue_A)}сл</span>
-            <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_A)}" title="Скопировать реплику A">??</button>
+            <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_A)}" title="Скопировать реплику A">📋</button>
           </div>
         </div>
         <div class="flex items-start gap-2 group">
           <div class="flex-1 text-[11px]"><span class="text-violet-400 font-bold">B:</span> <span class="text-gray-200">«${dialogB}»</span></div>
           <div class="flex items-center gap-1 flex-shrink-0">
             <span class="text-[8px] ${_wordCount(t.dialogue_B) > 18 ? 'text-red-400' : 'text-gray-600'} font-mono">${_wordCount(t.dialogue_B)}сл</span>
-            <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_B)}" title="Скопировать реплику B">??</button>
+            <button class="trend-copy-line" data-line="${_escForAttr(t.dialogue_B)}" title="Скопировать реплику B">📋</button>
           </div>
         </div>
       </div>
 
-      ${t.share_hook ? `<div class="text-[10px] text-gray-500/80 italic leading-relaxed">?? ${escapeHtml(t.share_hook)}</div>` : ''}
+      ${t.share_hook ? `<div class="text-[10px] text-gray-500/80 italic leading-relaxed">💡 ${escapeHtml(t.share_hook)}</div>` : ''}
 
       <!-- Action buttons -->
       <div class="flex gap-2 flex-wrap pt-0.5">
-        <button class="text-[11px] px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500/15 to-cyan-500/15 text-emerald-300 hover:from-emerald-500/25 hover:to-cyan-500/25 transition-all font-bold border border-emerald-500/25 quick-generate-trend" data-trend-index="${origIdx}" data-category="${_escForAttr(t.category)}" data-topic="${_escForAttr(t.topic)}" data-dialogue-a="${_escForAttr(t.dialogue_A)}" data-dialogue-b="${_escForAttr(t.dialogue_B)}">?? Быстрая генерация <span class="text-[9px] opacity-60">авто-подбор</span></button>
-        <button class="text-[10px] px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-semibold border border-cyan-500/15 trend-use-idea" data-idea="${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}">?? Как идею</button>
+        <button class="text-[11px] px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500/15 to-cyan-500/15 text-emerald-300 hover:from-emerald-500/25 hover:to-cyan-500/25 transition-all font-bold border border-emerald-500/25 quick-generate-trend" data-trend-index="${origIdx}" data-category="${_escForAttr(t.category)}" data-topic="${_escForAttr(t.topic)}" data-dialogue-a="${_escForAttr(t.dialogue_A)}" data-dialogue-b="${_escForAttr(t.dialogue_B)}">💡 Быстрая генерация <span class="text-[9px] opacity-60">авто-подбор</span></button>
+        <button class="text-[10px] px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors font-semibold border border-cyan-500/15 trend-use-idea" data-idea="${_escForAttr(t.topic + ': ' + (t.comedy_angle || ''))}">💡 Как идею</button>
         <button class="text-[10px] px-3 py-1.5 rounded-lg bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 transition-colors font-semibold border border-violet-500/15 trend-use-script" data-a="${_escForAttr(t.dialogue_A)}" data-b="${_escForAttr(t.dialogue_B)}">? Вставить диалог</button>
       </div>
     </div>`;
@@ -5260,7 +5260,7 @@ function useTrendAsIdea(topic) {
   if (customInput) customInput.value = topic;
   selectGenerationMode('idea');
   navigateTo('characters');
-  showNotification(`?? Идея выбрана! Теперь выбери персонажей`, 'info');
+  showNotification(`📌 Идея выбрана! Теперь выбери персонажей`, 'info');
   log('OK', 'ТРЕНД>ИДЕЯ', topic.slice(0, 60));
 }
 
@@ -5271,7 +5271,7 @@ function useTrendAsScript(dialogueA, dialogueB) {
   if (b) b.value = dialogueB;
   selectGenerationMode('script');
   navigateTo('characters');
-  showNotification(`?? Диалог вставлен! Теперь выбери персонажей`, 'info');
+  showNotification(`📌 Диалог вставлен! Теперь выбери персонажей`, 'info');
   log('OK', 'ТРЕНД>СКРИПТ', `A: ${dialogueA.slice(0, 30)}…`);
 }
 
@@ -5298,11 +5298,11 @@ async function quickGenerateFromTrend(category, topic, dialogueA, dialogueB) {
     notice.innerHTML = `
       <div class="glass-panel p-4 border-l-2 border-emerald-500/40 space-y-2">
         <div class="flex items-center justify-between">
-          <div class="text-sm font-semibold text-emerald-400">?? Автоматически подобрано</div>
-          <button onclick="navigateTo('characters')" class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">?? Изменить выбор</button>
+          <div class="text-sm font-semibold text-emerald-400">💡 Автоматически подобрано</div>
+          <button onclick="navigateTo('characters')" class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">💡 Изменить выбор</button>
         </div>
         <div class="text-xs text-gray-300">
-          <div class="mb-1">?? <span class="text-violet-300 font-medium">${state.selectedA.name_ru}</span> ? <span class="text-indigo-300 font-medium">${state.selectedB.name_ru}</span></div>
+          <div class="mb-1">💡 <span class="text-violet-300 font-medium">${state.selectedA.name_ru}</span> ? <span class="text-indigo-300 font-medium">${state.selectedB.name_ru}</span></div>
           <div class="text-[11px] text-gray-500">AI выбрал эту пару как наиболее подходящую для категории "${category}" — ${state.selectedA.compatibility} + ${state.selectedB.compatibility} = контрастная динамика</div>
         </div>
       </div>
@@ -5327,7 +5327,7 @@ function initTrends() {
       await quickGenerateFromTrend(category || '', topic || '', dialogueA || '', dialogueB || '');
       qgBtn.disabled = false;
       qgBtn.innerHTML = '? Готово!';
-      setTimeout(() => { qgBtn.innerHTML = '?? Быстрая генерация <span class="text-[9px] opacity-60">авто-подбор</span>'; }, 2000);
+      setTimeout(() => { qgBtn.innerHTML = '📌 Быстрая генерация <span class="text-[9px] opacity-60">авто-подбор</span>'; }, 2000);
       return;
     }
 
@@ -5355,7 +5355,7 @@ function initTrends() {
       navigator.clipboard.writeText(`A: «${a}»\nB: «${b}»`).then(() => {
         sfx.copy();
         copyBothBtn.textContent = '? скопировано';
-        setTimeout(() => { copyBothBtn.innerHTML = '?? оба'; }, 1400);
+        setTimeout(() => { copyBothBtn.innerHTML = '📌 оба'; }, 1400);
       });
       return;
     }
@@ -5367,7 +5367,7 @@ function initTrends() {
       navigator.clipboard.writeText(line).then(() => {
         sfx.copy();
         copyBtn.textContent = '?';
-        setTimeout(() => { copyBtn.textContent = '??'; }, 1200);
+        setTimeout(() => { copyBtn.textContent = '✨'; }, 1200);
       });
       return;
     }
@@ -5416,23 +5416,23 @@ function renderLocationsBrowse(filterGroup = '') {
   const autoSelB = !state.selectedLocation;
   grid.innerHTML = `
     <div class="loc-card ${autoSelB ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="">
-      <div class="text-sm">??</div>
+      <div class="text-sm"></div>
       <div class="text-[11px] font-medium text-violet-300">Авто</div>
       <div class="text-[10px] text-gray-500 mb-2">AI подберёт</div>
-      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${autoSelB ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="">${autoSelB ? '? Выбрано' : '?? Выбрать'}</button>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border ${autoSelB ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="">${autoSelB ? '? Выбрано' : '📌 Выбрать'}</button>
     </div>
   ` + locs.map(l => {
     const sel = state.selectedLocation === l.id;
-    const moodIcon = l.mood === 'nostalgic warmth' ? '??' : l.mood === 'sterile tension' ? '??' : l.mood === 'organic chaos' ? '??' : l.mood === 'dramatic intimacy' ? '???' : '??';
+    const moodIcon = l.mood === 'nostalgic warmth' ? '✨' : l.mood === 'sterile tension' ? '✨' : l.mood === 'organic chaos' ? '✨' : l.mood === 'dramatic intimacy' ? '🅰️' : '✨';
     return `
     <div class="loc-card ${sel ? 'selected ring-2 ring-violet-500' : ''}" data-loc-id="${l.id}">
       <div class="text-sm">${moodIcon}</div>
       <div class="text-[11px] font-medium text-white leading-tight">${l.numeric_id ? `<span class="text-[9px] text-gray-500 font-mono mr-1">#${l.numeric_id}</span>` : ''}${l.name_ru}</div>
       <div class="text-[10px] text-gray-500 leading-snug">${l.tagline_ru}</div>
       ${l.tags ? `<div class="flex gap-1 flex-wrap mt-1">${l.tags.slice(0, 3).map(t => `<span class="text-[8px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">${t}</span>`).join('')}</div>` : ''}
-      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border mt-2 ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '? Выбрано' : '?? Выбрать'}</button>
+      <button class="select-loc w-full py-2 rounded-lg text-[11px] font-bold transition-all border mt-2 ${sel ? 'bg-violet-600 text-white border-violet-500 shadow-lg shadow-violet-500/20' : 'bg-violet-600/10 text-violet-300 border-violet-500/20 hover:bg-violet-600/25 hover:border-violet-500/40'}" data-loc-id="${l.id}">${sel ? '? Выбрано' : '📌 Выбрать'}</button>
       <button class="copy-loc-prompt text-[9px] px-2 py-1 rounded-md font-medium transition-all bg-gold/10 text-gold hover:bg-gold/20 border border-gold/30 w-full mt-1.5 flex items-center justify-center gap-1" data-id="${l.id}" title="Скопировать детализированный промпт для Veo">
-        <span>??</span> Промпт
+        <span>📝</span> Промпт
       </button>
     </div>`;
   }).join('');
@@ -5448,7 +5448,7 @@ function updateLocationBrowseInfo() {
   if (!loc) { info.classList.add('hidden'); return; }
   info.classList.remove('hidden');
   const tags = (loc.tags || []).map(t => `<span class="tag text-[10px]">${t}</span>`).join(' ');
-  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium text-sm">?? ${loc.name_ru}</span>${tags}</div><div class="text-xs text-gray-400 mt-1">${loc.tagline_ru}</div>${loc.audio_hints ? `<div class="text-[10px] text-gray-500 mt-1">?? ${loc.audio_hints}</div>` : ''}`;
+  info.innerHTML = `<div class="flex items-center gap-2 flex-wrap"><span class="text-violet-400 font-medium text-sm">💡 ${loc.name_ru}</span>${tags}</div><div class="text-xs text-gray-400 mt-1">${loc.tagline_ru}</div>${loc.audio_hints ? `<div class="text-[10px] text-gray-500 mt-1">💡 ${loc.audio_hints}</div>` : ''}`;
 }
 
 function initLocationsBrowse() {
@@ -5492,7 +5492,7 @@ function initLocationsBrowse() {
     state.selectedLocation = rand.id;
     renderLocationsBrowse(filtered || '');
     renderLocations(document.getElementById('loc-group-filter')?.value || '');
-    log('INFO', 'ЛОКАЦИЯ', `?? Случайная: ${rand.name_ru}`);
+    log('INFO', 'ЛОКАЦИЯ', `🎲 Случайная: ${rand.name_ru}`);
   });
 }
 
@@ -5505,7 +5505,7 @@ document.addEventListener('keydown', (e) => {
     if (btn && !btn.disabled) {
       btn.click();
     } else if (btn && btn.disabled) {
-      showNotification('?? Заполните все обязательные поля перед генерацией (см. чеклист)', 'warning');
+      showNotification('⚠️ Заполните все обязательные поля перед генерацией (см. чеклист)', 'warning');
       navigateTo('generate');
     }
   }
@@ -5573,10 +5573,10 @@ function initConsultation() {
       if (text) {
         navigator.clipboard.writeText(text).then(() => {
           copyBtn.textContent = '? Скопировано';
-          setTimeout(() => { copyBtn.textContent = '?? Копировать'; }, 1500);
+          setTimeout(() => { copyBtn.textContent = '📌 Копировать'; }, 1500);
         }).catch(() => {
           copyBtn.textContent = '? Не удалось';
-          setTimeout(() => { copyBtn.textContent = '?? Копировать'; }, 1500);
+          setTimeout(() => { copyBtn.textContent = '📌 Копировать'; }, 1500);
         });
       }
     });
@@ -5586,7 +5586,7 @@ function initConsultation() {
   btn.addEventListener('click', async () => {
     const question = input.value.trim();
     if (!question || question.length < 3) {
-      if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-orange-400">?? Напишите вопрос (минимум 3 символа)</span>'; }
+      if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-orange-400">💡 Напишите вопрос (минимум 3 символа)</span>'; }
       return;
     }
 
@@ -5594,8 +5594,8 @@ function initConsultation() {
     if (_typeTimer) { clearInterval(_typeTimer); _typeTimer = null; }
 
     btn.disabled = true;
-    btn.innerHTML = '<span class="animate-pulse">??</span> Пишет...';
-    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-emerald-400 animate-pulse">?? Думаю...</span>'; }
+    btn.innerHTML = '<span class="animate-pulse">💭</span> Пишет...';
+    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.innerHTML = '<span class="text-emerald-400 animate-pulse">💡 Думаю...</span>'; }
     if (responseArea) responseArea.classList.add('hidden');
 
     // Build context from current app state
@@ -5645,7 +5645,7 @@ function initConsultation() {
             let html = responseEl.textContent
               .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
               .replace(/\*\*(.+?)\*\*/g, '<strong class="text-amber-300">$1</strong>')
-              .replace(/^[•??] (.+)$/gm, '<li class="ml-3">$1</li>')
+              .replace(/^[•?\u2022\u2728] (.+)$/gm, '<li class="ml-3">$1</li>')
               .replace(/^- (.+)$/gm, '<li class="ml-3">$1</li>')
               .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-3"><strong class="text-amber-400/70">$1.</strong> $2</li>')
               .replace(/((?:<li[^>]*>.*<\/li>\n?)+)/g, '<ul class="space-y-1 my-1.5">$1</ul>')
@@ -5665,7 +5665,7 @@ function initConsultation() {
         const histItem = document.createElement('div');
         histItem.className = 'rounded-lg p-3 space-y-1.5 border border-gray-800/30 bg-black/20 opacity-50';
         histItem.innerHTML = `
-          <div class="text-[10px] text-gray-500 font-medium">?? ${escapeHtml(question)}</div>
+          <div class="text-[10px] text-gray-500 font-medium">💡 ${escapeHtml(question)}</div>
           <div class="text-[11px] text-gray-500 leading-relaxed line-clamp-3">${escapeHtml(data.answer).slice(0, 300)}${data.answer.length > 300 ? '...' : ''}</div>
         `;
         historyEl.prepend(histItem);
@@ -5683,7 +5683,7 @@ function initConsultation() {
       log('ERR', 'ПОМОЩНИК', e.message);
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<span>??</span> Спросить';
+      btn.innerHTML = '<span>✨</span> Спросить';
     }
   });
 
@@ -5713,7 +5713,7 @@ function saveCurrentState(silent = false) {
       timestamp: Date.now()
     };
     localStorage.setItem('ferixdi_saved_state', JSON.stringify(stateToSave));
-    if (!silent) showNotification('?? Состояние сохранено', 'success');
+    if (!silent) showNotification('✅ Состояние сохранено', 'success');
   } catch { /* ignore quota errors */ }
 }
 
@@ -5734,7 +5734,7 @@ function resetToDefaults() {
   state.options = { enforce8s: true, preserveRhythm: true, strictLipSync: true, allowAutoTrim: false };
   localStorage.removeItem('ferixdi_saved_state');
   navigateTo('generation-mode');
-  showNotification('?? Сброс выполнен', 'info');
+  showNotification('ℹ️ Сброс выполнен', 'info');
 }
 
 // Load saved state on startup (restores state fields; UI restore deferred to _restoreDraftUI)
@@ -5747,9 +5747,9 @@ function loadSavedState() {
     if (age > 24 * 60 * 60 * 1000) return; // expire after 24h
 
     // Restore simple state fields
-    state.selectedLocation = d.selectedLocation ?? null;
-    state.generationMode = d.generationMode ?? null;
-    state.inputMode = d.inputMode ?? 'idea';
+    state.selectedLocation = d.selectedLocation • null;
+    state.generationMode = d.generationMode • null;
+    state.inputMode = d.inputMode • 'idea';
     if (d.options) state.options = { ...state.options, ...d.options };
 
     // Store IDs + text for deferred UI restore (characters may not be loaded yet)
@@ -5845,7 +5845,7 @@ function updateProgress() {
   const modeBorder = modeStep?.querySelector('.w-4');
   
   if (state.generationMode) {
-    const modeNames = { idea: '?? Своя идея', suggested: '?? Готовые идеи', script: '?? Свой диалог', video: '?? По видео' };
+    const modeNames = { idea: '📌 Своя идея', suggested: '📌 Готовые идеи', script: '📌 Свой диалог', video: '🎬 По видео' };
     if (modeValue) modeValue.textContent = modeNames[state.generationMode] || state.generationMode;
     if (modeCheck) { modeCheck.classList.remove('hidden', 'bg-gray-700'); modeCheck.classList.add('bg-emerald-500'); }
     if (modeBorder) { modeBorder.classList.remove('border-gray-700'); modeBorder.classList.add('border-emerald-500'); }
@@ -6028,16 +6028,16 @@ function generateCharacterPrompt(charId) {
   
   // Build detailed character prompt for Veo
   const prompt = `CHARACTER PROMPT FOR VEO 3.1
-???????????????????????????????
+═══════════════
 
-?? БАЗОВАЯ ИНФОРМАЦИЯ
+📋 БАЗОВАЯ ИНФОРМАЦИЯ
 Имя: ${char.name_ru} (${char.name_en || char.id})
 Группа: ${char.group}
 Архетип: ${char.vibe_archetype || 'не указан'}
-Роль по умолчанию: ${char.role_default === 'A' ? '??? Провокатор' : '??? Панчлайнер'}
+Роль по умолчанию: ${char.role_default === 'A' ? '🅰️ Провокатор' : '🅱️ Панчлайнер'}
 Совместимость: ${char.compatibility}
 
-?? ВИЗУАЛЬНОЕ ОПИСАНИЕ
+🎨 ВИЗУАЛЬНОЕ ОПИСАНИЕ
 ${tokens.character_en || char.appearance_ru || 'не указано'}
 
 ? КЛЮЧЕВЫЕ ЭЛЕМЕНТЫ ИДЕНТИФИКАЦИИ
@@ -6046,22 +6046,22 @@ ${tokens.character_en || char.appearance_ru || 'не указано'}
 Микро-жест: ${anchors.micro_gesture || 'не указан'}
 Гардероб-якорь: ${anchors.wardrobe_anchor || 'не указан'}
 
-?? РЕЧЬ И ПОВЕДЕНИЕ
+🗣️ РЕЧЬ И ПОВЕДЕНИЕ
 Стиль речи: ${char.speech_style_ru || 'не указан'}
 Темп речи: ${char.speech_pace || 'normal'} (${char.speech_pace === 'fast' ? '~3.5 слов/сек' : char.speech_pace === 'slow' ? '~2.0 слов/сек' : '~2.5-3.0 слов/сек'})
 Уровень мата: ${char.swear_level || 0}/3
 Поведение: ${char.behavior_ru || 'не указано'}
 Фирменные слова: ${(char.signature_words_ru || []).join(', ') || 'не указаны'}
 
-?? МОДИФИКАТОРЫ ДЛЯ ВИДЕО
+🎬 МОДИФИКАТОРЫ ДЛЯ ВИДЕО
 Хук-стиль: ${modifiers.hook_style || 'не указан'}
 Стиль смеха: ${modifiers.laugh_style || 'не указан'}
 
-?? ЭСТЕТИКА МИРА
+✨ ЭСТЕТИКА МИРА
 ${char.world_aesthetic || 'универсальная'}
 
-???????????????????????????????
-?? PROMPT ДЛЯ VEO (Английский):
+═══════════════
+📝 PROMPT ДЛЯ VEO (Английский):
 ${tokens.character_en || 'Character description not available'}
 
 Format: 9:16 vertical, 1080p, hyperrealistic smartphone capture, natural skin pores and imperfections, cinematic lighting, shallow depth of field.`;
@@ -6085,31 +6085,31 @@ function generateLocationPrompt(locId) {
   if (!loc) return '';
   
   const prompt = `LOCATION PROMPT FOR VEO 3.1
-???????????????????????????????
+═══════════════
 
-?? БАЗОВАЯ ИНФОРМАЦИЯ
+📋 БАЗОВАЯ ИНФОРМАЦИЯ
 Название: ${loc.name_ru} (${loc.name_en || loc.id})
 Группа: ${loc.group}
 Теги: ${(loc.tags || []).join(', ')}
 Описание: ${loc.tagline_ru || 'не указано'}
 
-?? ДЕТАЛЬНОЕ ОПИСАНИЕ СЦЕНЫ (English)
+📖 ДЕТАЛЬНОЕ ОПИСАНИЕ СЦЕНЫ (English)
 ${loc.scene_en || 'Scene description not available'}
 
-?? ОСВЕЩЕНИЕ
+💡 ОСВЕЩЕНИЕ
 ${loc.lighting || 'не указано'}
 
-?? НАСТРОЕНИЕ
+🎵 НАСТРОЕНИЕ
 ${loc.mood || 'не указано'}
 
-?? ЗВУКОВЫЕ ПОДСКАЗКИ
+🎶 ЗВУКОВЫЕ ПОДСКАЗКИ
 ${loc.audio_hints || 'не указаны'}
 
-?? РЕКОМЕНДУЕМЫЕ КАТЕГОРИИ
+🎯 РЕКОМЕНДУЕМЫЕ КАТЕГОРИИ
 ${(loc.category_hints || []).join(', ') || 'универсальная'}
 
-???????????????????????????????
-?? PROMPT ДЛЯ VEO (Английский):
+═══════════════
+📝 PROMPT ДЛЯ VEO (Английский):
 ${loc.scene_en || 'Location description not available'}
 
 Lighting: ${loc.lighting || 'natural'}
@@ -6198,7 +6198,7 @@ function renderSeriesList() {
         <div class="flex items-center justify-between">
           <div class="text-sm font-semibold text-amber-400">${escapeHtml(s.name)}</div>
           <div class="flex gap-2">
-            ${epCount > 0 ? `<button class="series-eps-btn text-[10px] px-3 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors" data-idx="${i}">?? ${epCount} эп.</button>` : ''}
+            ${epCount > 0 ? `<button class="series-eps-btn text-[10px] px-3 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors" data-idx="${i}">💡 ${epCount} эп.</button>` : ''}
             <button class="series-gen-btn text-[10px] px-3 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition-colors" data-idx="${i}">? Новый эпизод</button>
             <button class="series-del-btn text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors" data-idx="${i}">?</button>
           </div>
@@ -6309,44 +6309,44 @@ function renderEpisodeCard(ep, num, dateStr, uid) {
       <div class="px-3 py-1.5 text-[11px] text-gray-300 border-b border-gray-800/40">
         <span class="text-cyan-400">A:</span> «${escapeHtml(dA.length > 60 ? dA.slice(0, 60) + '...' : dA)}»
         ${dB ? `<span class="ml-2 text-violet-400">B:</span> «${escapeHtml(dB.length > 60 ? dB.slice(0, 60) + '...' : dB)}»` : ''}
-        ${kw ? `<span class="ml-2 text-amber-400">?? ${escapeHtml(kw)}</span>` : ''}
+        ${kw ? `<span class="ml-2 text-amber-400">💡 ${escapeHtml(kw)}</span>` : ''}
       </div>
       <div class="ep-body hidden p-3 space-y-2">
         ${hasVeo ? `<div class="space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider">?? Veo промпт</span>
-            <button class="ep-copy-btn text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors" data-copy="${veoSafe}">?? Копировать</button>
+            <span class="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider">💡 Veo промпт</span>
+            <button class="ep-copy-btn text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors" data-copy="${veoSafe}">💡 Копировать</button>
           </div>
           <pre class="text-[10px] text-gray-400 bg-black/30 rounded p-2 max-h-32 overflow-y-auto whitespace-pre-wrap break-words leading-relaxed">${escapeHtml(ep.veo_prompt?.slice(0, 500))}${ep.veo_prompt?.length > 500 ? '...' : ''}</pre>
         </div>` : '<div class="text-[10px] text-gray-600 italic">? Промпт не сохранён (старый эпизод)</div>'}
         ${hasRu ? `<div class="space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-[9px] text-blue-400 font-semibold uppercase tracking-wider">???? Пост</span>
-            <button class="ep-copy-btn text-[9px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors" data-copy="${ruSafe}">?? Копировать</button>
+            <span class="text-[9px] text-blue-400 font-semibold uppercase tracking-wider">✏️ Пост</span>
+            <button class="ep-copy-btn text-[9px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors" data-copy="${ruSafe}">💡 Копировать</button>
           </div>
           <pre class="text-[10px] text-gray-400 bg-black/30 rounded p-2 max-h-32 overflow-y-auto whitespace-pre-wrap break-words leading-relaxed">${escapeHtml(ep.ru_package?.slice(0, 300))}${ep.ru_package?.length > 300 ? '...' : ''}</pre>
         </div>` : ''}
         ${hasInsta ? `<div class="space-y-1.5">
-          <span class="text-[9px] text-pink-400 font-semibold uppercase tracking-wider">?? Инста-пакет</span>
+          <span class="text-[9px] text-pink-400 font-semibold uppercase tracking-wider">💡 Инста-пакет</span>
           ${viralTitle ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
-            <div><span class="text-[9px] text-amber-400">?? Заголовок:</span> <span class="text-[10px] text-gray-300">${escapeHtml(viralTitle)}</span></div>
-            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors" data-copy="${escapeHtml(viralTitle)}">??</button>
+            <div><span class="text-[9px] text-amber-400">💡 Заголовок:</span> <span class="text-[10px] text-gray-300">${escapeHtml(viralTitle)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors" data-copy="${escapeHtml(viralTitle)}">✨</button>
           </div>` : ''}
           ${shareBait ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
-            <div><span class="text-[9px] text-orange-400">?? Описание:</span> <span class="text-[10px] text-gray-300">${escapeHtml(shareBait.length > 80 ? shareBait.slice(0, 80) + '...' : shareBait)}</span></div>
-            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 transition-colors" data-copy="${escapeHtml(shareBait)}">??</button>
+            <div><span class="text-[9px] text-orange-400">💡 Описание:</span> <span class="text-[10px] text-gray-300">${escapeHtml(shareBait.length > 80 ? shareBait.slice(0, 80) + '...' : shareBait)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 transition-colors" data-copy="${escapeHtml(shareBait)}">✨</button>
           </div>` : ''}
           ${caption ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
-            <div><span class="text-[9px] text-pink-400">?? Caption:</span> <span class="text-[10px] text-gray-300">${escapeHtml(caption.length > 80 ? caption.slice(0, 80) + '...' : caption)}</span></div>
-            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-400 hover:bg-pink-500/20 transition-colors" data-copy="${escapeHtml(caption)}">??</button>
+            <div><span class="text-[9px] text-pink-400">💡 Caption:</span> <span class="text-[10px] text-gray-300">${escapeHtml(caption.length > 80 ? caption.slice(0, 80) + '...' : caption)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-400 hover:bg-pink-500/20 transition-colors" data-copy="${escapeHtml(caption)}">✨</button>
           </div>` : ''}
           ${hashtags ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
             <div><span class="text-[9px] text-cyan-400">#</span> <span class="text-[10px] text-gray-400">${escapeHtml(hashtags.length > 80 ? hashtags.slice(0, 80) + '...' : hashtags)}</span></div>
-            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors" data-copy="${escapeHtml(hashtags)}">??</button>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors" data-copy="${escapeHtml(hashtags)}">✨</button>
           </div>` : ''}
           ${pinComment ? `<div class="flex items-center justify-between bg-black/20 rounded px-2 py-1.5">
-            <div><span class="text-[9px] text-rose-400">?? Закреп:</span> <span class="text-[10px] text-gray-300">${escapeHtml(pinComment.length > 80 ? pinComment.slice(0, 80) + '...' : pinComment)}</span></div>
-            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors" data-copy="${escapeHtml(pinComment)}">??</button>
+            <div><span class="text-[9px] text-rose-400">💡 Закреп:</span> <span class="text-[10px] text-gray-300">${escapeHtml(pinComment.length > 80 ? pinComment.slice(0, 80) + '...' : pinComment)}</span></div>
+            <button class="ep-copy-btn text-[8px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors" data-copy="${escapeHtml(pinComment)}">✨</button>
           </div>` : ''}
         </div>` : ''}
       </div>
@@ -6354,7 +6354,7 @@ function renderEpisodeCard(ep, num, dateStr, uid) {
 }
 
 function createSeries() {
-  if (!isPromoValid()) { showNotification('?? Нужен промо-код', 'error'); return; }
+  if (!isPromoValid()) { showNotification('❌ Нужен промо-код', 'error'); return; }
 
   const name = document.getElementById('series-name-input')?.value.trim();
   const charA = document.getElementById('series-char-a')?.value;
@@ -6372,7 +6372,7 @@ function createSeries() {
   document.getElementById('series-name-input').value = '';
   document.getElementById('series-style-input').value = '';
   renderSeriesList();
-  showNotification(`?? Серия "${name}" создана!`, 'success');
+  showNotification(`📌 Серия "${name}" создана!`, 'success');
   log('OK', 'SERIES', `Создана серия: ${name}`);
 }
 
@@ -6390,7 +6390,7 @@ function generateFromSeries(idx) {
   const s = series[idx];
   if (!s) return;
 
-  if (!isPromoValid()) { showNotification('?? Нужен промо-код', 'error'); return; }
+  if (!isPromoValid()) { showNotification('❌ Нужен промо-код', 'error'); return; }
 
   selectChar('A', s.charA_id);
   selectChar('B', s.charB_id);
@@ -6407,7 +6407,7 @@ function generateFromSeries(idx) {
 
   navigateTo('generate');
   updateReadiness?.();
-  showNotification(`?? Серия "${s.name}" — создаём новый эпизод`, 'success');
+  showNotification(`📌 Серия "${s.name}" — создаём новый эпизод`, 'success');
 }
 
 function populateSeriesSelects() {
@@ -6482,7 +6482,7 @@ function renderHistory() {
     return;
   }
 
-  const _modeIcons = { idea: '??', script: '??', video: '??', suggested: '??', solo: '??', duo: '??' };
+  const _modeIcons = { idea: '✨', script: '✨', video: '🎬', suggested: '✨', solo: '✨', duo: '✨' };
   list.innerHTML = indexed.slice().reverse().map(({ ep, origIdx }) => {
     const dt = new Date(ep.ts);
     const dateStr = dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
@@ -6756,10 +6756,10 @@ const _SURPRISE_TWISTS = [
 // --- SURPRISE BUTTON v3 (full-cycle anti-repeat + unique topics) -
 function initSurprise() {
   document.getElementById('btn-surprise')?.addEventListener('click', () => {
-    if (!isPromoValid()) { showNotification('?? Нужен промо-код для генерации', 'error'); navigateTo('settings'); return; }
+    if (!isPromoValid()) { showNotification('❌ Нужен промо-код для генерации', 'error'); navigateTo('settings'); return; }
 
     const chars = state.characters;
-    if (!chars || chars.length < 2) { showNotification('?? Персонажи не загружены', 'error'); return; }
+    if (!chars || chars.length < 2) { showNotification('❌ Персонажи не загружены', 'error'); return; }
 
     // -- FULL-CYCLE ANTI-REPEAT: use ALL presets before ANY can repeat --
     if (_lastSurpriseIndices.length >= VIRAL_SURPRISE_PRESETS.length) {
@@ -6830,8 +6830,8 @@ function initSurprise() {
     navigateTo('generate');
     updateReadiness?.();
 
-    const shareHint = preset.share ? ` | ?? ${preset.share}` : '';
-    showNotification(`?? ${nameA} ? ${nameB}: "${preset.topic.slice(0, 50)}..."${shareHint}`, 'success');
+    const shareHint = preset.share ? ` | • ${preset.share}` : '';
+    showNotification(`📌 ${nameA} ? ${nameB}: "${preset.topic.slice(0, 50)}..."${shareHint}`, 'success');
     log('OK', 'VIRAL_SURPRISE', `#${idx}/${VIRAL_SURPRISE_PRESETS.length} [${_lastSurpriseIndices.length}/${VIRAL_SURPRISE_PRESETS.length} used] uid:${uid} | "${preset.topic}" | ${nameA} ? ${nameB} | Кат: ${preset.cat}`);
   });
 }
@@ -6847,7 +6847,7 @@ function populateStoryboard(result) {
   const ctx = result._apiContext || {};
   const dialogueA = lineA?.text_ru || ctx.dialogueA || result.dialogue_A_ru || '—';
   const dialogueB = lineB?.text_ru || ctx.dialogueB || result.dialogue_B_ru || '—';
-  const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || result.killer_word || '??';
+  const killerWord = result.blueprint_json?.killer_word || ctx.killerWord || result.killer_word || '✨';
 
   document.getElementById('sb-line-a').textContent = dialogueA;
   document.getElementById('sb-line-b').textContent = dialogueB;
@@ -6878,7 +6878,7 @@ async function generateABVariants() {
   try {
     const apiBase = localStorage.getItem('ferixdi_api_url') || DEFAULT_API_URL;
     const token = localStorage.getItem('ferixdi_jwt');
-    if (!token) { showNotification('?? Нет токена авторизации', 'error'); return; }
+    if (!token) { showNotification('❌ Нет токена авторизации', 'error'); return; }
     const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
 
     const ctx = state.lastResult._apiContext;
@@ -6934,9 +6934,9 @@ async function generateABVariants() {
       <div class="p-3 rounded-lg border ${v.active ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-gray-700 hover:border-amber-500/30'} cursor-pointer transition-colors ab-variant-card" data-idx="${i}">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-[10px] font-bold ${v.active ? 'text-emerald-400' : 'text-amber-400'}">${v.label} ${v.active ? '?' : ''}</span>
-          ${v.killer ? `<span class="text-[9px] text-pink-400">?? ${escapeHtml(v.killer)}</span>` : ''}
+          ${v.killer ? `<span class="text-[9px] text-pink-400">💡 ${escapeHtml(v.killer)}</span>` : ''}
         </div>
-        <div class="text-[11px] text-cyan-300 mb-0.5">${abSolo ? '??' : 'A:'} ${escapeHtml(v.a)}</div>
+        <div class="text-[11px] text-cyan-300 mb-0.5">${abSolo ? '✨' : 'A:'} ${escapeHtml(v.a)}</div>
         ${!abSolo ? `<div class="text-[11px] text-violet-300">B: ${escapeHtml(v.b)}</div>` : ''}
         ${!v.active ? `<button class="ab-select-btn mt-1.5 text-[9px] px-2 py-1 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors" data-idx="${i}">? Выбрать этот</button>` : ''}
       </div>
@@ -6959,7 +6959,7 @@ async function generateABVariants() {
           const vp = state.lastResult.video_prompt_en_json;
           if (vp?.dialogue) vp.dialogue.killer_word = v.killer;
           const kwEl = document.getElementById('gen-killer-word');
-          if (kwEl) kwEl.textContent = `?? killer word: ${v.killer}`;
+          if (kwEl) kwEl.textContent = `📌 killer word: ${v.killer}`;
           // Patch killer word in veo prompt & ru_package
           if (prevKw && prevKw !== v.killer && state.lastResult.veo_prompt) {
             let veo = state.lastResult.veo_prompt;
@@ -6997,7 +6997,7 @@ async function generateABVariants() {
   } catch (err) {
     showNotification(`Ошибка: ${err.message}`, 'error');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '?? Ещё 3 варианта'; }
+    if (btn) { btn.disabled = false; btn.textContent = '📌 Ещё 3 варианта'; }
   }
 }
 
@@ -7028,7 +7028,7 @@ function initCharConstructor() {
 }
 
 async function createCustomCharacter() {
-  if (!isPromoValid()) { showCCStatus('?? Нужен промо-код', 'text-amber-400'); return; }
+  if (!isPromoValid()) { showCCStatus('📌 Нужен промо-код', 'text-amber-400'); return; }
 
   const nameRu = document.getElementById('cc-name-ru')?.value.trim();
   const group = document.getElementById('cc-group')?.value;
@@ -7155,7 +7155,7 @@ async function createCustomCharacter() {
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        showCCStatus(err.error || '?? Ошибка валидации промо-кода на сервере', 'text-red-400');
+        showCCStatus(err.error || '📌 Ошибка валидации промо-кода на сервере', 'text-red-400');
         log('ERR', 'CHAR-CREATE', `Сервер отклонил: ${err.error || resp.status}`);
         return;
       }
@@ -7221,7 +7221,7 @@ function initLocConstructor() {
 }
 
 async function createCustomLocation() {
-  if (!isPromoValid()) { showLCStatus('?? Нужен промо-код', 'text-amber-400'); return; }
+  if (!isPromoValid()) { showLCStatus('📌 Нужен промо-код', 'text-amber-400'); return; }
 
   const nameRu = document.getElementById('lc-name-ru')?.value.trim();
   const group = document.getElementById('lc-group')?.value;
@@ -7263,7 +7263,7 @@ async function createCustomLocation() {
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        showLCStatus(err.error || '?? Ошибка валидации промо-кода на сервере', 'text-red-400');
+        showLCStatus(err.error || '📌 Ошибка валидации промо-кода на сервере', 'text-red-400');
         log('ERR', 'LOC-CREATE', `Сервер отклонил: ${err.error || resp.status}`);
         return;
       }
@@ -7290,7 +7290,7 @@ async function createCustomLocation() {
   document.getElementById('lc-mood').value = '';
 
   showLCStatus(`? Локация #${newLoc.numeric_id} "${nameRu}" создана!`, 'text-emerald-400');
-  showNotification(`?? Локация #${newLoc.numeric_id} "${nameRu}" добавлена`, 'success');
+  showNotification(`📌 Локация #${newLoc.numeric_id} "${nameRu}" добавлена`, 'success');
   log('OK', 'LOC-CREATE', `Создана: #${newLoc.numeric_id} ${nameRu} (${id})`);
 }
 
@@ -7398,7 +7398,7 @@ function renderEducation() {
 
     const scheduleEl = document.getElementById('edu-pub-schedule');
     if (scheduleEl && pg.schedule_by_geo) {
-      scheduleEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">?? Лучшее время по регионам:</div>' +
+      scheduleEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">💡 Лучшее время по регионам:</div>' +
         pg.schedule_by_geo.map(g =>
           `<div class="bg-amber-500/5 rounded-lg p-3 border border-amber-500/10"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-amber-200 font-semibold">${g.geo}</span><span class="text-[10px] text-amber-400 font-bold">Пик: ${g.peak}</span></div><div class="text-[10px] text-gray-400">Окна: ${g.best_times.join(' · ')}</div><div class="text-[10px] text-gray-500 mt-1">${g.why}</div></div>`
         ).join('');
@@ -7406,7 +7406,7 @@ function renderEducation() {
 
     const freqEl = document.getElementById('edu-pub-frequency');
     if (freqEl && pg.frequency_rules) {
-      freqEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">?? Частота публикаций:</div>' +
+      freqEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">💡 Частота публикаций:</div>' +
         pg.frequency_rules.map(f => {
           const color = f.level.includes('Оптимум') ? 'emerald' : f.level.includes('Агрессивный') ? 'red' : 'gray';
           return `<div class="bg-${color}-500/5 rounded-lg p-3 border border-${color}-500/10"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-${color}-300 font-semibold">${f.level}</span><span class="text-[10px] text-${color}-400 font-bold">${f.posts_per_week} / нед</span></div><div class="text-[10px] text-gray-400">${f.posts_per_day}</div><div class="text-[10px] text-gray-500 mt-1">${f.note}</div></div>`;
@@ -7415,7 +7415,7 @@ function renderEducation() {
 
     const algoEl = document.getElementById('edu-pub-algorithm');
     if (algoEl && pg.algorithm_rules) {
-      algoEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">?? Как работает алгоритм:</div>' +
+      algoEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">💡 Как работает алгоритм:</div>' +
         pg.algorithm_rules.map(r =>
           `<div class="flex items-start gap-2 text-[10px] text-gray-400 leading-relaxed"><span class="text-amber-400 mt-0.5 flex-shrink-0">></span><span>${r}</span></div>`
         ).join('');
@@ -7423,7 +7423,7 @@ function renderEducation() {
 
     const missedEl = document.getElementById('edu-pub-missed');
     if (missedEl && pg.missed_day_protocol) {
-      missedEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">?? Пропустил день — что делать:</div>' +
+      missedEl.innerHTML = '<div class="text-[10px] text-amber-400 font-semibold mb-1">💡 Пропустил день — что делать:</div>' +
         pg.missed_day_protocol.map(m => {
           const severity = m.scenario.includes('2+') ? 'red' : m.scenario.includes('неделю') ? 'orange' : m.scenario.includes('2–3') ? 'yellow' : 'emerald';
           return `<div class="bg-${severity}-500/5 rounded-lg p-3 border border-${severity}-500/10"><div class="text-[11px] text-${severity}-300 font-semibold mb-1">${m.scenario}</div><div class="text-[10px] text-gray-400 mb-1"><span class="text-${severity}-400/70">Влияние:</span> ${m.impact}</div><div class="text-[10px] text-gray-300"><span class="font-medium">Действие:</span> ${m.action}</div></div>`;
@@ -7450,7 +7450,7 @@ function renderEducation() {
             <div class="rounded-lg p-2 bg-emerald-500/5 border border-emerald-500/10"><div class="text-[9px] text-emerald-400 font-semibold mb-1">? Хорошо</div><div class="text-[10px] text-gray-400 leading-relaxed">${e.good}</div></div>
           </div>
           <div class="text-[10px] text-gray-500 leading-relaxed"><span class="text-purple-400/70 font-medium">Почему:</span> ${e.why}</div>
-          <div class="text-[10px] text-purple-300/80 leading-relaxed bg-purple-500/5 rounded p-2"><span class="font-medium">?? Совет:</span> ${e.tip}</div>
+          <div class="text-[10px] text-purple-300/80 leading-relaxed bg-purple-500/5 rounded p-2"><span class="font-medium">💡 Совет:</span> ${e.tip}</div>
         </div>`
       ).join('');
     }
@@ -7539,12 +7539,12 @@ function renderEducation() {
   const checkContent = document.getElementById('edu-checklist-content');
   if (checkWrap && checkTabs && checkContent && d.checklists) {
     const checkLabels = {
-      character_selection: '?? Подбор персонажей',
-      before_generation: '?? До генерации',
-      before_publish: '?? До публикации',
-      after_publish: '?? После публикации',
-      if_low_views: '?? Мало просмотров',
-      if_series_took_off: '?? Серия полетела'
+      character_selection: '📌 Подбор персонажей',
+      before_generation: '📌 До генерации',
+      before_publish: '📌 До публикации',
+      after_publish: '📌 После публикации',
+      if_low_views: '📌 Мало просмотров',
+      if_series_took_off: '📌 Серия полетела'
     };
     const checkKeys = Object.keys(d.checklists);
     let activeCheck = checkKeys[0];
@@ -7601,7 +7601,7 @@ function renderEducation() {
       accessBadge.textContent = '? Доступ открыт';
     } else {
       accessBadge.className = 'text-[10px] px-2 py-1 rounded-full font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30';
-      accessBadge.textContent = '?? Нужен промо-код';
+      accessBadge.textContent = '📌 Нужен промо-код';
     }
   }
 
@@ -7612,7 +7612,7 @@ function renderEducation() {
   if (lessonsGrid && d.lessons) {
     lessonsGrid.innerHTML = d.lessons.map(lesson => {
       const isRead = readLessons.includes(lesson.id);
-      const lockIcon = hasAccess ? (isRead ? '?' : '??') : '??';
+      const lockIcon = hasAccess ? (isRead ? '?' : '✨') : '✨';
       const cardBorder = hasAccess ? (isRead ? 'border-emerald-500/30 hover:border-emerald-500/50' : 'border-amber-500/30 hover:border-amber-500/50') : 'border-gray-700/50 hover:border-amber-500/30';
       const cardBg = hasAccess ? (isRead ? 'bg-emerald-500/3 hover:bg-emerald-500/8' : 'hover:bg-amber-500/5') : 'hover:bg-gray-800/30';
       const numStyle = isRead ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border-amber-500/25';
@@ -7690,7 +7690,7 @@ function openLesson(lessonId) {
   const lesson = lessons[idx];
 
   if (!isPromoValid()) {
-    showNotification('?? Доступ к урокам откроется после активации промо-кода', 'warning');
+    showNotification('⚠️ Доступ к урокам откроется после активации промо-кода', 'warning');
     setTimeout(() => {
       navigateTo('settings');
       setTimeout(() => {
@@ -7728,7 +7728,7 @@ function openLesson(lessonId) {
     metricsWrap?.classList.remove('hidden');
     if (metricsEl) {
       metricsEl.innerHTML = lesson.metrics.map(m =>
-        `<div class="flex items-start gap-2 text-[11px] text-gray-300"><span class="text-cyan-400 mt-0.5 flex-shrink-0">??</span><span>${m}</span></div>`
+        `<div class="flex items-start gap-2 text-[11px] text-gray-300"><span class="text-cyan-400 mt-0.5 flex-shrink-0">✨</span><span>${m}</span></div>`
       ).join('');
     }
   } else {
@@ -7842,7 +7842,7 @@ function initPhotoPrompt() {
   function _showPreview(file) {
     if (!file || !file.type.startsWith('image/')) return;
     if (file.size > 10 * 1024 * 1024) {
-      statusEl.textContent = '?? Файл слишком большой (макс 10 МБ)';
+      statusEl.textContent = '📌 Файл слишком большой (макс 10 МБ)';
       statusEl.classList.remove('hidden');
       return;
     }
@@ -7912,7 +7912,7 @@ function initPhotoPrompt() {
   genBtn.addEventListener('click', async () => {
     if (!_photoBase64) return;
     if (!isPromoValid()) {
-      statusEl.innerHTML = '<span class="text-amber-400">?? Введи промо-код в настройках</span>';
+      statusEl.innerHTML = '<span class="text-amber-400">💡 Введи промо-код в настройках</span>';
       statusEl.classList.remove('hidden');
       return;
     }
@@ -7920,7 +7920,7 @@ function initPhotoPrompt() {
     genBtn.disabled = true;
     btnIcon.textContent = '?';
     btnLabel.textContent = 'AI анализирует фото…';
-    statusEl.innerHTML = '<span class="text-gray-500">?? Анализирую каждую деталь изображения…</span>';
+    statusEl.innerHTML = '<span class="text-gray-500">💡 Анализирую каждую деталь изображения…</span>';
     statusEl.classList.remove('hidden');
     resultEl.classList.add('hidden');
 
@@ -8044,16 +8044,16 @@ function initThreadsTrends() {
     copyAllBtn.addEventListener('click', () => {
       if (!_threadsData.length) return;
       const allText = _threadsData.map((p, i) => {
-        const header = `??? ПОСТ #${i + 1} ???`;
-        const original = `?? Оригинал:\n${p.text}`;
+        const header = `═══ ПОСТ #${i + 1} ═══`;
+        const original = `📌 Оригинал:\n${p.text}`;
         const variants = (p.variants || []).map(v => `\n${_varStyleMeta[v.style]?.icon || '?'} ${v.label}:\n${v.text}`).join('');
         const hashtags = _allHashtags(p).join(' ');
         const time = p.best_time?.time ? `\n? Лучшее время: ${p.best_time.day || ''} ${p.best_time.time}` : '';
-        return `${header}\n${original}\n${variants}${hashtags ? '\n\n??? Хэштеги: ' + hashtags : ''}${time}`;
+        return `${header}\n${original}\n${variants}${hashtags ? '\n\n🏷️ Хэштеги: ' + hashtags : ''}${time}`;
       }).join('\n\n\n');
       navigator.clipboard.writeText(allText).then(() => {
         copyAllBtn.textContent = '? Скопировано!'; sfx.copy();
-        setTimeout(() => { copyAllBtn.textContent = '?? Копировать всё'; }, 2000);
+        setTimeout(() => { copyAllBtn.textContent = '📌 Копировать всё'; }, 2000);
       });
     });
   }
@@ -8081,7 +8081,7 @@ function initThreadsTrends() {
     if (statusEl) {
       statusEl.classList.remove('hidden');
       statusEl.innerHTML = `<div class="flex items-center gap-2">
-        <span class="text-violet-400 animate-pulse">?? Ищу актуальные новости и создаю вирусные посты…</span>
+        <span class="text-violet-400 animate-pulse">💡 Ищу актуальные новости и создаю вирусные посты…</span>
         <span class="text-[9px] text-gray-600">обычно 15-30 сек</span>
       </div>`;
     }
@@ -8114,25 +8114,25 @@ function initThreadsTrends() {
         badgeEl.classList.remove('hidden');
         if (data.used_grounding) {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-          badgeEl.textContent = '?? Google Search · реальные новости';
+          badgeEl.textContent = '🔍 Google Search · реальные новости';
         } else if (data.has_rss) {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-blue-500/15 text-blue-400 border-blue-500/30';
-          badgeEl.textContent = `?? RSS · ${data.rss_count || ''} реальных заголовков`;
+          badgeEl.textContent = `📌 RSS · ${data.rss_count || ''} реальных заголовков`;
         } else {
           badgeEl.className = 'text-[9px] px-2 py-1 rounded-full border font-medium bg-red-500/15 text-red-400 border-red-500/30';
-          badgeEl.textContent = '?? Нет источников · события могут быть вымышлены';
+          badgeEl.textContent = '📌 Нет источников · события могут быть вымышлены';
         }
       }
 
       if (!_threadsData.length) {
-        if (statusEl) statusEl.innerHTML = '<span class="text-amber-400">?? Посты не найдены. Попробуй другую тему или расширь фильтры.</span>';
+        if (statusEl) statusEl.innerHTML = '<span class="text-amber-400">💡 Посты не найдены. Попробуй другую тему или расширь фильтры.</span>';
         if (resultsEl) resultsEl.innerHTML = '';
         return;
       }
 
       // Status
       if (statusEl) {
-        const src = data.used_grounding ? 'на основе реальных новостей (Google)' : data.has_rss ? `на основе ${data.rss_count} реальных заголовков (RSS)` : '?? без проверенных источников';
+        const src = data.used_grounding ? 'на основе реальных новостей (Google)' : data.has_rss ? `на основе ${data.rss_count} реальных заголовков (RSS)` : '📌 без проверенных источников';
         const staleWarn = data.stale_count > 0 ? ` · <span class="text-amber-400">${data.stale_count} устаревших</span>` : '';
         const srcColor = (data.used_grounding || data.has_rss) ? 'text-emerald-400' : 'text-amber-400';
         statusEl.innerHTML = `<span class="${srcColor}">? Создано ${_threadsData.length} постов${query ? ' по «' + escapeHtml(query) + '»' : ''} · ${src}</span>${staleWarn}`;
@@ -8178,7 +8178,7 @@ function initThreadsTrends() {
         const text = copyPost.dataset.text || '';
         navigator.clipboard.writeText(text).then(() => {
           copyPost.textContent = '? Скопировано'; sfx.copy();
-          setTimeout(() => { copyPost.textContent = '?? Копировать'; }, 1500);
+          setTimeout(() => { copyPost.textContent = '📌 Копировать'; }, 1500);
         });
         return;
       }
@@ -8188,7 +8188,7 @@ function initThreadsTrends() {
         const text = copyVar.dataset.text || '';
         navigator.clipboard.writeText(text).then(() => {
           copyVar.textContent = '?'; sfx.copy();
-          setTimeout(() => { copyVar.textContent = '??'; }, 1400);
+          setTimeout(() => { copyVar.textContent = '✨'; }, 1400);
         });
         return;
       }
@@ -8212,7 +8212,7 @@ function initThreadsTrends() {
         const text = copyHash.dataset.text || '';
         navigator.clipboard.writeText(text).then(() => {
           copyHash.textContent = '? Скопировано'; sfx.copy();
-          setTimeout(() => { copyHash.textContent = '?? Копировать хэштеги'; }, 1500);
+          setTimeout(() => { copyHash.textContent = '📌 Копировать хэштеги'; }, 1500);
         });
         return;
       }
@@ -8246,7 +8246,7 @@ function initThreadsTrends() {
         if (!body) return;
         const isHidden = body.classList.contains('hidden');
         body.classList.toggle('hidden', !isHidden);
-        toggleReels.textContent = isHidden ? '^ Скрыть' : '?? Идеи для Reels';
+        toggleReels.textContent = isHidden ? '^ Скрыть' : '📌 Идеи для Reels';
         sfx.clickSoft();
         return;
       }
@@ -8335,8 +8335,8 @@ async function _updateThreadsQueueBadge() {
     if (!resp.ok) { badge.classList.add('hidden'); return; }
     badge.classList.remove('hidden');
     const depth = data.queue_depth !== null ? `${data.queue_depth}/${data.target}` : '?';
-    badge.textContent = `?? ${data.pending} ожид · Buffer: ${depth}`;
-    badge.title = `Reservoir: ${data.pending} pending, ${data.sent} sent\nBuffer: ${depth}\nFree slots: ${data.free_slots ?? '?'}`;
+    badge.textContent = `📌 ${data.pending} ожид · Buffer: ${depth}`;
+    badge.title = `Reservoir: ${data.pending} pending, ${data.sent} sent\nBuffer: ${depth}\nFree slots: ${data.free_slots • '?'}`;
   } catch { badge.classList.add('hidden'); }
 }
 
@@ -8367,7 +8367,7 @@ function _updateThreadsGate() {
   } else {
     lockedEl.classList.remove('hidden');
     activeEl.classList.add('hidden');
-    if (lockNav) { lockNav.textContent = '??'; lockNav.className = 'ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold'; }
+    if (lockNav) { lockNav.textContent = '✨'; lockNav.className = 'ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold'; }
   }
 }
 
@@ -8433,21 +8433,21 @@ function _renderSkeletons(n) {
 }
 
 const _confidenceMeta = {
-  high:   { label: '?? На основе новости', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
-  medium: { label: '?? На основе тренда',  cls: 'bg-amber-500/15 text-amber-400 border-amber-500/25',    dot: 'bg-amber-400' },
-  low:    { label: '?? Не проверено',      cls: 'bg-red-500/15 text-red-400 border-red-600/25',          dot: 'bg-red-500' },
+  high:   { label: '📌 На основе новости', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
+  medium: { label: '📌 На основе тренда',  cls: 'bg-amber-500/15 text-amber-400 border-amber-500/25',    dot: 'bg-amber-400' },
+  low:    { label: '📌 Не проверено',      cls: 'bg-red-500/15 text-red-400 border-red-600/25',          dot: 'bg-red-500' },
 };
 
 const _varStyleMeta = {
-  bold:      { icon: '??', label: 'Провокатор' },
-  smart:     { icon: '??', label: 'Аналитик' },
-  emotional: { icon: '??', label: 'Личная история' },
-  viral:     { icon: '??', label: 'Вирусный' },
-  personal:  { icon: '??', label: 'Вопрос залу' },
+  bold:      { icon: '✨', label: 'Провокатор' },
+  smart:     { icon: '✨', label: 'Аналитик' },
+  emotional: { icon: '✨', label: 'Личная история' },
+  viral:     { icon: '✨', label: 'Вирусный' },
+  personal:  { icon: '✨', label: 'Вопрос залу' },
 };
 
 function _viralityColor(score) {
-  if (score >= 80) return { bar: 'bg-emerald-500', text: 'text-emerald-400', label: 'Огонь ??' };
+  if (score >= 80) return { bar: 'bg-emerald-500', text: 'text-emerald-400', label: 'Огонь 🔥' };
   if (score >= 60) return { bar: 'bg-violet-500',  text: 'text-violet-400',  label: 'Высокий' };
   if (score >= 40) return { bar: 'bg-amber-500',   text: 'text-amber-400',   label: 'Средний' };
   return                   { bar: 'bg-gray-500',    text: 'text-gray-400',    label: 'Низкий' };
@@ -8484,10 +8484,10 @@ function _renderThreadsPosts() {
         <span class="${vColor.text} text-[10px] font-bold tabular-nums">${vScore}</span>
       </div>
       <div class="flex gap-1.5 mt-1">
-        <span class="text-[8px] text-gray-600" title="Комменты (0-30)">??${sb.comment_potential || sb.debate || 0}</span>
-        <span class="text-[8px] text-gray-600" title="Узнаваемость (0-25)">??${sb.relatability || sb.depth || 0}</span>
-        <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">??${sb.shareability || 0}</span>
-        <span class="text-[8px] text-gray-600" title="Эмоция (0-20)">??${sb.emotion || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Комменты (0-30)">💬${sb.comment_potential || sb.debate || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Узнаваемость (0-25)">👥${sb.relatability || sb.depth || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔄${sb.shareability || 0}</span>
+        <span class="text-[8px] text-gray-600" title="Эмоция (0-20)">❤️${sb.emotion || 0}</span>
       </div>`;
 
     // Variants tabs HTML
@@ -8513,7 +8513,7 @@ function _renderThreadsPosts() {
               ${charCount <= 500 ? '<span class="text-[8px] text-emerald-600">? Threads OK</span>' : '<span class="text-[8px] text-red-600">? Длинный</span>'}
             </div>
           </div>
-          <button class="threads-copy-variant flex-shrink-0 text-[9px] px-2 py-1 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 border border-violet-500/20 transition-all font-medium" data-text="${escapeHtml(v.text)}">??</button>
+          <button class="threads-copy-variant flex-shrink-0 text-[9px] px-2 py-1 rounded-md bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 border border-violet-500/20 transition-all font-medium" data-text="${escapeHtml(v.text)}">✨</button>
         </div>
       </div>`;
     }).join('');
@@ -8524,9 +8524,9 @@ function _renderThreadsPosts() {
       <div class="border-t border-white/[0.04] px-5 py-4 space-y-2" style="background:rgba(232,121,168,0.02)">
         <div class="flex items-center justify-between">
           <button class="threads-toggle-hashtags text-[10px] text-fuchsia-400 font-semibold uppercase tracking-[0.15em] hover:text-fuchsia-300 transition-colors flex items-center gap-1.5">
-            <span>???</span> <span>Хэштеги (${allH.length})</span> <span class="text-gray-600">Ў</span>
+            <span>🏷️</span> <span>Хэштеги (${allH.length})</span> <span class="text-gray-600">Ў</span>
           </button>
-          <button class="threads-copy-hashtags btn-neon-pink text-[9px] px-2 py-0.5" data-text="${escapeHtml(allH.join(' '))}">?? Копировать</button>
+          <button class="threads-copy-hashtags btn-neon-pink text-[9px] px-2 py-0.5" data-text="${escapeHtml(allH.join(' '))}">💡 Копировать</button>
         </div>
         <div class="threads-hashtags-body hidden space-y-2 pt-1">
           ${post.hashtags?.high_volume?.length ? `<div class="space-y-1"><div class="text-[8px] text-gray-600 uppercase tracking-wider">Популярные</div><div class="flex flex-wrap gap-1">${post.hashtags.high_volume.map(h => `<span class="tag tag-green">${escapeHtml(h)}</span>`).join('')}</div></div>` : ''}
@@ -8536,13 +8536,13 @@ function _renderThreadsPosts() {
       </div>` : '';
 
     // Reel ideas HTML
-    const reelFormatIcon = { 'talking head': '???', 'text-on-screen': '??', 'POV': '??', 'greenscreen': '??', 'trending-audio': '??', 'storytelling': '??' };
+    const reelFormatIcon = { 'talking head': '🅰️', 'text-on-screen': '✨', 'POV': '✨', 'greenscreen': '✨', 'trending-audio': '✨', 'storytelling': '✨' };
     const reelHtml = (post.reel_ideas || []).map((r, i) => `
       <div class="rounded-lg p-3 border border-cyan-500/15 bg-cyan-500/5 space-y-1.5">
         <div class="flex items-center gap-2">
           <span class="flex items-center justify-center w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-bold flex-shrink-0">${i + 1}</span>
           <span class="text-[11px] font-semibold text-cyan-300">${escapeHtml(r.hook)}</span>
-          ${r.format ? `<span class="ml-auto text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-500 border border-cyan-500/15">${reelFormatIcon[r.format] || '??'} ${escapeHtml(r.format)}</span>` : ''}
+          ${r.format ? `<span class="ml-auto text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-500 border border-cyan-500/15">${reelFormatIcon[r.format] || '✨'} ${escapeHtml(r.format)}</span>` : ''}
         </div>
         ${r.conflict ? `<div class="text-[10px] text-gray-400"><span class="text-amber-400/70 font-medium">Конфликт:</span> ${escapeHtml(r.conflict)}</div>` : ''}
         ${r.direction ? `<div class="text-[10px] text-gray-400"><span class="text-violet-400/70 font-medium">Сценарий:</span> ${escapeHtml(r.direction)}</div>` : ''}
@@ -8578,9 +8578,9 @@ function _renderThreadsPosts() {
             </div>
             <div class="flex items-center gap-2 text-[9px] text-gray-600">
               ${post.freshness_label ? `<span>${escapeHtml(post.freshness_label)}</span>` : ''}
-              ${sigLikes !== 'неизвестно' ? `<span>?? ${escapeHtml(sigLikes)}</span>` : ''}
-              ${sigComm !== 'неизвестно' ? `<span>?? ${escapeHtml(sigComm)}</span>` : ''}
-              ${sigRepost !== 'неизвестно' ? `<span>?? ${escapeHtml(sigRepost)}</span>` : ''}
+              ${sigLikes !== 'неизвестно' ? `<span>💡 ${escapeHtml(sigLikes)}</span>` : ''}
+              ${sigComm !== 'неизвестно' ? `<span>💡 ${escapeHtml(sigComm)}</span>` : ''}
+              ${sigRepost !== 'неизвестно' ? `<span>💡 ${escapeHtml(sigRepost)}</span>` : ''}
             </div>
           </div>
 
@@ -8593,10 +8593,10 @@ function _renderThreadsPosts() {
               <span class="${vColor.text} text-xs font-bold tabular-nums" style="font-family:'JetBrains Mono',monospace">${vScore}</span>
             </div>
             <div class="flex gap-1.5 justify-end">
-              <span class="text-[8px] text-gray-600" title="Комменты (0-30)">??${sb.comment_potential || sb.debate || 0}</span>
-              <span class="text-[8px] text-gray-600" title="Узнаваемость (0-25)">??${sb.relatability || sb.depth || 0}</span>
-              <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">??${sb.shareability || 0}</span>
-              <span class="text-[8px] text-gray-600" title="Эмоция (0-20)">??${sb.emotion || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Комменты (0-30)">💬${sb.comment_potential || sb.debate || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Узнаваемость (0-25)">👥${sb.relatability || sb.depth || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Шаринг (0-25)">🔄${sb.shareability || 0}</span>
+              <span class="text-[8px] text-gray-600" title="Эмоция (0-20)">❤️${sb.emotion || 0}</span>
             </div>
           </div>
         </div>
@@ -8607,17 +8607,17 @@ function _renderThreadsPosts() {
         <!-- Engagement hook badge -->
         ${post.engagement_hook ? `
         <div class="flex items-start gap-1.5 rounded-lg p-2 bg-violet-500/5 border border-violet-500/15">
-          <span class="text-[10px] flex-shrink-0">??</span>
+          <span class="text-[10px] flex-shrink-0">✨</span>
           <span class="text-[10px] text-violet-300 leading-snug font-medium">${escapeHtml(post.engagement_hook)}</span>
         </div>` : ''}
 
         <!-- News source badge -->
         ${post.news_source ? `
         <div class="flex items-start gap-1.5 rounded-lg p-2 bg-cyan-500/5 border border-cyan-500/15">
-          <span class="text-[10px] flex-shrink-0">??</span>
+          <span class="text-[10px] flex-shrink-0">✨</span>
           <div class="space-y-0.5">
             <span class="text-[10px] text-cyan-400 leading-snug">${escapeHtml(post.news_source)}</span>
-            ${post.news_url ? `<a href="${escapeHtml(post.news_url)}" target="_blank" rel="noopener" class="block text-[9px] text-cyan-600 hover:text-cyan-400 truncate transition-colors">?? Источник</a>` : ''}
+            ${post.news_url ? `<a href="${escapeHtml(post.news_url)}" target="_blank" rel="noopener" class="block text-[9px] text-cyan-600 hover:text-cyan-400 truncate transition-colors">💡 Источник</a>` : ''}
           </div>
         </div>` : ''}
 
@@ -8626,9 +8626,9 @@ function _renderThreadsPosts() {
 
         <!-- Actions row -->
         <div class="flex items-center gap-2 flex-wrap pt-1">
-          <button class="threads-copy-post btn-neon text-[10px] px-2.5 py-1" data-text="${escapeHtml(post.text)}">?? Копировать</button>
-          <button class="threads-queue-post text-[10px] px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all font-medium" data-post-idx="${idx}">?? В очередь</button>
-          ${hasUrl ? `<a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="btn-neon text-[10px] px-2.5 py-1" style="text-decoration:none">?? Открыть</a>` : ''}
+          <button class="threads-copy-post btn-neon text-[10px] px-2.5 py-1" data-text="${escapeHtml(post.text)}">💡 Копировать</button>
+          <button class="threads-queue-post text-[10px] px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all font-medium" data-post-idx="${idx}">💡 В очередь</button>
+          ${hasUrl ? `<a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="btn-neon text-[10px] px-2.5 py-1" style="text-decoration:none">💡 Открыть</a>` : ''}
           <button class="threads-toggle-analysis text-[10px] px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20 transition-all font-medium">Ў Анализ</button>
         </div>
       </div>
@@ -8649,7 +8649,7 @@ function _renderThreadsPosts() {
         </div>
         ${post.analysis?.predicted_comments?.length ? `
         <div class="rounded-xl p-3 bg-gradient-to-r from-violet-500/5 to-fuchsia-500/5 border border-violet-500/15 space-y-2">
-          <div class="text-[9px] text-violet-400 font-semibold uppercase tracking-[0.15em]">?? Предсказанные комментарии</div>
+          <div class="text-[9px] text-violet-400 font-semibold uppercase tracking-[0.15em]">💡 Предсказанные комментарии</div>
           ${post.analysis.predicted_comments.map(c => `<div class="text-[11px] text-gray-300 pl-3 border-l-2 border-violet-500/20">"${escapeHtml(c)}"</div>`).join('')}
         </div>` : ''}
       </div>
@@ -8669,7 +8669,7 @@ function _renderThreadsPosts() {
       ${post.reel_ideas?.length ? `
       <div class="border-t border-white/[0.04] px-5 py-4 space-y-2" style="background:rgba(6,182,212,0.02)">
         <button class="threads-toggle-reels text-[10px] text-cyan-400 font-semibold uppercase tracking-[0.15em] hover:text-cyan-300 transition-colors w-full text-left flex items-center gap-1.5">
-          <span>??</span> <span>Идеи для Reels (${post.reel_ideas.length})</span> <span class="text-gray-600 ml-auto">Ў</span>
+          <span>✨</span> <span>Идеи для Reels (${post.reel_ideas.length})</span> <span class="text-gray-600 ml-auto">Ў</span>
         </button>
         <div class="threads-reels-body hidden space-y-2">${reelHtml}</div>
       </div>` : ''}
