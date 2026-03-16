@@ -1036,6 +1036,23 @@ function resolveRoles(charA, charB) {
 // ─── CAST CONTRACT BUILDER (universal) ───────
 function buildCastContract(charA, charB) {
   const buildBiology = (char, role) => {
+    // Video mode: defer ALL character details to Gemini's analysis of original video
+    if (char.id === 'video_original') {
+      return {
+        character_en: 'character from original video — AI engine describes appearance from video analysis. Do NOT use elderly/old defaults.',
+        age: 'as in source video',
+        skin: 'as in original video — AI engine describes based on video analysis',
+        eyes: 'as in original video — AI engine describes based on video analysis',
+        mouth: role === 'A'
+          ? 'as in original video, mouth open mid-word, realistic lip-sync'
+          : 'as in original video, mouth SEALED when not speaking, jaw still',
+        face_silhouette: 'as in original video',
+        signature_element: 'as in original video',
+        micro_gesture: 'as in original video',
+        wardrobe_anchor: 'as in original video — AI engine describes from video analysis',
+        vibe: 'authentic',
+      };
+    }
     const bio = char.biology_override || {};
     const anchors = char.identity_anchors || {};
     const ageNum = parseInt(String(bio.age || '').replace(/[^0-9]/g, ''), 10) || 65;
@@ -1824,9 +1841,17 @@ export function generate(input) {
     id: 'video_original', name_ru: 'Персонаж из оригинала', name_en: 'Original Cast',
     group: '', vibe_archetype: 'authentic', speech_pace: 'natural',
     speech_style_ru: 'как в оригинальном видео',
-    prompt_tokens: { main: [], secondary: [], character_en: '' },
-    identity_anchors: { face_silhouette: null, wardrobe_anchor: '', signature_element: '' },
-    biology_override: { age: 'as in source video' },
+    prompt_tokens: { main: [], secondary: [], character_en: 'character from original video — AI engine will describe appearance based on video analysis' },
+    identity_anchors: { face_silhouette: 'as in original video', wardrobe_anchor: 'as in original video', signature_element: 'as in original video' },
+    biology_override: {
+      age: 'as in source video',
+      skin_tokens: ['as in original video — AI describes from video'],
+      eye_tokens: ['as in original video — AI describes from video'],
+      hair_tokens: ['as in original video — AI describes from video'],
+      nose_tokens: ['as in original video'],
+      mouth_tokens: ['as in original video'],
+      height_build: 'as in original video',
+    },
     modifiers: {},
     compatibility: [],
     role_default: 'A',
@@ -2009,8 +2034,13 @@ export function generate(input) {
   const lightingMood = pickRandom(lightingPool, rng);
 
   // ── Wardrobe from character anchors (full description, not just a keyword) ──
-  const wardrobeA = charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar';
-  const wardrobeB = charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt';
+  const _isVideoMode = input_mode === 'video';
+  const wardrobeA = _isVideoMode && charA.id === 'video_original'
+    ? 'as in original video — AI describes wardrobe from video analysis'
+    : (charA.identity_anchors?.wardrobe_anchor || 'silk floral blouse with mother-of-pearl buttons, velvet collar');
+  const wardrobeB = _isVideoMode && charB.id === 'video_original'
+    ? 'as in original video — AI describes wardrobe from video analysis'
+    : (charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt');
 
   // ── Hook & Release (character-aware) ──
   // Character A's hook_style determines the hook action — NOT random
@@ -2906,6 +2936,24 @@ export function mergeAIResult(localResult, aiData) {
       photoScene += ' ' + idBlock;
     }
     r.photo_prompt_en_json.scene = photoScene;
+
+    // Video mode: override template characters and environment with Gemini's analysis
+    if (ctx.input_mode === 'video' && (ctx.charA?.id === 'video_original')) {
+      // Gemini's photo_scene_en contains the REAL character/environment descriptions from video
+      // Clear generic template data so user sees Gemini's analysis, not placeholder defaults
+      r.photo_prompt_en_json.characters = [{
+        role: 'Character(s) from original video',
+        appearance: 'FULLY DESCRIBED IN SCENE FIELD ABOVE — extracted by AI from original video analysis',
+        note: 'All character details (age, gender, appearance, clothing, accessories) are in photo_scene_en. Gemini analyzed the original video and generated accurate descriptions.',
+      }];
+      r.photo_prompt_en_json.environment = {
+        location: 'As described in scene field — extracted from original video',
+        lighting: 'As described in scene field — extracted from original video',
+        note: 'Environment details are fully described in photo_scene_en. Gemini analyzed the original video.',
+      };
+      // Also clear IDENTITY_LOCK since there are no DB characters to lock
+      r.photo_prompt_en_json.IDENTITY_LOCK = 'VIDEO COPY MODE: Characters and environment are described by AI engine based on original video analysis. No DB character identity lock applied.';
+    }
   }
 
   // ── 2. Video prompt: replace dialogue (AI engine generates fresh lines) ──
@@ -2913,6 +2961,33 @@ export function mergeAIResult(localResult, aiData) {
   const hasDialogueOverride = !!(ctx.dialogue_override?.A);
   if (!hasDialogueOverride) {
     if (g.dialogue_A_ru) r.video_prompt_en_json.dialogue.final_A_ru = g.dialogue_A_ru;
+
+    // Video mode: override cast descriptions with Gemini's analysis
+    if (ctx.input_mode === 'video' && ctx.charA?.id === 'video_original') {
+      const vc = r.video_prompt_en_json.cast;
+      if (vc?.speaker_A) {
+        vc.speaker_A.character_en = 'Character from original video — described by AI in photo_scene_en and remake_veo_prompt_en';
+        vc.speaker_A.wardrobe_anchor = 'As in original video — described by AI';
+        vc.speaker_A.age = 'As in original video';
+      }
+      if (vc?.speaker_B) {
+        vc.speaker_B.character_en = 'Character from original video — described by AI in photo_scene_en and remake_veo_prompt_en';
+        vc.speaker_B.wardrobe_anchor = 'As in original video — described by AI';
+        vc.speaker_B.age = 'As in original video';
+      }
+      // Override world/location
+      const vw = r.video_prompt_en_json.world;
+      if (vw) {
+        vw.location = 'As in original video — described by AI in photo_scene_en';
+        vw.lighting = 'As in original video — described by AI';
+      }
+      // Override identity_anchors
+      const ia = r.video_prompt_en_json.identity_anchors;
+      if (ia) {
+        if (ia.A) ia.A.wardrobe = 'As in original video — described by AI';
+        if (ia.B) ia.B.wardrobe = 'As in original video — described by AI';
+      }
+    }
     if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
     if (g.killer_word) {
       r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
