@@ -5747,9 +5747,9 @@ function loadSavedState() {
     if (age > 24 * 60 * 60 * 1000) return; // expire after 24h
 
     // Restore simple state fields
-    state.selectedLocation = d.selectedLocation • null;
-    state.generationMode = d.generationMode • null;
-    state.inputMode = d.inputMode • 'idea';
+    state.selectedLocation = d.selectedLocation ?? null;
+    state.generationMode = d.generationMode ?? null;
+    state.inputMode = d.inputMode ?? 'idea';
     if (d.options) state.options = { ...state.options, ...d.options };
 
     // Store IDs + text for deferred UI restore (characters may not be loaded yet)
@@ -8336,7 +8336,7 @@ async function _updateThreadsQueueBadge() {
     badge.classList.remove('hidden');
     const depth = data.queue_depth !== null ? `${data.queue_depth}/${data.target}` : '?';
     badge.textContent = `📌 ${data.pending} ожид · Buffer: ${depth}`;
-    badge.title = `Reservoir: ${data.pending} pending, ${data.sent} sent\nBuffer: ${depth}\nFree slots: ${data.free_slots • '?'}`;
+    badge.title = `Reservoir: ${data.pending} pending, ${data.sent} sent\nBuffer: ${depth}\nFree slots: ${data.free_slots ?? '?'}`;
   } catch { badge.classList.add('hidden'); }
 }
 
