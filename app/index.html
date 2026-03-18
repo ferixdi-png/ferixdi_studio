@@ -1921,12 +1921,44 @@
         <section id="section-settings" class="section-panel hidden space-y-4">
           <h2 class="text-lg font-semibold text-white">⚙️ Настройки</h2>
 
-          <!-- Личный кабинет -->
-          <div id="account-panel" class="glass-panel p-4 space-y-3">
+          <!-- Quick-start guide -->
+          <div id="settings-guide" class="rounded-xl p-4 border border-cyan-500/20 space-y-2" style="background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(124,92,252,0.04) 100%)">
+            <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">🚀 Быстрый старт</div>
+            <div class="text-[11px] text-gray-300 leading-relaxed space-y-1">
+              <div class="flex items-start gap-2"><span class="text-amber-400 font-bold">1.</span> <span>Введите <strong class="text-amber-300">промо-код</strong> ниже и нажмите «Активировать»</span></div>
+              <div class="flex items-start gap-2"><span class="text-cyan-400 font-bold">2.</span> <span>Создайте <strong class="text-cyan-300">аккаунт</strong> (логин + пароль) — у вас будут личные лимиты генерации</span></div>
+              <div class="flex items-start gap-2"><span class="text-emerald-400 font-bold">3.</span> <span>Готово! Переходите к <strong class="text-emerald-300">генерации</strong> — выбирайте режим, персонажей и создавайте промпты</span></div>
+            </div>
+          </div>
+
+          <!-- ШАГ 1: Промо-код (FIRST — before registration) -->
+          <div class="glass-panel p-4 space-y-3 relative overflow-hidden" id="promo-panel">
+            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-500/50 via-orange-500/50 to-amber-500/50"></div>
+            <div class="flex items-center gap-2">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold">1</span>
+              <div class="text-xs text-amber-400 font-semibold">🔑 Промо-код</div>
+            </div>
+            <div class="flex gap-2">
+              <div class="relative flex-1">
+                <input id="promo-input" type="text" class="input-field w-full text-center tracking-widest pr-8" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
+              </div>
+              <button id="promo-save-btn" class="btn-neon text-xs whitespace-nowrap">Активировать</button>
+            </div>
+            <div id="promo-status" class="text-xs min-h-[20px]"></div>
+            <p class="text-[11px] text-gray-500/70">Без промо-кода вы можете просматривать персонажей, но генерация недоступна.</p>
+            <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400/70 hover:text-cyan-300 transition-colors">написать в Telegram →</a></p>
+          </div>
+
+          <!-- ШАГ 2: Личный кабинет (AFTER promo code) -->
+          <div id="account-panel" class="glass-panel p-4 space-y-3 relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 via-violet-500/50 to-cyan-500/50"></div>
             <!-- Logged-in state -->
             <div id="account-logged-in" class="hidden space-y-3">
               <div class="flex items-center justify-between">
-                <div class="text-xs text-gray-400 font-medium">👤 Личный кабинет</div>
+                <div class="flex items-center gap-2">
+                  <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">✓</span>
+                  <div class="text-xs text-emerald-400 font-semibold">👤 Личный кабинет</div>
+                </div>
                 <button id="account-logout-btn" class="text-[10px] text-red-400/70 hover:text-red-400 transition-colors">Выйти</button>
               </div>
               <div class="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/8 border border-emerald-500/20">
@@ -1940,8 +1972,16 @@
 
             <!-- Login/Register forms (shown when not logged in) -->
             <div id="account-auth" class="space-y-3">
-              <div class="text-xs text-gray-400 font-medium">👤 Вход / Регистрация</div>
+              <div class="flex items-center gap-2">
+                <span class="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-bold">2</span>
+                <div class="text-xs text-cyan-400 font-semibold">👤 Вход / Регистрация</div>
+              </div>
               <p class="text-[10px] text-gray-500 leading-relaxed">Создай аккаунт — у каждого свои лимиты генерации. Больше никакого ожидания из-за других пользователей.</p>
+
+              <!-- Promo required hint (shown when promo not active) -->
+              <div id="auth-needs-promo" class="text-[11px] text-amber-400/80 bg-amber-500/8 border border-amber-500/15 rounded-lg p-2.5 leading-relaxed">
+                ⚠️ Для регистрации сначала активируйте промо-код выше (шаг 1). Если уже есть аккаунт — войдите через «Вход».
+              </div>
 
               <!-- Tab toggle -->
               <div class="flex rounded-lg overflow-hidden border border-gray-700/50">
@@ -1963,20 +2003,8 @@
                 <button id="register-btn" class="btn-neon w-full text-xs py-2">Создать аккаунт</button>
               </div>
 
-              <div id="auth-status" class="text-xs h-5"></div>
+              <div id="auth-status" class="text-xs min-h-[20px]"></div>
             </div>
-          </div>
-
-          <!-- Промо-код -->
-          <div class="glass-panel p-4 space-y-3">
-            <div class="text-xs text-gray-400 font-medium">🔑 Промо-код</div>
-            <div class="flex gap-2">
-              <input id="promo-input" type="password" class="input-field flex-1 text-center tracking-widest" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
-              <button id="promo-save-btn" class="btn-neon text-xs whitespace-nowrap">Активировать</button>
-            </div>
-            <div id="promo-status" class="text-xs h-5"></div>
-            <p class="text-[11px] text-gray-500/70">Без промо-кода вы можете просматривать персонажей, но генерация недоступна.</p>
-            <p class="text-[11px] text-gray-500/50">Нужен промо-код? <a href="https://t.me/ferixdiii" target="_blank" class="text-cyan-400/70 hover:text-cyan-300 transition-colors">написать в Telegram →</a></p>
           </div>
 
           <!-- Звуки -->

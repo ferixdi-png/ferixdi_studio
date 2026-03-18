@@ -77,6 +77,19 @@ function isPromoValid() {
   return localStorage.getItem('ferixdi_ph') === _PH;
 }
 
+function _updatePromoUI() {
+  const hint = document.getElementById('auth-needs-promo');
+  const badge = document.querySelector('#promo-panel .rounded-full');
+  const guide = document.getElementById('settings-guide');
+  if (isPromoValid()) {
+    if (hint) hint.classList.add('hidden');
+    if (badge) { badge.className = 'flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold'; badge.textContent = '✓'; }
+    if (guide) guide.classList.add('hidden');
+  } else {
+    if (hint) hint.classList.remove('hidden');
+  }
+}
+
 function initPromoCode() {
   const btn = document.getElementById('promo-save-btn');
   const input = document.getElementById('promo-input');
@@ -85,11 +98,12 @@ function initPromoCode() {
 
   // Show saved state
   if (isPromoValid()) {
-    status.innerHTML = '<span class="neon-text-green">? Промо-код активен</span>';
+    status.innerHTML = '<span class="neon-text-green">✅ Промо-код активен</span>';
     input.placeholder = '••••••••';
     const modeEl = document.getElementById('header-mode');
     if (modeEl) modeEl.textContent = 'VIP';
   }
+  _updatePromoUI();
 
   btn.addEventListener('click', async () => {
     const key = input.value.trim();
@@ -102,18 +116,19 @@ function initPromoCode() {
     if (hash === _PH) {
       localStorage.setItem('ferixdi_ph', hash);
       localStorage.removeItem('ferixdi_promo');
-      status.innerHTML = '<span class="neon-text-green">? Промо-код активен! Добро пожаловать!</span>';
+      status.innerHTML = '<span class="neon-text-green">✅ Промо-код активен! Теперь создайте аккаунт ниже (шаг 2)</span>';
       input.value = '';
       input.placeholder = '••••••••';
       const modeEl = document.getElementById('header-mode');
       if (modeEl) modeEl.textContent = 'VIP';
       log('OK', 'ПРОМО', 'Промо-код принят');
+      _updatePromoUI();
       updateWelcomeBanner();
       autoAuth(hash);
       updateReadiness();
       renderEducation();
     } else {
-      status.innerHTML = '<span class="text-red-400">? Неверный промо-код</span>';
+      status.innerHTML = '<span class="text-red-400">❌ Неверный промо-код. Проверьте правильность и попробуйте снова</span>';
       log('WARN', 'ПРОМО', 'Неверный промо-код');
     }
     btn.disabled = false;
@@ -253,7 +268,7 @@ function initAccountSystem() {
     const password = document.getElementById('reg-password')?.value;
     const promoHash = localStorage.getItem('ferixdi_ph');
     if (!username || !password) { statusEl.innerHTML = '<span class="text-red-400">Заполните все поля</span>'; return; }
-    if (!promoHash) { statusEl.innerHTML = '<span class="text-red-400">Сначала активируйте промо-код ниже</span>'; return; }
+    if (!promoHash) { statusEl.innerHTML = '<span class="text-red-400">Сначала активируйте промо-код выше (шаг 1)</span>'; return; }
     registerBtn.disabled = true; registerBtn.textContent = '...';
     try {
       const resp = await fetch(`${url}/api/auth/register`, {
