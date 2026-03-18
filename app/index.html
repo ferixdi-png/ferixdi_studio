@@ -95,10 +95,8 @@
       <!-- Sidebar -->
       <nav id="sidebar" class="w-56 flex-shrink-0 border-r border-space-border overflow-y-auto py-5 relative" style="background:rgba(6,8,15,0.88); backdrop-filter:blur(28px)">
         <div class="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-gold/8 via-transparent to-gold/8"></div>
-        <div class="px-4 mb-5">
-          <div class="text-[10px] text-gray-500 uppercase tracking-[0.25em] font-medium">навигация</div>
-        </div>
         <div id="nav-items" class="space-y-1 px-2">
+          <div class="px-2 pb-1"><div class="text-[9px] text-gray-600 uppercase tracking-[0.2em] font-medium">База</div></div>
           <!-- 🎓 Education — hero position -->
           <div class="nav-item relative overflow-hidden" data-section="education" style="background:linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(234,88,12,0.08) 100%); border:1px solid rgba(245,158,11,0.25); border-radius:10px;">
             <span>🎓</span>
@@ -110,10 +108,10 @@
           <div class="nav-item active" data-section="generation-mode"><span>🎯</span><span>1. Режим</span></div>
           <div class="nav-item" data-section="content"><span>📝</span><span>2. Контент</span></div>
           <div class="nav-item" data-section="characters"><span>👥</span><span>3. Персонажи</span></div>
-          <div class="nav-item" data-section="locations"><span>📍</span><span>4. Локации</span></div>
-          <div class="nav-item" data-section="generate"><span>⚡</span><span>5. Промпт</span></div>
+          <div class="nav-item" data-section="generate"><span>⚡</span><span>4. Промпт</span></div>
 
           <div class="px-2 pt-3 pb-1"><div class="text-[9px] text-gray-600 uppercase tracking-[0.2em] font-medium">Инструменты</div></div>
+          <div class="nav-item" data-section="locations"><span>📍</span><span>Локации</span></div>
           <div class="nav-item" data-section="series"><span>📺</span><span>Серии</span></div>
           <div class="nav-item" data-section="history"><span>📜</span><span>История</span></div>
           <div class="nav-item" data-section="ideas"><span>🔍</span><span>Поиск идей</span></div>
@@ -406,7 +404,7 @@
           <div id="remix-suggested" class="glass-panel p-4 space-y-3 hidden">
             <div class="text-xs text-gray-400 font-medium mb-2">📚 Готовые идеи — AI подберёт тему</div>
             <div class="text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
-              💡 <strong>Готовые идеи</strong> находятся в разделе <button onclick="navigateTo('trends')" class="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 font-medium transition-colors">🔍 Поиск идей</button> в боковом меню. Найдите подходящую тему там и вставьте её в поле ниже, или оставьте пустым — AI сам подберёт актуальную тему.
+              💡 <strong>Готовые идеи</strong> находятся в разделе <button onclick="navigateTo('ideas')" class="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 font-medium transition-colors">🔍 Поиск идей</button> в боковом меню. Найдите подходящую тему там и вставьте её в поле ниже, или оставьте пустым — AI сам подберёт актуальную тему.
             </div>
             <div id="trending-ideas-main" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[180px] overflow-y-auto">
               <div class="text-xs text-gray-500 text-center py-3">🔍 Загружаем популярные темы...</div>
@@ -1142,10 +1140,10 @@
         <!-- SECTION: Locations (standalone browse) -->
         <section id="section-locations" class="section-panel hidden space-y-5">
           <div class="flex items-center gap-3 mb-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">3</div>
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-600 text-white text-sm font-bold">📍</div>
             <div>
-              <h2 class="text-lg font-semibold text-white">Выберите локацию</h2>
-              <p class="text-xs text-gray-400">Где будет происходить действие? AI подберёт подходящее место для ваших персонажей и темы.</p>
+              <h2 class="text-lg font-semibold text-white">Каталог локаций</h2>
+              <p class="text-xs text-gray-400">Просматривайте все локации и создавайте свои. Локацию можно выбрать здесь или на шаге 4 (Промпт).</p>
             </div>
           </div>
           <div class="flex gap-3 flex-wrap items-center">
@@ -1833,49 +1831,24 @@
             <div class="bg-black/40 rounded-lg p-4 space-y-3">
               <div class="text-[11px] text-gray-400 font-medium">📋 Как искать:</div>
               <div class="text-xs text-gray-300 space-y-2 leading-relaxed">
-                <div>1. Открой Instagram и в поиске набери один из хештегов:</div>
+                <div>1. Открой Instagram → Reels → Поиск, набери один из хештегов:</div>
                 <div class="flex gap-2 flex-wrap">
                   <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#veo3');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#veo3',1500)">#veo3</span>
                   <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#aivideo');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#aivideo',1500)">#aivideo</span>
-                  <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#нейросеть');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#нейросеть',1500)">#нейросеть</span>
                   <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#aireels');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#aireels',1500)">#aireels</span>
+                  <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#нейросеть');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#нейросеть',1500)">#нейросеть</span>
                   <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#aiвидео');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#aiвидео',1500)">#aiвидео</span>
+                  <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#aiреклама');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#aiреклама',1500)">#aiреклама</span>
+                  <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#нейросетивидео');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#нейросетивидео',1500)">#нейросетивидео</span>
                   <span class="tag text-[10px] cursor-pointer hover:bg-cyan-500/20 transition-colors" onclick="navigator.clipboard.writeText('#бабкижгут');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#бабкижгут',1500)">#бабкижгут</span>
                 </div>
-                <div>2. Фильтруй по <span class="text-amber-300 font-medium">«Самые популярные»</span> и выбери <span class="text-amber-300 font-medium">«Эта неделя»</span></div>
-                <div>3. Ищи видео <span class="text-emerald-300 font-medium">на русском языке</span> с AI-персонажами (бабки, деды, мультяшные)</div>
-                <div>4. Нашёл залетевшее? <span class="text-cyan-300 font-medium">Скачай видео</span> через <a href="https://saveclip.app" target="_blank" class="text-cyan-400 underline hover:text-cyan-300">saveclip.app</a> → <span class="text-cyan-300 font-medium">загрузи файл</span> в режиме <span class="text-cyan-300 font-medium">«🎥 По видео»</span> при генерации</div>
+                <div>2. Фильтруй по <span class="text-amber-300 font-medium">«Самые популярные»</span> → выбери <span class="text-amber-300 font-medium">«Эта неделя»</span> → смотри Reels с 50K+ просмотров</div>
+                <div>3. Ищи видео <span class="text-emerald-300 font-medium">на русском языке</span> с AI-персонажами (бабки, деды, семейные пары)</div>
+                <div>4. Нашёл залетевшее? <span class="text-cyan-300 font-medium">Скачай видео</span> через <a href="https://saveclip.app" target="_blank" class="text-cyan-400 underline hover:text-cyan-300">saveclip.app</a> (скопируй ссылку → вставь → скачай MP4) → <span class="text-cyan-300 font-medium">загрузи файл</span> в режиме <span class="text-cyan-300 font-medium">«🎥 По видео»</span> при генерации</div>
               </div>
             </div>
             <a href="https://www.instagram.com/explore/tags/aireels/" target="_blank" class="btn-neon w-full py-2.5 text-sm font-medium flex items-center justify-center gap-2">
               <span>🎬</span> Открыть Instagram → искать AI-Reels
-            </a>
-          </div>
-
-          <!-- 3. COMPETITOR RESEARCH — Instagram -->
-          <div class="glass-panel p-5 space-y-4 border-l-2 border-violet-500/40">
-            <div class="text-sm font-semibold text-violet-400 flex items-center gap-2">📸 Найди вирусные AI-видео в Instagram</div>
-            <div class="text-xs text-gray-300 leading-relaxed">
-              Instagram Reels — главная площадка для публикации. Ищи что уже залетело и делай лучше.
-            </div>
-            <div class="bg-black/40 rounded-lg p-4 space-y-3">
-              <div class="text-[11px] text-gray-400 font-medium">📋 Как искать:</div>
-              <div class="text-xs text-gray-300 space-y-2 leading-relaxed">
-                <div>1. Открой Instagram → Reels → Поиск, набери:</div>
-                <div class="flex gap-2 flex-wrap">
-                  <span class="tag text-[10px] cursor-pointer hover:bg-violet-500/20 transition-colors" onclick="navigator.clipboard.writeText('#veo3');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#veo3',1500)">#veo3</span>
-                  <span class="tag text-[10px] cursor-pointer hover:bg-violet-500/20 transition-colors" onclick="navigator.clipboard.writeText('#aiреклама');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#aiреклама',1500)">#aiреклама</span>
-                  <span class="tag text-[10px] cursor-pointer hover:bg-violet-500/20 transition-colors" onclick="navigator.clipboard.writeText('#нейросетивидео');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#нейросетивидео',1500)">#нейросетивидео</span>
-                  <span class="tag text-[10px] cursor-pointer hover:bg-violet-500/20 transition-colors" onclick="navigator.clipboard.writeText('#aiгенерация');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='#aiгенерация',1500)">#aiгенерация</span>
-                  <span class="tag text-[10px] cursor-pointer hover:bg-violet-500/20 transition-colors" onclick="navigator.clipboard.writeText('ai видео русский');this.textContent='✓ скопировано';setTimeout(()=>this.textContent='ai видео русский',1500)">ai видео русский</span>
-                </div>
-                <div>2. Сортируй по <span class="text-amber-300 font-medium">«Популярные»</span> → смотри Reels с 50K+ просмотров</div>
-                <div>3. Ищи видео с <span class="text-emerald-300 font-medium">AI-персонажами на русском</span> — бабки, деды, семейные пары</div>
-                <div>4. Нашёл? <span class="text-cyan-300 font-medium">Скачай видео</span> через <a href="https://saveclip.app" target="_blank" class="text-violet-400 underline hover:text-violet-300">saveclip.app</a> (скопируй ссылку → вставь на сайт → скачай MP4) → <span class="text-cyan-300 font-medium">загрузи файл</span> в режиме <span class="text-cyan-300 font-medium">«🎥 По видео»</span></div>
-              </div>
-            </div>
-            <a href="https://www.instagram.com/explore/tags/veo3/" target="_blank" class="btn-neon w-full py-2.5 text-sm font-medium flex items-center justify-center gap-2">
-              <span>📸</span> Открыть Instagram → искать AI Reels
             </a>
           </div>
 

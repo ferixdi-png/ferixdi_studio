@@ -1463,7 +1463,7 @@ function navigateTo(section) {
 }
 
 function updateProgressIndicators(currentSection) {
-  const sections = ['ideas', 'generation-mode', 'content', 'characters', 'locations', 'generate'];
+  const sections = ['generation-mode', 'content', 'characters', 'generate'];
   const currentIndex = sections.indexOf(currentSection);
   
   sections.forEach((section, index) => {
@@ -1472,15 +1472,13 @@ function updateProgressIndicators(currentSection) {
       if (index < currentIndex) {
         // Completed sections
         indicator.className = 'flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white text-sm font-bold';
-        indicator.textContent = '?';
+        indicator.textContent = '✓';
       } else if (index === currentIndex) {
         // Current section
         const colors = {
-          'ideas': 'bg-amber-600',
           'generation-mode': 'bg-violet-600',
           'content': 'bg-cyan-600',
           'characters': 'bg-cyan-600',
-          'locations': 'bg-violet-600',
           'generate': 'bg-gradient-to-r from-emerald-600 to-cyan-600'
         };
         indicator.className = `flex items-center justify-center w-8 h-8 rounded-full ${colors[section] || 'bg-gray-600'} text-white text-sm font-bold`;
