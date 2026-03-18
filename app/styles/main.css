@@ -1453,6 +1453,32 @@ mark {
   font-family: 'JetBrains Mono', monospace;
   position: relative;
 }
+/* ── Video Hero Card — subtle glow pulse ── */
+.generation-mode-card[data-mode="video"]:not(.ring-2) {
+  animation: videoCardPulse 3s ease-in-out infinite;
+}
+@keyframes videoCardPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+  50%      { box-shadow: 0 0 20px 2px rgba(245,158,11,0.08); }
+}
+
+/* Video dropzone — amber accent */
+#video-dropzone-main {
+  border-color: rgba(245,158,11,0.25) !important;
+  background: rgba(245,158,11,0.03);
+  transition: all 0.3s var(--ease);
+}
+#video-dropzone-main:hover {
+  border-color: rgba(245,158,11,0.50) !important;
+  background: rgba(245,158,11,0.06);
+  box-shadow: 0 0 16px rgba(245,158,11,0.08);
+}
+#video-dropzone-main.drag-over {
+  border-color: rgba(245,158,11,0.70) !important;
+  background: rgba(245,158,11,0.10);
+  box-shadow: 0 0 24px rgba(245,158,11,0.15);
+}
+
 /* ── Safety: interactive elements always clickable ── */
 #app button, #app a, #app input, #app select, #app textarea,
 #app .nav-item, #app .btn-neon, #app .btn-primary, #app .char-card,

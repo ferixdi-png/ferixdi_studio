@@ -315,11 +315,11 @@ function updateWelcomeBanner() {
   const ctaHint = document.getElementById('welcome-cta-hint');
 
   if (isPromoValid()) {
-    if (title) title.textContent = '\u{1F680} FERIXDI Studio — VIP \u{2728}';
-    if (desc) desc.textContent = 'AI-\u0433\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0432\u0438\u0440\u0443\u0441\u043D\u044B\u0445 Reels \u0430\u043A\u0442\u0438\u0432\u0435\u043D. \u0412\u044B\u0431\u0435\u0440\u0438 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0435\u0439, \u043E\u043F\u0438\u0448\u0438 \u0438\u0434\u0435\u044E \u0438 \u043D\u0430\u0436\u043C\u0438 \u00AB\u0421\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u00BB. \u0411\u0435\u0437\u043B\u0438\u043C\u0438\u0442\u043D\u044B\u0435 \u0433\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u0438 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B.';
+    if (title) title.textContent = '🎬 Уникализатор видео — копия 1:1 с нуля';
+    if (desc) desc.innerHTML = 'Загрузи вирусный Reels → AI скопирует его <strong class="text-amber-300">один-в-один</strong>: речь дословно, каждый жест, камеру, свет, мимику → получишь промпт для точной покадровой копии. Или используй другие режимы.';
     if (columns) columns.classList.add('hidden');
-    if (ctaBtn) { ctaBtn.textContent = '\u{1F3AC} \u041D\u0430\u0447\u0430\u0442\u044C \u0433\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044E'; ctaBtn.onclick = () => navigateTo('generate'); }
-    if (ctaHint) ctaHint.textContent = '\u0412\u0441\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438 \u0440\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B \u2014 \u0433\u0435\u043D\u0435\u0440\u0438\u0440\u0443\u0439 \u0431\u0435\u0437 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439!';
+    if (ctaBtn) { ctaBtn.textContent = '🎬 Начать с видео'; ctaBtn.onclick = () => { navigateTo('generation-mode'); setTimeout(() => selectGenerationMode('video'), 150); }; }
+    if (ctaHint) ctaHint.textContent = 'Все функции разблокированы — генерируй без ограничений!';
   }
   const charCountEl = document.getElementById('welcome-char-count');
   if (charCountEl) charCountEl.textContent = state.characters.length;
@@ -330,6 +330,14 @@ function initWelcomeBanner() {
   const btn = document.getElementById('welcome-go-settings');
   if (btn && !isPromoValid()) {
     btn.addEventListener('click', () => navigateTo('settings'));
+  }
+  // "Начать с видео" CTA — navigate to mode selection and auto-pick video
+  const goVideoBtn = document.getElementById('welcome-go-mode');
+  if (goVideoBtn) {
+    goVideoBtn.addEventListener('click', () => {
+      navigateTo('generation-mode');
+      setTimeout(() => selectGenerationMode('video'), 150);
+    });
   }
 }
 
@@ -1658,11 +1666,17 @@ function selectGenerationMode(mode) {
       idea: '📌 Своя идея',
       suggested: '📌 Готовые идеи',
       script: '📌 Свой диалог / монолог',
-      video: '🎬 По видео'
+      video: '🎬 Уникализатор видео — копия 1:1'
     };
     nameEl.textContent = modeNames[mode] || mode;
     continueBtn.disabled = false;
-    continueBtn.innerHTML = `<span>Далее > Описать контент</span><span>></span>`;
+    const btnLabels = {
+      idea: 'Далее > Описать идею',
+      suggested: 'Далее > Выбрать тему',
+      script: 'Далее > Написать диалог',
+      video: 'Далее > Загрузить видео'
+    };
+    continueBtn.innerHTML = `<span>${btnLabels[mode] || 'Далее > Описать контент'}</span><span>></span>`;
 
     // Show mode-specific hint
     const hintEl = document.getElementById('selected-mode-hint');
@@ -1671,7 +1685,7 @@ function selectGenerationMode(mode) {
         idea: '📌 На следующем шаге опишите свою идею, затем выберете персонажей.',
         suggested: '📌 На следующем шаге выберите тему из трендов или оставьте пустым — AI подберёт.',
         script: '📌 Напишите свой диалог (A + B) или монолог (только A). Оставьте B пустым для соло.',
-        video: '🎬 На следующем шаге загрузите видео-файл (MP4/MOV) для ремейка. Персонажи опциональны — можно просто скопировать креатив.',
+        video: '🎬 На следующем шаге загрузите видео (MP4/MOV), которое уже залетело. AI разберёт его покадрово и создаст точную копию с нуля. Персонажи опциональны.',
       };
       const hint = hints[mode] || '';
       if (hint) {

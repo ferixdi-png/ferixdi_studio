@@ -1275,14 +1275,25 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
 // to recreate the video's vibe, structure, and dialogue with our characters
 function buildRemakeInstruction(video_meta, charA, charB) {
   const parts = [];
-  parts.push('🎬 РЕЖИМ РЕМЕЙКА — КОПИЯ ОРИГИНАЛА + ХАРИЗМА НАШИХ ПЕРСОНАЖЕЙ');
+  parts.push('🔴 РЕЖИМ РЕМЕЙКА — УНИКАЛИЗАТОР ВИДЕО: ТОЧНАЯ КОПИЯ ОДИН-В-ОДИН');
   parts.push('');
-  parts.push('ГЛАВНЫЕ ПРАВИЛА:');
-  parts.push('1. ДИАЛОГ: дословная копия из оригинала (85-95% слов сохранить)');
-  parts.push('2. ВИЗУАЛ: та же сцена, локация, ракурс, действия — но с НАШИМИ персонажами');
-  parts.push('3. ОДЕЖДА: персонажи ВСЕГДА в своей фирменной одежде (wardrobe_anchor) — ЗАПРЕЩЕНО копировать одежду из оригинала');
-  parts.push('4. ХАРИЗМА: можно добавить 1 signature_word или reaction_sound персонажа если не ломает смысл');
-  parts.push('5. ЭНЕРГИЯ: определи что сделало оригинал вирусным и усиль через наших персонажей');
+  parts.push('ЭТО НЕ ВДОХНОВЕНИЕ И НЕ АДАПТАЦИЯ. ЭТО ПОКАДРОВАЯ КОПИЯ ОРИГИНАЛЬНОГО ВИДЕО.');
+  parts.push('');
+  parts.push('АБСОЛЮТНЫЕ ПРАВИЛА (НАРУШЕНИЕ = БРАК):');
+  parts.push('1. ДИАЛОГ: 100% ДОСЛОВНАЯ расшифровка оригинала. НИ ОДНОГО слова не менять, не добавлять, не убирать.');
+  parts.push('2. ДЕЙСТВИЯ: покадровая копия — каждый жест, поворот головы, взгляд, наклон тела — ТОЧНО как в оригинале.');
+  parts.push('3. ЛОКАЦИЯ: та же самая — если кухня, то кухня. Если улица, то улица. Каждый предмет фона.');
+  parts.push('4. КАМЕРА: тот же ракурс, та же крупность, то же движение. Selfie = selfie. Со стороны = со стороны.');
+  parts.push('5. РИТМ: тот же темп речи, те же паузы, та же энергия, тот же момент кульминации.');
+  parts.push('6. МИМИКА: те же эмоции, те же выражения лиц, те же реакции в те же моменты.');
+  parts.push('');
+  parts.push('ЧТО МОЖЕТ ИЗМЕНИТЬСЯ (только если пользователь явно выбрал):');
+  parts.push('- Персонажи: если выбраны → внешность и одежда заменяются на character_en / wardrobe_anchor');
+  parts.push('- Локация: если выбрана → заменяется на выбранную. Если НЕТ → та же самая как в оригинале.');
+  parts.push('ВСЁ ОСТАЛЬНОЕ = ТОЧНАЯ КОПИЯ ОРИГИНАЛА.');
+  parts.push('');
+  parts.push('ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ ВЫБРАЛ ПЕРСОНАЖЕЙ — описывай людей из оригинала КАК ЕСТЬ (возраст, внешность, одежда — всё из видео).');
+  parts.push('ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ ВЫБРАЛ ЛОКАЦИЮ — описывай локацию из оригинала КАК ЕСТЬ (каждый предмет, фон, освещение).');
   parts.push('');
 
   if (video_meta.title) {
@@ -1302,16 +1313,15 @@ function buildRemakeInstruction(video_meta, charA, charB) {
   parts.push(`🅰️ Персонаж A: ${charA.name_ru} — ${charA.vibe_archetype || 'провокатор'}, темп ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
   parts.push(`🅱️ Персонаж B: ${charB.name_ru} — ${charB.vibe_archetype || 'панчлайн'}, темп ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
   parts.push('');
-  parts.push('⚠️ КРИТИЧЕСКИ ВАЖНО:');
-  parts.push('- Диалог ОБЯЗАТЕЛЬНО на русском языке');
-  parts.push('- dialogue_A_ru = ДОСЛОВНАЯ копия речи первого (можно изменить 1-3 слова для стиля персонажа)');
-  parts.push('- dialogue_B_ru = ДОСЛОВНАЯ копия речи второго (можно изменить 1-3 слова для стиля персонажа)');
+  parts.push('⚠️ КРИТИЧЕСКИ ВАЖНО ДЛЯ GEMINI:');
+  parts.push('- dialogue_A_ru = 100% ДОСЛОВНАЯ РАСШИФРОВКА речи первого говорящего. ЗАПРЕЩЕНО менять хоть одно слово.');
+  parts.push('- dialogue_B_ru = 100% ДОСЛОВНАЯ РАСШИФРОВКА речи второго говорящего. ЗАПРЕЩЕНО менять хоть одно слово.');
   parts.push('- killer_word = последнее ударное слово из ОРИГИНАЛЬНОЙ речи');
-  parts.push('- НЕ ПЕРЕПИСЫВАЙ диалог! НЕ ПРИДУМЫВАЙ НОВЫЙ! Бери ДОСЛОВНО из оригинала!');
-  parts.push('- photo_scene_en: КОПИРУЙ сцену из оригинала + ДОСЛОВНО вставь character_en каждого персонажа');
-  parts.push('- remake_veo_prompt_en: 6 блоков, 300-500 слов, ультра-детальный промпт-копия визуала оригинала');
-  parts.push('- Если к сообщению приложено фото обложки — используй его как визуальный референс');
-  parts.push('- Воспроизведи композицию кадра, позы, энергию из обложки');
+  parts.push('- photo_scene_en: ТОЧНАЯ КОПИЯ первого кадра оригинала + character_en персонажей');
+  parts.push('- remake_veo_prompt_en: 6 блоков, 300-500 слов, ПОКАДРОВАЯ КОПИЯ визуала оригинала — каждое действие, каждый жест, каждый поворот камеры');
+  parts.push('- video_emotion_arc: ПОКАДРОВАЯ КОПИЯ эмоциональной кривой оригинала — тот же хук, те же действия, тот же финал');
+  parts.push('- ТЕСТ: если ANY поле отличается от оригинала — это БРАК');
+  parts.push('- Если приложено фото обложки — используй как визуальный референс для photo_scene_en');
 
   return parts.join('\n');
 }
@@ -1881,17 +1891,23 @@ export function generate(input) {
     }
   }
 
-  // ── VIDEO MODE: ALWAYS use placeholder cast ──
-  // Gemini analyzes the original video and extracts real character descriptions.
-  // DB characters must NEVER leak into video mode output — the result must be
-  // a faithful copy (but better) of the ORIGINAL video's characters.
+  // ── VIDEO MODE: use placeholder ONLY if user didn't select characters ──
+  // If user selected characters → replace original video's people with our characters.
+  // If user didn't select → defer to Gemini's analysis of original video (exact copy).
   if (input_mode === 'video') {
-    rawA = _VIDEO_PLACEHOLDER;
-    soloMode = true; // default solo — AI engine will determine actual cast from video
-    warnings.push('Видео-режим: персонажи будут скопированы из оригинального видео');
+    const userPickedChars = character1_id && character1_id !== 'video_original';
+    if (!userPickedChars) {
+      rawA = _VIDEO_PLACEHOLDER;
+      soloMode = true; // default solo — AI engine will determine actual cast from video
+      warnings.push('Видео-режим: персонажи из оригинального видео (точная копия)');
+    } else {
+      // User selected their own characters — override original video's people
+      soloMode = !character2_id;
+      warnings.push('Видео-режим: персонажи заменены на выбранных (остальное — точная копия из видео)');
+    }
   }
 
-  const rawB = input_mode === 'video'
+  const rawB = input_mode === 'video' && (!character1_id || character1_id === 'video_original')
     ? _VIDEO_PLACEHOLDER
     : _autoPickedB
     ? _autoPickedB
@@ -2060,8 +2076,9 @@ export function generate(input) {
     ? 'as in original video — AI describes wardrobe from video analysis'
     : (charB.identity_anchors?.wardrobe_anchor || 'worn striped sailor telnyashka under patched corduroy jacket, leather belt');
 
-  // ── VIDEO MODE: override location/lighting/props to defer to Gemini ──
-  if (_isVideoMode && charA.id === 'video_original') {
+  // ── VIDEO MODE: override location to defer to Gemini ──
+  // Location always comes from original video unless user explicitly selected one
+  if (_isVideoMode && !selected_location_id) {
     location = 'Location from original video — AI engine describes setting based on video analysis';
     locationObj = null;
   }
@@ -2136,7 +2153,8 @@ export function generate(input) {
   }
 
   // ── VIDEO MODE: override hook/release/prop to defer to Gemini ──
-  if (_isVideoMode && charA.id === 'video_original') {
+  // Actions/props always come from original video — only characters/location can be overridden
+  if (_isVideoMode) {
     mergedHookObj.action_en = 'hook action as in original video — AI engine describes from video analysis';
     mergedHookObj.action_ru = 'хук из оригинального видео';
     mergedHookObj.audio = 'as in original video';
@@ -2259,7 +2277,7 @@ export function generate(input) {
   const cameraPreset = buildCameraPreset();
   const timingGrid = buildTimingGridV2(mergedHookObj, releaseObj);
   const cinematography = buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA, charB, mergedHookObj, releaseObj, propAnchor);
-  const aesthetic = _isVideoMode && charA.id === 'video_original'
+  const aesthetic = _isVideoMode
     ? 'as in original video — AI describes aesthetic from video analysis'
     : _aestheticToEn(charA.world_aesthetic || charB.world_aesthetic || 'VIP-деревенский уют');
   const nameEnA = charA.name_en || charA.id || 'Character A';
@@ -2504,18 +2522,24 @@ export function generate(input) {
       serial: { aesthetic, prop_anchor: propAnchor },
     },
     ...(topicEn ? { topic_context: topicEn } : {}),
-    ...(sceneHint ? { scene_reference: `Visual/structural reference from source video: "${sceneHint}". Adapt the energy and pacing but keep original characters and dialogue.` } : {}),
+    ...(sceneHint ? { scene_reference: input_mode === 'video'
+      ? `EXACT COPY reference from source video: "${sceneHint}". Copy EVERYTHING exactly — every action, gesture, camera angle, dialogue, energy, pacing. Change NOTHING.`
+      : `Visual/structural reference from source video: "${sceneHint}". Adapt the energy and pacing but keep original characters and dialogue.` } : {}),
     dialogue: {
       CRITICAL_INSTRUCTION: input_mode === 'script'
         ? 'The user provided their OWN dialogue below. AI engine MUST USE the user\'s lines as-is (dialogue_A_ru / dialogue_B_ru). You may ONLY adjust 1-2 words for timing fit. Do NOT rewrite or replace the user\'s script. Generate killer_word from the last impactful word of B\'s line.'
         : input_mode === 'video'
-        ? 'This is REMAKE MODE — the dialogue below is from the ORIGINAL VIDEO. AI engine MUST preserve it VERBATIM (90-95% of words). Only change character names/pronouns to fit our cast. Do NOT invent a new dialogue. killer_word = last impactful word from B\'s original line.'
+        ? 'This is REMAKE MODE — the dialogue below is from the ORIGINAL VIDEO. AI engine MUST preserve it 100% VERBATIM — every single word exactly as spoken in the original. Do NOT change, add, remove, or rephrase ANY word. Do NOT invent a new dialogue. killer_word = last impactful word from the original line.'
         : 'AI engine MUST invent its OWN dialogue from scratch. The example below is ONLY to show format and style. NEVER copy or reuse the example lines. Generate completely original, funny, contextually perfect dialogue for THESE specific characters and THIS category.',
       example_format_only: {
         example_A_ru: dialogueA,
         example_B_ru: dialogueB,
         example_killer_word: killerWord,
-        note: 'THIS IS JUST A FORMAT EXAMPLE. You MUST write your own lines that are funnier and more fitting for the characters above.',
+        note: input_mode === 'video'
+          ? 'This is the ORIGINAL DIALOGUE from the video. Preserve it 100% VERBATIM — do NOT change, add, remove, or rephrase ANY word.'
+          : input_mode === 'script'
+          ? 'This is the USER\'S OWN dialogue. Use it as-is. Do NOT rewrite.'
+          : 'THIS IS JUST A FORMAT EXAMPLE. You MUST write your own lines that are funnier and more fitting for the characters above.',
       },
       language: 'CRITICAL: All dialogue MUST be spoken in Russian (русский язык). Characters speak naturally with authentic Russian intonation, regional accent variations, and age-appropriate speech patterns. NO English speech allowed.',
       speech_style_A: _speechStyleToEn(charA.speech_style_ru, charA.speech_pace, charA.compatibility),
@@ -2915,6 +2939,7 @@ ${engage.firstComment}
       propAnchor, lightingMood, hookAction: mergedHookObj, releaseAction: releaseObj,
       aesthetic, script_ru, cinematography, thread_memory,
       dialogue_override: dialogue_override || null,
+      selected_location_id,
       // Fallback dialogue for mergeAIResult when AI doesn't return dialogue
       dialogueA, dialogueB, killerWord,
       // Remake instruction — when video reference is provided, AI must replicate it
@@ -2949,7 +2974,8 @@ export function mergeAIResult(localResult, aiData) {
     const idA = cA?.prompt_tokens?.character_en;
     const idB = cB?.prompt_tokens?.character_en;
     let photoScene = g.photo_scene_en;
-    if ((idA || idB) && ctx.input_mode !== 'video') {
+    const _videoWithOriginalCast = ctx.input_mode === 'video' && ctx.charA?.id === 'video_original';
+    if ((idA || idB) && !_videoWithOriginalCast) {
       const _idLockParts = (c, id, wFallback) => {
         const ia = c?.identity_anchors || {};
         const bio = c?.biology_override || {};
@@ -2974,7 +3000,7 @@ export function mergeAIResult(localResult, aiData) {
     r.photo_prompt_en_json.scene = photoScene;
 
     // Video mode: override template characters and environment with Gemini's analysis
-    if (ctx.input_mode === 'video' && (ctx.charA?.id === 'video_original')) {
+    if (ctx.input_mode === 'video' && _videoWithOriginalCast) {
       // Gemini's photo_scene_en contains the REAL character/environment descriptions from video
       // Clear generic template data so user sees Gemini's analysis, not placeholder defaults
       r.photo_prompt_en_json.characters = [{
@@ -3011,38 +3037,25 @@ export function mergeAIResult(localResult, aiData) {
         vc.speaker_B.wardrobe_anchor = 'As in original video — described by AI';
         vc.speaker_B.age = 'As in original video';
       }
-      // Override world/location
-      const vw = r.video_prompt_en_json.world;
-      if (vw) {
-        vw.location = 'As in original video — described by AI in photo_scene_en';
-        vw.lighting = 'As in original video — described by AI';
-      }
-      // Override identity_anchors
+      // Override identity_anchors wardrobe (only for original cast)
       const ia = r.video_prompt_en_json.identity_anchors;
       if (ia) {
         if (ia.A) ia.A.wardrobe = 'As in original video — described by AI';
         if (ia.B) ia.B.wardrobe = 'As in original video — described by AI';
       }
     }
+    // Video mode: override world/location unless user explicitly selected a location
+    // This is separate from cast override — location defers to video regardless of character selection
+    if (ctx.input_mode === 'video' && !ctx.selected_location_id) {
+      const vw = r.video_prompt_en_json.world;
+      if (vw) {
+        vw.location = 'As in original video — described by AI in photo_scene_en';
+        vw.lighting = 'As in original video — described by AI';
+      }
+    }
     if (g.dialogue_B_ru) r.video_prompt_en_json.dialogue.final_B_ru = g.dialogue_B_ru;
     if (g.killer_word) {
       r.video_prompt_en_json.dialogue.killer_word = g.killer_word;
-      // Sync killer_word into scenes speech_hints
-      if (r.blueprint_json && r.blueprint_json.scenes) {
-        r.blueprint_json.scenes.forEach(sc => {
-          if (sc.speech_hints && sc.speech_hints.includes('killer word "')) {
-            sc.speech_hints = sc.speech_hints.replace(/killer word "[^"]*"/, `killer word "${g.killer_word}"`);
-          }
-        });
-      }
-      // Sync killer_word into scenes speech_hints
-      if (r.blueprint_json && r.blueprint_json.scenes) {
-        r.blueprint_json.scenes.forEach(sc => {
-          if (sc.speech_hints && sc.speech_hints.includes('killer word "')) {
-            sc.speech_hints = sc.speech_hints.replace(/killer word "[^"]*"/, `killer word "${g.killer_word}"`);
-          }
-        });
-      }
       // Sync killer_word into scenes speech_hints
       if (r.blueprint_json && r.blueprint_json.scenes) {
         r.blueprint_json.scenes.forEach(sc => {
@@ -3187,7 +3200,7 @@ export function mergeAIResult(localResult, aiData) {
 
   : `🎬 ${ctx.remake_mode ? 'РЕМЕЙК' : 'ДИАЛОГ'} С ТАЙМИНГАМИ (FERIXDI AI Production)
 ═══════════════════════════════════════════
-📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}${ctx.remake_mode ? `\n🔄 Режим: РЕМЕЙК (копия оригинала + харизма наших персонажей)` : ''}
+📂 Категория: ${ctx.category.ru}${ctx.topic_ru ? `\n💡 Идея: ${ctx.topic_ru}` : ''}${ctx.scene_hint ? `\n🎥 Референс: ${ctx.scene_hint}` : ''}${ctx.remake_mode ? `\n🔴 Режим: РЕМЕЙК — ТОЧНАЯ КОПИЯ ОРИГИНАЛА ОДИН-В-ОДИН (уникализация)` : ''}
 🤖 Сгенерировано FERIXDI AI — уникальный контент
 👥 Пара: ${charA.name_ru} (${cast.speaker_A?.age || charA.biology_override?.age || 'adult'}) × ${charB.name_ru} (${cast.speaker_B?.age || charB.biology_override?.age || 'adult'})
 🎭 Динамика: ${pairDynamic}

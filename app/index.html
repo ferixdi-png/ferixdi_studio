@@ -199,29 +199,39 @@
       <main id="workspace" class="flex-1 overflow-y-auto p-6 relative">
 
         <!-- ═══ WELCOME BANNER (shown for all users, different content for VIP) ═══ -->
-        <div id="welcome-banner" class="mb-6 relative overflow-hidden rounded-2xl border border-cyan-500/20" style="background: linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(124,92,252,0.06) 50%, rgba(232,121,168,0.04) 100%)">
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,229,255,0.08),transparent_60%)]"></div>
+        <div id="welcome-banner" class="mb-6 relative overflow-hidden rounded-2xl border border-amber-500/25" style="background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(249,115,22,0.04) 50%, rgba(124,92,252,0.04) 100%)">
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,0.08),transparent_60%)]"></div>
           <div class="relative p-6 space-y-4">
-            <!-- Main message -->
+            <!-- HERO: Video Uniqualizer -->
             <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/20 text-2xl">🚀</div>
+              <div class="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-xl bg-amber-500/15 border border-amber-500/25 text-3xl">🎬</div>
               <div class="flex-1">
-                <h3 class="text-base font-bold text-white leading-tight">Помощник для создания промптов → генерация в <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer" class="text-cyan-400 hover:text-cyan-300 underline decoration-cyan-400/30">Google Flow</a></h3>
-                <p class="text-sm text-gray-300 mt-1.5 leading-relaxed">Studio собирает идеальный промпт за 2 минуты: диалог, тайминги, камера, свет, мимика. Копируешь → вставляешь в <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer" class="text-cyan-400 font-semibold hover:underline">Google Flow</a> → получаешь ролик. Публикуешь каждый день — алгоритм раздаёт бесплатно.</p>
+                <h3 class="text-lg font-bold text-white leading-tight">Лучший уникализатор видео — копия один-в-один с нуля</h3>
+                <p class="text-sm text-gray-300 mt-1.5 leading-relaxed">Загрузи Reels, который уже залетел → AI разберёт его <strong class="text-amber-300">покадрово</strong>: речь дословно, каждый жест, ракурс камеры, свет, мимику → ты получишь промпт для <strong class="text-amber-300">точной копии один-в-один</strong> в <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer" class="text-amber-400 font-semibold hover:underline">Google Flow</a>. Та же речь, те же действия, та же энергия — но уникальное видео.</p>
               </div>
             </div>
 
-            <!-- Business value proposition -->
+            <!-- USP strip -->
+            <div class="flex flex-wrap gap-2">
+              <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full font-medium">🔍 Покадровый разбор</span>
+              <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full font-medium">🗣️ 100% дословная речь</span>
+              <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full font-medium">🎬 Копия жестов и камеры</span>
+              <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full font-medium">📸 Фото + видео промпт</span>
+              <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full font-medium">🚀 Персонажи не нужны</span>
+              <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full font-medium">✨ + ещё 3 режима</span>
+            </div>
+
+            <!-- How it works — 3 steps -->
             <div class="bg-gradient-to-r from-amber-500/8 via-orange-500/6 to-pink-500/8 rounded-xl p-4 border border-amber-500/15">
               <div class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-2">
                 <span class="flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/20 text-[10px]">🎯</span>
-                Как это работает для бизнеса
+                Как работает уникализатор
               </div>
               <div class="text-[11px] text-gray-300 space-y-1.5 leading-relaxed">
-                <div>🎬 <span class="text-amber-300 font-medium">Studio делает промпт</span> — выбираешь персонажей, пишешь идею на русском → получаешь готовый промпт для Veo с диалогом, камерой, светом, мимикой.</div>
-                <div>🚀 <span class="text-emerald-300 font-medium">Studio бесплатно с промо-кодом</span> — копируешь промпт → вставляешь в <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer" class="text-cyan-400 hover:underline">Google Flow</a> → получаешь ролик. Промо-код — напишите в <a href="https://t.me/ferixdiii" target="_blank" rel="noreferrer" class="text-cyan-400 hover:underline">Telegram</a>.</div>
-                <div>📈 <span class="text-violet-300 font-medium">Собираешь охваты бесплатно</span> — публикуешь Reels каждый день → алгоритм Instagram раздаёт видео в холодную аудиторию → подписчики, заявки, клиенты.</div>
-                <div>📦 <span class="text-cyan-300 font-medium">Результат — бесплатный трафик</span> — публикуешь регулярно → подписчики, заявки, клиенты. Воронка, серийность, монетизация — в <span class="text-amber-300 font-medium">Обучении</span> (14 уроков).</div>
+                <div>🎬 <span class="text-amber-300 font-medium">Загружаешь видео</span> — Reels, TikTok, любой креатив который уже залетел. AI смотрит его целиком: слышит речь, видит каждый жест.</div>
+                <div>🔍 <span class="text-amber-300 font-medium">AI копирует покадрово</span> — речь дословно, каждое действие, поза, ракурс камеры, свет, мимика, локация, фон — <strong class="text-amber-200">точная копия один-в-один</strong>.</div>
+                <div>📸 <span class="text-emerald-300 font-medium">Получаешь промпт-клон</span> — копируешь → вставляешь в <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noreferrer" class="text-cyan-400 hover:underline">Google Flow</a> → получаешь уникальный ролик с той же речью и действиями, но пересобранный с нуля.</div>
+                <div>📈 <span class="text-violet-300 font-medium">Публикуешь и собираешь охваты</span> — алгоритм видит уникальный контент, а зрители — проверенный вирусный формат. Подписчики и клиенты бесплатно.</div>
               </div>
             </div>
 
@@ -241,14 +251,14 @@
                 </div>
               </div>
               <!-- Promo -->
-              <div class="bg-black/30 rounded-xl p-4 border border-cyan-500/15">
-                <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 mb-2">
-                  <span class="flex items-center justify-center w-5 h-5 rounded-full bg-cyan-500/20 text-[10px]">⚡</span>
+              <div class="bg-black/30 rounded-xl p-4 border border-amber-500/15">
+                <div class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-2">
+                  <span class="flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/20 text-[10px]">⚡</span>
                   С промо-кодом
                 </div>
                 <div class="text-[11px] text-gray-400 space-y-1">
+                  <div>• <span class="text-amber-200 font-medium">🎬 Уникализатор видео</span> — точная копия 1:1 с нуля</div>
                   <div>• <span class="text-gray-200">AI-генерация</span> промптов для Veo</div>
-                  <div>• Вирусные диалоги + фото и видео промпты</div>
                   <div>• Инста-пакет: заголовки, хештеги, комменты</div>
                   <div>• Встройка <span class="text-gray-200">вашего товара</span> прямо в сюжет</div>
                   <div>• <span class="text-gray-200">14 уроков</span> + 50 ошибок + 100+ FAQ</div>
@@ -259,13 +269,16 @@
 
             <!-- CTA -->
             <div class="flex items-center gap-3 pt-1 flex-wrap">
-              <button id="welcome-go-settings" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
+              <button id="welcome-go-mode" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black text-sm font-bold hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                🎬 Начать с видео
+              </button>
+              <button id="welcome-go-settings" class="px-4 py-2.5 rounded-lg bg-white/5 border border-gray-600/40 hover:border-cyan-500/50 hover:bg-cyan-500/10 transition-all text-sm font-medium text-gray-300 hover:text-cyan-300 flex items-center gap-2">
                 🔑 Ввести промо-код
               </button>
               <a href="https://telegra.ph/Avtomatizirovannyj-AI-dvizhok-dlya-sozdaniya-virusnyh-8-sekundnyh-video-dlya-Instagram-Reels-03-04" target="_blank" rel="noreferrer" class="px-4 py-2.5 rounded-lg bg-white/5 border border-gray-600/40 hover:border-violet-500/50 hover:bg-violet-500/10 transition-all text-sm font-medium text-gray-300 hover:text-violet-300 flex items-center gap-2">
                 📖 Как устроен движок
               </a>
-              <span id="welcome-cta-hint" class="text-[11px] text-gray-500">Вставь промо-код в разделе «Настройки» → и генерируй!</span>
+              <span id="welcome-cta-hint" class="text-[11px] text-gray-500">Промо-код → в «Настройках»</span>
             </div>
 
             <!-- Telegram channel banner -->
@@ -291,73 +304,82 @@
           </div>
 
           <!-- Generation Mode Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Idea Mode -->
-            <div class="glass-panel p-5 border-l-2 border-cyan-500/40 cursor-pointer hover:border-cyan-500/60 transition-all hover:bg-cyan-500/5 generation-mode-card" data-mode="idea">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-cyan-500/20 border border-cyan-500/30">
-                  <span class="text-2xl">💡</span>
-                </div>
-                <div>
-                  <h3 class="text-base font-semibold text-cyan-400">💡 Своя идея</h3>
-                  <p class="text-xs text-gray-400">Напишите свою тему</p>
+          <div class="space-y-4">
+
+            <!-- ★ HERO: Video Remake Mode — PRIMARY -->
+            <div class="relative cursor-pointer generation-mode-card group" data-mode="video">
+              <div class="absolute -top-2.5 left-5 z-10">
+                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/25">⭐ Рекомендуем</span>
+              </div>
+              <div class="rounded-2xl p-6 border-2 border-amber-500/40 hover:border-amber-500/70 transition-all hover:shadow-lg hover:shadow-amber-500/10" style="background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(249,115,22,0.06) 50%, rgba(234,88,12,0.04) 100%)">
+                <div class="flex items-start gap-4">
+                  <div class="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-xl bg-amber-500/20 border border-amber-500/30 text-3xl group-hover:scale-110 transition-transform">🎬</div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-amber-400">🎬 Уникализатор видео — копия 1:1</h3>
+                    <p class="text-sm text-amber-300/80 font-medium mt-0.5">Точная копия вирусного видео с нуля — речь, действия, камера</p>
+                    <div class="text-sm text-gray-300 leading-relaxed mt-2">
+                      Загрузите Reels, который уже залетел — AI скопирует его <strong class="text-amber-300">один-в-один</strong>: дословную речь, каждый жест и действие, ракурс камеры, свет, мимику, локацию. Вы получите промпт для <strong class="text-amber-300">точной покадровой копии</strong>. Та же речь, те же действия — но уникальное видео.
+                    </div>
+                    <div class="flex flex-wrap gap-3 mt-3">
+                      <span class="text-[10px] text-amber-400/90 bg-amber-500/10 px-2 py-1 rounded-full">🔍 Покадровая копия</span>
+                      <span class="text-[10px] text-amber-400/90 bg-amber-500/10 px-2 py-1 rounded-full">🗣️ 100% дословная речь</span>
+                      <span class="text-[10px] text-amber-400/90 bg-amber-500/10 px-2 py-1 rounded-full">🎬 Копия жестов и камеры</span>
+                      <span class="text-[10px] text-amber-400/90 bg-amber-500/10 px-2 py-1 rounded-full">📸 Фото + видео промпт</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="text-sm text-gray-300 leading-relaxed">
-                Опишите идею простыми словами (например: "цены на бензин выросли") и AI создаст смешной диалог. Полный контроль над темой!
-              </div>
-              <div class="mt-3 text-xs text-cyan-300">✨ Для уникального контента</div>
             </div>
 
-            <!-- Suggested Ideas Mode -->
-            <div class="glass-panel p-5 border-l-2 border-emerald-500/40 cursor-pointer hover:border-emerald-500/60 transition-all hover:bg-emerald-500/5 generation-mode-card" data-mode="suggested">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/30">
-                  <span class="text-2xl">📚</span>
+            <!-- Secondary modes grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Idea Mode -->
+              <div class="glass-panel p-4 border-l-2 border-cyan-500/30 cursor-pointer hover:border-cyan-500/50 transition-all hover:bg-cyan-500/5 generation-mode-card" data-mode="idea">
+                <div class="flex items-center gap-2.5 mb-2">
+                  <div class="flex items-center justify-center w-9 h-9 rounded-full bg-cyan-500/15 border border-cyan-500/25">
+                    <span class="text-lg">💡</span>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-semibold text-cyan-400">Своя идея</h3>
+                    <p class="text-[10px] text-gray-500">Напишите тему</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 class="text-base font-semibold text-emerald-400">📚 Готовые идеи</h3>
-                  <p class="text-xs text-gray-400">Выберите из трендов</p>
+                <div class="text-xs text-gray-400 leading-relaxed">
+                  Опишите идею словами — AI создаст диалог, сцену, промпт.
                 </div>
               </div>
-              <div class="text-sm text-gray-300 leading-relaxed">
-                AI найдёт актуальные темы и готовые диалоги. Просто выберите понравившуюся идею и начните генерацию!
-              </div>
-              <div class="mt-3 text-xs text-emerald-300">🔥 Для быстрых результатов</div>
-            </div>
 
-            <!-- Script Mode -->
-            <div class="glass-panel p-5 border-l-2 border-purple-500/40 cursor-pointer hover:border-purple-500/60 transition-all hover:bg-purple-500/5 generation-mode-card" data-mode="script">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 border border-purple-500/30">
-                  <span class="text-2xl">📝</span>
+              <!-- Suggested Ideas Mode -->
+              <div class="glass-panel p-4 border-l-2 border-emerald-500/30 cursor-pointer hover:border-emerald-500/50 transition-all hover:bg-emerald-500/5 generation-mode-card" data-mode="suggested">
+                <div class="flex items-center gap-2.5 mb-2">
+                  <div class="flex items-center justify-center w-9 h-9 rounded-full bg-emerald-500/15 border border-emerald-500/25">
+                    <span class="text-lg">📚</span>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-semibold text-emerald-400">Готовые идеи</h3>
+                    <p class="text-[10px] text-gray-500">Выберите из трендов</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 class="text-base font-semibold text-purple-400">📝 Свой диалог / монолог</h3>
-                  <p class="text-xs text-gray-400">Полный контроль</p>
+                <div class="text-xs text-gray-400 leading-relaxed">
+                  AI предложит актуальные темы и сгенерирует контент.
                 </div>
               </div>
-              <div class="text-sm text-gray-300 leading-relaxed">
-                Напишите свой диалог (A + B) или монолог (только A). AI сохранит ваш текст, но добавит профессиональные детали и тайминги.
-              </div>
-              <div class="mt-3 text-xs text-purple-300">🎯 Готовый диалог или монолог</div>
-            </div>
 
-            <!-- Video Mode -->
-            <div class="glass-panel p-5 border-l-2 border-amber-500/40 cursor-pointer hover:border-amber-500/60 transition-all hover:bg-amber-500/5 generation-mode-card" data-mode="video">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/30">
-                  <span class="text-2xl">🎥</span>
+              <!-- Script Mode -->
+              <div class="glass-panel p-4 border-l-2 border-purple-500/30 cursor-pointer hover:border-purple-500/50 transition-all hover:bg-purple-500/5 generation-mode-card" data-mode="script">
+                <div class="flex items-center gap-2.5 mb-2">
+                  <div class="flex items-center justify-center w-9 h-9 rounded-full bg-purple-500/15 border border-purple-500/25">
+                    <span class="text-lg">📝</span>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-semibold text-purple-400">Свой диалог</h3>
+                    <p class="text-[10px] text-gray-500">Полный контроль</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 class="text-base font-semibold text-amber-400">🎥 По видео</h3>
-                  <p class="text-xs text-gray-400">Ремейк видео</p>
+                <div class="text-xs text-gray-400 leading-relaxed">
+                  Напишите свой текст — AI добавит детали и тайминги.
                 </div>
               </div>
-              <div class="text-sm text-gray-300 leading-relaxed">
-                Загрузите видео (Reels) и AI создаст ремейк с вашими персонажами. Сохранит стиль, энергию и структуру оригинала.
-              </div>
-              <div class="mt-3 text-xs text-amber-300">🚀 Для копирования вирусных видео</div>
             </div>
 
           </div>
@@ -458,21 +480,25 @@
           </div>
 
           <!-- MODE: video -->
-          <div id="remix-video" class="glass-panel p-4 space-y-3 hidden">
-            <div class="text-xs text-gray-400 font-medium mb-2">🎥 Видео-референс</div>
+          <div id="remix-video" class="glass-panel p-4 space-y-3 hidden" style="border-color: rgba(245,158,11,0.15)">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-lg">🎬</span>
+              <div class="text-sm font-semibold text-amber-400">Уникализатор видео</div>
+              <span class="text-[9px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded-full font-medium ml-auto">⭐ Главный режим</span>
+            </div>
             <!-- Info: chars/location optional -->
             <div class="text-[11px] text-amber-300/80 bg-amber-500/8 border border-amber-500/20 rounded-lg p-2.5 leading-relaxed">
-              🎬 <strong>Персонажи и локация — необязательны.</strong> AI скопирует их из оригинального видео. Или выбери своих на шаге 3 для максимальной харизмы.
+              🎬 <strong>Загрузи видео, которое уже залетело</strong> → AI разберёт его покадрово и создаст точную копию с нуля. Персонажи и локация берутся из оригинала автоматически.
             </div>
-            <div class="glass-panel p-3 border-dashed border-2 border-gray-700 text-center cursor-pointer rounded-lg hover:border-cyan-400/30 transition-colors" id="video-dropzone-main">
-              <div class="text-lg mb-1">📁</div>
-              <div class="text-xs text-gray-400">Перетащи MP4 сюда или нажми</div>
-              <div class="text-[10px] text-gray-600 mt-1">mp4 / mov · до 50 MB</div>
+            <div class="rounded-xl p-5 border-dashed border-2 text-center cursor-pointer transition-all" id="video-dropzone-main">
+              <div class="text-3xl mb-2">🎬</div>
+              <div class="text-sm font-medium text-amber-300">Перетащи видео сюда или нажми</div>
+              <div class="text-[10px] text-gray-500 mt-1.5">MP4 / MOV · до 50 MB · Reels, TikTok, любой 8-секундный креатив</div>
               <input type="file" id="video-file-main" accept="video/mp4,video/quicktime" class="hidden">
             </div>
             <div id="video-meta-main" class="hidden text-xs text-gray-500"></div>
-            <div id="video-remake-badge-main" class="hidden text-[11px] text-cyan-300 bg-cyan-500/8 border border-cyan-500/15 rounded-lg p-2.5 leading-relaxed">
-              🎬 <strong>Режим ремейка</strong> — AI проанализирует видео и воспроизведёт его с твоими персонажами
+            <div id="video-remake-badge-main" class="hidden text-[11px] text-amber-300 bg-amber-500/8 border border-amber-500/20 rounded-lg p-2.5 leading-relaxed">
+              ✅ <strong>Видео загружено</strong> — AI разберёт его покадрово: диалог, тайминги, камеру, свет, мимику. Результат — точная копия с нуля.
             </div>
             <button id="auto-match-cast-btn" class="hidden w-full py-2.5 rounded-lg text-[12px] font-bold transition-all border bg-emerald-600/15 text-emerald-300 border-emerald-500/25 hover:bg-emerald-600/30 hover:border-emerald-500/50 active:scale-[0.98]" onclick="autoMatchCast()">
               🎯 Подобрать персонажей и локацию автоматически
