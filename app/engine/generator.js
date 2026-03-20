@@ -1274,26 +1274,49 @@ function buildCinematography(lightingMood, location, wardrobeA, wardrobeB, charA
 // When user provides a video reference, build a detailed instruction for AI engine
 // to recreate the video's vibe, structure, and dialogue with our characters
 function buildRemakeInstruction(video_meta, charA, charB) {
+  const isVideoPlaceholderA = !charA?.id || charA.id === 'video_original';
+  const isVideoPlaceholderB = !charB?.id || charB.id === 'video_original';
   const parts = [];
   parts.push('🔴 РЕЖИМ РЕМЕЙКА — УНИКАЛИЗАТОР ВИДЕО: ТОЧНАЯ КОПИЯ ОДИН-В-ОДИН');
   parts.push('');
   parts.push('ЭТО НЕ ВДОХНОВЕНИЕ И НЕ АДАПТАЦИЯ. ЭТО ПОКАДРОВАЯ КОПИЯ ОРИГИНАЛЬНОГО ВИДЕО.');
   parts.push('');
+
+  parts.push('═══ ШАГ 0: ЗАПОЛНИ original_video_analysis ═══');
+  parts.push('ПЕРЕД ЗАПОЛНЕНИЕМ ЛЮБОГО ДРУГОГО ПОЛЯ — заполни original_video_analysis в JSON.');
+  parts.push('Это ОБЯЗАТЕЛЬНОЕ поле. Без него генерация = БРАК.');
+  parts.push('Анализ включает: num_people, people_description, location_exact, camera_type/framing/angle,');
+  parts.push('lighting_exact, dialogue_transcription, action_timeline, mood, what_makes_viral.');
+  parts.push('');
+
   parts.push('АБСОЛЮТНЫЕ ПРАВИЛА (НАРУШЕНИЕ = БРАК):');
-  parts.push('1. ДИАЛОГ: 100% ДОСЛОВНАЯ расшифровка оригинала. НИ ОДНОГО слова не менять, не добавлять, не убирать.');
+  parts.push('1. ДИАЛОГ: 100% ДОСЛОВНАЯ расшифровка оригинала. НИ ОДНОГО слова не менять, не добавлять, не убирать. Мат = мат. Диалект = диалект.');
   parts.push('2. ДЕЙСТВИЯ: покадровая копия — каждый жест, поворот головы, взгляд, наклон тела — ТОЧНО как в оригинале.');
-  parts.push('3. ЛОКАЦИЯ: та же самая — если кухня, то кухня. Если улица, то улица. Каждый предмет фона.');
-  parts.push('4. КАМЕРА: тот же ракурс, та же крупность, то же движение. Selfie = selfie. Со стороны = со стороны.');
-  parts.push('5. РИТМ: тот же темп речи, те же паузы, та же энергия, тот же момент кульминации.');
+  parts.push('3. ЛОКАЦИЯ: та же самая — если деревня с избой и резными наличниками, то ИМЕННО ТАК. НЕ УПРОЩАЙ до "barn" или "kitchen".');
+  parts.push('4. КАМЕРА: тот же ракурс, та же крупность, то же движение. Selfie = selfie. Со стороны = со стороны. Используй original_video_analysis.camera_type/framing/angle.');
+  parts.push('5. РИТМ: тот же темп речи, те же паузы, та же энергия, тот же момент кульминации. ТАЙМКОДЫ = РЕАЛЬНАЯ длительность оригинала.');
   parts.push('6. МИМИКА: те же эмоции, те же выражения лиц, те же реакции в те же моменты.');
+  parts.push('7. ЧИСЛО ЛЮДЕЙ: столько же людей в кадре, сколько в оригинале (original_video_analysis.num_people).');
+  parts.push('8. СВЕТ: original_video_analysis.lighting_exact — то же направление, температура, качество теней.');
   parts.push('');
+
   parts.push('ЧТО МОЖЕТ ИЗМЕНИТЬСЯ (только если пользователь явно выбрал):');
-  parts.push('- Персонажи: если выбраны → внешность и одежда заменяются на character_en / wardrobe_anchor');
-  parts.push('- Локация: если выбрана → заменяется на выбранную. Если НЕТ → та же самая как в оригинале.');
-  parts.push('ВСЁ ОСТАЛЬНОЕ = ТОЧНАЯ КОПИЯ ОРИГИНАЛА.');
+  if (isVideoPlaceholderA && isVideoPlaceholderB) {
+    parts.push('⚠️ ПОЛЬЗОВАТЕЛЬ НЕ ВЫБРАЛ ПЕРСОНАЖЕЙ — описывай людей из оригинала КАК ЕСТЬ.');
+    parts.push('Используй original_video_analysis.people_description для КАЖДОГО человека.');
+    parts.push('НЕ ЗАМЕНЯЙ внешность, НЕ ЗАМЕНЯЙ одежду, НЕ ЗАМЕНЯЙ возраст.');
+  } else {
+    parts.push('- Персонажи: ВЫБРАНЫ → внешность и одежда заменяются на character_en / wardrobe_anchor из Identity Lock.');
+    parts.push('  ВСЁ ОСТАЛЬНОЕ (действия, локация, ракурс, свет, диалог, темп) = ТОЧНАЯ КОПИЯ ОРИГИНАЛА.');
+  }
+  parts.push('- Локация: если выбрана → заменяется на выбранную. Если НЕТ → та же как в оригинале (original_video_analysis.location_exact).');
   parts.push('');
-  parts.push('ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ ВЫБРАЛ ПЕРСОНАЖЕЙ — описывай людей из оригинала КАК ЕСТЬ (возраст, внешность, одежда — всё из видео).');
-  parts.push('ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ ВЫБРАЛ ЛОКАЦИЮ — описывай локацию из оригинала КАК ЕСТЬ (каждый предмет, фон, освещение).');
+
+  parts.push('═══ АНТИ-AI РЕАЛИЗМ ═══');
+  parts.push('ЗАПРЕЩЕНО: пластиковая кожа, студийный свет, CGI-гладкость, идеальная симметрия.');
+  parts.push('ОБЯЗАТЕЛЬНО: видимые поры, родинки, морщины, неровный тон кожи, пот на висках.');
+  parts.push('ОБЯЗАТЕЛЬНО: ISO шум в тенях 800-1600, JPEG артефакты, пересветы, несовершенный баланс белого.');
+  parts.push('ОБЯЗАТЕЛЬНО: micro-jitter камеры если оригинал с рук, breathing oscillation.');
   parts.push('');
 
   if (video_meta.title) {
@@ -1303,25 +1326,36 @@ function buildRemakeInstruction(video_meta, charA, charB) {
     parts.push(`👤 Автор: @${video_meta.author} (${video_meta.platform || 'Instagram'})`);
   }
   if (video_meta.duration) {
-    parts.push(`⏱ Длительность оригинала: ${video_meta.duration}с`);
+    parts.push(`⏱ Длительность оригинала: ${video_meta.duration}с — ИСПОЛЬЗУЙ ЭТУ ДЛИТЕЛЬНОСТЬ в таймкодах, НЕ хардкодь 8 секунд`);
   }
   if (video_meta.music) {
     parts.push(`🎵 Музыка: ${video_meta.music}`);
   }
 
   parts.push('');
-  parts.push(`🅰️ Персонаж A: ${charA.name_ru} — ${charA.vibe_archetype || 'провокатор'}, темп ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
-  parts.push(`🅱️ Персонаж B: ${charB.name_ru} — ${charB.vibe_archetype || 'панчлайн'}, темп ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
+  if (!isVideoPlaceholderA) {
+    parts.push(`🅰️ Персонаж A: ${charA.name_ru} — ${charA.vibe_archetype || 'провокатор'}, темп ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
+  } else {
+    parts.push('🅰️ Персонаж A: ИЗ ОРИГИНАЛА — опиши по original_video_analysis.people_description[0]');
+  }
+  if (!isVideoPlaceholderB) {
+    parts.push(`🅱️ Персонаж B: ${charB.name_ru} — ${charB.vibe_archetype || 'панчлайн'}, темп ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
+  } else {
+    parts.push('🅱️ Персонаж B: ИЗ ОРИГИНАЛА — опиши по original_video_analysis.people_description[1] (если есть)');
+  }
+
   parts.push('');
   parts.push('⚠️ КРИТИЧЕСКИ ВАЖНО ДЛЯ GEMINI:');
-  parts.push('- dialogue_A_ru = 100% ДОСЛОВНАЯ РАСШИФРОВКА речи первого говорящего. ЗАПРЕЩЕНО менять хоть одно слово.');
-  parts.push('- dialogue_B_ru = 100% ДОСЛОВНАЯ РАСШИФРОВКА речи второго говорящего. ЗАПРЕЩЕНО менять хоть одно слово.');
+  parts.push('- original_video_analysis: ОБЯЗАТЕЛЬНОЕ поле — заполни ПЕРВЫМ, ДО всех остальных полей');
+  parts.push('- dialogue_A_ru = 100% ДОСЛОВНАЯ РАСШИФРОВКА речи первого говорящего (original_video_analysis.dialogue_transcription). ЗАПРЕЩЕНО менять хоть одно слово.');
+  parts.push('- dialogue_B_ru = 100% ДОСЛОВНАЯ РАСШИФРОВКА речи второго говорящего. ЗАПРЕЩЕНО менять хоть одно слово. null если один говорящий.');
   parts.push('- killer_word = последнее ударное слово из ОРИГИНАЛЬНОЙ речи');
-  parts.push('- photo_scene_en: ТОЧНАЯ КОПИЯ первого кадра оригинала + character_en персонажей');
-  parts.push('- remake_veo_prompt_en: 6 блоков, 300-500 слов, ПОКАДРОВАЯ КОПИЯ визуала оригинала — каждое действие, каждый жест, каждый поворот камеры');
-  parts.push('- video_emotion_arc: ПОКАДРОВАЯ КОПИЯ эмоциональной кривой оригинала — тот же хук, те же действия, тот же финал');
-  parts.push('- ТЕСТ: если ANY поле отличается от оригинала — это БРАК');
-  parts.push('- Если приложено фото обложки — используй как визуальный референс для photo_scene_en');
+  parts.push('- photo_scene_en: ТОЧНАЯ КОПИЯ первого кадра. Локация = original_video_analysis.location_exact. Ракурс = camera_type+framing+angle. Свет = lighting_exact.');
+  parts.push('- remake_veo_prompt_en: 6 блоков, 300-500 слов, ПОКАДРОВАЯ КОПИЯ визуала — каждое действие из action_timeline, каждый жест, каждый поворот камеры');
+  parts.push('- video_emotion_arc: ТАЙМКОДЫ ИЗ ОРИГИНАЛА (не хардкодь 0-0.7/0.7-3.5/3.5-7.0/7.0-8.0). Используй action_timeline для реальных временных отрезков.');
+  parts.push('- video_atmosphere_en: звуки, реверб, room tone — всё из оригинала');
+  parts.push('- ТЕСТ: прочитай свой результат — он СОВПАДАЕТ с оригиналом? Если нет — ПЕРЕДЕЛАЙ');
+  parts.push('- Если приложено видео/обложка — используй как визуальный референс');
 
   return parts.join('\n');
 }
@@ -3313,13 +3347,17 @@ ${firstComment}
     // ── IDENTITY LOCK ENFORCEMENT ──
     // AI engine paraphrases character descriptions instead of copying verbatim.
     // Inject canonical character_en from catalog to guarantee identity consistency.
+    // SKIP if characters are video_original — use AI's video analysis descriptions instead.
     const charA = ctx.charA;
     const charB = ctx.charB;
-    const canonicalA = charA?.prompt_tokens?.character_en;
-    const canonicalB = charB?.prompt_tokens?.character_en;
+    const isPlaceholderA = !charA?.id || charA.id === 'video_original';
+    const isPlaceholderB = !charB?.id || charB.id === 'video_original';
+    const canonicalA = !isPlaceholderA ? charA?.prompt_tokens?.character_en : null;
+    const canonicalB = !isPlaceholderB ? charB?.prompt_tokens?.character_en : null;
     let remakePrompt = g.remake_veo_prompt_en;
 
     // Append identity override block so Veo always gets the exact catalog descriptions
+    // Only when user explicitly selected catalog characters (not video_original)
     if (canonicalA || canonicalB) {
       const _remakeIdParts = (c, canonical, wFallback) => {
         const ia = c?.identity_anchors || {};
@@ -3342,6 +3380,9 @@ ${firstComment}
         canonicalB ? `CHARACTER B (${charB.name_ru || 'B'}): ${_remakeIdParts(charB, canonicalB, ctx.wardrobeB)}.` : '',
       ].filter(Boolean).join('\n');
       remakePrompt += identityBlock;
+    } else if (isPlaceholderA && isPlaceholderB) {
+      // Both characters are from original video — no catalog identity lock needed
+      remakePrompt += '\n\n[VIDEO COPY MODE — NO IDENTITY LOCK]: Characters are described by AI based on original video analysis. All character appearances, clothing, and accessories come from the video — do NOT use any database character templates.';
     }
 
     // ── DIALOGUE INJECTION ──
