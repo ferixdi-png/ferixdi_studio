@@ -2570,7 +2570,7 @@ function updateReadiness() {
     const missing = [];
     if (!checks.mode) missing.push('режим');
     if (!checks.chars) missing.push('персонажи');
-    if (!checks.content) missing.push('контент');
+    if (!checks.content) missing.push(state.generationMode === 'video' ? 'видео (загрузите заново)' : 'контент');
     if (!checks.promo) missing.push('промо-код');
     btn.innerHTML = `<span class="flex items-center justify-center gap-2">💡 Не хватает: ${missing.join(', ')}</span>`;
   }
@@ -2607,9 +2607,9 @@ function updateReadiness() {
 
   const contentLabel = _contentLabel();
   _updateCheckItem('readiness-content', checks.content,
-    checks.content ? contentLabel : 'Идея / диалог / видео',
-    checks.content ? '' : '< введите контент',
-    null);
+    checks.content ? contentLabel : (state.generationMode === 'video' ? '🎬 Загрузите видео' : 'Идея / диалог / видео'),
+    checks.content ? '' : (state.generationMode === 'video' ? '< нажмите чтобы загрузить' : '< введите контент'),
+    checks.content ? null : () => { navigateTo('content'); setTimeout(() => document.getElementById('remix-video')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200); });
 
   _updateCheckItem('readiness-promo', checks.promo,
     checks.promo ? 'VIP активен' : 'Промо-код',
@@ -5814,6 +5814,13 @@ function _restoreDraftUI() {
   // Restore generation mode UI
   if (state.generationMode) {
     selectGenerationMode(state.generationMode);
+    // Video mode restored but video file is not persisted — prompt user to re-upload
+    if (state.generationMode === 'video' && !state.videoMeta) {
+      setTimeout(() => {
+        showNotification('🎬 Видео нужно загрузить заново после обновления страницы', 'warning');
+        navigateTo('content');
+      }, 500);
+    }
   }
 
   // Restore text inputs
