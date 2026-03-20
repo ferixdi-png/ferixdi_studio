@@ -1277,101 +1277,49 @@ function buildRemakeInstruction(video_meta, charA, charB) {
   const isVideoPlaceholderA = !charA?.id || charA.id === 'video_original';
   const isVideoPlaceholderB = !charB?.id || charB.id === 'video_original';
   const parts = [];
-  parts.push('🔴 РЕЖИМ РЕМЕЙКА — ПОКАДРОВАЯ 1:1 КОПИЯ ОРИГИНАЛА');
+  parts.push('🔴 РЕЖИМ РЕМЕЙКА — 1:1 КОПИЯ ОРИГИНАЛА');
+  parts.push('ЭТО ПОКАДРОВАЯ КОПИЯ. НЕ адаптация, НЕ пересказ.');
   parts.push('');
-  parts.push('ЭТО НЕ ВДОХНОВЕНИЕ. НЕ АДАПТАЦИЯ. НЕ ПЕРЕСКАЗ. ЭТО ТОЧНАЯ ПОКАДРОВАЯ КОПИЯ.');
-  parts.push('Результат должен быть НЕОТЛИЧИМ от оригинала: те же люди, те же слова, те же действия, та же сцена.');
+  parts.push('ШАГ 0: ЗАПОЛНИ original_video_analysis ПЕРВЫМ.');
+  parts.push('Посмотри видео 2 раза (слух + глаз). Заполни ВСЕ подполя.');
   parts.push('');
-
-  parts.push('═══ ШАГ 0: ЗАПОЛНИ original_video_analysis (ОБЯЗАТЕЛЬНО ПЕРВЫМ) ═══');
-  parts.push('ПОСМОТРИ ВИДЕО 2 РАЗА. Первый раз — на слух (речь). Второй — на глаз (визуал).');
-  parts.push('Заполни ВСЕ поля original_video_analysis ДО заполнения любых других полей JSON:');
-  parts.push('- num_people: ТОЧНОЕ число людей в кадре (1, 2, 3...)');
-  parts.push('- num_speakers: сколько из них ГОВОРЯТ');
-  parts.push('- people_description: ОТДЕЛЬНОЕ описание КАЖДОГО человека (50-80 слов каждый) — возраст, одежда (цвет+материал+фасон), причёска, лицо, аксессуары');
-  parts.push('- body_positions: КТО ГДЕ — сидит на лавке / стоит перед ними / наклонился / идёт. Позиция в кадре (слева/справа/центр)');
-  parts.push('- props_in_hands: что ДЕРЖИТ каждый человек — газета, стакан, палка, ничего');
-  parts.push('- text_on_objects: ВЕСЬ видимый текст/логотипы (если на газете "JOY CASINO" — пиши "JOY CASINO")');
-  parts.push('- location_exact: УЛЬТРА-ДЕТАЛЬНОЕ место (60-100 слов) — каждый предмет, материал, цвет');
-  parts.push('- camera_type/framing/angle/movement: ТОЧНЫЙ ракурс');
-  parts.push('- lighting_exact: направление, тип, температура, тени (30-50 слов)');
-  parts.push('- dialogue_transcription: ДОСЛОВНАЯ расшифровка с указанием КТО говорит');
-  parts.push('- per_speaker_timing: ТОЧНОЕ время речи каждого по секундам');
-  parts.push('- action_timeline: ПОСЕКУНДНАЯ раскадровка действий');
+  parts.push('ПРАВИЛА (нарушение = брак):');
+  parts.push('1. Диалог: 100% дословно. Мат=мат. 2. Действия: каждый жест покадрово.');
+  parts.push('3. Локация: точная (не "barn" а конкретно). 4. Камера: тот же ракурс.');
+  parts.push('5. Ритм: тот же темп, паузы. 6. Мимика: те же реакции.');
+  parts.push('7. Число людей: то же. 8. Свет: из lighting_exact.');
+  parts.push('9. Предметы+текст: props_in_hands+text_on_objects. 10. Позиции: body_positions.');
+  parts.push('11. Изоляция речи: 1 говорит, остальные МОЛЧАТ. 12. Финал: физика смеха/тишина.');
   parts.push('');
 
-  parts.push('═══ АБСОЛЮТНЫЕ ПРАВИЛА (НАРУШЕНИЕ = БРАК) ═══');
-  parts.push('1. ДИАЛОГ: 100% ДОСЛОВНАЯ расшифровка. НИ ОДНОГО слова не менять. Мат = мат. Диалект = диалект.');
-  parts.push('2. ДЕЙСТВИЯ: покадровая копия — КАЖДЫЙ жест, поворот головы, наклон, шаг — ТОЧНО как в оригинале.');
-  parts.push('3. ЛОКАЦИЯ: ТОЧНАЯ — если деревня с избой и голубыми наличниками, деревянная лавка, штакетник — пиши ИМЕННО ТАК. НЕ УПРОЩАЙ до "barn".');
-  parts.push('4. КАМЕРА: тот же ракурс, крупность, движение. Selfie = selfie. Со стороны = со стороны. Статика = статика.');
-  parts.push('5. РИТМ: тот же темп речи, паузы, энергия, момент кульминации. ТАЙМКОДЫ = РЕАЛЬНАЯ длительность.');
-  parts.push('6. МИМИКА: те же эмоции, выражения лиц, реакции в те же моменты.');
-  parts.push('7. ЧИСЛО ЛЮДЕЙ: столько же, сколько в оригинале. Если 3 человека — 3 человека, не 2.');
-  parts.push('8. СВЕТ: то же направление, температура, качество теней из lighting_exact.');
-  parts.push('9. ПРЕДМЕТЫ: те же предметы в руках (props_in_hands). Тот же текст на предметах (text_on_objects).');
-  parts.push('10. ПОЗИЦИИ: те же позиции тел (body_positions) — кто сидит, кто стоит, кто наклонился.');
-  parts.push('11. ИЗОЛЯЦИЯ РЕЧИ: в КАЖДЫЙ момент ТОЛЬКО ОДИН человек говорит. Остальные СТРОГО МОЛЧАТ (рот закрыт, sealed lips).');
-  parts.push('12. ФИНАЛ: тот же финал — если все смеются, опиши ФИЗИКУ смеха каждого. Если тишина — тишина.');
-  parts.push('');
-
-  parts.push('═══ ЧТО МОЖЕТ ИЗМЕНИТЬСЯ ═══');
   if (isVideoPlaceholderA && isVideoPlaceholderB) {
-    parts.push('⚠️ ПОЛЬЗОВАТЕЛЬ НЕ ВЫБРАЛ ПЕРСОНАЖЕЙ — ВСЁ ИЗ ОРИГИНАЛА КАК ЕСТЬ.');
-    parts.push('Внешность, одежда, возраст, предметы в руках — всё из people_description.');
-    parts.push('НЕ ЗАМЕНЯЙ: молодую на старую, мужчину на женщину, одежду на другую.');
+    parts.push('ПЕРСОНАЖИ НЕ ВЫБРАНЫ — всё из оригинала как есть. НЕ заменяй внешность/одежду.');
   } else {
-    parts.push('- Персонажи: ВЫБРАНЫ → внешность и одежда заменяются на character_en / wardrobe_anchor.');
-    parts.push('  Но ПОЗИЦИИ (сидит/стоит), ПРЕДМЕТЫ В РУКАХ, ДЕЙСТВИЯ = из ОРИГИНАЛА.');
+    parts.push('ПЕРСОНАЖИ ВЫБРАНЫ — замени внешность на character_en/wardrobe_anchor. Позиции+предметы+действия = оригинал.');
   }
-  parts.push('- Локация: если пользователь выбрал → заменяется. Если НЕТ → location_exact из оригинала.');
+  parts.push('Локация: если выбрана — заменить. Нет — location_exact.');
+  parts.push('');
+  parts.push('АНТИ-AI: поры, морщины, ISO шум, JPEG артефакты, micro-jitter. НЕТ: пластик, CGI, студийный свет.');
   parts.push('');
 
-  parts.push('═══ АНТИ-AI РЕАЛИЗМ ═══');
-  parts.push('ЗАПРЕЩЕНО: пластиковая кожа, студийный свет, CGI, идеальная симметрия, AI-гладкость.');
-  parts.push('ОБЯЗАТЕЛЬНО: видимые поры, родинки, морщины (особенно у пожилых), пигментные пятна, неровный тон кожи.');
-  parts.push('ОБЯЗАТЕЛЬНО: ISO шум 800-1600, JPEG артефакты, пересветы, несовершенный баланс белого.');
-  parts.push('ОБЯЗАТЕЛЬНО: micro-jitter камеры если с рук, breathing oscillation, room tone.');
+  if (video_meta.title) parts.push(`📝 "${video_meta.title}"`);
+  if (video_meta.author) parts.push(`👤 @${video_meta.author} (${video_meta.platform || 'Instagram'})`);
+  if (video_meta.duration) parts.push(`⏱ ${video_meta.duration}с — таймкоды = эта длительность`);
+  if (video_meta.music) parts.push(`🎵 ${video_meta.music}`);
   parts.push('');
 
-  if (video_meta.title) {
-    parts.push(`📝 Название оригинала: "${video_meta.title}"`);
-  }
-  if (video_meta.author) {
-    parts.push(`👤 Автор: @${video_meta.author} (${video_meta.platform || 'Instagram'})`);
-  }
-  if (video_meta.duration) {
-    parts.push(`⏱ Длительность: ${video_meta.duration}с — ВСЕ таймкоды = эта длительность, НЕ хардкодь 8 секунд`);
-  }
-  if (video_meta.music) {
-    parts.push(`🎵 Музыка: ${video_meta.music}`);
-  }
-
-  parts.push('');
   if (!isVideoPlaceholderA) {
-    parts.push(`🅰️ Персонаж A: ${charA.name_ru} — ${charA.vibe_archetype || 'роль A'}, темп ${charA.speech_pace}, ${charA.speech_style_ru || ''}`);
+    parts.push(`🅰️ ${charA.name_ru} — ${charA.vibe_archetype || 'A'}, ${charA.speech_pace}`);
   } else {
-    parts.push('🅰️ Персонаж A: ИЗ ОРИГИНАЛА — people_description[0] + body_positions[0] + props_in_hands[0]');
+    parts.push('🅰️ A: из people_description[0]');
   }
   if (!isVideoPlaceholderB) {
-    parts.push(`🅱️ Персонаж B: ${charB.name_ru} — ${charB.vibe_archetype || 'роль B'}, темп ${charB.speech_pace}, ${charB.speech_style_ru || ''}`);
+    parts.push(`🅱️ ${charB.name_ru} — ${charB.vibe_archetype || 'B'}, ${charB.speech_pace}`);
   } else {
-    parts.push('🅱️ Персонаж B+: ИЗ ОРИГИНАЛА — people_description[1..N] (все остальные из видео)');
+    parts.push('🅱️ B+: из people_description[1..N]');
   }
-
   parts.push('');
-  parts.push('═══ ЧЕКЛИСТ ПОЛЕЙ JSON (КАЖДОЕ ОБЯЗАТЕЛЬНО) ═══');
-  parts.push('✅ original_video_analysis — заполни ПЕРВЫМ, все подполя');
-  parts.push('✅ dialogue_A_ru — 100% ДОСЛОВНО из dialogue_transcription. Мат = мат.');
-  parts.push('✅ dialogue_B_ru — 100% ДОСЛОВНО. null если 1 говорящий.');
-  parts.push('✅ killer_word — последнее ударное слово последней реплики');
-  parts.push('✅ photo_scene_en — ТОЧНАЯ КОПИЯ первого кадра на EN. 250-350 слов. Каждый человек, каждый предмет, текст на предметах.');
-  parts.push('✅ remake_veo_prompt_en — 6 блоков, 500-800 слов. БЛОК 4 = ПОСЕКУНДНОЕ описание действий с audio sync и strict character isolation.');
-  parts.push('✅ video_emotion_arc — ТАЙМКОДЫ ИЗ ОРИГИНАЛА (per_speaker_timing). Не хардкодь 0-0.7/0.7-3.5/3.5-7.0/7.0-8.0.');
-  parts.push('✅ end_frame_en — ТОЧНАЯ КОПИЯ последнего кадра. Физика смеха каждого / тишина.');
-  parts.push('✅ video_atmosphere_en — звуки, реверб, room tone, шорохи — всё из оригинала.');
-  parts.push('');
-  parts.push('ФИНАЛЬНЫЙ ТЕСТ: прочитай каждое поле — оно СОВПАДАЕТ с оригиналом? Если нет — ПЕРЕДЕЛАЙ.');
+  parts.push('ЧЕКЛИСТ: original_video_analysis(первым) | dialogue_A/B_ru(дословно) | killer_word | photo_scene_en(200-300 слов) | remake_veo_prompt_en(6 блоков) | video_emotion_arc(реальные таймкоды) | end_frame_en | video_atmosphere_en');
 
   return parts.join('\n');
 }
